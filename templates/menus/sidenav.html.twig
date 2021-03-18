@@ -1,0 +1,77 @@
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-white     sidebar-light-blue">
+	{# class="main-sidebar sidebar-dark-primary elevation-4"> #}
+	<!-- Brand Logo -->
+		<a href="#" class="brand-link navbar-lightblue"> <img src="{{ asset('logoad.jpeg')}}" height="100" width="80" alt=" Logo" class="brand-image img-circle elevation-5" style="opacity: .8">
+		<span class="brand-text font-weight-light">Road Automation</span>
+	</a>
+	{% block sidebar %}
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<!-- Sidebar user panel (optional) -->
+			{# {% if app.user %}
+															
+																			<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+																				<div class="image">
+																					
+																						<img src="{{ asset('profile/user.png')}}" class="img-circle elevation-2" alt="User Image">
+																					
+															
+																				</div>
+																				<div class="info">
+																					<a href="{{ path('home')}}" class="d-block">{{app.user.userInfo.firstName}}
+																						{{app.user.userInfo.middleName}}</a>
+															
+															
+																				</div>
+																			</div>
+																		{% endif %} #}
+
+
+			<!-- Sidebar Menu -->
+				<nav class="mt-2"> <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i class="nav-icon fa fa-car"></i>
+							<p>
+								Create Vichels
+								<i class="right fa fa-angle-left"></i>
+
+							</p>
+						</a>
+
+						<ul class="nav nav-treeview">
+							<li class="nav-item">
+								<a href="{{path('vichels_index')}}" class="nav-link">
+
+									<p>
+										create
+
+									</p>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link">
+
+									<p>
+										Count Stock
+
+									</p>
+								</a>
+							</li>
+
+
+						</ul>
+					</li>
+
+
+				</ul>
+
+			</nav>
+			<!-- /.sidebar-menu -->
+		</div>
+	{% endblock %}
+	<!-- /.sidebar -->
+</aside>

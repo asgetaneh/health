@@ -1,0 +1,123 @@
+{% if  is_granted('idgrp_act') or  is_granted('perm_act') or 
+ is_granted('usr_act') or   is_granted('usrgrp_act')  or is_granted('usr_btch_act')  or
+    is_granted('usrtyp_act') or  is_granted('spr_actn')   or is_granted('eml_grp') 
+ %}
+	<li class="nav-item has-treeview ">
+		<a href="#" class="nav-link">
+			<i class="nav-icon fa fa-users-cog"></i>
+			<p>
+				{% trans %}Users{% endtrans %}
+				{# <span class="right badge badge-danger">New</span> #}
+			</p>
+
+			<i class="right fas fa-angle-left"></i>
+		</a>
+		<ul class="nav nav-treeview ml-3">
+
+		
+				<li class="nav-item has-treeview">
+					<a href="{{path('user_dashboard')}}" class="nav-link">
+						<i class="nav-icon fa fa-tachometer-alt"></i>
+						<p>
+							{% trans %}Dashboard{% endtrans %}
+						</p>
+					</a>
+				</li>
+		
+				{% if  is_granted('usr_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('user_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-user-circle"></i>
+						<p>
+							{% trans %}Users{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+				{% if  is_granted('usrgrp_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('user_group_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-users"></i>
+						<p>
+							{% trans %}User Groups{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+		
+			{% if  is_granted('idgrp_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('identification_group_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-user-cog"></i>
+						<p>
+							{% trans %}Identification Group{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('eml_grp') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('email_group_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-voicemail"></i>
+						<p>
+							{% trans %}Email Group{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('perm_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('permission_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-user-check"></i>
+						<p>
+							{% trans %}Permissions{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+		
+			{% if  is_granted('usr_btch_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('user_batch_action')}}" class="nav-link">
+						<i class="nav-icon fa fa-user-circle"></i>
+						<p>
+							{% trans %}Batch Action{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('usrtyp_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('user_type_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-users"></i>
+						<p>
+							{% trans %}User Types{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('ldps_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('ldap_searche')}}" class="nav-link">
+						<i class="nav-icon fa fa-users"></i>
+						<p>
+							{% trans %}Ldap Search Entry{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('spr_actn') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('admin_actions')}}" class="nav-link">
+						<i class="nav-icon  fa fa-lock"></i>
+						<p>
+							{% trans %}Super Actions{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</li>
+{% endif %}
+
+

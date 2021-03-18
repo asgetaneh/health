@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			Log in</title>
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Font Awesome -->
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+		<!-- Ionicons -->
+		<link rel="stylesheet" href="{{asset('assets/plugins/fontawesome/css/all.min.css')}}">
+
+		<!-- icheck bootstrap -->
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+		<link
+		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
+		
+		<!-- Google Font: Source Sans Pro -->
+	</head>
+	<body class="hold-transition login-page">
+			<div class="wrapper">
+			{% block fullbody %}
+		<div class="login-box">
+			<div class="login-logo">
+				
+			</div>
+			 {% block body %}
+			 
+			 {% endblock %}
+			 </div>
+			 {% endblock %}
+
+
+				</div>
+
+
+				<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+				<script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
+				<script src="{{asset('assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+
+				<script src="{{asset('assets/dist/js/adminlte.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/pace-progress/pace.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
+				<script></script>
+				{% block javascripts %}{% endblock %}
+			</body>
+		</html>

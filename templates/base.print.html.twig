@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+{% block title %}
+	
+{% endblock %}
+</title>
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.css')}}"/>
+
+		{# <link rel="stylesheet" href="{{ asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}"> #}
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}"/>
+		<link rel="stylesheet" href="{{asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/stud/css/style.css')}}"/>
+
+		<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css')}}"/>
+
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}"/>
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css')}}">
+		<link rel="stylesheet" href="{{ asset('assets/plugins/pace-progress/themes/black/pace-theme-minimal.css')}}"/>
+		<link
+		rel="stylesheet" href="{{asset('assets/plugins/toastr/toastr.min.css')}}">
+		{# <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> #}
+		<link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
+		<link rel="stylesheet" href="{{asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}"/>
+		<link rel="stylesheet" href="{{ asset('assets/plugins/stud/css/style_last.css')}}">
+		
+
+<style>
+body{
+	font-size:1.6em;
+	line-height:1.4em;
+}
+
+</style>
+ 		{% block stylesheets %}{% endblock %}
+		</head>
+		
+		<body class="hold-transition sidebar-mini hold-transition   pace-primary">
+			<div class="wrapper">
+			<h1><center>Jimma University</center></h1>
+			
+			 {% block body %}{% endblock %}
+
+
+				</div>
+
+
+				<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+				<script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
+				<script src="{{asset('assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+
+				<script src="{{asset('assets/dist/js/adminlte.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/pace-progress/pace.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+
+				<script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+				<script src="{{ asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
+				<script></script>
+				{% block javascripts %}{% endblock %}
+			</body>
+		</html>

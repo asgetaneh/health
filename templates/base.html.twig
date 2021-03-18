@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			UAS |
+			{% block title %}
+				Dashboard
+			{% endblock %}
+		</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
+
+		{# <link rel="stylesheet" href="{{ asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}"> #}
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+		<link rel="stylesheet" href="{{asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+
+
+		<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css')}}">
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+
+		<link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css')}}">
+		<link rel="stylesheet" href="{{ asset('assets/plugins/pace-progress/themes/black/pace-theme-minimal.css')}}">
+		<link
+		rel="stylesheet" href="{{asset('assets/plugins/toastr/toastr.min.css')}}">
+		{# <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> #}
+		<link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+	
+	<style>
+	.timeline-centered {
+    position: relative;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    clear: both;
+}
+
+.timeline-centered:before, .timeline-centered:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered:after {
+    clear: both;
+}
+
+.timeline-centered:before, .timeline-centered:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered:after {
+    clear: both;
+}
+
+.timeline-centered:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 4px;
+    background: #f5f5f6;
+    left: 10%;
+    top: 20px;
+    bottom: 20px;
+    margin-left: -4px;
+}
+
+.timeline-centered .timeline-entry {
+    position: relative;
+    width: 90%;
+    float: right;
+    margin-bottom: 15px;
+    clear: both;
+}
+
+.timeline-centered .timeline-entry:before, .timeline-centered .timeline-entry:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered .timeline-entry:after {
+    clear: both;
+}
+
+.timeline-centered .timeline-entry:before, .timeline-centered .timeline-entry:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered .timeline-entry:after {
+    clear: both;
+}
+
+.timeline-centered .timeline-entry.begin {
+    margin-bottom: 0;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner {
+    position: relative;
+    margin-left: 0px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner:before, .timeline-centered .timeline-entry .timeline-entry-inner:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner:after {
+    clear: both;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner:before, .timeline-centered .timeline-entry .timeline-entry-inner:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner:after {
+    clear: both;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-time {
+    position: absolute;
+    left: -110px;
+    text-align: right;
+    padding: 0px 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-time > span {
+    display: block;
+    max-width: 130px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-time > span:first-child {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-time > span:last-child {
+    font-size: 12px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon {
+    background: #fff;
+    color: #737881;
+    display: block;
+    width: 40px;
+    height: 40px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-align: center;
+    -moz-box-shadow: 0 0 0 5px #f5f5f6;
+    -webkit-box-shadow: 0 0 0 5px #f5f5f6;
+    box-shadow: 0 0 0 5px #f5f5f6;
+    line-height: 40px;
+    font-size: 15px;
+    float: left;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-primary {
+    background-color: #303641;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-secondary {
+    background-color: #ee4749;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-success {
+    background-color: #00a651;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-info {
+    background-color: #21a9e1;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-warning {
+    background-color: #fad839;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-danger {
+    background-color: #cc2424;
+    color: #fff;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label {
+    position: relative;
+    background: #f5f5f6;
+    padding: 15px 30px;
+    margin-left: 60px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 9px 9px 9px 0;
+    border-color: transparent #f5f5f6 transparent transparent;
+    left: 0;
+    top: 12px;
+    margin-left: -9px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2, .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label p {
+    color: #737881;
+    font-family: "Noto Sans",sans-serif;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.428571429;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label p + p {
+    margin-top: 15px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 a {
+    color: #e83e8c;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label span.badge {
+    font-size: 90%;
+}
+
+a.transaction-hash {
+    padding: .4rem!important;
+}
+
+table.layout-fixed {
+    table-layout: fixed;
+}
+	</style>
+		{% block stylesheets %}{% endblock %}
+	</head>
+	<body class="hold-transition sidebar-mini hold-transition   pace-primary ">
+    {# sidebar-collapse #}
+		<div class="wrapper">
+
+			{% include "menus/topnav.html.twig" %}
+			{% include "menus/sidenav.html.twig" %}
+
+
+			<div class="content-wrapper">
+
+				<div class="content-header">
+					<div class="container-fluid">
+
+						<div class="row ">
+							{% block noBreadcrumb %}
+								<div class="col-sm-6">
+									<h1 class="m-0 text-dark">
+										{% block maintitle %}
+
+											Dashboard
+											{% trans %}
+											Index
+											{% endtrans %}
+										{% endblock %}
+
+									</h1>
+								</div>
+								<div class="col-sm-6">
+									<ol class="breadcrumb float-sm-right">
+										<li class="breadcrumb-item">
+											<a href="#">
+                                            {% trans %}Home{% endtrans %}
+                                            
+                                            </a>
+										</li>
+										{% block breadcrumb %}
+
+											<li class="breadcrumb-item active">Dashboard v1</li>
+
+										{% endblock %}
+									</ol>
+								</div>
+							{% endblock %}
+						</div>
+
+					</div>
+				</div>
+
+				<section class="content">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+
+								{% for label, messages in app.flashes %}
+									{% for message in messages %}
+										<div class="row alert alert-{{ label }} alert-dismissible">
+											<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+											<h4 class="mr-4">
+												<i class="icon fa fa-{% if label=='success' %}check {% else %}ban {% endif %}"></i>
+												Alert!</h4>
+											{{ message }}
+
+										</div>
+
+
+									{% endfor %}
+								{% endfor %}
+
+							</div>
+						</div>
+
+						{% block body %}
+						
+						{% block dh_auditor_content %}
+<div class="card border-0">
+    <div class="card-body">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('dh_auditor_list_audits') }}">{% trans %}audit.header.home{% endtrans %}</a></li>
+                <li class="breadcrumb-item {% if id is null %}active{% endif %}" aria-current="page"><a href="{{ path('dh_auditor_show_entity_history', { 'entity': helper.namespaceToParam(entity) }) }}">{{ entity }}</a></li>
+                {% if id is not null %}
+                <li class="breadcrumb-item active" aria-current="page"><a href="{{ path('dh_auditor_show_entity_history', { 'entity': helper.namespaceToParam(entity), 'id': id }) }}">{{ entity }}#{{ id }}</a></li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <h4 class="card-title float-left"><code>{{ entity }}{% if id is not null %}#{{ id }}{% endif %}</code> <em>{% trans %}audit.audit_details.most_recent{% endtrans %}</em></h4>
+        <h5 class="float-right">{{ bootstrap.badge(paginator.results|length ~ ' operations', 'primary') }}</h5>
+
+        <div class="timeline-centered">
+        {% for entry in paginator.results %}
+            {{ include('@DHAuditor/Audit/entry.html.twig', {'entry': entry}) }}
+        {% endfor %}
+        
+        </div>
+
+        {{ pager.render(helper.namespaceToParam(entity), id, paginator) }}
+    </div>
+</div>
+{% endblock dh_auditor_content %}
+						{% endblock %}
+					</div>
+				</section>
+
+			</div>
+
+			<footer class="main-footer">
+				<strong>Copyright &copy;
+					{{ date()|date("Y") }}
+					<a href="http://ju.edu.et">UAS</a>.</strong>
+				All rights reserved.
+				<div class="float-right d-none d-sm-inline-block">
+					<b>Version</b>
+					3.0
+				</div>
+			</footer>
+
+
+			<aside class="control-sidebar control-sidebar-dark"></aside>
+
+		</div>
+
+
+		<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+		<script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
+		<script src="{{asset('assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+
+		<script src="{{asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+		<script src="{{asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+
+		<script src="{{asset('assets/dist/js/adminlte.js')}}"></script>
+
+		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+		<script src="{{ asset('assets/plugins/pace-progress/pace.min.js')}}"></script>
+		<script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+
+		<script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+		<script src="{{ asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
+		<script src="{{ asset('assets/plugins/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+     	<script>
+
+			$(document).ready(function () {
+
+
+$(".nav-sidebar").find(".active").removeClass("active");
+
+var path = document.location.protocol +"//"+ document.location.hostname + document.location.pathname;
+$('.nav-item a').each(function () {
+if (this.href === path) {
+$(this).addClass('active');
+$(this).closest('.has-treeview').addClass('menu-open');
+}
+});
+
+})
+
+$('#language').submit(function (e) {
+e.preventDefault();
+var form = $(this);
+var url = form.attr('action');
+
+
+$.ajax({
+type: "POST",
+url: form.attr('action'),
+data: form.serialize(),
+success: function (response) {
+
+location.reload();
+}
+})
+
+});
+$('#lang').change(function () {
+$('#language').submit();
+})
+		</script>
+		<script>
+			function toastIt(context, msg, pos) {
+toastr.options.timeOut = "3000";
+toastr.options.progressBar = true;
+toastr.options.closeButton = true;
+toastr.options.positionClass = 'toast-bottom-right';
+toastr['info']('Success');
+
+// $('.btn-toastr').on('click', function() {
+if (context == "danger") 
+context = "error"
+
+
+
+
+
+$context = context;
+$message = msg;
+$position = pos;
+
+if ($context === '') {
+$context = 'info';
+}
+
+if ($position === '') {
+$positionClass = 'toast-top-right';
+} else {
+$positionClass = 'toast-' + $position;
+}
+
+toastr.remove();
+toastr[$context]($message, '', {positionClass: $positionClass});
+// });
+}
+		</script>
+         <script>
+        			$(document).ready(function () {
+
+
+$(".nav-sidebar").find(".active").removeClass("active");
+
+var path = document.location.protocol + "//" + document.location.hostname + document.location.pathname;
+$('.nav-item a').each(function () {
+if (this.href === path) {
+$(this).addClass('active');
+$(this).closest('.has-treeview').addClass('menu-open');
+}
+});
+
+});
+        </script>
+		{% block javascripts %}
+       
+        {% endblock %}
+	</body>
+</html>

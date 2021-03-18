@@ -1,0 +1,67 @@
+{% if  is_granted('clg_act') or  is_granted('dpt_act')  or   is_granted('dmn_act')  %}
+	<li class="nav-item has-treeview ">
+		<a href="#" class="nav-link">
+			<i class="nav-icon fa fa-screwdriver"></i>
+			<p>
+				{% trans %}Setting{% endtrans %}
+				{# <span class="right badge badge-danger">New</span> #}
+			</p>
+
+			<i class="right fas fa-angle-left"></i>
+		</a>
+		<ul class="nav nav-treeview ml-3">
+			{% if  is_granted('clg_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('college_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-university"></i>
+						<p>
+							{% trans %}College{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('dpt_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('department_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-home"></i>
+						<p>
+							{% trans %}Department{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('dmn_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('domain_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-list"></i>
+						<p>
+							{% trans %}Domain{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('dfltv_act') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('default_value_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-list"></i>
+						<p>
+							{% trans %}Default Value{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+			{% if  is_granted('gnrl_sttg') %}
+				<li class="nav-item has-treeview">
+					<a href="{{path('system_setting_index')}}" class="nav-link">
+						<i class="nav-icon fa fa-list"></i>
+						<p>
+							{% trans %}General Settings{% endtrans %}
+						</p>
+					</a>
+				</li>
+			{% endif %}
+
+		</ul>
+	</li>
+{% endif %}
+
