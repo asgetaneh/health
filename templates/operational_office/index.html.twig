@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OperationalOffice index{% endblock %}
+
+{% block body %}
+    <h1>OperationalOffice index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>CreatedAt</th>
+                <th>IsActive</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for operational_office in operational_offices %}
+            <tr>
+                <td>{{ operational_office.id }}</td>
+                <td>{{ operational_office.name }}</td>
+                <td>{{ operational_office.createdAt ? operational_office.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ operational_office.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ operational_office.description }}</td>
+                <td>
+                    <a href="{{ path('operational_office_show', {'id': operational_office.id}) }}">show</a>
+                    <a href="{{ path('operational_office_edit', {'id': operational_office.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('operational_office_new') }}">Create new</a>
+{% endblock %}

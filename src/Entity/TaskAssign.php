@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskAssignRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,16 @@ class TaskAssign
      * @ORM\Column(type="datetime")
      */
     private $assignedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TaskAccomplishment::class, mappedBy="taskAssign")
+     */
+    private $taskAccomplishments;
+
+    public function __construct()
+    {
+        $this->taskAccomplishments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +132,36 @@ class TaskAssign
     public function setAssignedAt(\DateTimeInterface $assignedAt): self
     {
         $this->assignedAt = $assignedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskAccomplishment[]
+     */
+    public function getTaskAccomplishments(): Collection
+    {
+        return $this->taskAccomplishments;
+    }
+
+    public function addTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
+    {
+        if (!$this->taskAccomplishments->contains($taskAccomplishment)) {
+            $this->taskAccomplishments[] = $taskAccomplishment;
+            $taskAccomplishment->setTaskAssign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
+    {
+        if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAccomplishment->getTaskAssign() === $this) {
+                $taskAccomplishment->setTaskAssign(null);
+            }
+        }
 
         return $this;
     }

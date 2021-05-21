@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OperationalManager{% endblock %}
+
+{% block body %}
+    <h1>OperationalManager</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ operational_manager.id }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ operational_manager.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('operational_manager_index') }}">back to list</a>
+
+    <a href="{{ path('operational_manager_edit', {'id': operational_manager.id}) }}">edit</a>
+
+    {{ include('operational_manager/_delete_form.html.twig') }}
+{% endblock %}

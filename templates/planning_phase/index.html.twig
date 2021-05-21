@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningPhase index{% endblock %}
+
+{% block body %}
+    <h1>PlanningPhase index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>CreatedAt</th>
+                <th>IsActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for planning_phase in planning_phases %}
+            <tr>
+                <td>{{ planning_phase.id }}</td>
+                <td>{{ planning_phase.name }}</td>
+                <td>{{ planning_phase.code }}</td>
+                <td>{{ planning_phase.description }}</td>
+                <td>{{ planning_phase.createdAt ? planning_phase.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ planning_phase.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('planning_phase_show', {'id': planning_phase.id}) }}">show</a>
+                    <a href="{{ path('planning_phase_edit', {'id': planning_phase.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('planning_phase_new') }}">Create new</a>
+{% endblock %}

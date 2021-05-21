@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningYear index{% endblock %}
+
+{% block body %}
+    <h1>PlanningYear index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Year</th>
+                <th>Description</th>
+                <th>IsActive</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for planning_year in planning_years %}
+            <tr>
+                <td>{{ planning_year.id }}</td>
+                <td>{{ planning_year.year ? planning_year.year|date('Y-m-d') : '' }}</td>
+                <td>{{ planning_year.description }}</td>
+                <td>{{ planning_year.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ planning_year.createdAt ? planning_year.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('planning_year_show', {'id': planning_year.id}) }}">show</a>
+                    <a href="{{ path('planning_year_edit', {'id': planning_year.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('planning_year_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningPhase{% endblock %}
+
+{% block body %}
+    <h1>PlanningPhase</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ planning_phase.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ planning_phase.name }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ planning_phase.code }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ planning_phase.description }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ planning_phase.createdAt ? planning_phase.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ planning_phase.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('planning_phase_index') }}">back to list</a>
+
+    <a href="{{ path('planning_phase_edit', {'id': planning_phase.id}) }}">edit</a>
+
+    {{ include('planning_phase/_delete_form.html.twig') }}
+{% endblock %}

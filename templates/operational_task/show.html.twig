@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OperationalTask{% endblock %}
+
+{% block body %}
+    <h1>OperationalTask</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ operational_task.id }}</td>
+            </tr>
+            <tr>
+                <th>TaskName</th>
+                <td>{{ operational_task.taskName }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ operational_task.description }}</td>
+            </tr>
+            <tr>
+                <th>StartDate</th>
+                <td>{{ operational_task.startDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndDate</th>
+                <td>{{ operational_task.endDate }}</td>
+            </tr>
+            <tr>
+                <th>TimeGap</th>
+                <td>{{ operational_task.timeGap }}</td>
+            </tr>
+            <tr>
+                <th>Weight</th>
+                <td>{{ operational_task.weight }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('operational_task_index') }}">back to list</a>
+
+    <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}">edit</a>
+
+    {{ include('operational_task/_delete_form.html.twig') }}
+{% endblock %}

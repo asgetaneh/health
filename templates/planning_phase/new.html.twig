@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PlanningPhase{% endblock %}
+
+{% block body %}
+    <h1>Create new PlanningPhase</h1>
+
+    {{ include('planning_phase/_form.html.twig') }}
+
+    <a href="{{ path('planning_phase_index') }}">back to list</a>
+{% endblock %}

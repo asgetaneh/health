@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}KeyPerformanceIndicator index{% endblock %}
+
+{% block body %}
+    <h1>KeyPerformanceIndicator index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>IsActive</th>
+                <th>Weight</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key_performance_indicator in key_performance_indicators %}
+            <tr>
+                <td>{{ key_performance_indicator.id }}</td>
+                <td>{{ key_performance_indicator.name }}</td>
+                <td>{{ key_performance_indicator.description }}</td>
+                <td>{{ key_performance_indicator.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ key_performance_indicator.weight }}</td>
+                <td>{{ key_performance_indicator.createdAt ? key_performance_indicator.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('key_performance_indicator_show', {'id': key_performance_indicator.id}) }}">show</a>
+                    <a href="{{ path('key_performance_indicator_edit', {'id': key_performance_indicator.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('key_performance_indicator_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PrincipalManager index{% endblock %}
+
+{% block body %}
+    <h1>PrincipalManager index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>IsActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for principal_manager in principal_managers %}
+            <tr>
+                <td>{{ principal_manager.id }}</td>
+                <td>{{ principal_manager.name }}</td>
+                <td>{{ principal_manager.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('principal_manager_show', {'id': principal_manager.id}) }}">show</a>
+                    <a href="{{ path('principal_manager_edit', {'id': principal_manager.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('principal_manager_new') }}">Create new</a>
+{% endblock %}

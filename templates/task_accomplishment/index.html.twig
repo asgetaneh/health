@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaskAccomplishment index{% endblock %}
+
+{% block body %}
+    <h1>TaskAccomplishment index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ExpectedValue</th>
+                <th>AccomplishmentValue</th>
+                <th>Note</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task_accomplishment in task_accomplishments %}
+            <tr>
+                <td>{{ task_accomplishment.id }}</td>
+                <td>{{ task_accomplishment.expectedValue }}</td>
+                <td>{{ task_accomplishment.accomplishmentValue }}</td>
+                <td>{{ task_accomplishment.note }}</td>
+                <td>
+                    <a href="{{ path('task_accomplishment_show', {'id': task_accomplishment.id}) }}">show</a>
+                    <a href="{{ path('task_accomplishment_edit', {'id': task_accomplishment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('task_accomplishment_new') }}">Create new</a>
+{% endblock %}

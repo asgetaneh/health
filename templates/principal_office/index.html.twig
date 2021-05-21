@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PrincipalOffice index{% endblock %}
+
+{% block body %}
+    <h1>PrincipalOffice index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>IsActive</th>
+                <th>CreateAt</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for principal_office in principal_offices %}
+            <tr>
+                <td>{{ principal_office.id }}</td>
+                <td>{{ principal_office.name }}</td>
+                <td>{{ principal_office.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ principal_office.createAt ? principal_office.createAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ principal_office.description }}</td>
+                <td>
+                    <a href="{{ path('principal_office_show', {'id': principal_office.id}) }}">show</a>
+                    <a href="{{ path('principal_office_edit', {'id': principal_office.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('principal_office_new') }}">Create new</a>
+{% endblock %}

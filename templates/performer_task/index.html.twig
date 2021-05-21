@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PerformerTask index{% endblock %}
+
+{% block body %}
+    <h1>PerformerTask index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Weight</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>TimeGap</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for performer_task in performer_tasks %}
+            <tr>
+                <td>{{ performer_task.id }}</td>
+                <td>{{ performer_task.name }}</td>
+                <td>{{ performer_task.weight }}</td>
+                <td>{{ performer_task.startDate }}</td>
+                <td>{{ performer_task.endDate }}</td>
+                <td>{{ performer_task.timeGap }}</td>
+                <td>
+                    <a href="{{ path('performer_task_show', {'id': performer_task.id}) }}">show</a>
+                    <a href="{{ path('performer_task_edit', {'id': performer_task.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('performer_task_new') }}">Create new</a>
+{% endblock %}

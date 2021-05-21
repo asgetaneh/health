@@ -143,6 +143,11 @@ class User implements UserInterface
      */
     private $taskAssigns;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Measure::class, mappedBy="createdBy")
+     */
+    private $measures;
+
  
 
 
@@ -169,6 +174,7 @@ class User implements UserInterface
         $this->planningPhases = new ArrayCollection();
         $this->plans = new ArrayCollection();
         $this->taskAssigns = new ArrayCollection();
+        $this->measures = new ArrayCollection();
     }
     public function __toString()
     {
@@ -858,6 +864,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($taskAssign->getAssignedBy() === $this) {
                 $taskAssign->setAssignedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Measure[]
+     */
+    public function getMeasures(): Collection
+    {
+        return $this->measures;
+    }
+
+    public function addMeasure(Measure $measure): self
+    {
+        if (!$this->measures->contains($measure)) {
+            $this->measures[] = $measure;
+            $measure->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeasure(Measure $measure): self
+    {
+        if ($this->measures->removeElement($measure)) {
+            // set the owning side to null (unless already changed)
+            if ($measure->getCreatedBy() === $this) {
+                $measure->setCreatedBy(null);
             }
         }
 

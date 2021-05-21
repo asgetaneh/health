@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaskAssign index{% endblock %}
+
+{% block body %}
+    <h1>TaskAssign index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>AssignedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task_assign in task_assigns %}
+            <tr>
+                <td>{{ task_assign.id }}</td>
+                <td>{{ task_assign.type }}</td>
+                <td>{{ task_assign.status }}</td>
+                <td>{{ task_assign.assignedAt ? task_assign.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('task_assign_show', {'id': task_assign.id}) }}">show</a>
+                    <a href="{{ path('task_assign_edit', {'id': task_assign.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('task_assign_new') }}">Create new</a>
+{% endblock %}

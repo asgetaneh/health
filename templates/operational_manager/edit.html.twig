@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit OperationalManager{% endblock %}
+
+{% block body %}
+    <h1>Edit OperationalManager</h1>
+
+    {{ include('operational_manager/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('operational_manager_index') }}">back to list</a>
+
+    {{ include('operational_manager/_delete_form.html.twig') }}
+{% endblock %}

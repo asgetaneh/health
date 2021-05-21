@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PrincipalManager{% endblock %}
+
+{% block body %}
+    <h1>Edit PrincipalManager</h1>
+
+    {{ include('principal_manager/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('principal_manager_index') }}">back to list</a>
+
+    {{ include('principal_manager/_delete_form.html.twig') }}
+{% endblock %}

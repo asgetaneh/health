@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningYear{% endblock %}
+
+{% block body %}
+    <h1>PlanningYear</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ planning_year.id }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td>{{ planning_year.year ? planning_year.year|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ planning_year.description }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ planning_year.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ planning_year.createdAt ? planning_year.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('planning_year_index') }}">back to list</a>
+
+    <a href="{{ path('planning_year_edit', {'id': planning_year.id}) }}">edit</a>
+
+    {{ include('planning_year/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InitiativeBehaviour index{% endblock %}
+
+{% block body %}
+    <h1>InitiativeBehaviour index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Code</th>
+                <th>CreatedAt</th>
+                <th>IsActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for initiative_behaviour in initiative_behaviours %}
+            <tr>
+                <td>{{ initiative_behaviour.id }}</td>
+                <td>{{ initiative_behaviour.name }}</td>
+                <td>{{ initiative_behaviour.description }}</td>
+                <td>{{ initiative_behaviour.code }}</td>
+                <td>{{ initiative_behaviour.createdAt ? initiative_behaviour.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ initiative_behaviour.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('initiative_behaviour_show', {'id': initiative_behaviour.id}) }}">show</a>
+                    <a href="{{ path('initiative_behaviour_edit', {'id': initiative_behaviour.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('initiative_behaviour_new') }}">Create new</a>
+{% endblock %}

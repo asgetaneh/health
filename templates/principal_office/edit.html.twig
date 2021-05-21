@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PrincipalOffice{% endblock %}
+
+{% block body %}
+    <h1>Edit PrincipalOffice</h1>
+
+    {{ include('principal_office/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('principal_office_index') }}">back to list</a>
+
+    {{ include('principal_office/_delete_form.html.twig') }}
+{% endblock %}

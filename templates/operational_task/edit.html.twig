@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit OperationalTask{% endblock %}
+
+{% block body %}
+    <h1>Edit OperationalTask</h1>
+
+    {{ include('operational_task/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('operational_task_index') }}">back to list</a>
+
+    {{ include('operational_task/_delete_form.html.twig') }}
+{% endblock %}

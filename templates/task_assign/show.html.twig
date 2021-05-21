@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaskAssign{% endblock %}
+
+{% block body %}
+    <h1>TaskAssign</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ task_assign.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ task_assign.type }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ task_assign.status }}</td>
+            </tr>
+            <tr>
+                <th>AssignedAt</th>
+                <td>{{ task_assign.assignedAt ? task_assign.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('task_assign_index') }}">back to list</a>
+
+    <a href="{{ path('task_assign_edit', {'id': task_assign.id}) }}">edit</a>
+
+    {{ include('task_assign/_delete_form.html.twig') }}
+{% endblock %}

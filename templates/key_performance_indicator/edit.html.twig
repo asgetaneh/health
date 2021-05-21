@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit KeyPerformanceIndicator{% endblock %}
+
+{% block body %}
+    <h1>Edit KeyPerformanceIndicator</h1>
+
+    {{ include('key_performance_indicator/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('key_performance_indicator_index') }}">back to list</a>
+
+    {{ include('key_performance_indicator/_delete_form.html.twig') }}
+{% endblock %}

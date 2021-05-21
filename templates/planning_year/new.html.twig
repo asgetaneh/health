@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PlanningYear{% endblock %}
+
+{% block body %}
+    <h1>Create new PlanningYear</h1>
+
+    {{ include('planning_year/_form.html.twig') }}
+
+    <a href="{{ path('planning_year_index') }}">back to list</a>
+{% endblock %}
