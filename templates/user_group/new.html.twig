@@ -1,0 +1,33 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}New UserGroup
+{% endblock %}
+
+{% block body %}
+	<div
+		class="row">
+		<!-- [ sample-page ] start -->
+		<div class="col-sm-12">
+			<div class="card">
+
+				<div class="card-header">
+					<h5>Add New UserGroup</h5>
+					<div class="card-header-right">
+						<a href="{{ path('user_group_index') }}" class="btn btn-success">back to list</a>
+
+
+					</div>
+				</div>
+				<div class="card-body">
+					{{ include('user_group/_form.html.twig') }}
+
+				</div>
+			</div>
+		</div>
+		<!-- [ sample-page ] end -->
+	</div>
+
+
+{% endblock %}

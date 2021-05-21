@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+{% block title %}UserGroup index
+{% endblock %}
+{% block maintitle %}
+	User
+{% endblock %}
+{% block breadcrumb %}User
+{% endblock %}
+{% block body %}
+	<div
+		class="row">
+		<!-- [ sample-page ] start -->
+		<div class="col-sm-12">
+			<div class="card">
+
+				<div class="card-header">
+					<h5>User index</h5>
+
+					<div class="card-header-right">
+						<a href="{{ path('user_group_new') }}" class="btn btn-success">Create new</a>
+
+					</div>
+				</div>
+				<div class="card-body">
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Description</th>
+								<th>CreatedAt</th>
+								<th>UpdatedAt</th>
+								<th>IsActive</th>
+								<th>actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for user_group in user_groups %}
+								<tr>
+									{# <td>{{ user_group.id }}</td> #}
+									<td>{{ user_group.name }}
+									<span class="badge badge-primary badge-pill">
+										{{ user_group.users|length}}</span></td>
+									<td>{{ user_group.description }}</td>
+									<td>{{ user_group.createdAt ? user_group.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+									<td>{{ user_group.updatedAt ? user_group.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+									<td>{{ user_group.isActive ? 'Yes' : 'No' }}</td>
+									<td>
+										<a href="{{ path('user_group_show', {'id': user_group.id}) }}" class="btn btn-primary btn-sm">
+											<i class=" fas fa-eye f-3"></i>
+										</a>
+										<a href="{{ path('user_group_edit', {'id': user_group.id}) }}" class="btn btn-warning btn-sm">
+											<i class=" fas fa-edit f-3"></i>
+										</a>
+										<form class="d-inline" method="post" action="{{ path('user_group_permission', {'id': user_group.id}) }}">
+											<input type="hidden" name="edit" value="{{user_group.id}}">
+											<button class="btn btn-sm btn-outline-success" title="Permission">
+												<i class="fa fa-tasks"></i>
+											</button>
+										</form>
+
+										{# {% if user_group.permission|length and is_granted("ad_usr_t_grp") %} #}
+										<form class="d-inline" method="post" action="{{ path('user_group_users', {'id': user_group.id}) }}">
+											<input type="hidden" name="edit" value="{{user_group.id}}">
+											<button class="btn btn-sm btn-outline-success" title="Users">
+												<i class="fa fa-users"></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="7">no records found</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

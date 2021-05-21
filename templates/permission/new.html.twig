@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}New Permission
+{% endblock %}
+
+{% block maintitle %}
+	Permission
+{% endblock %}
+{% block breadcrumb %}Create Permission
+{% endblock %}
+
+{% block body %}
+	<div
+		class="row">
+		<!-- [ sample-page ] start -->
+		<div class="col-sm-12">
+			<div class="card">
+
+				<div class="card-header">
+					<h5>Add New Permission</h5>
+					<div class="card-header-right">
+						<a href="{{ path('permission_index') }}" class="btn btn-success">back to list</a>
+
+
+					</div>
+				</div>
+				<div class="card-body">
+					{{ include('permission/_form.html.twig') }}
+
+				</div>
+			</div>
+		</div>
+		<!-- [ sample-page ] end -->
+	</div>
+{% endblock %}

@@ -1,0 +1,869 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ */
+class User implements UserInterface
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="json",nullable=true)
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string",nullable=true)
+     */
+    private $password;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\UserGroup", inversedBy="users")
+     */
+    private $userGroup;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserInfo", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userInfo;
+
+  
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserGroup::class, mappedBy="registerBy")
+     */
+    private $userGroups;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Perspective::class, mappedBy="createdBy")
+     */
+    private $perspectives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Goal::class, mappedBy="createdBy")
+     */
+    private $goals;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Objective::class, mappedBy="CreatedBy")
+     */
+    private $objectives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Strategy::class, mappedBy="createdBy")
+     */
+    private $strategies;
+
+    /**
+     * @ORM\OneToMany(targetEntity=KeyPerformanceIndicator::class, mappedBy="createdBy")
+     */
+    private $keyPerformanceIndicators;
+
+    /**
+     * @ORM\OneToMany(targetEntity=InitiativeBehaviourCatagory::class, mappedBy="createdBy")
+     */
+    private $initiativeBehaviourCatagories;
+
+    /**
+     * @ORM\OneToMany(targetEntity=InitiativeBehaviour::class, mappedBy="createdBy")
+     */
+    private $initiativeBehaviours;
+
+    /**
+     * @ORM\OneToMany(targetEntity=InitiativeAttribute::class, mappedBy="createdBy")
+     */
+    private $initiativeAttributes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="createdBy")
+     */
+    private $initiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrincipalOffice::class, mappedBy="createdBy")
+     */
+    private $principalOffices;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalOffice::class, mappedBy="createdBy")
+     */
+    private $operationalOffices;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrincipalManager::class, mappedBy="principal")
+     */
+    private $principalManagers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalManager::class, mappedBy="manager")
+     */
+    private $operationalManagers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Performer::class, mappedBy="performer")
+     */
+    private $performers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlanningYear::class, mappedBy="createdBy")
+     */
+    private $planningYears;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlanningPhase::class, mappedBy="createdBy")
+     */
+    private $planningPhases;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="createdBy")
+     */
+    private $plans;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="assignedBy")
+     */
+    private $taskAssigns;
+
+ 
+
+
+    public function __construct()
+    {
+      
+        $this->userPermissions = new ArrayCollection();
+        $this->userGroup = new ArrayCollection();
+        $this->perspectives = new ArrayCollection();
+        $this->goals = new ArrayCollection();
+        $this->objectives = new ArrayCollection();
+        $this->strategies = new ArrayCollection();
+        $this->keyPerformanceIndicators = new ArrayCollection();
+        $this->initiativeBehaviourCatagories = new ArrayCollection();
+        $this->initiativeBehaviours = new ArrayCollection();
+        $this->initiativeAttributes = new ArrayCollection();
+        $this->initiatives = new ArrayCollection();
+        $this->principalOffices = new ArrayCollection();
+        $this->operationalOffices = new ArrayCollection();
+        $this->principalManagers = new ArrayCollection();
+        $this->operationalManagers = new ArrayCollection();
+        $this->performers = new ArrayCollection();
+        $this->planningYears = new ArrayCollection();
+        $this->planningPhases = new ArrayCollection();
+        $this->plans = new ArrayCollection();
+        $this->taskAssigns = new ArrayCollection();
+    }
+    public function __toString()
+    {
+        return $this->username;
+    }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+    public function getUserInfo(): ?UserInfo
+    {
+        return $this->userInfo;
+    }
+
+    public function setUserInfo(UserInfo $userInfo): self
+    {
+        $this->userInfo = $userInfo;
+
+        // set the owning side of the relation if necessary
+        if ($userInfo->getUser() !== $this) {
+            $userInfo->setUser($this);
+        }
+
+        return $this;
+    }
+
+    // /**
+    //  * A visual identifier that represents this user.
+    //  *
+    //  * @see UserInterface
+    //  */
+    // public function getUsername(): string
+    // {
+    //     return (string) $this->username;
+    // }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+   
+    /**
+     * @return Collection|UserGroup[]
+     */
+    public function getUserGroup(): Collection
+    {
+        return $this->userGroup;
+    }
+
+    public function addUserGroup(UserGroup $userGroup): self
+    {
+        if (!$this->userGroup->contains($userGroup)) {
+            $this->userGroup[] = $userGroup;
+        }
+
+        return $this;
+    }
+
+    public function removeUserGroup(UserGroup $userGroup): self
+    {
+        if ($this->userGroup->contains($userGroup)) {
+            $this->userGroup->removeElement($userGroup);
+        }
+
+        return $this;
+    }
+    // /**
+    //  * @return Collection|UserPermission[]
+    //  */
+    // public function getUserPermissions(): Collection
+    // {
+    //     return $this->userPermissions;
+    // }
+
+    // public function addUserPermission(UserPermission $userPermission): self
+    // {
+    //     if (!$this->userPermissions->contains($userPermission)) {
+    //         $this->userPermissions[] = $userPermission;
+    //         $userPermission->setUser($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeUserPermission(UserPermission $userPermission): self
+    // {
+    //     if ($this->userPermissions->removeElement($userPermission)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($userPermission->getUser() === $this) {
+    //             $userPermission->setUser(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection|Perspective[]
+     */
+    public function getPerspectives(): Collection
+    {
+        return $this->perspectives;
+    }
+
+    public function addPerspective(Perspective $perspective): self
+    {
+        if (!$this->perspectives->contains($perspective)) {
+            $this->perspectives[] = $perspective;
+            $perspective->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerspective(Perspective $perspective): self
+    {
+        if ($this->perspectives->removeElement($perspective)) {
+            // set the owning side to null (unless already changed)
+            if ($perspective->getCreatedBy() === $this) {
+                $perspective->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Goal[]
+     */
+    public function getGoals(): Collection
+    {
+        return $this->goals;
+    }
+
+    public function addGoal(Goal $goal): self
+    {
+        if (!$this->goals->contains($goal)) {
+            $this->goals[] = $goal;
+            $goal->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoal(Goal $goal): self
+    {
+        if ($this->goals->removeElement($goal)) {
+            // set the owning side to null (unless already changed)
+            if ($goal->getCreatedBy() === $this) {
+                $goal->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Objective[]
+     */
+    public function getObjectives(): Collection
+    {
+        return $this->objectives;
+    }
+
+    public function addObjective(Objective $objective): self
+    {
+        if (!$this->objectives->contains($objective)) {
+            $this->objectives[] = $objective;
+            $objective->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObjective(Objective $objective): self
+    {
+        if ($this->objectives->removeElement($objective)) {
+            // set the owning side to null (unless already changed)
+            if ($objective->getCreatedBy() === $this) {
+                $objective->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Strategy[]
+     */
+    public function getStrategies(): Collection
+    {
+        return $this->strategies;
+    }
+
+    public function addStrategy(Strategy $strategy): self
+    {
+        if (!$this->strategies->contains($strategy)) {
+            $this->strategies[] = $strategy;
+            $strategy->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStrategy(Strategy $strategy): self
+    {
+        if ($this->strategies->removeElement($strategy)) {
+            // set the owning side to null (unless already changed)
+            if ($strategy->getCreatedBy() === $this) {
+                $strategy->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|KeyPerformanceIndicator[]
+     */
+    public function getKeyPerformanceIndicators(): Collection
+    {
+        return $this->keyPerformanceIndicators;
+    }
+
+    public function addKeyPerformanceIndicator(KeyPerformanceIndicator $keyPerformanceIndicator): self
+    {
+        if (!$this->keyPerformanceIndicators->contains($keyPerformanceIndicator)) {
+            $this->keyPerformanceIndicators[] = $keyPerformanceIndicator;
+            $keyPerformanceIndicator->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKeyPerformanceIndicator(KeyPerformanceIndicator $keyPerformanceIndicator): self
+    {
+        if ($this->keyPerformanceIndicators->removeElement($keyPerformanceIndicator)) {
+            // set the owning side to null (unless already changed)
+            if ($keyPerformanceIndicator->getCreatedBy() === $this) {
+                $keyPerformanceIndicator->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeBehaviourCatagory[]
+     */
+    public function getInitiativeBehaviourCatagories(): Collection
+    {
+        return $this->initiativeBehaviourCatagories;
+    }
+
+    public function addInitiativeBehaviourCatagory(InitiativeBehaviourCatagory $initiativeBehaviourCatagory): self
+    {
+        if (!$this->initiativeBehaviourCatagories->contains($initiativeBehaviourCatagory)) {
+            $this->initiativeBehaviourCatagories[] = $initiativeBehaviourCatagory;
+            $initiativeBehaviourCatagory->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeBehaviourCatagory(InitiativeBehaviourCatagory $initiativeBehaviourCatagory): self
+    {
+        if ($this->initiativeBehaviourCatagories->removeElement($initiativeBehaviourCatagory)) {
+            // set the owning side to null (unless already changed)
+            if ($initiativeBehaviourCatagory->getCreatedBy() === $this) {
+                $initiativeBehaviourCatagory->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeBehaviour[]
+     */
+    public function getInitiativeBehaviours(): Collection
+    {
+        return $this->initiativeBehaviours;
+    }
+
+    public function addInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
+    {
+        if (!$this->initiativeBehaviours->contains($initiativeBehaviour)) {
+            $this->initiativeBehaviours[] = $initiativeBehaviour;
+            $initiativeBehaviour->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
+    {
+        if ($this->initiativeBehaviours->removeElement($initiativeBehaviour)) {
+            // set the owning side to null (unless already changed)
+            if ($initiativeBehaviour->getCreatedBy() === $this) {
+                $initiativeBehaviour->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeAttribute[]
+     */
+    public function getInitiativeAttributes(): Collection
+    {
+        return $this->initiativeAttributes;
+    }
+
+    public function addInitiativeAttribute(InitiativeAttribute $initiativeAttribute): self
+    {
+        if (!$this->initiativeAttributes->contains($initiativeAttribute)) {
+            $this->initiativeAttributes[] = $initiativeAttribute;
+            $initiativeAttribute->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeAttribute(InitiativeAttribute $initiativeAttribute): self
+    {
+        if ($this->initiativeAttributes->removeElement($initiativeAttribute)) {
+            // set the owning side to null (unless already changed)
+            if ($initiativeAttribute->getCreatedBy() === $this) {
+                $initiativeAttribute->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Initiative[]
+     */
+    public function getInitiatives(): Collection
+    {
+        return $this->initiatives;
+    }
+
+    public function addInitiative(Initiative $initiative): self
+    {
+        if (!$this->initiatives->contains($initiative)) {
+            $this->initiatives[] = $initiative;
+            $initiative->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiative(Initiative $initiative): self
+    {
+        if ($this->initiatives->removeElement($initiative)) {
+            // set the owning side to null (unless already changed)
+            if ($initiative->getCreatedBy() === $this) {
+                $initiative->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrincipalOffice[]
+     */
+    public function getPrincipalOffices(): Collection
+    {
+        return $this->principalOffices;
+    }
+
+    public function addPrincipalOffice(PrincipalOffice $principalOffice): self
+    {
+        if (!$this->principalOffices->contains($principalOffice)) {
+            $this->principalOffices[] = $principalOffice;
+            $principalOffice->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrincipalOffice(PrincipalOffice $principalOffice): self
+    {
+        if ($this->principalOffices->removeElement($principalOffice)) {
+            // set the owning side to null (unless already changed)
+            if ($principalOffice->getCreatedBy() === $this) {
+                $principalOffice->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalOffice[]
+     */
+    public function getOperationalOffices(): Collection
+    {
+        return $this->operationalOffices;
+    }
+
+    public function addOperationalOffice(OperationalOffice $operationalOffice): self
+    {
+        if (!$this->operationalOffices->contains($operationalOffice)) {
+            $this->operationalOffices[] = $operationalOffice;
+            $operationalOffice->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalOffice(OperationalOffice $operationalOffice): self
+    {
+        if ($this->operationalOffices->removeElement($operationalOffice)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalOffice->getCreatedBy() === $this) {
+                $operationalOffice->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrincipalManager[]
+     */
+    public function getPrincipalManagers(): Collection
+    {
+        return $this->principalManagers;
+    }
+
+    public function addPrincipalManager(PrincipalManager $principalManager): self
+    {
+        if (!$this->principalManagers->contains($principalManager)) {
+            $this->principalManagers[] = $principalManager;
+            $principalManager->setPrincipal($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrincipalManager(PrincipalManager $principalManager): self
+    {
+        if ($this->principalManagers->removeElement($principalManager)) {
+            // set the owning side to null (unless already changed)
+            if ($principalManager->getPrincipal() === $this) {
+                $principalManager->setPrincipal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalManager[]
+     */
+    public function getOperationalManagers(): Collection
+    {
+        return $this->operationalManagers;
+    }
+
+    public function addOperationalManager(OperationalManager $operationalManager): self
+    {
+        if (!$this->operationalManagers->contains($operationalManager)) {
+            $this->operationalManagers[] = $operationalManager;
+            $operationalManager->setManager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalManager(OperationalManager $operationalManager): self
+    {
+        if ($this->operationalManagers->removeElement($operationalManager)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalManager->getManager() === $this) {
+                $operationalManager->setManager(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Performer[]
+     */
+    public function getPerformers(): Collection
+    {
+        return $this->performers;
+    }
+
+    public function addPerformer(Performer $performer): self
+    {
+        if (!$this->performers->contains($performer)) {
+            $this->performers[] = $performer;
+            $performer->setPerformer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformer(Performer $performer): self
+    {
+        if ($this->performers->removeElement($performer)) {
+            // set the owning side to null (unless already changed)
+            if ($performer->getPerformer() === $this) {
+                $performer->setPerformer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanningYear[]
+     */
+    public function getPlanningYears(): Collection
+    {
+        return $this->planningYears;
+    }
+
+    public function addPlanningYear(PlanningYear $planningYear): self
+    {
+        if (!$this->planningYears->contains($planningYear)) {
+            $this->planningYears[] = $planningYear;
+            $planningYear->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningYear(PlanningYear $planningYear): self
+    {
+        if ($this->planningYears->removeElement($planningYear)) {
+            // set the owning side to null (unless already changed)
+            if ($planningYear->getCreatedBy() === $this) {
+                $planningYear->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanningPhase[]
+     */
+    public function getPlanningPhases(): Collection
+    {
+        return $this->planningPhases;
+    }
+
+    public function addPlanningPhase(PlanningPhase $planningPhase): self
+    {
+        if (!$this->planningPhases->contains($planningPhase)) {
+            $this->planningPhases[] = $planningPhase;
+            $planningPhase->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningPhase(PlanningPhase $planningPhase): self
+    {
+        if ($this->planningPhases->removeElement($planningPhase)) {
+            // set the owning side to null (unless already changed)
+            if ($planningPhase->getCreatedBy() === $this) {
+                $planningPhase->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plan[]
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): self
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans[] = $plan;
+            $plan->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): self
+    {
+        if ($this->plans->removeElement($plan)) {
+            // set the owning side to null (unless already changed)
+            if ($plan->getCreatedBy() === $this) {
+                $plan->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskAssign[]
+     */
+    public function getTaskAssigns(): Collection
+    {
+        return $this->taskAssigns;
+    }
+
+    public function addTaskAssign(TaskAssign $taskAssign): self
+    {
+        if (!$this->taskAssigns->contains($taskAssign)) {
+            $this->taskAssigns[] = $taskAssign;
+            $taskAssign->setAssignedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAssign(TaskAssign $taskAssign): self
+    {
+        if ($this->taskAssigns->removeElement($taskAssign)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAssign->getAssignedBy() === $this) {
+                $taskAssign->setAssignedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
+
+}

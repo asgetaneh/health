@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block title %}permission index
+{% endblock %}
+{% block maintitle %}
+	permission
+{% endblock %}
+{% block breadcrumb %}permission
+{% endblock %}
+
+{% block body %}
+	<div
+		class="row">
+		<!-- [ sample-page ] start -->
+		<div class="col-sm-12">
+			<div class="card">
+
+				<div class="card-header">
+					<h5>permission index</h5>
+
+					<div class="card-header-right">
+						<a href="{{ path('permission_new') }}" class="btn btn-success">Create new</a>
+
+					</div>
+				</div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Code</th>
+							<th>Description</th>
+							<th>actions</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% set count = 0 %}
+						{% for permission in permissions %}
+						{% set count = count + 1 %}
+							<tr>
+								<td>{{ count }}</td>
+								<td>{{ permission.name }}</td>
+								<td>{{ permission.code }}</td>
+								<td>{{ permission.description }}</td>
+								<td>
+									<a href="{{ path('permission_show', {'id': permission.id}) }}"  class="btn btn-primary btn-sm">
+										<i class=" fas fa-eye f-2"></i>
+
+									</a>
+									<a href="{{ path('permission_edit', {'id': permission.id}) }}"  class="btn btn-warning btn-sm">
+										<i class=" fas fa-edit f-2"></i>
+									</a>
+
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="5">no records found</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+	<!-- [ sample-page ] end -->
+</div>{% endblock %}
