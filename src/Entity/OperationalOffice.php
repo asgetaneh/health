@@ -64,10 +64,14 @@ class OperationalOffice
         $this->operationalManagers = new ArrayCollection();
         $this->performers = new ArrayCollection();
     }
-
+  
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getName(): ?string

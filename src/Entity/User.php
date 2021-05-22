@@ -175,6 +175,7 @@ class User implements UserInterface
         $this->plans = new ArrayCollection();
         $this->taskAssigns = new ArrayCollection();
         $this->measures = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
     }
     public function __toString()
     {
@@ -898,6 +899,14 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|UserGroup[]
+     */
+    public function getUserGroups(): Collection
+    {
+        return $this->userGroups;
     }
 
     

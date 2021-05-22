@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Plan;
 
 /**
  * @Route("/planning/phase")
@@ -91,4 +92,27 @@ class PlanningPhaseController extends AbstractController
 
         return $this->redirectToRoute('planning_phase_index');
     }
+     /**
+     * @Route("/{id}/plan", name="plan_creation",methods={"GET","POST"})
+     */
+    public function PlanCreationForPhase(Request $request, PlanningPhase $planningPhase): Response
+    {
+        
+       $em=$this->getDoctrine()->getManager();
+       $office=$this->getUser()->getPrincipalManagers()
+       ;
+       $offices=array();
+
+       foreach ($office as $key => $value) {
+          array_push ($offices,$value->getPrincipalOffice()->getName());
+       }
+       dd($offices);
+       $plan = new Plan();
+       $planningyear=$planningPhase->getPlanningYear();
+
+
+
+        return $this->redirectToRoute('planning_phase_index');
+    }
+    
 }

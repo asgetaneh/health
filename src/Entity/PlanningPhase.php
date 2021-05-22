@@ -59,6 +59,21 @@ class PlanningPhase
      */
     private $plans;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $message;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $guide;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $otherinfo;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
@@ -179,6 +194,42 @@ class PlanningPhase
                 $plan->setPlanningPhase(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getGuide(): ?string
+    {
+        return $this->guide;
+    }
+
+    public function setGuide(?string $guide): self
+    {
+        $this->guide = $guide;
+
+        return $this;
+    }
+
+    public function getOtherinfo(): ?string
+    {
+        return $this->otherinfo;
+    }
+
+    public function setOtherinfo(?string $otherinfo): self
+    {
+        $this->otherinfo = $otherinfo;
 
         return $this;
     }

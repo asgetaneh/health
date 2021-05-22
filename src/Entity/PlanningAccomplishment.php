@@ -35,7 +35,7 @@ class PlanningAccomplishment
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $accompNoye;
+    private $accomplishNote;
 
     public function getId(): ?int
     {
@@ -78,14 +78,14 @@ class PlanningAccomplishment
         return $this;
     }
 
-    public function getAccompNoye(): ?string
+    public function getAccomplishNote(): ?string
     {
-        return $this->accompNoye;
+        return $this->accomplishNote;
     }
 
-    public function setAccompNoye(?string $accompNoye): self
+    public function setAccomplishNote(?string $accomplishNote): self
     {
-        $this->accompNoye = $accompNoye;
+        $this->accomplishNote = $accomplishNote;
 
         return $this;
     }

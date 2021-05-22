@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Performer index{% endblock %}
+
+{% block body %}
+    <h1>Performer index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>IsActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for performer in performers %}
+            <tr>
+                <td>{{ performer.id }}</td>
+                <td>{{ performer.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('performer_show', {'id': performer.id}) }}">show</a>
+                    <a href="{{ path('performer_edit', {'id': performer.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('performer_new') }}">Create new</a>
+{% endblock %}

@@ -64,9 +64,20 @@ class Initiative
      */
     private $plans;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=PrincipalOffice::class, inversedBy="initiatives")
+     */
+    private $principalOffice;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isActive;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
+        $this->principalOffice = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +207,42 @@ class Initiative
                 $plan->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrincipalOffice[]
+     */
+    public function getPrincipalOffice(): Collection
+    {
+        return $this->principalOffice;
+    }
+
+    public function addPrincipalOffice(PrincipalOffice $principalOffice): self
+    {
+        if (!$this->principalOffice->contains($principalOffice)) {
+            $this->principalOffice[] = $principalOffice;
+        }
+
+        return $this;
+    }
+
+    public function removePrincipalOffice(PrincipalOffice $principalOffice): self
+    {
+        $this->principalOffice->removeElement($principalOffice);
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(?bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Initiative;
 use App\Form\InitiativeType;
 use App\Repository\InitiativeRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/initiative")
@@ -16,12 +18,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class InitiativeController extends AbstractController
 {
     /**
-     * @Route("/", name="initiative_index", methods={"GET"})
+     * @Route("/", name="initiative_index", methods={"GET","POST"})
      */
-    public function index(InitiativeRepository $initiativeRepository): Response
+    public function index(InitiativeRepository $initiativeRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $initiative = new Initiative();
+        $form = $this->createForm(InitiativeType::class, $initiative);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $initiative->setCreatedAt(new DateTime('now'));
+            $initiative->setCreatedBy($this->getUser());
+            $entityManager->persist($initiative);
+            $entityManager->flush();
+            $this->addFlash('success',"initatives are added seccuss");
+            return $this->redirectToRoute('initiative_index');
+        }
+        $data=$paginator->paginate(
+            $initiativeRepository->findAll(),
+            $request->query->getInt('page',1),
+            10
+        );
         return $this->render('initiative/index.html.twig', [
-            'initiatives' => $initiativeRepository->findAll(),
+            'initiatives' => $data,
+            'form'=>$form->createView()
         ]);
     }
 

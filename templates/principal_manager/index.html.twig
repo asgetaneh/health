@@ -8,9 +8,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>IsActive</th>
+                <th>#</th>
+                <th>Principal</th>
+                <th>Office</th>
+                
+                <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,8 +20,9 @@
         {% for principal_manager in principal_managers %}
             <tr>
                 <td>{{ principal_manager.id }}</td>
-                <td>{{ principal_manager.name }}</td>
-                <td>{{ principal_manager.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ principal_manager.principal }}</td>
+                <td>{{ principal_manager.principalOffice }}</td>
+                <td>{{ principal_manager.isActive ? 'Active' : 'Deactivated' }}</td>
                 <td>
                     <a href="{{ path('principal_manager_show', {'id': principal_manager.id}) }}">show</a>
                     <a href="{{ path('principal_manager_edit', {'id': principal_manager.id}) }}">edit</a>

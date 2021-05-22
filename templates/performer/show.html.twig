@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Performer{% endblock %}
+
+{% block body %}
+    <h1>Performer</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ performer.id }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ performer.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('performer_index') }}">back to list</a>
+
+    <a href="{{ path('performer_edit', {'id': performer.id}) }}">edit</a>
+
+    {{ include('performer/_delete_form.html.twig') }}
+{% endblock %}

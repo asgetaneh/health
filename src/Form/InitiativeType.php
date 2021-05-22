@@ -16,10 +16,9 @@ class InitiativeType extends AbstractType
             ->add('description')
             ->add('maximumValue')
             ->add('minimumValue')
-            ->add('createdAt')
             ->add('initiativeBehaviour')
             ->add('keyPerformanceIndicator')
-            ->add('createdBy')
+            ->add('principalOffice')
         ;
     }
 

@@ -49,9 +49,15 @@ class Plan
      */
     private $operationalTasks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BehavioralPlanningAccomplishment::class, mappedBy="plan")
+     */
+    private $behavioralPlanningAccomplishments;
+
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
+        $this->behavioralPlanningAccomplishments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +149,36 @@ class Plan
             // set the owning side to null (unless already changed)
             if ($operationalTask->getPlan() === $this) {
                 $operationalTask->setPlan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BehavioralPlanningAccomplishment[]
+     */
+    public function getBehavioralPlanningAccomplishments(): Collection
+    {
+        return $this->behavioralPlanningAccomplishments;
+    }
+
+    public function addBehavioralPlanningAccomplishment(BehavioralPlanningAccomplishment $behavioralPlanningAccomplishment): self
+    {
+        if (!$this->behavioralPlanningAccomplishments->contains($behavioralPlanningAccomplishment)) {
+            $this->behavioralPlanningAccomplishments[] = $behavioralPlanningAccomplishment;
+            $behavioralPlanningAccomplishment->setPlan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBehavioralPlanningAccomplishment(BehavioralPlanningAccomplishment $behavioralPlanningAccomplishment): self
+    {
+        if ($this->behavioralPlanningAccomplishments->removeElement($behavioralPlanningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($behavioralPlanningAccomplishment->getPlan() === $this) {
+                $behavioralPlanningAccomplishment->setPlan(null);
             }
         }
 

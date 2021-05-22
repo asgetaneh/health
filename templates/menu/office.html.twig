@@ -1,0 +1,38 @@
+<li>
+	<a href="#" class="dropdown-toggle ">
+		<i class=""></i>
+		<span class="menu-text">
+
+			{% trans %}Office {% endtrans %}
+		</span>
+		<b class="arrow fa fa-angle-down"></b>
+	</a>
+	<ul class="submenu">
+		<li>
+			<a href="{{ path('principal_office_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Principal Office{% endtrans %}
+			</a>
+		</li>
+        <li>
+			<a href="{{ path('principal_manager_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Principal Manager{% endtrans %}
+			</a>
+		</li>
+		<li>
+			<a href="{{ path('operational_office_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Operational Office{% endtrans %}
+			</a>
+		</li>
+        <li>
+			<a href="{{ path('operational_manager_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Operational Manager{% endtrans %}
+			</a>
+		</li>
+		
+		
+        </ul>
+        </li>

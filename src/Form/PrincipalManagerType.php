@@ -12,10 +12,11 @@ class PrincipalManagerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('isActive')
-            ->add('principal')
-            ->add('principalOffice')
+            
+        ->add('principal')
+        ->add('principalOffice')
+        ->add('isActive')
+            
         ;
     }
 

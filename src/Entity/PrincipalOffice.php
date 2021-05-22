@@ -54,17 +54,26 @@ class PrincipalOffice
      */
     private $principalManagers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="principalOffice")
+     */
+    private $initiatives;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
         $this->principalManagers = new ArrayCollection();
+        $this->initiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
+  public function __toString()
+  {
+      return $this->name;
+  }
     public function getName(): ?string
     {
         return $this->name;
@@ -180,6 +189,33 @@ class PrincipalOffice
             if ($principalManager->getPrincipalOffice() === $this) {
                 $principalManager->setPrincipalOffice(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Initiative[]
+     */
+    public function getInitiatives(): Collection
+    {
+        return $this->initiatives;
+    }
+
+    public function addInitiative(Initiative $initiative): self
+    {
+        if (!$this->initiatives->contains($initiative)) {
+            $this->initiatives[] = $initiative;
+            $initiative->addPrincipalOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiative(Initiative $initiative): self
+    {
+        if ($this->initiatives->removeElement($initiative)) {
+            $initiative->removePrincipalOffice($this);
         }
 
         return $this;

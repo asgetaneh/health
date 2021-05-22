@@ -1,1296 +1,1313 @@
 <!DOCTYPE html>
 <html lang="en" lang="am">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title> {% block application_title %}{% trans %}SMIS{% endtrans %}{% endblock %}</title>
-
-        <meta name="description" content="Mailbox with some customizations as described in docs" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
-
-        <!-- bootstrap & fontawesome -->
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}" />
-        <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
-        {#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
-
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}" />
-        {#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/rollmanage.css') }}" />
-
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}" />
-
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}" />
-        {#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
-
-
-        {#        <script src="{{ asset('assets/assets/js/forgraph.js') }}"></script>#}
-        {#        <script src="{{ asset('assets/assets/js/ace-extra.js') }}"></script>#}
-
-        <script src="{{ asset('assets/assets/js/jquery-2.1.4.min.js') }}"></script>
-         <script src="{{ asset('js/select2.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
-
-        <!-- page specific plugin scripts -->
-        <script src="{{ asset('assets/assets/js/bootstrap-tag.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/jquery.hotkeys.index.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/bootstrap-wysiwyg.min.js') }}"></script>
-
-        <!-- ace scripts -->
-        <script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/jquery.gritter.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/notify.js') }}"></script>
-
-
-        <script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/Sum-Total-Row-Column-Table-jQuery-tableTotal/jquery.tableTotal.js') }}"></script>
-
-        <script src="{{ asset('assets/assets/js/mychart.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-        <script src="{{ asset('assets/assets/js/chosen.jquery.min.js') }}"></script>
-
-
-
-        <script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/lib/moment.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.default-settings.js') }}"></script>
-
-        {#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
-        {#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
-
-
-
-        <style>
-            #myBtn {
-                display: none;
-                position: fixed;
-                bottom: 20px;
-                right: 30px;
-                z-index: 99;
-                cursor: pointer;
-                padding: 15px;
-                border-radius: 4px;
-            }
-
-            #myBtn:hover {
-                background-color: #555;
-            }
-
-            #myBtnDown {
-                display: none;
-                position: fixed;
-                top: 75px;
-                right: 30px;
-                z-index: 99;
-                cursor: pointer;
-                padding: 15px;
-                border-radius: 4px;
-            }
-
-            #myBtnDown:hover {
-                background-color: #555;
-            }
-        </style>
-
-        <link rel="stylesheet" href="{{ asset('bundles/fullcalendar/css/fullcalendar/fullcalendar.min.css') }}" />
-    </head>
-
-    <body style='font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif; color: black' class="no-skin">
-
-        {#<header class="header">
-            <a  href="#" style="max-width: 100%; margin:0;">
-                    <img src="{{ asset('bundles/images/headerbanner.png') }}"  style=" margin-bottom: -22px; width: 100%;" >
-            </a>
-        </header>#}
-
-        {% block navbar %}
-            <div id="navbar" class="navbar navbar-default ace-save-state">
-                {% block navbar_container %}
-                    <div class="navbar-container ace-save-state" id="navbar-container">
-                        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-                            <span class="sr-only">Toggle sidebar</span>
-
-                            <span class="icon-bar"></span>
-
-                            <span class="icon-bar"></span>
-
-                            <span class="icon-bar"></span>
-                        </button>
-
-                        <div class="navbar-header pull-left">
-                            <a href="#" class="navbar-brand">
-                                <small>
-                                    <i class="fa fa-cog"></i>
-                                    {% block application_simple_title %} {% endblock %}
-                                {% block application %}{% endblock %}
-                            </small>
-                        </a>
-                    </div>
-                    {% block navbar_right %}
-                        <div class="navbar-buttons navbar-header pull-right" role="navigation">
-                            {% block nav_list %}
-                                <ul class="nav ace-nav">
-                                    {% if is_granted('IS_PPO_DIRECTOR') %}
-                                        <li><a class="btn btn-primary btn-sm" href="{{ path('lexik_translation_overview') }}">Translations</a></li>
-                                        {% endif %}
-                                    <li>
-                                        {# <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
-                                                <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="{{ path('switch_language', { '_locale': 'am' }) }}">{% trans %}Amharic{% endtrans %}</a></li>
-                                                <li><a href="{{ path('switch_language', { '_locale': 'en' }) }}">{% trans %}English{% endtrans %}</a></li>
-                                                 <li><a href="{{ path('switch_language', { '_locale': 'or' }) }}">{% trans %}Afaan Oromo{% endtrans %}</a></li>
-                                            </ul>
-                                        </div> #}
-                                    </li>
-                                    {#########################################################################################################################################################################################################}
-                                    {#######################################################################################################################################################################################################
-                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-                                    #######################################################################################################################################################################################################
-                                    #######################################################################################################################################################################################################}
-                                    <li>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ColorHelpModal"><span class="glyphicon glyphicon-question-sign"></button>
-                                    </li>
-                                    {##################################################################################################################################################################################################
-                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-                                    ###################################################################################################################################################################################################
-                                    ###################################################################################################################################################################################################}
-
-
-                                    <li class="green dropdown-modal">
-                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                            <i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
-                                            <span class="badge badge-success"></span>
-                                        </a>
-
-                                        <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
-                                            <li class="dropdown-header">
-                                                <i class="ace-icon fa fa-envelope-o"></i>
-
-                                            </li>
-
-                                            <li class="dropdown-content">
-                                                <ul class="dropdown-menu dropdown-navbar">
-
-                                                    <li>
-                                                        {% set sessionUnreadMails = app.session.get('sessionUnreadMails') %}
-                                                        {% for sessionUnreadMail in sessionUnreadMails %}
-                                                            <a href="#" class="clearfix">
-                                                                <img src="{{ asset('assets/assets/images/avatars/avatar.png') }}" class="msg-photo" alt="Alex's Avatar" />
-                                                                <span class="msg-body">
-                                                                    <span class="msg-title">
-                                                                        <span class="blue">{{ sessionUnreadMail.sender }} {{ sessionUnreadMail.mailsubject }}</span>
-                                                                    </span>
-                                                                    <span class="msg-time">
-                                                                        <i class="ace-icon fa fa-clock-o"></i>
-
-                                                                    </span>
-                                                                </span>
-                                                            </a>
-                                                        {% endfor %}
-                                                    </li>
-
-                                                </ul>
-                                            </li>
-
-                                            <li class="dropdown-footer">
-                                                <a href="javascript:return false">
-
-                                                    <i class="ace-icon fa fa-arrow-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-
-                                    <li class="light-blue dropdown-modal">
-                                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                                            <img class="nav-user-photo" src="{{ asset('assets/assets/images/avatars/avatar2.png') }}" alt="Jason's Photo" />
-                                            <span class="user-info">
-                                                {# <small>{% trans %}Welcome{% endtrans %},<br> {{ app.user.username }}</small> #}
-                                            </span>
-                                            <i class="ace-icon fa fa-caret-down"></i>
-                                        </a>
-
-                                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                                            <li>
-                                                <a href="#">
-                                                    <i class="ace-icon fa fa-cog"></i>
-                                                    {% trans %}Setting{% endtrans %}
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                {# <a href="{{ path('fos_user_profile_show') }}"> #}
-                                                   <a href="#">
-                                                    <i class="ace-icon fa fa-user"></i>
-                                                    {% trans %}Profile{% endtrans %}
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                {# <a href="{{ path('fos_user_profile_edit') }}"> #}
-                                                              <a href="#">
-
-                                                    <i class="ace-icon fa fa-user"></i>
-                                                    {% trans %}Update Profile{% endtrans %}
-                                                </a>
-                                            </li>
-
-                                            <li class="divider"></li>
-
-                                            <li>
-                                                                                            {# <a href="{{ path('fos_user_change_password') }}"> #}
-
-                                                <a href="#">
-                                                    <i class="ace-icon fa fa-power-off"></i>
-                                                    {% trans %}Change Password{% endtrans %}
-                                                </a>
-                                            </li>
-
-
-                                            <li>
-                                                                                            {# <a href="{{ path('fos_user_security_logout') }}"> #}
-
-                                                <a href="{{ path('app_logout') }}">
-                                                    <i class="ace-icon fa fa-power-off"></i>
-                                                    {% trans %}Logout{% endtrans %}
-                                                </a>
-                                            </li>
-
-
-
-
-                                        </ul>
-                                    </li>
-                                </ul>
-                            {% endblock %}
-                        </div>
-                    {% endblock %}
-                </div><!-- /.navbar-container -->
-            {% endblock %}
-        </div>
-    {% endblock %}
-
-    <!-- Modal -->
-    {#############################################################################################################}
-    <div class="modal fade" id="ColorHelpModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Color Meaning and Representation</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Auto Generated Plan Record</div>                        
-                        </div>
-
-                        <div class="panel panel-primary">
-                            <div class="panel-heading"> Over Accomplishment Report(>100%) </div>
-                        </div>
-
-                        <div class="panel panel-success">
-                            <div class="panel-heading">100% Plan Accoplishment Result(=100%)</div>
-                        </div>
-
-                        <div class="panel panel-info">
-                            <div class="panel-heading">Plan Accoplishment Result(>75% and <100%)</div>
-                        </div>
-
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">Plan Accoplishment Result(<75%)</div>
-                        </div>
-
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">Plan Accoplishment Result(<50%)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {#############################################################################################################}
-
-
-    <div class="main-container ace-save-state" id="main-container">
-        <script type="text/javascript">
-            try {
-                ace.settings.loadState('main-container')
-            } catch (e) {
-            }
-        </script>
-        {% block sidebar %}
-            <div id="sidebar" class="sidebar  responsive  ace-save-state">
-                <script type="text/javascript">
-                    try {
-                        ace.settings.loadState('sidebar')
-                    } catch (e) {
-                    }
-                </script>
-
-                <ul class="nav nav-list">
-                    {% block app_menu %}
-                        {% block homepageMenu %}
-                        {% endblock %}
-                    {% endblock %}
-
-                    <ul class="nav nav-list">
-
-                        {% block tobologyMenu %}
-                            {# <li>
-                                <a href="{{ path('homepage') }} " style="text-align: center" >
-                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
-                                    <span class="menu-text"></span>
-                                    <b class=""></b>
-                                </a>
-                            </li> #}
-
-                            {% if is_granted('EMIS') %}
-                                <li>
-
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class=""></i>
-                                        <span class="menu-text">
-                                            {% trans %}EMIS{% endtrans %}    
-                                        </span>
-
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <ul class="submenu">
-                                        {% if is_granted('STUDENT_SUMMARY_SRS') %}                                         
-                                        <li>
-                                            <a href="{{ path('misquery_index_dynamic_query_template') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %} EMIS Student Information{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                        {% if is_granted('STAFF_SUMMARY_HRM') %}
-                                        <li>
-                                            <a href="{{ path('misquery_index_dynamic_query_hrm') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %} EMIS Staff Information{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                         {% if is_granted('LIST_MISQUERY') %}   
-                                        <li>
-                                            <a href="{{ path('misquery_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %} EMIS Query{% endtrans %}
-                                            </a>
-                                        </li>
-                                         {% endif %}
-                                       {% if is_granted('EMIS') and is_granted('SMIS') %}                                       
-                                        <li>
-                                            <a href="{{ path('mistableattribute_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %} EMIS Table Attribute{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('mistable_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}EMIS Table{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('miswherecondition_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}   EMIS Where condition{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('misfromtable_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}  EMIS From Table{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('misoperation_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %} EMIS Operation{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('misselectattribute_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}  EMIS select Attribute{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('misgroupby_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}   EMIS Group By{% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('misorderby_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}  EMIS Order By {% endtrans %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('tag_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Tags{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                        {% if is_granted('BUILDING_SUMMARY_BUILDING') %}
-                                         <li>
-                                            <a href="{{ path('building_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Facilities{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                         {% if is_granted('BUDGET_SUMMARY_BUDGET') %}
-                                         <li>
-                                            <a href="{{ path('program_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Budget{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                         {% if is_granted('RESEARCH_SUMMARY_RESEARCH') %}
-                                        <li>
-                                            <a href="{{ path('researchpaper_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Research{% endtrans %}
-                                            </a>
-                                        </li>
-                                        {% endif %}
-          {#                               <li>
-                                            <a href="{{ path('thematicarea_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Thematic Area{% endtrans %}
-                                            </a>
-                                        </li>
-                                         <li>
-                                            <a href="{{ path('costcenter_index') }}">
-                                                <b class="fa fa-caret-right"></b>
-                                                {% trans %}Cost center{% endtrans %}
-                                            </a>
-                                        </li>   #}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                            {# {% if is_granted('SMIS') %} #}
-                                <li>
-                                    <a href="#" class="dropdown-toggle ">
-                                        <i class=""></i>
-                                        <span class="menu-text">
-
-                                            {% trans %}SMIS{% endtrans %}
-                                        </span>
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-                                    <ul class="submenu">
-                                        {# {% if is_granted('LIST_PERSPECTIVE') %}                                         #}
-                                            <li>
-                                                <a href="#">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Perspective {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {# {% endif %}                                         #}
-                                        {% if is_granted('LIST_THEME') %}                                                                                
-                                            <li>
-                                                <a href="{{ path('theme_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Goal {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                        {% if is_granted('LIST_OBJECTIVE') %}                                        
-                                            <li>
-                                                <a href="{{ path('objective_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Objective {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-
-                                        {% if is_granted('LIST_STRATEGY') %}                                        
-                                            <li>
-                                                <a href="{{ path('strategy_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Strategy{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}    
-                                        
-                                        {% if is_granted('LIST_STRATEGY') %}                                        
-                                            <li>
-                                                <a href="{{ path('realkeyperformanceindicator_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Key Performance Indicator {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                        {% if is_granted('LIST_KPI') %}                                        
-                                            <li>
-                                                <a href="{{ path('keyperformanceindicator_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Initiatives{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('UPDATE_PLAN_SETTING') %}                                        
-                                            <li>
-                                                <a href="{{ path('measure_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}  Measure {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-
-                                        {% if is_granted('UPDATE_PLAN_SETTING') %}
-                                            <li>
-                                                <a href="{{ path('kpibehaviour_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}  Initiative Behaviours {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %} 
-                                       
-
-                                        {% if is_granted('IS_PPO_DIRECTOR') %}
-                                            <li>
-                                                <a style="background:#3f87a6; color: #f5f6f8" href="{{ path('reportingperiod_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Reporting Period{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('UPDATE_PLAN_SETTING') %}                                        
-                                            <li>
-                                                <a style="background:#3f87a6; color: #f5f6f8"  href="{{ path('planannouncement_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Reporting Year{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-
-                                       {% if is_granted('LIST_PLAN') %}                                       
-                                            <li>
-                                                <a style="background:#3f87a6; color: #f5f6f8" href="{{ path('plan_index', { 'template': 2, 'AccessMode': 'PLAN' }) }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Cascading / Achievement{% endtrans %}                                                </a>
-                                            </li>
-                                       {% endif %}                                       
-
-                                        {% if is_granted('LIST_PLAN') %}                                        
-                                            <li>
-                                                <a style="background:#3f87a6; color: #f5f6f8" href="{{ path('plan_single_autocreate') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Manual KPI Selection{% endtrans %}                                                
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        
-                                         {% if is_granted('UPDATE_PLAN_SETTING') %}
-                                            <li>
-                                                <a   href="{{ path('staff_evaluation') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Staff Evaluation{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        
-                                         {% if is_granted('LIST_OFFICE') %}
-                                            <li>
-                                                <a   href="{{ path('user_delegation') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Delegation {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %} 
-                                        
-                                                                              
-                                        {% if is_granted('LIST_PLAN_SETTING') %}
-                                            <li>
-                                                <a href="{{ path('plansetting_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Plan Setting {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                        {% if is_granted('LIST_OFFICE_LEVEL_ONE') %}
-                                            <li>
-                                                <a href="{{ path('officelevelone_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Principal Offices {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                                                                
-                                        {% if is_granted('LIST_OFFICE') %}
-                                            <li>
-                                                <a href="{{ path('office_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Work Units {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                                                              
-                                       
-                                        {% if is_granted('OFFICE_PLAN_ACTIVITY_REPORT') %}
-                                            <li>
-                                                <a href="{{ path('plan_office_report') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Performance{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-
-{#
-                                        {% if is_granted('IS_PPO_DIRECTOR') %}
-                                            <li>
-                                                <a href="{{ path('activity_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Activities{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('IS_PPO_DIRECTOR') %}
-                                            <li>
-                                                <a href="{{ path('rootcauseproblem_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Problem To Generate KPI{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}#}
-                                         {% if is_granted('UPDATE_PLAN_SETTING') %}
-                                            <li>
-                                                <a href="{{ path('plan_select_reporting_period_to_template') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}To next Reporting Period{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                         
-                                         {% if is_granted('REPORT_PLAN') %}
-                                            <li>
-                                                <a href="{{ path('juplan_chartjs') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Chart{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        
-                                         {% if is_granted('LIST_PLAN_SETTING') %}
-                                            <li>
-                                                <a href="{{ path('qualityvalue_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Quality Setting {% endtrans %}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('methodofverfication_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Method of verfication {% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %} 
-                                         
-                                       {% if is_granted('LIST_PLAN') %}                                       
-                                            <li>
-                                                <a style="background:red; color: #f5f6f8" href="{{ path('narrativereportuploading_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Upload Narrative Report{% endtrans %}                                                
-                                                </a>
-                                            </li>
-                                       {% endif %}
-
-                                        {% if is_granted('LIST_PLAN') %}                                       
-                                            <li>
-                                                <a style="background:red; color: #f5f6f8" href="{{ path('challengefacedandsolution_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Challenge  & solution for  accomplishment{% endtrans %}                                                
-                                                </a>
-                                            </li>
-                                       {% endif %}
-                                       {# {% if is_granted('UPDATE_PLAN_SETTING') %} 
-                                            <a href="{{ path('plan_select_reporting_period_to_template') }}" class="glyphicon glyphicon-th-list">{% trans %}To next Reporting Period{% endtrans %}</a>
-                                        {% endif %}#}
-                                        {#<li>#}
-                                        {#<a href="{{ path('juplan_chart') }}">#}
-                                        {#<b class="fa fa-caret-right"></b>#}
-                                        {#{% trans %}Chart{% endtrans %}#}
-                                        {#</a>#}
-                                        {#</li>#}
-                                    </ul>
-                                </li>
-                            {# {% endif %} #}
-
-
-
-                            {% if is_granted('LIST_USER') %}
-                                <li>
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class=""></i>
-                                        <span class="menu-text">
-                                            {% trans %} User Management{% endtrans %}
-
-                                        </span>
-
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <ul class="submenu">
-                                        {% if is_granted('LIST_USER') %}                                        
-                                            <li>
-                                                <a href="{{ path('user_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} User{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                        {% if is_granted('LIST_GROUP') %}                                        
-                                            <li>
-                                                <a href="{{ path('group_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Group{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}                                        
-                                        {% if is_granted('LIST_PERMISSION') %}
-                                            <li>
-                                                <a href="{{ path('permission_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %} Permission{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('FETCH_UAS_USER') %}
-                                            <li>
-                                                <a href="{{ path('user_create_user_from_ldap') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    USER FROM LDAP
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                                {#<li>#}
-                                {#<a href="#" class="dropdown-toggle">#}
-                                {#<i class=""></i>#}
-                                {#<span class="menu-text">#}
-                                {#{% trans %} Mail{% endtrans %}#}
-
-                                {#</span>#}
-
-                                {#<b class="arrow fa fa-angle-down"></b>#}
-                                {#</a>#}
-
-                                {#<ul class="submenu">#}
-                                {#<li>#}
-                                {#<a href="{{ path('mismail_index') }}">#}
-                                {#<b class="fa fa-caret-right"></b>#}
-                                {#{% trans %} Inbox {% endtrans %}#}
-                                {#</a>#}
-                                {#</li>#}
-                                {#<li>#}
-                                {#<a href="{{ path('mismail_new') }}">#}
-                                {#<b class="fa fa-caret-right"></b>#}
-                                {#{% trans %} Compose Mail {% endtrans %}#}
-                                {#</a>#}
-                                {#</li>#}
-                                {#<li>#}
-                                {#<a href="#">#}
-                                {#<b class="fa fa-caret-right"></b>#}
-                                {#{% trans %} View Mail {% endtrans %}#}
-                                {#</a>#}
-                                {#</li>#}
-                                {#</ul>#}
-                                {#</li>#}
-                            {% endif %}
-
-                       {#     {% if is_granted('SIS') %}
-                                <li>
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class=""></i>
-                                        <span class="menu-text">
-                                            {% trans %} SIS{% endtrans %}
-
-                                        </span>
-
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    {% if is_granted('SIS') %}
-                                    <ul class="submenu">
-                                        
-                                            <li>
-                                                <a href="{{ path('common_homepage') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Student Information{% endtrans %}
-                                                </a>
-                                            </li>
-                                        
-                                        {% if is_granted('SIS') %}
-                                            <li>
-                                                <a href="{{ path('dinningroom_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Student Meal and  Dinning Room{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('SIS') %}
-                                            <li>
-                                                <a href="{{ path('disease_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Student Clinic{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                        {% if is_granted('SIS') %}
-                                            <li>
-                                                <a href="{{ path('costsharinggroup_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Non-caffe and Non-dorm Cost Sharing{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                       {% if is_granted('SIS') %}
-                                            <li>
-                                                <a href="{{ path('backup_index') }}">
-                                                    <b class="fa fa-caret-right"></b>
-                                                    {% trans %}Go{% endtrans %}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                    {% endif %}
-                                </li>
-                            {% endif %}#}
-
-
-                            {% if is_granted('SMIS') %}
-                            <li>
-                                <a href="{{ path('mismail_index') }}">
-                                    <b class="fa fa-caret-right"></b>
-                                    {% trans %}Mail{% endtrans %}
-                                </a>
-                            </li>
-                            {% endif %}  
-                            {% if is_granted('IS_PPO_DIRECTOR') %}
-                            {% if is_granted('LIST_LOG') %}
-                                <li>
-                                    <a href="{{ path('extlogentries_index') }}">
-                                        <b class="fa fa-caret-right"></b>
-                                        {% trans %}Log{% endtrans %}
-                                    </a>
-                                </li>
-                            {% endif %}  
-                            {% endif %}  
-
-                            {% if is_granted('IS_PPO_DIRECTOR') %}
-                                <li>
-                                    <a href="{{ path('juua_homepage') }}">
-                                        <b class="fa fa-caret-right"></b>
-                                        {% trans %}Login Statistics{% endtrans %}
-                                    </a>
-                                </li>
-                            {% endif %}                              
-
-                            {% if is_granted('IS_PPO_DIRECTOR') %}
-                                <li>
-                                    <a href="{{ path('downloadhistory_index') }}">
-                                        <b class="fa fa-caret-right"></b>
-                                        {% trans %}Download History{% endtrans %}
-                                    </a>
-                                </li>
-                            {% endif %}
-                           {# {% if is_granted('SISS') %}
-                                <a href="{{ path('jusis_homepage') }}">
-                                    <b class="fa fa-caret-right"></b>
-                                    {% trans %}SIS Home page  {% endtrans %}
-                                </a>
-                            {% endif %}#}
-
-                            {% if is_granted('IS_PPO_DIRECTOR') %}
-                                <li>
-                                    <a href="{{ path('plan_unasociated') }}">
-                                        <b class="fa fa-caret-right"></b>
-                                        {% trans %}Unasociated Plan Records{% endtrans %}
-                                    </a>
-
-                                </li>
-                            {% endif %}
-  {% if is_granted('IS_PPO_DIRECTOR') %}
-                                <li>
-                                    <a href="{{ path('missurveyquestion_index') }}">
-                                        <b class="fa fa-caret-right"></b>
-                                        {% trans %}Survey quesstions{% endtrans %}
-                                    </a>
-
-                                </li>
-                            {% endif %}
-
-
-
-
-                            {#                            <li>
-                                                            <a href="{{ path('jusis_homepage') }}">
-                                                                <b class="fa fa-caret-right"></b>
-                                                                {% trans %}SIS{% endtrans %}
-                                                            </a>
-                                                        </li>#}
-                        </ul>
-
-                        {#{% endblock %}#}
-                    </ul><!-- /.nav-list -->
-                {% endblock %}
-
-            </div>
-        {% endblock %}
-
-
-
-        <div class="main-content">
-            <div class="main-content-inner">
-                <div class="nav">
-                    {% block subMenu %}
-                    {% endblock %}                    
-                </div>
-                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
-                    <ul class="breadcrumb">
-                        {% block mainTitle %}
-                            <li>
-                                <i class="icon-home home-icon"></i>
-                                <a href="">{% trans %}MIS{% endtrans %}</a>
-
-                                <span class="divider">
-                                    <i class="arrow-icon"></i>
-                                </span>
-                            </li>
-                        {% endblock %}
-                        {% block subTitle %}
-                            <li class="active">{% trans %}Dashboard{% endtrans %}</li>
-                            {% endblock %}
-                        {# <li class="pull-right">
-                            {% if app.user.userOffice %}
-                                <span class="badge badge-info pull-right">{{ app.user.userOffice.name }}</span>
-                            {% endif %}
-                            {% if is_granted('IS_PRINCIPAL_OFFICE') %}
-                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PO </span>
-                            {% endif %}
-                            {% if is_granted('IS_PPO_DIRECTOR') %}
-                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PPO </span>
-                            {% endif %}
-                            {% if is_granted('IS_TOP_MANAGER') %}
-                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> Top Management </span>
-                            {% endif %}
-                        </li> #}
-                    </ul><!--.breadcrumb--> 
-                    {% block search %}
-                    {% endblock %}
-                </div>
-                <div style="text-align: center">
-                    {% block title %}
-                    {% endblock %}
-                </div>
-
-                <div class="nav">
-                    {% block progresIndicator %}
-                    {% endblock %}
-                </div>
-                <div class="page-header" >
-                {% block header %}{% endblock %}
-                </div>
-                <div class="page-content">
-                    {# pass a string argument to get only the messages of that type #}
-                    {% for message in app.flashes('notice') %}
-                        <div class="alert alert-info">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="ace-icon fa fa-times"></i>
-                            </button>
-
-                            {{ message }}
-                            <br>
-                        </div>
-
-                    {% endfor %}
-
-                    {% for message in app.flashes('success') %}
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="ace-icon fa fa-times"></i>
-                            </button>
-
-                            {{ message }}
-                            <br>
-                        </div>
-
-                    {% endfor %}
-                    {#
-                    
-                                        {% for message in app.flashes('success') %}
-                                            <div class="alert alert-block alert-success">
-                                                <button type="button" class="close" data-dismiss="alert">
-                                                    <i class="ace-icon fa fa-times"></i>
-                                                </button>
-                                                <div class="well well-lg text-center">
-                                                    <div class="label label-large label-success arrowed">
-                                                        {{ message }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                    
-                                        {% endfor %}
-                    #}
-
-                    {# pass an array argument to get the messages of those types  #}
-                    {% for label, messages in app.flashes(['warning']) %}
-                        {% for message in messages %}
-                            <div class="alert alert-warning">
-                                <button type="button" class="close" data-dismiss="alert">
-                                    <i class="ace-icon fa fa-times"></i>
-                                </button>
-                                <div class="well well-lg text-center">
-                                    <div class="alert alert-warning">
-                                        {{ message }}
-                                    </div>
-                                </div>
-                                <br>
-                            </div>
-
-
-                        {% endfor %}
-                    {% endfor %}
-
-                    {% for label, messages in app.flashes(['error']) %}
-                        {% for message in messages %}
-                            <div class="alert alert-warning">
-                                <button type="button" class="close" data-dismiss="alert">
-                                    <i class="ace-icon fa fa-times"></i>
-                                </button>
-
-                                <div class="well well-lg text-center">
-                                    <span class="label label-warning">
-                                        <i class="ace-icon fa fa-exclamation-triangle bigger-120"></i>
-                                        Error
-                                    </span>
-                                    <div class="label label-large label-danger arrowed-in">
-                                        {{ message }}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-
-
-
-                    <div id='ViewContentDiv'>
-
-                    {% block fos_user_content %}{% endblock %}
-                    {% block body %}                     
-                    {% endblock %}
-
-
-
-                    <button class="btn btn-primary" onclick="topFunction()" id="myBtn" title="Go to top" class=""><span class="glyphicon glyphicon-arrow-up"></span></button>
-                    <button class="btn btn-primary" onclick="downFunction()" id="myBtnDown" title="Go to top" class=""><span class="glyphicon glyphicon-arrow-down"></span></button>
-                    <script>
-                        // When the user scrolls down 20px from the top of the document, show the button
-                        window.onscroll = function () {
-                            scrollFunction()
-                        };
-
-                        function scrollFunction() {
-                            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                                document.getElementById("myBtnDown").style.display = "none";
-                                document.getElementById("myBtn").style.display = "block";
-                            } else {
-                                document.getElementById("myBtn").style.display = "none";
-                                document.getElementById("myBtnDown").style.display = "block";
-                            }
-                        }
-
-                        // When the user clicks on the button, scroll to the top of the document
-                        function topFunction() {
-                            document.body.scrollTop = 0;
-                            document.documentElement.scrollTop = 0;
-                        }
-                        // When the user clicks on the button, scroll to the top of the document
-                        function downFunction() {
-                            window.scrollTo(0, document.body.scrollHeight);
-                        }
-                    </script>
-
-
-
-
-                </div><!--/.page-content-->
-            </div><!--/.page-content-->
-        </div>
-    </div><!-- /.main-content -->
-
-    {% block footer %}
-        <div class="footer">
-            <div class="footer-inner">
-                <div class="footer-content">
-                    <span class="bigger-120">
-                        <span class="blue bolder">{% trans %}EMIS{% endtrans %}</span>
-                        {% trans %}Application{% endtrans %} &copy; {% trans %}Jimma University 2017{% endtrans %}
-                    </span>
-
-                    &nbsp; &nbsp;
-                    <span class="action-buttons">
-                        <a href="#">
-                            <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-                        </a>
-
-                        <a href="#">
-                            <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-                        </a>
-
-                        <a href="#">
-                            <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-                        </a>
-                    </span>
-                </div>
-            </div>
-        </div>
-    {% endblock %}
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-    </a>
-
-
-</div><!-- /.main-container -->
-
-<script>
-    $("input[type='submit']").on("click", function () {
-        $('.chosen-select').filter('[required]').each(function (i, requiredField) {
-
-            if ($(requiredField).val() == '')
-            {
-                $(requiredField).next('div').notify("Required", {
-                    position: "top",
-                    className: "error"
-                });
-            }
-        });
-
-    });
-    function loadContent(url) {
-        $.ajax({url: url, success: function (result) {
-                $("#ViewContentDiv").html(result);
-            }});
-    }
-</script>
-
-
-<script>
-
-    jQuery(function ($) {
-        if (!ace.vars['touch']) {
-            $('.chosen-select').chosen({allow_single_deselect: true});
-            //resize the chosen on window resize
-
-            $(window)
-                    .off('resize.chosen')
-                    .on('resize.chosen', function () {
-                        $('.chosen-select').each(function () {
-                            var $this = $(this);
-                            $this.next().css({'width': $this.parent().width()});
-                        })
-                    }).trigger('resize.chosen');
-            //resize chosen on sidebar collapse/expand
-            $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
-                if (event_name != 'sidebar_collapsed')
-                    return;
-                $('.chosen-select').each(function () {
-                    var $this = $(this);
-                    $this.next().css({'width': $this.parent().width()});
-                })
-            });
-
-
-            $('#chosen-multiple-style .btn').on('click', function (e) {
-                var target = $(this).find('input[type=radio]');
-                var which = parseInt(target.val());
-                if (which == 2)
-                    $('#form-field-select-4').addClass('tag-input-style');
-                else
-                    $('#form-field-select-4').removeClass('tag-input-style');
-            });
-        }
-    });
-    $(function () {
-        setNavigation();
-    });
-
-    function setNavigation() {
-        var path = window.location.pathname;
-        path = path.replace(/\/$/, "");
-        path = decodeURIComponent(path);
-        if (!path.endsWith("/")) {
-            path = path + "/";
-        }
-        console.log(" Original Path : " + path);
-        $(".submenu a").each(function () {
-            var href = $(this).attr('href');
-            if (!href.endsWith("/")) {
-                href = href + "/";
-            }
-            console.log("Original HREF : " + href);
-            if (path.substring(0, href.length) === href) {
-                console.log(" <<<<<<<<<<<>>>>>>>>>>>>>> : " + href);
-                $(this).closest('li').addClass('active');
-                $(this).closest('ul').parent().addClass('active');
-                $(this).closest('ul').parent().addClass('open');
-            }
-        });
-        var element = document.getElementById("navbar");
-        element.classList.remove("navbar-fixed-top");
-    }
-    {#    $('#popupDelete').close();#}
-</script>
-
-<!--[if IE]>
-{% block script %} {% endblock %}
-<![endif]-->
-
-{% block additional_script_file %}
-
-{% endblock %}
-<!-- inline scripts related to this page -->
-
-<script>
-    function checkAll(list_batch_checkbox)
-    {
-        var boxes = document.getElementsByTagName('input');
-        for (var index = 0; index < boxes.length; index++) {
-            box = boxes[index];
-            if (box.type == 'checkbox' && box.className == list_batch_checkbox) {
-                box.checked = document.getElementById(list_batch_checkbox).checked
-            }
-        }
-        return true;
-    }
-</script>
-
-
-</body>
-</html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>
+			{% block application_title %}
+				{% trans %}SMIS{% endtrans %}
+			{% endblock %}
+		</title>
+
+		<meta name="description" content="Mailbox with some customizations as described in docs"/>
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
+		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
+		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
+
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
+		<link
+		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
+		{#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/rollmanage.css') }}"/>
+
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
+
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
+
+
+		{#        <script src="{{ asset('assets/assets/js/forgraph.js') }}"></script>#}
+		{#        <script src="{{ asset('assets/assets/js/ace-extra.js') }}"></script>#}<script src="{{ asset('assets/assets/js/jquery-2.1.4.min.js') }}"> </script>
+		<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
+
+		<!-- page specific plugin scripts -->
+		<script src="{{ asset('assets/assets/js/bootstrap-tag.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/jquery.hotkeys.index.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/bootstrap-wysiwyg.min.js') }}"></script>
+
+		<!-- ace scripts -->
+		<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/jquery.gritter.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/notify.js') }}"></script>
+
+
+		<script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/Sum-Total-Row-Column-Table-jQuery-tableTotal/jquery.tableTotal.js') }}"></script>
+
+		<script src="{{ asset('assets/assets/js/mychart.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/chosen.jquery.min.js') }}"></script>
+
+
+		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/lib/moment.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.default-settings.js') }}"></script>
+
+		{#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
+		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
+
+
+		<style>
+			#myBtn {
+				display: none;
+				position: fixed;
+				bottom: 20px;
+				right: 30px;
+				z-index: 99;
+				cursor: pointer;
+				padding: 15px;
+				border-radius: 4px;
+			}
+
+			#myBtn:hover {
+				background-color: #555;
+			}
+
+			#myBtnDown {
+				display: none;
+				position: fixed;
+				top: 75px;
+				right: 30px;
+				z-index: 99;
+				cursor: pointer;
+				padding: 15px;
+				border-radius: 4px;
+			}
+
+			#myBtnDown:hover {
+				background-color: #555;
+			}
+		</style>
+
+		<link rel="stylesheet" href="{{ asset('bundles/fullcalendar/css/fullcalendar/fullcalendar.min.css') }}"/>
+	</head>
+
+	<body
+		style='font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif; color: black' class="no-skin">
+
+		{#<header class="header">
+								            <a  href="#" style="max-width: 100%; margin:0;">
+								                    <img src="{{ asset('bundles/images/headerbanner.png') }}"  style=" margin-bottom: -22px; width: 100%;" >
+								            </a>
+								        </header>#}
+
+		{% block navbar %}
+			<div id="navbar" class="navbar navbar-default ace-save-state">
+				{% block navbar_container %}
+					<div class="navbar-container ace-save-state" id="navbar-container">
+						<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+							<span class="sr-only">Toggle sidebar</span>
+
+							<span class="icon-bar"></span>
+
+							<span class="icon-bar"></span>
+
+							<span class="icon-bar"></span>
+						</button>
+
+						<div class="navbar-header pull-left">
+							<a href="#" class="navbar-brand">
+								<small>
+									<i class="fa fa-cog"></i>
+									{% block application_simple_title %}
+										<strong>
+											{% trans %}Strategic Management Information System{% endtrans %}</strong>
+									{% endblock %}
+									{% block application %}{% endblock %}
+								</small>
+							</a>
+						</div>
+						{% block navbar_right %}
+							<div class="navbar-buttons navbar-header pull-right" role="navigation">
+								{% block nav_list %}
+									<ul class="nav ace-nav">
+										{% if is_granted('IS_PPO_DIRECTOR') %}
+											<li>
+												<a class="btn btn-primary btn-sm" href="{{ path('lexik_translation_overview') }}">Translations</a>
+											</li>
+										{% endif %}
+										<li></li>
+										<li>
+											<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ColorHelpModal">
+												<span class="glyphicon glyphicon-question-sign"></button>
+											</li>
+										</li>
+										<li class="green dropdown-modal">
+											<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+												<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
+												<span class="badge badge-success"></span>
+											</a>
+
+											<ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+												<li class="dropdown-header">
+													<i class="ace-icon fa fa-envelope-o"></i>
+
+												</li>
+
+												<li class="dropdown-content">
+													<ul class="dropdown-menu dropdown-navbar">
+
+														<li>
+															{% set sessionUnreadMails = app.session.get('sessionUnreadMails') %}
+															{% for sessionUnreadMail in sessionUnreadMails %}
+																<a href="#" class="clearfix">
+																	<img src="{{ asset('assets/assets/images/avatars/avatar.png') }}" class="msg-photo" alt="Alex's Avatar"/>
+																	<span class="msg-body">
+																		<span class="msg-title">
+																			<span class="blue">{{ sessionUnreadMail.sender }}
+																				{{ sessionUnreadMail.mailsubject }}</span>
+																		</span>
+																		<span class="msg-time">
+																			<i class="ace-icon fa fa-clock-o"></i>
+
+																		</span>
+																	</span>
+																</a>
+															{% endfor %}
+														</li>
+
+													</ul>
+												</li>
+
+												<li class="dropdown-footer">
+													<a href="javascript:return false">
+
+														<i class="ace-icon fa fa-arrow-right"></i>
+													</a>
+												</li>
+											</ul>
+
+										</li>
+
+										<li class="light-blue dropdown-modal">
+											<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<img class="nav-user-photo" src="{{ asset('assets/assets/images/avatars/avatar2.png') }}" alt="Jason's Photo"/>
+												<span
+													class="user-info">{# <small>{% trans %}Welcome{% endtrans %},<br> {{ app.user.username }}</small> #}
+												</span>
+												<i class="ace-icon fa fa-caret-down"></i>
+											</a>
+
+											<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+												<li>
+													<a href="#">
+														<i class="ace-icon fa fa-cog"></i>
+														{% trans %}Setting{% endtrans %}
+													</a>
+												</li>
+
+												<li>
+													{# <a href="{{ path('fos_user_profile_show') }}"> #}
+													<a href="#">
+														<i class="ace-icon fa fa-user"></i>
+														{% trans %}Profile{% endtrans %}
+													</a>
+												</li>
+
+												<li>
+													{# <a href="{{ path('fos_user_profile_edit') }}"> #}
+													<a href="#">
+
+														<i class="ace-icon fa fa-user"></i>
+														{% trans %}Update Profile{% endtrans %}
+													</a>
+												</li>
+
+												<li class="divider"></li>
+
+												<li>
+													{# <a href="{{ path('fos_user_change_password') }}"> #}
+
+													<a href="#">
+														<i class="ace-icon fa fa-power-off"></i>
+														{% trans %}Change Password{% endtrans %}
+													</a>
+												</li>
+
+
+												<li>
+													{# <a href="{{ path('fos_user_security_logout') }}"> #}
+
+													<a href="{{ path('app_logout') }}">
+														<i class="ace-icon fa fa-power-off"></i>
+														{% trans %}Logout{% endtrans %}
+													</a>
+												</li>
+
+
+											</ul>
+										</li>
+									</ul>
+								{% endblock %}
+							</div>
+						{% endblock %}
+					</div>
+					<!-- /.navbar-container -->
+				{% endblock %}
+			</div>
+		{% endblock %}
+
+
+		<div class="modal fade" id="ColorHelpModal" role="dialog">
+			<div
+				class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Color Meaning and Representation</h4>
+					</div>
+					<div class="modal-body">
+						<div class="panel-group">
+							<div class="panel panel-default">
+								<div class="panel-heading">Auto Generated Plan Record</div>
+							</div>
+
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									Over Accomplishment Report(>100%)
+								</div>
+							</div>
+
+							<div class="panel panel-success">
+								<div class="panel-heading">100% Plan Accoplishment Result(=100%)</div>
+							</div>
+
+							<div class="panel panel-info">
+								<div class="panel-heading">Plan Accoplishment Result(>75% and <100%)</div>
+							</div>
+
+							<div class="panel panel-warning">
+								<div class="panel-heading">Plan Accoplishment Result(<75%)</div>
+							</div>
+
+							<div class="panel panel-danger">
+								<div class="panel-heading">Plan Accoplishment Result(<50%)</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try {
+ace.settings.loadState('main-container')
+} catch (e) {}
+			</script>
+			{% block sidebar %}
+				<div id="sidebar" class="sidebar  responsive  ace-save-state">
+					<script type="text/javascript">
+						try {
+ace.settings.loadState('sidebar')
+} catch (e) {}
+					</script>
+
+					<ul class="nav nav-list">
+						{% block app_menu %}
+							{% block homepageMenu %}{% endblock %}
+						{% endblock %}
+
+						<ul class="nav nav-list">
+
+							{% block tobologyMenu %}
+								{# <li>
+																																                                <a href="{{ path('homepage') }} " style="text-align: center" >
+																																                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
+																																                                    <span class="menu-text"></span>
+																																                                    <b class=""></b>
+																																                                </a>
+																																                            </li> #}
+
+								{% if is_granted('EMIS') %}
+									<li>
+
+										<a href="#" class="dropdown-toggle">
+											<i class=""></i>
+											<span class="menu-text">
+												{% trans %}EMIS{% endtrans %}
+											</span>
+
+											<b class="arrow fa fa-angle-down"></b>
+										</a>
+
+										<ul class="submenu">
+											{% if is_granted('STUDENT_SUMMARY_SRS') %}
+												<li>
+													<a href="{{ path('misquery_index_dynamic_query_template') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Student Information{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('STAFF_SUMMARY_HRM') %}
+												<li>
+													<a href="{{ path('misquery_index_dynamic_query_hrm') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Staff Information{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('LIST_MISQUERY') %}
+												<li>
+													<a href="{{ path('misquery_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Query{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('EMIS') and is_granted('SMIS') %}
+												<li>
+													<a href="{{ path('mistableattribute_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Table Attribute{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('mistable_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}EMIS Table{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('miswherecondition_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Where condition{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('misfromtable_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS From Table{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('misoperation_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Operation{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('misselectattribute_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS select Attribute{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('misgroupby_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Group By{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('misorderby_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														EMIS Order By
+														{% endtrans %}
+													</a>
+												</li>
+												<li>
+													<a href="{{ path('tag_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}Tags{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('BUILDING_SUMMARY_BUILDING') %}
+												<li>
+													<a href="{{ path('building_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}Facilities{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('BUDGET_SUMMARY_BUDGET') %}
+												<li>
+													<a href="{{ path('program_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}Budget{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('RESEARCH_SUMMARY_RESEARCH') %}
+												<li>
+													<a href="{{ path('researchpaper_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}Research{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{#                               <li>
+																																												                                            <a href="{{ path('thematicarea_index') }}">
+																																												                                                <b class="fa fa-caret-right"></b>
+																																												                                                {% trans %}Thematic Area{% endtrans %}
+																																												                                            </a>
+																																												                                        </li>
+																																												                                         <li>
+																																												                                            <a href="{{ path('costcenter_index') }}">
+																																												                                                <b class="fa fa-caret-right"></b>
+																																												                                                {% trans %}Cost center{% endtrans %}
+																																												                                            </a>
+																																												                                        </li>   #}
+										</ul>
+									</li>
+								{% endif %}
+								{# {% if is_granted('SMIS') %} #}
+								<li>
+									<a href="#" class="dropdown-toggle ">
+										<i class=""></i>
+										<span class="menu-text">
+
+											{% trans %}SMIS{% endtrans %}
+										</span>
+										<b class="arrow fa fa-angle-down"></b>
+									</a>
+									<ul
+										class="submenu">
+										{# {% if is_granted('LIST_PERSPECTIVE') %}                                         #}
+										<li>
+											<a href="#">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}
+												Perspective
+												{% endtrans %}
+											</a>
+										</li>
+
+										{% if is_granted('LIST_THEME') %}
+											<li>
+												<a href="{{ path('theme_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Goal
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('LIST_OBJECTIVE') %}
+											<li>
+												<a href="{{ path('objective_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Objective
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+
+										{% if is_granted('LIST_STRATEGY') %}
+											<li>
+												<a href="{{ path('strategy_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Strategy{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_STRATEGY') %}
+											<li>
+												<a href="{{ path('realkeyperformanceindicator_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Key Performance Indicator
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{{ include('menu/sidenav.html.twig') }}
+										{% if is_granted('UPDATE_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('measure_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Measure
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('UPDATE_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('kpibehaviour_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Initiative Behaviours
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+
+										{% if is_granted('IS_PPO_DIRECTOR') %}
+											<li>
+												<a style="background:#3f87a6; color: #f5f6f8" href="{{ path('reportingperiod_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Reporting Period{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('UPDATE_PLAN_SETTING') %}
+											<li>
+												<a style="background:#3f87a6; color: #f5f6f8" href="{{ path('planannouncement_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Reporting Year{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_PLAN') %}
+											<li>
+												<a style="background:#3f87a6; color: #f5f6f8" href="{{ path('plan_index', { 'template': 2, 'AccessMode': 'PLAN' }) }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Cascading / Achievement{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_PLAN') %}
+											<li>
+												<a style="background:#3f87a6; color: #f5f6f8" href="{{ path('plan_single_autocreate') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Manual KPI Selection{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('UPDATE_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('staff_evaluation') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Staff Evaluation{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_OFFICE') %}
+											<li>
+												<a href="{{ path('user_delegation') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Delegation
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+
+										{% if is_granted('LIST_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('plansetting_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Plan Setting
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('LIST_OFFICE_LEVEL_ONE') %}
+											<li>
+												<a href="{{ path('officelevelone_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Principal Offices
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('LIST_OFFICE') %}
+											<li>
+												<a href="{{ path('office_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Work Units
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+
+										{% if is_granted('OFFICE_PLAN_ACTIVITY_REPORT') %}
+											<li>
+												<a href="{{ path('plan_office_report') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Performance{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{#
+																																								                                        {% if is_granted('IS_PPO_DIRECTOR') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('activity_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Activities{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}
+																																								                                        {% if is_granted('IS_PPO_DIRECTOR') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('rootcauseproblem_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Problem To Generate KPI{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}#}
+										{% if is_granted('UPDATE_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('plan_select_reporting_period_to_template') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}To next Reporting Period{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('REPORT_PLAN') %}
+											<li>
+												<a href="{{ path('juplan_chartjs') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Chart{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_PLAN_SETTING') %}
+											<li>
+												<a href="{{ path('qualityvalue_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Quality Setting
+													{% endtrans %}
+												</a>
+											</li>
+											<li>
+												<a href="{{ path('methodofverfication_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Method of verfication
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_PLAN') %}
+											<li>
+												<a style="background:red; color: #f5f6f8" href="{{ path('narrativereportuploading_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Upload Narrative Report{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if is_granted('LIST_PLAN') %}
+											<li>
+												<a style="background:red; color: #f5f6f8" href="{{ path('challengefacedandsolution_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}Challenge  & solution for  accomplishment{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{# {% if is_granted('UPDATE_PLAN_SETTING') %} 
+																																								                                            <a href="{{ path('plan_select_reporting_period_to_template') }}" class="glyphicon glyphicon-th-list">{% trans %}To next Reporting Period{% endtrans %}</a>
+																																								                                        {% endif %}#}
+									{#<li>#}
+										{#<a href="{{ path('juplan_chart') }}">#}
+										{#<b class="fa fa-caret-right"></b>#}
+										{#{% trans %}Chart{% endtrans %}#}
+										{#</a>#}
+										{#</li>#}
+									</ul>
+								</li>
+								{# {% endif %} #}
+
+
+								{% if is_granted('LIST_USER') %}
+									<li>
+										<a href="#" class="dropdown-toggle">
+											<i class=""></i>
+											<span class="menu-text">
+												{% trans %}
+												User Management{% endtrans %}
+
+											</span>
+
+											<b class="arrow fa fa-angle-down"></b>
+										</a>
+
+										<ul class="submenu">
+											{% if is_granted('LIST_USER') %}
+												<li>
+													<a href="{{ path('user_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														User{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('LIST_GROUP') %}
+												<li>
+													<a href="{{ path('group_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														Group{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('LIST_PERMISSION') %}
+												<li>
+													<a href="{{ path('permission_index') }}">
+														<b class="fa fa-caret-right"></b>
+														{% trans %}
+														Permission{% endtrans %}
+													</a>
+												</li>
+											{% endif %}
+											{% if is_granted('FETCH_UAS_USER') %}
+												<li>
+													<a href="{{ path('user_create_user_from_ldap') }}">
+														<b class="fa fa-caret-right"></b>
+														USER FROM LDAP
+													</a>
+												</li>
+											{% endif %}
+										</ul>
+									</li>
+									{#<li>#}
+								{#<a href="#" class="dropdown-toggle">#}
+									{#<i class=""></i>#}
+									{#<span class="menu-text">#}
+									{#{% trans %} Mail{% endtrans %}#}
+
+									{#</span>#}
+
+									{#<b class="arrow fa fa-angle-down"></b>#}
+									{#</a>#}
+
+									{#<ul class="submenu">#}
+									{#<li>#}
+									{#<a href="{{ path('mismail_index') }}">#}
+									{#<b class="fa fa-caret-right"></b>#}
+									{#{% trans %} Inbox {% endtrans %}#}
+									{#</a>#}
+									{#</li>#}
+									{#<li>#}
+									{#<a href="{{ path('mismail_new') }}">#}
+									{#<b class="fa fa-caret-right"></b>#}
+									{#{% trans %} Compose Mail {% endtrans %}#}
+									{#</a>#}
+									{#</li>#}
+									{#<li>#}
+									{#<a href="#">#}
+									{#<b class="fa fa-caret-right"></b>#}
+									{#{% trans %} View Mail {% endtrans %}#}
+									{#</a>#}
+									{#</li>#}
+									{#</ul>#}
+									{#</li>#}
+								{% endif %}
+
+								{#     {% if is_granted('SIS') %}
+																																                                <li>
+																																                                    <a href="#" class="dropdown-toggle">
+																																                                        <i class=""></i>
+																																                                        <span class="menu-text">
+																																                                            {% trans %} SIS{% endtrans %}
+																																
+																																                                        </span>
+																																
+																																                                        <b class="arrow fa fa-angle-down"></b>
+																																                                    </a>
+																																
+																																                                    {% if is_granted('SIS') %}
+																																                                    <ul class="submenu">
+																																                                        
+																																                                            <li>
+																																                                                <a href="{{ path('common_homepage') }}">
+																																                                                    <b class="fa fa-caret-right"></b>
+																																                                                    {% trans %}Student Information{% endtrans %}
+																																                                                </a>
+																																                                            </li>
+																																                                        
+																																                                        {% if is_granted('SIS') %}
+																																                                            <li>
+																																                                                <a href="{{ path('dinningroom_index') }}">
+																																                                                    <b class="fa fa-caret-right"></b>
+																																                                                    {% trans %}Student Meal and  Dinning Room{% endtrans %}
+																																                                                </a>
+																																                                            </li>
+																																                                        {% endif %}
+																																                                        {% if is_granted('SIS') %}
+																																                                            <li>
+																																                                                <a href="{{ path('disease_index') }}">
+																																                                                    <b class="fa fa-caret-right"></b>
+																																                                                    {% trans %}Student Clinic{% endtrans %}
+																																                                                </a>
+																																                                            </li>
+																																                                        {% endif %}
+																																                                        {% if is_granted('SIS') %}
+																																                                            <li>
+																																                                                <a href="{{ path('costsharinggroup_index') }}">
+																																                                                    <b class="fa fa-caret-right"></b>
+																																                                                    {% trans %}Non-caffe and Non-dorm Cost Sharing{% endtrans %}
+																																                                                </a>
+																																                                            </li>
+																																                                        {% endif %}
+																																                                       {% if is_granted('SIS') %}
+																																                                            <li>
+																																                                                <a href="{{ path('backup_index') }}">
+																																                                                    <b class="fa fa-caret-right"></b>
+																																                                                    {% trans %}Go{% endtrans %}
+																																                                                </a>
+																																                                            </li>
+																																                                        {% endif %}
+																																                                    </ul>
+																																                                    {% endif %}
+																																                                </li>
+																																                            {% endif %}#}
+
+
+								{% if is_granted('SMIS') %}
+									<li>
+										<a href="{{ path('mismail_index') }}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}Mail{% endtrans %}
+										</a>
+									</li>
+								{% endif %}
+								{% if is_granted('IS_PPO_DIRECTOR') %}
+									{% if is_granted('LIST_LOG') %}
+										<li>
+											<a href="{{ path('extlogentries_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}Log{% endtrans %}
+											</a>
+										</li>
+									{% endif %}
+								{% endif %}
+
+								{% if is_granted('IS_PPO_DIRECTOR') %}
+									<li>
+										<a href="{{ path('juua_homepage') }}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}Login Statistics{% endtrans %}
+										</a>
+									</li>
+								{% endif %}
+
+								{% if is_granted('IS_PPO_DIRECTOR') %}
+									<li>
+										<a href="{{ path('downloadhistory_index') }}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}Download History{% endtrans %}
+										</a>
+									</li>
+								{% endif %}
+								{# {% if is_granted('SISS') %}
+																																                                <a href="{{ path('jusis_homepage') }}">
+																																                                    <b class="fa fa-caret-right"></b>
+																																                                    {% trans %}SIS Home page  {% endtrans %}
+																																                                </a>
+																																                            {% endif %}#}
+
+								{% if is_granted('IS_PPO_DIRECTOR') %}
+									<li>
+										<a href="{{ path('plan_unasociated') }}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}Unasociated Plan Records{% endtrans %}
+										</a>
+
+									</li>
+								{% endif %}
+								{% if is_granted('IS_PPO_DIRECTOR') %}
+									<li>
+										<a href="{{ path('missurveyquestion_index') }}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}Survey quesstions{% endtrans %}
+										</a>
+
+									</li>
+								{% endif %}
+
+
+								{#                            <li>
+																																                                                            <a href="{{ path('jusis_homepage') }}">
+																																                                                                <b class="fa fa-caret-right"></b>
+																																                                                                {% trans %}SIS{% endtrans %}
+																																                                                            </a>
+																																                                                        </li>#}
+							</ul>
+
+							{#{% endblock %}#}
+						</ul>
+						<!-- /.nav-list -->
+					{% endblock %}
+
+				</div>
+			{% endblock %}
+
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="nav"> {% block subMenu %}{% endblock %}
+						</div>
+						<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+							<ul class="breadcrumb">
+								{% block mainTitle %}
+									<li>
+										<i class="icon-home home-icon"></i>
+										<a href="">{% trans %}MIS{% endtrans %}</a>
+
+										<span class="divider">
+											<i class="arrow-icon"></i>
+										</span>
+									</li>
+								{% endblock %}
+								{% block subTitle %}
+									<li class="active">{% trans %}Dashboard{% endtrans %}</li>
+								{% endblock %}
+								{# <li class="pull-right">
+																																                            {% if app.user.userOffice %}
+																																                                <span class="badge badge-info pull-right">{{ app.user.userOffice.name }}</span>
+																																                            {% endif %}
+																																                            {% if is_granted('IS_PRINCIPAL_OFFICE') %}
+																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PO </span>
+																																                            {% endif %}
+																																                            {% if is_granted('IS_PPO_DIRECTOR') %}
+																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PPO </span>
+																																                            {% endif %}
+																																                            {% if is_granted('IS_TOP_MANAGER') %}
+																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> Top Management </span>
+																																                            {% endif %}
+																																                        </li> #}
+							</ul>
+							<!--.breadcrumb-->
+							{% block search %}{% endblock %}
+						</div>
+						<div style="text-align: center"> {% block title %}{% endblock %}
+							</div>
+
+							<div class="nav"> {% block progresIndicator %}{% endblock %}
+								</div>
+								<div class="page-header"> {% block header %}{% endblock %}
+									</div>
+									<div
+										class="page-content">
+										{# pass a string argument to get only the messages of that type #}
+										{% for message in app.flashes('notice') %}
+											<div class="alert alert-info">
+												<button type="button" class="close" data-dismiss="alert">
+													<i class="ace-icon fa fa-times"></i>
+												</button>
+
+												{{ message }}
+												<br>
+											</div>
+
+										{% endfor %}
+
+										{% for message in app.flashes('success') %}
+											<div class="alert alert-success">
+												<button type="button" class="close" data-dismiss="alert">
+													<i class="ace-icon fa fa-times"></i>
+												</button>
+
+												{{ message }}
+												<br>
+											</div>
+
+										{% endfor %}
+										{#
+																																								                    
+																																								                                        {% for message in app.flashes('success') %}
+																																								                                            <div class="alert alert-block alert-success">
+																																								                                                <button type="button" class="close" data-dismiss="alert">
+																																								                                                    <i class="ace-icon fa fa-times"></i>
+																																								                                                </button>
+																																								                                                <div class="well well-lg text-center">
+																																								                                                    <div class="label label-large label-success arrowed">
+																																								                                                        {{ message }}
+																																								                                                    </div>
+																																								                                                </div>
+																																								                                            </div>
+																																								                    
+																																								                                        {% endfor %}
+																																								                    #}
+
+										{# pass an array argument to get the messages of those types  #}
+										{% for label, messages in app.flashes(['warning']) %}
+											{% for message in messages %}
+												<div class="alert alert-warning">
+													<button type="button" class="close" data-dismiss="alert">
+														<i class="ace-icon fa fa-times"></i>
+													</button>
+													<div class="well well-lg text-center">
+														<div class="alert alert-warning">
+															{{ message }}
+														</div>
+													</div>
+													<br>
+												</div>
+
+
+											{% endfor %}
+										{% endfor %}
+
+										{% for label, messages in app.flashes(['error']) %}
+											{% for message in messages %}
+												<div class="alert alert-warning">
+													<button type="button" class="close" data-dismiss="alert">
+														<i class="ace-icon fa fa-times"></i>
+													</button>
+
+													<div class="well well-lg text-center">
+														<span class="label label-warning">
+															<i class="ace-icon fa fa-exclamation-triangle bigger-120"></i>
+															Error
+														</span>
+														<div class="label label-large label-danger arrowed-in">
+															{{ message }}
+														</div>
+													</div>
+												</div>
+											{% endfor %}
+										{% endfor %}
+
+
+										<div id='ViewContentDiv'> {% block fos_user_content %}{% endblock %}{% block body %}{% endblock %}
+
+
+											<button class="btn btn-primary" onclick="topFunction()" id="myBtn" title="Go to top" class="">
+												<span class="glyphicon glyphicon-arrow-up"></span>
+											</button>
+											<button class="btn btn-primary" onclick="downFunction()" id="myBtnDown" title="Go to top" class="">
+												<span class="glyphicon glyphicon-arrow-down"></span>
+											</button>
+											<script>
+												// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+scrollFunction()
+};
+
+function scrollFunction() {
+if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+document.getElementById("myBtnDown").style.display = "none";
+document.getElementById("myBtn").style.display = "block";
+} else {
+document.getElementById("myBtn").style.display = "none";
+document.getElementById("myBtnDown").style.display = "block";
+}
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+document.body.scrollTop = 0;
+document.documentElement.scrollTop = 0;
+}
+// When the user clicks on the button, scroll to the top of the document
+function downFunction() {
+window.scrollTo(0, document.body.scrollHeight);
+}
+											</script>
+
+
+										</div>
+										<!--/.page-content-->
+									</div>
+									<!--/.page-content-->
+								</div>
+							</div>
+							<!-- /.main-content -->
+
+							{% block footer %}
+								<div class="footer">
+									<div class="footer-inner">
+										<div class="footer-content">
+											<span class="bigger-120">
+												<span class="blue bolder">{% trans %}EMIS{% endtrans %}</span>
+												{% trans %}Application{% endtrans %}
+												&copy;
+												{% trans %}Jimma University 2017{% endtrans %}
+											</span>
+
+											&nbsp; &nbsp;
+											<span class="action-buttons">
+												<a href="#">
+													<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+												</a>
+
+												<a href="#">
+													<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+												</a>
+
+												<a href="#">
+													<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+												</a>
+											</span>
+										</div>
+									</div>
+								</div>
+							{% endblock %}
+							<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+								<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+							</a>
+
+
+						</div>
+						<!-- /.main-container -->
+
+						<script>
+							$("input[type='submit']").on("click", function () {
+$('.chosen-select').filter('[required]').each(function (i, requiredField) {
+
+if ($(requiredField).val() == '') {
+$(requiredField).next('div').notify("Required", {
+position: "top",
+className: "error"
+});
+}
+});
+
+});
+function loadContent(url) {
+$.ajax({
+url: url,
+success: function (result) {
+$("#ViewContentDiv").html(result);
+}
+});
+}
+						</script>
+
+
+						<script>
+
+							jQuery(function ($) {
+if (!ace.vars['touch']) {
+$('.chosen-select').chosen({allow_single_deselect: true});
+// resize the chosen on window resize
+
+$(window).off('resize.chosen').on('resize.chosen', function () {
+$('.chosen-select').each(function () {
+var $this = $(this);
+$this.next().css({'width': $this.parent().width()});
+})
+}).trigger('resize.chosen');
+// resize chosen on sidebar collapse/expand
+$(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+if (event_name != 'sidebar_collapsed') 
+return;
+
+
+
+$('.chosen-select').each(function () {
+var $this = $(this);
+$this.next().css({'width': $this.parent().width()});
+})
+});
+
+
+$('#chosen-multiple-style .btn').on('click', function (e) {
+var target = $(this).find('input[type=radio]');
+var which = parseInt(target.val());
+if (which == 2) 
+$('#form-field-select-4').addClass('tag-input-style');
+ else 
+$('#form-field-select-4').removeClass('tag-input-style');
+
+
+
+});
+}
+});
+$(function () {
+setNavigation();
+});
+
+function setNavigation() {
+var path = window.location.pathname;
+path = path.replace(/\/$/, "");
+path = decodeURIComponent(path);
+if (! path.endsWith("/")) {
+path = path + "/";
+}
+console.log(" Original Path : " + path);
+$(".submenu a").each(function () {
+var href = $(this).attr('href');
+if (! href.endsWith("/")) {
+href = href + "/";
+}
+console.log("Original HREF : " + href);
+if (path.substring(0, href.length) === href) {
+console.log(" <<<<<<<<<<<>>>>>>>>>>>>>> : " + href);
+$(this).closest('li').addClass('active');
+$(this).closest('ul').parent().addClass('active');
+$(this).closest('ul').parent().addClass('open');
+}
+});
+var element = document.getElementById("navbar");
+element.classList.remove("navbar-fixed-top");
+}
+{
+# $('#popupDelete').close();
+#
+}
+						</script>
+
+						<!--[if IE]>
+																								{% block script %} {% endblock %}
+																								<![endif]-->
+
+						{% block additional_script_file %}{% endblock %}
+						<!-- inline scripts related to this page -->
+
+						<script>
+							function checkAll(list_batch_checkbox) {
+var boxes = document.getElementsByTagName('input');
+for (var index = 0; index < boxes.length; index++) {
+box = boxes[index];
+if (box.type == 'checkbox' && box.className == list_batch_checkbox) {
+box.checked = document.getElementById(list_batch_checkbox).checked
+}
+}
+return true;
+}
+						</script>
+
+
+					</body>
+				</html>

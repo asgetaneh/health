@@ -17,10 +17,7 @@ class PrincipalManager
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="principalManagers")
@@ -35,24 +32,14 @@ class PrincipalManager
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive = 0;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    
 
     public function getPrincipal(): ?User
     {
