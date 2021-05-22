@@ -521,7 +521,7 @@ ace.settings.loadState('sidebar')
 										class="submenu">
 										{# {% if is_granted('LIST_PERSPECTIVE') %}                                         #}
 										<li>
-											<a href="#">
+											<a href="{{path('perspective_index')}}">
 												<b class="fa fa-caret-right"></b>
 												{% trans %}
 												Perspective
@@ -529,16 +529,16 @@ ace.settings.loadState('sidebar')
 											</a>
 										</li>
 
-										{% if is_granted('LIST_THEME') %}
+										{# {% if is_granted('LIST_THEME') %} #}
 											<li>
-												<a href="{{ path('theme_index') }}">
+												<a href="{{ path('goal_index') }}">
 													<b class="fa fa-caret-right"></b>
 													{% trans %}Goal
 													{% endtrans %}
 												</a>
 											</li>
-										{% endif %}
-										{% if is_granted('LIST_OBJECTIVE') %}
+										{# {% endif %} #}
+										{# {% if is_granted('LIST_OBJECTIVE') %} #}
 											<li>
 												<a href="{{ path('objective_index') }}">
 													<b class="fa fa-caret-right"></b>
@@ -547,28 +547,28 @@ ace.settings.loadState('sidebar')
 													{% endtrans %}
 												</a>
 											</li>
-										{% endif %}
+										{# {% endif %} #}
 
 
-										{% if is_granted('LIST_STRATEGY') %}
+										{# {% if is_granted('LIST_STRATEGY') %} #}
 											<li>
 												<a href="{{ path('strategy_index') }}">
 													<b class="fa fa-caret-right"></b>
 													{% trans %}Strategy{% endtrans %}
 												</a>
 											</li>
-										{% endif %}
+										{# {% endif %} #}
 
-										{% if is_granted('LIST_STRATEGY') %}
+										{# {% if is_granted('LIST_STRATEGY') %} #}
 											<li>
-												<a href="{{ path('realkeyperformanceindicator_index') }}">
+												<a href="{{ path('key_performance_indicator_index') }}">
 													<b class="fa fa-caret-right"></b>
 													{% trans %}
 													Key Performance Indicator
 													{% endtrans %}
 												</a>
 											</li>
-										{% endif %}
+										{# {% endif %} #}
 
 										{{ include('menu/sidenav.html.twig') }}
 										{% if is_granted('UPDATE_PLAN_SETTING') %}
