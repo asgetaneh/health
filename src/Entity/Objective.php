@@ -69,6 +69,14 @@ class Objective
      */
     private $strategies;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function __construct()
     {
         $this->strategies = new ArrayCollection();
@@ -213,6 +221,18 @@ class Objective
                 $strategy->setObjective(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

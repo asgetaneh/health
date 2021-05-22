@@ -58,15 +58,17 @@ class KeyPerformanceIndicator
      * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="keyPerformanceIndicator")
      */
     private $initiatives;
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     public function __construct()
     {
         $this->initiatives = new ArrayCollection();
     }
 
-    public function __toString(){
-        return $this->name;
-    }
+    
     public function getId(): ?int
     {
         return $this->id;

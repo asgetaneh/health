@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Strategy;
 use App\Form\StrategyType;
 use App\Repository\StrategyRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class StrategyController extends AbstractController
 {
     /**
-     * @Route("/", name="strategy_index", methods={"GET"})
+     * @Route("/", name="strategy_index")
      */
-    public function index(StrategyRepository $strategyRepository): Response
+    public function index(Request $request, StrategyRepository $strategyRepository,PaginatorInterface $paginator): Response
     {
+        $strategy = new Strategy();
+        $form = $this->createForm(StrategyType::class, $strategy);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $strategy->setCreatedAt(new \DateTime());
+            $strategy->setIsActive(1);
+            $strategy->setCreatedBy($this->getUser());
+            $entityManager->persist($strategy);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('strategy_index');
+        }
+        $strategies=$strategyRepository->findAlls(); 
+        $data = $paginator->paginate(
+            $strategies,
+            $request->query->getInt('page', 1),
+            6
+        );     
+          
         return $this->render('strategy/index.html.twig', [
-            'strategies' => $strategyRepository->findAll(),
+            'strategies' => $data,
+            'totalStrategies'=>$strategyRepository->findAll(),
+            'form' => $form->createView(),
+
+
         ]);
     }
 

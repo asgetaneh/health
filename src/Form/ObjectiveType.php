@@ -13,12 +13,10 @@ class ObjectiveType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('description')
             ->add('outPut')
             ->add('outCome')
             ->add('weight')
-            ->add('isActive')
-            ->add('createdAt')
-            ->add('CreatedBy')
             ->add('perspective')
             ->add('goal')
         ;

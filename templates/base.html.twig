@@ -21,7 +21,7 @@
 		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
 		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
 
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
 		<link
 		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
 		{#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
@@ -149,9 +149,29 @@
 										{% endif %}
 										<li></li>
 										<li>
+											{# <div class="dropdown">
+																																												                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
+																																												                                                <span class="caret"></span></button>
+																																												                                            <ul class="dropdown-menu">
+																																												                                                <li><a href="{{ path('switch_language', { '_locale': 'am' }) }}">{% trans %}Amharic{% endtrans %}</a></li>
+																																												                                                <li><a href="{{ path('switch_language', { '_locale': 'en' }) }}">{% trans %}English{% endtrans %}</a></li>
+																																												                                                 <li><a href="{{ path('switch_language', { '_locale': 'or' }) }}">{% trans %}Afaan Oromo{% endtrans %}</a></li>
+																																												                                            </ul>
+																																												                                        </div> #}
+										</li>
+										{#########################################################################################################################################################################################################}
+										{#######################################################################################################################################################################################################
+																																								                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
+																																								                                    #######################################################################################################################################################################################################
+																																								                                    #######################################################################################################################################################################################################}
+										<li>
 											<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ColorHelpModal">
 												<span class="glyphicon glyphicon-question-sign"></button>
 											</li>
+											{##################################################################################################################################################################################################
+																																												                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
+																																												                                    ###################################################################################################################################################################################################
+																																												                                    ###################################################################################################################################################################################################}
 										</li>
 										<li class="green dropdown-modal">
 											<a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -267,7 +287,6 @@
 				{% endblock %}
 			</div>
 		{% endblock %}
-
 
 		<div class="modal fade" id="ColorHelpModal" role="dialog">
 			<div

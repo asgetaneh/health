@@ -70,9 +70,7 @@
 										<th>Id</th>
 										<th>Name</th>
 										<th>Description</th>
-										<th>CreatedAt</th>
-										<th>UpdatedAt</th>
-										<th>UsedToPlan</th>
+										
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -82,12 +80,15 @@
 											<td>{{ perspective.id }}</td>
 											<td>{{ perspective.name }}</td>
 											<td>{{ perspective.description }}</td>
-											<td>{{ perspective.createdAt ? perspective.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-											<td>{{ perspective.updatedAt ? perspective.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-											<td>{{ perspective.usedToPlan ? 'Yes' : 'No' }}</td>
+											
 											<td>
-												<a href="{{ path('perspective_show', {'id': perspective.id}) }}">show</a>
-												<a href="{{ path('perspective_edit', {'id': perspective.id}) }}">edit</a>
+												<a href="{{ path('perspective_show', {'id': perspective.id}) }}" class="btn btn-primary btn-sm">
+													<i class="fa fa-eye"></i>
+												</a>
+												<a href="{{ path('perspective_edit', {'id': perspective.id}) }}" class="btn btn-warning btn-sm">
+													<i class="fa fa-edit"></i>
+												</a>
+											
 											</td>
 										</tr>
 									{% else %}

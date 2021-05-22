@@ -13,11 +13,8 @@ class StrategyType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('isActive')
             ->add('description')
-            ->add('createdAt')
             ->add('objective')
-            ->add('createdBy')
         ;
     }
 

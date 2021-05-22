@@ -14,11 +14,8 @@ class KeyPerformanceIndicatorType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('isActive')
             ->add('weight')
-            ->add('createdAt')
             ->add('strategy')
-            ->add('createdBy')
         ;
     }
 

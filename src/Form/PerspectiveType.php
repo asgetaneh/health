@@ -14,11 +14,7 @@ class PerspectiveType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('usedToPlan')
-            ->add('createdBy')
-            ->add('updatedBy')
+            
         ;
     }
 

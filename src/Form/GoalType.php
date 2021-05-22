@@ -16,9 +16,7 @@ class GoalType extends AbstractType
             ->add('description')
             ->add('outPut')
             ->add('outCome')
-            ->add('isActive')
-            ->add('createdAt')
-            ->add('createdBy')
+            
         ;
     }
 

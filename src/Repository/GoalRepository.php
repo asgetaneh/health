@@ -22,19 +22,15 @@ class GoalRepository extends ServiceEntityRepository
     // /**
     //  * @return Goal[] Returns an array of Goal objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findAlls()
     {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+            
+            ->getQuery();
+        
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Goal

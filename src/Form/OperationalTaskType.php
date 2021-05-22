@@ -18,7 +18,6 @@ class OperationalTaskType extends AbstractType
             ->add('endDate')
             ->add('timeGap')
             ->add('weight')
-            ->add('plan')
         ;
     }
 

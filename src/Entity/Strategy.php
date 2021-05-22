@@ -53,7 +53,10 @@ class Strategy
      * @ORM\OneToMany(targetEntity=KeyPerformanceIndicator::class, mappedBy="strategy")
      */
     private $keyPerformanceIndicators;
-
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function __construct()
     {
         $this->keyPerformanceIndicators = new ArrayCollection();
