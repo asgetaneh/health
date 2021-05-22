@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\KeyPerformanceIndicator;
 use App\Form\KeyPerformanceIndicatorType;
 use App\Repository\KeyPerformanceIndicatorRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class KeyPerformanceIndicatorController extends AbstractController
 {
     /**
-     * @Route("/", name="key_performance_indicator_index", methods={"GET"})
+     * @Route("/", name="key_performance_indicator_index")
      */
-    public function index(KeyPerformanceIndicatorRepository $keyPerformanceIndicatorRepository): Response
+    public function index(Request $request, KeyPerformanceIndicatorRepository $keyPerformanceIndicatorRepository,PaginatorInterface $paginator): Response
     {
+        $keyPerformanceIndicator = new KeyPerformanceIndicator();
+        $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $keyPerformanceIndicator->setCreatedAt(new \DateTime());
+            $keyPerformanceIndicator->setIsActive(1);
+            $keyPerformanceIndicator->setCreatedBy($this->getUser());
+            $entityManager->persist($keyPerformanceIndicator);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('key_performance_indicator_index');
+        }
+       
+        $keyPerformanceIndicators=$keyPerformanceIndicatorRepository->findAlls(); 
+        $data = $paginator->paginate(
+            $keyPerformanceIndicators,
+            $request->query->getInt('page', 1),
+            6
+        );     
+          
         return $this->render('key_performance_indicator/index.html.twig', [
-            'key_performance_indicators' => $keyPerformanceIndicatorRepository->findAll(),
+            'key_performance_indicators' => $data,
+            'totalkeyperformance'=>$keyPerformanceIndicatorRepository->findAll(),
+            'form' => $form->createView(),
+
         ]);
     }
 

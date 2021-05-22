@@ -53,7 +53,10 @@ class PrincipalOffice
      * @ORM\OneToMany(targetEntity=PrincipalManager::class, mappedBy="principalOffice")
      */
     private $principalManagers;
-
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();

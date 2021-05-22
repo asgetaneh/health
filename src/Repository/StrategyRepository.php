@@ -18,6 +18,13 @@ class StrategyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Strategy::class);
     }
+    public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+            
+            ->getQuery();
+        
+    }
 
     // /**
     //  * @return Strategy[] Returns an array of Strategy objects

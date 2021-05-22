@@ -16,12 +16,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class OperationalTaskController extends AbstractController
 {
     /**
-     * @Route("/", name="operational_task_index", methods={"GET"})
+     * @Route("/", name="operational_task_index")
      */
-    public function index(OperationalTaskRepository $operationalTaskRepository): Response
+    public function index(Request $request, OperationalTaskRepository $operationalTaskRepository): Response
     {
+        $operationalTask = new OperationalTask();
+        $form = $this->createForm(OperationalTaskType::class, $operationalTask);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($operationalTask);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('operational_task_index');
+        }
+
+      
         return $this->render('operational_task/index.html.twig', [
             'operational_tasks' => $operationalTaskRepository->findAll(),
+            'form' => $form->createView(),
+
         ]);
     }
 

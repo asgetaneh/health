@@ -58,6 +58,10 @@ class Goal
      * @ORM\OneToMany(targetEntity=Objective::class, mappedBy="goal")
      */
     private $objectives;
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     public function __construct()
     {

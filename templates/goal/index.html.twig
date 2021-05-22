@@ -1,45 +1,162 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Goal index{% endblock %}
-
+{% extends "base.html.twig" %}
+{% block subTitle %}
+	<li class="active">{% trans %}Goal{% endtrans %}</li>
+{% endblock %}
 {% block body %}
-    <h1>Goal index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>OutPut</th>
-                <th>OutCome</th>
-                <th>IsActive</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for goal in goals %}
-            <tr>
-                <td>{{ goal.id }}</td>
-                <td>{{ goal.name }}</td>
-                <td>{{ goal.description }}</td>
-                <td>{{ goal.outPut }}</td>
-                <td>{{ goal.outCome }}</td>
-                <td>{{ goal.isActive ? 'Yes' : 'No' }}</td>
-                <td>{{ goal.createdAt ? goal.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('goal_show', {'id': goal.id}) }}">show</a>
-                    <a href="{{ path('goal_edit', {'id': goal.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">Goal</h5>
 
-    <a href="{{ path('goal_new') }}">Create new</a>
+					<div class="widget-toolbar"></div>
+
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{totalGoals|length}}</strong>
+						</span>
+					</div>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar">
+							<div
+								class="btn-group">
+								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+
+
+								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+									{% trans %}
+									New Goal{% endtrans %}</a>
+								{# {% endif %} #}
+								<form class="form-inline" method="post" style="display:inline;">
+									<input type="hidden" name="nonapplicable" value="nonapp"/>
+									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+										<i class="ace-icon fa fa-times bigger-110 red2"></i>
+										{% trans %}
+										None Applicable Goals{% endtrans %}</button>
+								</form>
+
+
+							</div>
+
+
+						</div>
+					</div>
+
+					<div class="widget-main padding-16">
+
+						<div class="table-responsive">
+							<form class="form-inline" method="post" style="display:inline;">
+
+								<div class="input-group">
+									<input type="text" class="form-control" name="search" placeholder="search"/>
+									<div class="input-group-btn">
+										<button type="submit" class="btn btn-default no-border btn-sm">
+											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+										</button>
+									</div>
+								</div>
+							</form>
+
+							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Name</th>
+										<th>OutCome</th>
+										<th>Description</th>
+										<th>actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% set count =  goals.getItemNumberPerPage() * (goals.getCurrentPageNumber() -1) %}
+
+									{% for goal in goals %}
+										<tr>
+											{% set count = count + 1 %}
+											<td>{{count }}</td>
+											<td>{{ goal.name }}</td>
+											<td>{{ goal.outCome }}</td>
+
+											<td>{{ goal.description|title|raw }}</td>
+											<td>
+												<a href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
+													<i class="fa fa-eye"></i>
+												</a>
+												<a href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
+													<i class="fa fa-edit"></i>
+												</a>
+
+											</td>
+
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="8">no records found</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							<div class="float-left" id="custompaginator">{{ knp_pagination_render(goals) }}</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="myModal" class="modal fade" role="dialog">
+			<div
+				class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">New Goal</h4>
+					</div>
+					<div class="modal-body">
+						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+						<div class="form-group">
+							{{ form_label(form.name) }}
+							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+						<div class="form-group">
+							{{ form_label(form.outCome) }}
+							{{ form_widget(form.outCome,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+						<div class="form-group">
+							{{ form_label(form.outPut) }}
+							{{ form_widget(form.outPut,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+						<div class="form-group">
+							{{ form_label(form.description) }}
+							{{ form_widget(form.description ,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+
+
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					{{ form_end(form) }}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
 {% endblock %}

@@ -19,6 +19,13 @@ class ObjectiveRepository extends ServiceEntityRepository
         parent::__construct($registry, Objective::class);
     }
 
+    public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+            
+            ->getQuery();
+        
+    }
     // /**
     //  * @return Objective[] Returns an array of Objective objects
     //  */

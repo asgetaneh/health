@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerspectiveController extends AbstractController
 {
     /**
-     * @Route("/", name="perspective_index", methods={"GET"})
+     * @Route("/", name="perspective_index")
      */
     public function index(PerspectiveRepository $perspectiveRepository, Request $request): Response
     {
@@ -26,6 +26,9 @@ class PerspectiveController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $perspective->setCreatedAt(new \DateTime());
+            $perspective->setUsedToPlan(1);
+            $perspective->setCreatedBy($this->getUser());
             $entityManager->persist($perspective);
             $entityManager->flush();
 

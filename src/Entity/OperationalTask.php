@@ -38,9 +38,8 @@ class OperationalTask
      * @ORM\Column(type="date")
      */
     private $startDate;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+  /**
+     * @ORM\Column(type="date")
      */
     private $endDate;
 
@@ -123,12 +122,12 @@ class OperationalTask
         return $this;
     }
 
-    public function getEndDate(): ?string
+    public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(string $endDate): self
+    public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
 

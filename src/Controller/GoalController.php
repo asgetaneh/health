@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Goal;
 use App\Form\GoalType;
 use App\Repository\GoalRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,35 @@ use Symfony\Component\Routing\Annotation\Route;
 class GoalController extends AbstractController
 {
     /**
-     * @Route("/", name="goal_index", methods={"GET"})
+     * @Route("/", name="goal_index")
      */
-    public function index(GoalRepository $goalRepository): Response
+    public function index(Request $request,GoalRepository $goalRepository,PaginatorInterface $paginator): Response
     {
-        return $this->render('goal/index.html.twig', [
-            'goals' => $goalRepository->findAll(),
+        $goal = new Goal();
+        $form = $this->createForm(GoalType::class, $goal);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $goal->setCreatedAt(new \DateTime());
+            $goal->setIsActive(1);
+            $goal->setCreatedBy($this->getUser());
+            $entityManager->persist($goal);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('goal_index');
+        }
+        $goals=$goalRepository->findAlls(); 
+        $data = $paginator->paginate(
+            $goals,
+            $request->query->getInt('page', 1),
+            6
+        );      
+          return $this->render('goal/index.html.twig', [
+            'goals' => $data,
+            'totalGoals'=>$goalRepository->findAll(),
+            'form' => $form->createView(),
+
         ]);
     }
 

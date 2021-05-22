@@ -1,46 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Goal{% endblock %}
+{% block title %} Show Goal
+{% endblock %}
 
 {% block body %}
-    <h1>Goal</h1>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">Show Goal
+					</h5>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ goal.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ goal.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ goal.description }}</td>
-            </tr>
-            <tr>
-                <th>OutPut</th>
-                <td>{{ goal.outPut }}</td>
-            </tr>
-            <tr>
-                <th>OutCome</th>
-                <td>{{ goal.outCome }}</td>
-            </tr>
-            <tr>
-                <th>IsActive</th>
-                <td>{{ goal.isActive ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ goal.createdAt ? goal.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							<a href="{{ path('goal_index') }}" class="btn btn-success">
+								{% trans %}
+								back
+								{% endtrans %}
+							</a>
+						</span>
+					</div>
 
-    <a href="{{ path('goal_index') }}">back to list</a>
+				</div>
 
-    <a href="{{ path('goal_edit', {'id': goal.id}) }}">edit</a>
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar"></div>
+					</div>
 
-    {{ include('goal/_delete_form.html.twig') }}
+					<div class="widget-main padding-16">
+
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr>
+										<th>Id</th>
+										<td>{{ goal.id }}</td>
+									</tr>
+									<tr>
+										<th>Name</th>
+										<td>{{ goal.name }}</td>
+									</tr>
+									<tr>
+										<th>Description</th>
+										<td>{{ goal.description }}</td>
+									</tr>
+									<tr>
+										<th>OutPut</th>
+										<td>{{ goal.outPut }}</td>
+									</tr>
+									<tr>
+										<th>OutCome</th>
+										<td>{{ goal.outCome }}</td>
+									</tr>
+									<tr>
+										<th>Status</th>
+										{% if  goal.isActive %}
+
+											<td>Active</td>
+										{% else %}
+											<td>InActive</td>
+										{% endif %}
+
+									</tr>
+									<tr>
+										<th>CreatedAt</th>
+										<td>{{ goal.createdAt ? goal.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+									</tr>
+									
+								</tbody>
+							</table>
+
+
+							<div class="col-md-6">
+								<a href="{{ path('goal_index', {'id': goal.id}) }}" class="btn btn-warning">edit</a>
+							</div>
+							<div class="col-md-6">
+								{{ include('goal/_delete_form.html.twig') }}
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 {% endblock %}

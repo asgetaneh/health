@@ -18,6 +18,13 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, KeyPerformanceIndicator::class);
     }
+    public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+            
+            ->getQuery();
+        
+    }
 
     // /**
     //  * @return KeyPerformanceIndicator[] Returns an array of KeyPerformanceIndicator objects

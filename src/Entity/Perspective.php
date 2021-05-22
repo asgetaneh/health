@@ -39,15 +39,7 @@ class Perspective
      */
     private $createdBy;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="perspectives")
-     */
-    private $updatedBy;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -58,7 +50,10 @@ class Perspective
      * @ORM\OneToMany(targetEntity=Objective::class, mappedBy="perspective")
      */
     private $objectives;
-
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function __construct()
     {
         $this->objectives = new ArrayCollection();
@@ -117,29 +112,6 @@ class Perspective
         return $this;
     }
 
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
 
     public function getUsedToPlan(): ?bool
     {
