@@ -18,6 +18,25 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PrincipalOffice::class);
     }
+    public function findAllsUser($user)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffices','oo')
+          ->leftJoin('oo.operationalManagers','om')
+          ->leftJoin('om.manager','u')
+         ->leftJoin('u.userInfo','ui')
+            ->Select('ui.fullName')  
+           
+            ->addSelect('u.id')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
 
     // /**
     //  * @return PrincipalOffice[] Returns an array of PrincipalOffice objects

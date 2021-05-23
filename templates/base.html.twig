@@ -63,11 +63,10 @@
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/lib/moment.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.default-settings.js') }}"></script>
-<script src="{{ asset('assets/assets/js/wizard.min.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/wizard.min.js') }}"></script>
 
 
-
-	<script src="{{asset('bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+		<script src="{{asset('bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
 
 		{#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
 		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
@@ -112,10 +111,10 @@
 		style='font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif; color: black' class="no-skin">
 
 		{#<header class="header">
-								            <a  href="#" style="max-width: 100%; margin:0;">
-								                    <img src="{{ asset('bundles/images/headerbanner.png') }}"  style=" margin-bottom: -22px; width: 100%;" >
-								            </a>
-								        </header>#}
+										            <a  href="#" style="max-width: 100%; margin:0;">
+										                    <img src="{{ asset('bundles/images/headerbanner.png') }}"  style=" margin-bottom: -22px; width: 100%;" >
+										            </a>
+										        </header>#}
 
 		{% block navbar %}
 			<div id="navbar" class="navbar navbar-default ace-save-state">
@@ -155,28 +154,28 @@
 										<li></li>
 										<li>
 											{# <div class="dropdown">
-																																												                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
-																																												                                                <span class="caret"></span></button>
-																																												                                            <ul class="dropdown-menu">
-																																												                                                <li><a href="{{ path('switch_language', { '_locale': 'am' }) }}">{% trans %}Amharic{% endtrans %}</a></li>
-																																												                                                <li><a href="{{ path('switch_language', { '_locale': 'en' }) }}">{% trans %}English{% endtrans %}</a></li>
-																																												                                                 <li><a href="{{ path('switch_language', { '_locale': 'or' }) }}">{% trans %}Afaan Oromo{% endtrans %}</a></li>
-																																												                                            </ul>
-																																												                                        </div> #}
+																																																							                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
+																																																							                                                <span class="caret"></span></button>
+																																																							                                            <ul class="dropdown-menu">
+																																																							                                                <li><a href="{{ path('switch_language', { '_locale': 'am' }) }}">{% trans %}Amharic{% endtrans %}</a></li>
+																																																							                                                <li><a href="{{ path('switch_language', { '_locale': 'en' }) }}">{% trans %}English{% endtrans %}</a></li>
+																																																							                                                 <li><a href="{{ path('switch_language', { '_locale': 'or' }) }}">{% trans %}Afaan Oromo{% endtrans %}</a></li>
+																																																							                                            </ul>
+																																																							                                        </div> #}
 										</li>
 										{#########################################################################################################################################################################################################}
 										{#######################################################################################################################################################################################################
-																																								                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-																																								                                    #######################################################################################################################################################################################################
-																																								                                    #######################################################################################################################################################################################################}
+																																																		                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
+																																																		                                    #######################################################################################################################################################################################################
+																																																		                                    #######################################################################################################################################################################################################}
 										<li>
 											<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ColorHelpModal">
 												<span class="glyphicon glyphicon-question-sign"></button>
 											</li>
 											{##################################################################################################################################################################################################
-																																												                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-																																												                                    ###################################################################################################################################################################################################
-																																												                                    ###################################################################################################################################################################################################}
+																																																							                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
+																																																							                                    ###################################################################################################################################################################################################
+																																																							                                    ###################################################################################################################################################################################################}
 										</li>
 										<li class="green dropdown-modal">
 											<a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -228,8 +227,8 @@
 										<li class="light-blue dropdown-modal">
 											<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 												<img class="nav-user-photo" src="{{ asset('assets/assets/images/avatars/avatar2.png') }}" alt="Jason's Photo"/>
-												<span
-													class="user-info">{# <small>{% trans %}Welcome{% endtrans %},<br> {{ app.user.username }}</small> #}
+												<span class="user-info">
+                                                    <small> {{ app.user.userInfo.fullName }}</small>
 												</span>
 												<i class="ace-icon fa fa-caret-down"></i>
 											</a>
@@ -362,12 +361,12 @@ ace.settings.loadState('sidebar')
 
 							{% block tobologyMenu %}
 								{# <li>
-																																                                <a href="{{ path('homepage') }} " style="text-align: center" >
-																																                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
-																																                                    <span class="menu-text"></span>
-																																                                    <b class=""></b>
-																																                                </a>
-																																                            </li> #}
+																																								                                <a href="{{ path('homepage') }} " style="text-align: center" >
+																																								                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
+																																								                                    <span class="menu-text"></span>
+																																								                                    <b class=""></b>
+																																								                                </a>
+																																								                            </li> #}
 
 								{% if is_granted('EMIS') %}
 									<li>
@@ -498,17 +497,17 @@ ace.settings.loadState('sidebar')
 												</li>
 											{% endif %}
 											{#                               <li>
-																																												                                            <a href="{{ path('thematicarea_index') }}">
-																																												                                                <b class="fa fa-caret-right"></b>
-																																												                                                {% trans %}Thematic Area{% endtrans %}
-																																												                                            </a>
-																																												                                        </li>
-																																												                                         <li>
-																																												                                            <a href="{{ path('costcenter_index') }}">
-																																												                                                <b class="fa fa-caret-right"></b>
-																																												                                                {% trans %}Cost center{% endtrans %}
-																																												                                            </a>
-																																												                                        </li>   #}
+																																																							                                            <a href="{{ path('thematicarea_index') }}">
+																																																							                                                <b class="fa fa-caret-right"></b>
+																																																							                                                {% trans %}Thematic Area{% endtrans %}
+																																																							                                            </a>
+																																																							                                        </li>
+																																																							                                         <li>
+																																																							                                            <a href="{{ path('costcenter_index') }}">
+																																																							                                                <b class="fa fa-caret-right"></b>
+																																																							                                                {% trans %}Cost center{% endtrans %}
+																																																							                                            </a>
+																																																							                                        </li>   #}
 										</ul>
 									</li>
 								{% endif %}
@@ -535,44 +534,44 @@ ace.settings.loadState('sidebar')
 										</li>
 
 										{# {% if is_granted('LIST_THEME') %} #}
-											<li>
-												<a href="{{ path('goal_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}Goal
-													{% endtrans %}
-												</a>
-											</li>
+										<li>
+											<a href="{{ path('goal_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}Goal
+												{% endtrans %}
+											</a>
+										</li>
 										{# {% endif %} #}
 										{# {% if is_granted('LIST_OBJECTIVE') %} #}
-											<li>
-												<a href="{{ path('objective_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}
-													Objective
-													{% endtrans %}
-												</a>
-											</li>
+										<li>
+											<a href="{{ path('objective_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}
+												Objective
+												{% endtrans %}
+											</a>
+										</li>
 										{# {% endif %} #}
 
 
 										{# {% if is_granted('LIST_STRATEGY') %} #}
-											<li>
-												<a href="{{ path('strategy_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}Strategy{% endtrans %}
-												</a>
-											</li>
+										<li>
+											<a href="{{ path('strategy_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}Strategy{% endtrans %}
+											</a>
+										</li>
 										{# {% endif %} #}
 
 										{# {% if is_granted('LIST_STRATEGY') %} #}
-											<li>
-												<a href="{{ path('key_performance_indicator_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}
-													Key Performance Indicator
-													{% endtrans %}
-												</a>
-											</li>
+										<li>
+											<a href="{{ path('key_performance_indicator_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}
+												Key Performance Indicator
+												{% endtrans %}
+											</a>
+										</li>
 										{# {% endif %} #}
 
 										{{ include('menu/sidenav.html.twig') }}
@@ -697,22 +696,22 @@ ace.settings.loadState('sidebar')
 										{% endif %}
 
 										{#
-																																								                                        {% if is_granted('IS_PPO_DIRECTOR') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('activity_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Activities{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}
-																																								                                        {% if is_granted('IS_PPO_DIRECTOR') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('rootcauseproblem_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Problem To Generate KPI{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}#}
+																																																		                                        {% if is_granted('IS_PPO_DIRECTOR') %}
+																																																		                                            <li>
+																																																		                                                <a href="{{ path('activity_index') }}">
+																																																		                                                    <b class="fa fa-caret-right"></b>
+																																																		                                                    {% trans %}Activities{% endtrans %}
+																																																		                                                </a>
+																																																		                                            </li>
+																																																		                                        {% endif %}
+																																																		                                        {% if is_granted('IS_PPO_DIRECTOR') %}
+																																																		                                            <li>
+																																																		                                                <a href="{{ path('rootcauseproblem_index') }}">
+																																																		                                                    <b class="fa fa-caret-right"></b>
+																																																		                                                    {% trans %}Problem To Generate KPI{% endtrans %}
+																																																		                                                </a>
+																																																		                                            </li>
+																																																		                                        {% endif %}#}
 										{% if is_granted('UPDATE_PLAN_SETTING') %}
 											<li>
 												<a href="{{ path('plan_select_reporting_period_to_template') }}">
@@ -767,8 +766,8 @@ ace.settings.loadState('sidebar')
 											</li>
 										{% endif %}
 										{# {% if is_granted('UPDATE_PLAN_SETTING') %} 
-																																								                                            <a href="{{ path('plan_select_reporting_period_to_template') }}" class="glyphicon glyphicon-th-list">{% trans %}To next Reporting Period{% endtrans %}</a>
-																																								                                        {% endif %}#}
+																																																		                                            <a href="{{ path('plan_select_reporting_period_to_template') }}" class="glyphicon glyphicon-th-list">{% trans %}To next Reporting Period{% endtrans %}</a>
+																																																		                                        {% endif %}#}
 									{#<li>#}
 										{#<a href="{{ path('juplan_chart') }}">#}
 										{#<b class="fa fa-caret-right"></b>#}
@@ -779,121 +778,119 @@ ace.settings.loadState('sidebar')
 								</li>
 
 
-
-
 								{# {% if is_granted('LIST_USER') %} #}
-									<li>
-										<a href="#" class="dropdown-toggle">
-											<i class=""></i>
-											<span class="menu-text">
-												{% trans %}
-												User Management{% endtrans %}
+								<li>
+									<a href="#" class="dropdown-toggle">
+										<i class=""></i>
+										<span class="menu-text">
+											{% trans %}
+											User Management{% endtrans %}
 
-											</span>
+										</span>
 
-											<b class="arrow fa fa-angle-down"></b>
-										</a>
+										<b class="arrow fa fa-angle-down"></b>
+									</a>
 
-										<ul class="submenu">
-                                        {{ include('menu/user.html.twig') }}
-											{% if is_granted('LIST_USER') %}
-												<li>
-													<a href="{{ path('user_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														User{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('LIST_GROUP') %}
-												<li>
-													<a href="{{ path('group_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														Group{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('LIST_PERMISSION') %}
-												<li>
-													<a href="{{ path('permission_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														Permission{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('FETCH_UAS_USER') %}
-												<li>
-													<a href="{{ path('user_create_user_from_ldap') }}">
-														<b class="fa fa-caret-right"></b>
-														USER FROM LDAP
-													</a>
-												</li>
-											{% endif %}
-										</ul>
-									</li>
-									
+									<ul class="submenu">
+										{{ include('menu/user.html.twig') }}
+										{% if is_granted('LIST_USER') %}
+											<li>
+												<a href="{{ path('user_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													User{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('LIST_GROUP') %}
+											<li>
+												<a href="{{ path('group_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Group{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('LIST_PERMISSION') %}
+											<li>
+												<a href="{{ path('permission_index') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Permission{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('FETCH_UAS_USER') %}
+											<li>
+												<a href="{{ path('user_create_user_from_ldap') }}">
+													<b class="fa fa-caret-right"></b>
+													USER FROM LDAP
+												</a>
+											</li>
+										{% endif %}
+									</ul>
+								</li>
+
 								{# {% endif %} #}
 
 								{#     {% if is_granted('SIS') %}
-																																                                <li>
-																																                                    <a href="#" class="dropdown-toggle">
-																																                                        <i class=""></i>
-																																                                        <span class="menu-text">
-																																                                            {% trans %} SIS{% endtrans %}
-																																
-																																                                        </span>
-																																
-																																                                        <b class="arrow fa fa-angle-down"></b>
-																																                                    </a>
-																																
-																																                                    {% if is_granted('SIS') %}
-																																                                    <ul class="submenu">
-																																                                        
-																																                                            <li>
-																																                                                <a href="{{ path('common_homepage') }}">
-																																                                                    <b class="fa fa-caret-right"></b>
-																																                                                    {% trans %}Student Information{% endtrans %}
-																																                                                </a>
-																																                                            </li>
-																																                                        
-																																                                        {% if is_granted('SIS') %}
-																																                                            <li>
-																																                                                <a href="{{ path('dinningroom_index') }}">
-																																                                                    <b class="fa fa-caret-right"></b>
-																																                                                    {% trans %}Student Meal and  Dinning Room{% endtrans %}
-																																                                                </a>
-																																                                            </li>
-																																                                        {% endif %}
-																																                                        {% if is_granted('SIS') %}
-																																                                            <li>
-																																                                                <a href="{{ path('disease_index') }}">
-																																                                                    <b class="fa fa-caret-right"></b>
-																																                                                    {% trans %}Student Clinic{% endtrans %}
-																																                                                </a>
-																																                                            </li>
-																																                                        {% endif %}
-																																                                        {% if is_granted('SIS') %}
-																																                                            <li>
-																																                                                <a href="{{ path('costsharinggroup_index') }}">
-																																                                                    <b class="fa fa-caret-right"></b>
-																																                                                    {% trans %}Non-caffe and Non-dorm Cost Sharing{% endtrans %}
-																																                                                </a>
-																																                                            </li>
-																																                                        {% endif %}
-																																                                       {% if is_granted('SIS') %}
-																																                                            <li>
-																																                                                <a href="{{ path('backup_index') }}">
-																																                                                    <b class="fa fa-caret-right"></b>
-																																                                                    {% trans %}Go{% endtrans %}
-																																                                                </a>
-																																                                            </li>
-																																                                        {% endif %}
-																																                                    </ul>
-																																                                    {% endif %}
-																																                                </li>
-																																                            {% endif %}#}
+																																								                                <li>
+																																								                                    <a href="#" class="dropdown-toggle">
+																																								                                        <i class=""></i>
+																																								                                        <span class="menu-text">
+																																								                                            {% trans %} SIS{% endtrans %}
+																																								
+																																								                                        </span>
+																																								
+																																								                                        <b class="arrow fa fa-angle-down"></b>
+																																								                                    </a>
+																																								
+																																								                                    {% if is_granted('SIS') %}
+																																								                                    <ul class="submenu">
+																																								                                        
+																																								                                            <li>
+																																								                                                <a href="{{ path('common_homepage') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Student Information{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        
+																																								                                        {% if is_granted('SIS') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('dinningroom_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Student Meal and  Dinning Room{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}
+																																								                                        {% if is_granted('SIS') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('disease_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Student Clinic{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}
+																																								                                        {% if is_granted('SIS') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('costsharinggroup_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Non-caffe and Non-dorm Cost Sharing{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}
+																																								                                       {% if is_granted('SIS') %}
+																																								                                            <li>
+																																								                                                <a href="{{ path('backup_index') }}">
+																																								                                                    <b class="fa fa-caret-right"></b>
+																																								                                                    {% trans %}Go{% endtrans %}
+																																								                                                </a>
+																																								                                            </li>
+																																								                                        {% endif %}
+																																								                                    </ul>
+																																								                                    {% endif %}
+																																								                                </li>
+																																								                            {% endif %}#}
 
 
 								{% if is_granted('SMIS') %}
@@ -933,11 +930,11 @@ ace.settings.loadState('sidebar')
 									</li>
 								{% endif %}
 								{# {% if is_granted('SISS') %}
-																																                                <a href="{{ path('jusis_homepage') }}">
-																																                                    <b class="fa fa-caret-right"></b>
-																																                                    {% trans %}SIS Home page  {% endtrans %}
-																																                                </a>
-																																                            {% endif %}#}
+																																								                                <a href="{{ path('jusis_homepage') }}">
+																																								                                    <b class="fa fa-caret-right"></b>
+																																								                                    {% trans %}SIS Home page  {% endtrans %}
+																																								                                </a>
+																																								                            {% endif %}#}
 
 								{% if is_granted('IS_PPO_DIRECTOR') %}
 									<li>
@@ -960,11 +957,11 @@ ace.settings.loadState('sidebar')
 
 
 								{#                            <li>
-																																                                                            <a href="{{ path('jusis_homepage') }}">
-																																                                                                <b class="fa fa-caret-right"></b>
-																																                                                                {% trans %}SIS{% endtrans %}
-																																                                                            </a>
-																																                                                        </li>#}
+																																								                                                            <a href="{{ path('jusis_homepage') }}">
+																																								                                                                <b class="fa fa-caret-right"></b>
+																																								                                                                {% trans %}SIS{% endtrans %}
+																																								                                                            </a>
+																																								                                                        </li>#}
 							</ul>
 
 							{#{% endblock %}#}
@@ -996,19 +993,19 @@ ace.settings.loadState('sidebar')
 									<li class="active">{% trans %}Dashboard{% endtrans %}</li>
 								{% endblock %}
 								{# <li class="pull-right">
-																																                            {% if app.user.userOffice %}
-																																                                <span class="badge badge-info pull-right">{{ app.user.userOffice.name }}</span>
-																																                            {% endif %}
-																																                            {% if is_granted('IS_PRINCIPAL_OFFICE') %}
-																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PO </span>
-																																                            {% endif %}
-																																                            {% if is_granted('IS_PPO_DIRECTOR') %}
-																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PPO </span>
-																																                            {% endif %}
-																																                            {% if is_granted('IS_TOP_MANAGER') %}
-																																                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> Top Management </span>
-																																                            {% endif %}
-																																                        </li> #}
+																																								                            {% if app.user.userOffice %}
+																																								                                <span class="badge badge-info pull-right">{{ app.user.userOffice.name }}</span>
+																																								                            {% endif %}
+																																								                            {% if is_granted('IS_PRINCIPAL_OFFICE') %}
+																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PO </span>
+																																								                            {% endif %}
+																																								                            {% if is_granted('IS_PPO_DIRECTOR') %}
+																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PPO </span>
+																																								                            {% endif %}
+																																								                            {% if is_granted('IS_TOP_MANAGER') %}
+																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> Top Management </span>
+																																								                            {% endif %}
+																																								                        </li> #}
 							</ul>
 							<!--.breadcrumb-->
 							{% block search %}{% endblock %}
@@ -1046,22 +1043,34 @@ ace.settings.loadState('sidebar')
 											</div>
 
 										{% endfor %}
+										{% for message in app.flashes('danger') %}
+											<div class="alert alert-danger">
+												<button type="button" class="close" data-dismiss="alert">
+													<i class="ace-icon fa fa-times"></i>
+												</button>
+
+												{{ message }}
+												<br>
+											</div>
+
+										{% endfor %}
+
 										{#
-																																								                    
-																																								                                        {% for message in app.flashes('success') %}
-																																								                                            <div class="alert alert-block alert-success">
-																																								                                                <button type="button" class="close" data-dismiss="alert">
-																																								                                                    <i class="ace-icon fa fa-times"></i>
-																																								                                                </button>
-																																								                                                <div class="well well-lg text-center">
-																																								                                                    <div class="label label-large label-success arrowed">
-																																								                                                        {{ message }}
-																																								                                                    </div>
-																																								                                                </div>
-																																								                                            </div>
-																																								                    
-																																								                                        {% endfor %}
-																																								                    #}
+																																																		                    
+																																																		                                        {% for message in app.flashes('success') %}
+																																																		                                            <div class="alert alert-block alert-success">
+																																																		                                                <button type="button" class="close" data-dismiss="alert">
+																																																		                                                    <i class="ace-icon fa fa-times"></i>
+																																																		                                                </button>
+																																																		                                                <div class="well well-lg text-center">
+																																																		                                                    <div class="label label-large label-success arrowed">
+																																																		                                                        {{ message }}
+																																																		                                                    </div>
+																																																		                                                </div>
+																																																		                                            </div>
+																																																		                    
+																																																		                                        {% endfor %}
+																																																		                    #}
 
 										{# pass an array argument to get the messages of those types  #}
 										{% for label, messages in app.flashes(['warning']) %}
@@ -1106,56 +1115,53 @@ ace.settings.loadState('sidebar')
 										<div id='ViewContentDiv'> {% block fos_user_content %}{% endblock %}{% block body %}{% endblock %}
 
 
-											
-											
-
+											</div>
+											<!--/.page-content-->
 										</div>
 										<!--/.page-content-->
 									</div>
-									<!--/.page-content-->
 								</div>
-							</div>
-							<!-- /.main-content -->
+								<!-- /.main-content -->
 
-							{% block footer %}
-								<div class="footer">
-									<div class="footer-inner">
-										<div class="footer-content">
-											<span class="bigger-120">
-												<span class="blue bolder">{% trans %}EMIS{% endtrans %}</span>
-												{% trans %}Application{% endtrans %}
-												&copy;
-												{% trans %}Jimma University 2017{% endtrans %}
-											</span>
+								{% block footer %}
+									<div class="footer">
+										<div class="footer-inner">
+											<div class="footer-content">
+												<span class="bigger-120">
+													<span class="blue bolder">{% trans %}EMIS{% endtrans %}</span>
+													{% trans %}Application{% endtrans %}
+													&copy;
+													{% trans %}Jimma University 2017{% endtrans %}
+												</span>
 
-											&nbsp; &nbsp;
-											<span class="action-buttons">
-												<a href="#">
-													<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-												</a>
+												&nbsp; &nbsp;
+												<span class="action-buttons">
+													<a href="#">
+														<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+													</a>
 
-												<a href="#">
-													<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-												</a>
+													<a href="#">
+														<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+													</a>
 
-												<a href="#">
-													<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-												</a>
-											</span>
+													<a href="#">
+														<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+													</a>
+												</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							{% endblock %}
-							<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-								<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-							</a>
+								{% endblock %}
+								<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+									<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+								</a>
 
 
-						</div>
-						<!-- /.main-container -->
+							</div>
+							<!-- /.main-container -->
 
-						<script>
-							$("input[type='submit']").on("click", function () {
+							<script>
+								$("input[type='submit']").on("click", function () {
 $('.chosen-select').filter('[required]').each(function (i, requiredField) {
 
 if ($(requiredField).val() == '') {
@@ -1175,12 +1181,12 @@ $("#ViewContentDiv").html(result);
 }
 });
 }
-						</script>
+							</script>
 
 
-						<script>
+							<script>
 
-							jQuery(function ($) {
+								jQuery(function ($) {
 if (!ace.vars['touch']) {
 $('.chosen-select').chosen({allow_single_deselect: true});
 // resize the chosen on window resize
@@ -1250,17 +1256,17 @@ element.classList.remove("navbar-fixed-top");
 # $('#popupDelete').close();
 #
 }
-						</script>
+							</script>
 
-						<!--[if IE]>
-																								{% block script %} {% endblock %}
-																								<![endif]-->
+							<!--[if IE]>
+																															{% block script %} {% endblock %}
+																															<![endif]-->
 
-						{% block additional_script_file %}{% endblock %}
-						<!-- inline scripts related to this page -->
+							{% block additional_script_file %}{% endblock %}
+							<!-- inline scripts related to this page -->
 
-						<script>
-							function checkAll(list_batch_checkbox) {
+							<script>
+								function checkAll(list_batch_checkbox) {
 var boxes = document.getElementsByTagName('input');
 for (var index = 0; index < boxes.length; index++) {
 box = boxes[index];
@@ -1270,11 +1276,9 @@ box.checked = document.getElementById(list_batch_checkbox).checked
 }
 return true;
 }
-						</script>
+							</script>
 
-		{% block javascripts %}
-        
-        {% endblock %}
+							{% block javascripts %}{% endblock %}
 
-					</body>
-				</html>
+						</body>
+					</html>

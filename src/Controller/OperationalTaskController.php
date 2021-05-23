@@ -8,7 +8,11 @@ use App\Entity\TaskMeasurement;
 use App\Form\OperationalTaskType;
 use App\Form\TaskMeasurementType;
 use App\Repository\OperationalManagerRepository;
+use App\Repository\OperationalOfficeRepository;
 use App\Repository\OperationalTaskRepository;
+use App\Repository\PrincipalOfficeRepository;
+use App\Repository\TaskAccomplishmentRepository;
+use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +37,23 @@ class OperationalTaskController extends AbstractController
         $taskMeasurement = new TaskMeasurement();
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
+        $count=0;
+        $operationalTasks = $operationalTaskRepository->findAll();
+// dd($operationalTasks);
+        foreach($operationalTasks as $operationals){
+             $count=$count+
+            $operationals->getWeight();
+        }
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $weight=$form->getData()->getWeight();
+            if ($count + $weight > 100 ) {
+                            $this->addFlash('danger', 'Weight must be less than 100 !');
+
+            return $this->redirectToRoute('operational_task_index');
+
+            }
             $entityManager->persist($operationalTask);
             $entityManager->flush();
 
@@ -59,18 +78,36 @@ $count=0;
 
         ]);
     }
+    /**
+     * @Route("/list", name="operational_task_list")
+     */
+    public function listTask(Request $request,TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    {
+        $user=$this->getUser();
+        // dd($user);
+        $operational_tasks = $taskAccomplishmentRepository->findTask($user);
+        foreach ($operational_tasks as $key ) {
+
+            # code...
+        }
+        // dd($operational_tasks);
+        return $this->render('operational_task/taskList.html.twig', [
+            'operational_tasks_assigns' => $taskAccomplishmentRepository->findTask($user),
+           
+
+        ]);
+    }
  /**
      * @Route("/userFetch", name="user_fetch")
      */
-    public function OperationalFetch(Request $request,OperationalManagerRepository $operationalManagerRepository ,UserInfoRepository $userInfoRepository)
+    public function OperationalFetch(Request $request,PrincipalOfficeRepository $principalOfficeRepository ,UserInfoRepository $userInfoRepository)
     { 
 
         $office=$request->request->get('userprincipal');
-        dd($office);
         // $users=$operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
-        // dd($users);
-        $units = $userInfoRepository->filterDeliverBy($request->request->get('query'));
-    // dd($units);,
+        // dd($office);
+        $units = $principalOfficeRepository->findAllsUser($request->request->get('userprincipal'));
+    // dd($units);
         return new JsonResponse($units);
     }
     /**

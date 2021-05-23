@@ -32,7 +32,7 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">Principal Office
-																																																																																																																																										                     TotalWeight=<div class="badge badge-danger">{{count}}</div>
+																																																																																																																																																																														                     TotalWeight=<div class="badge badge-danger">{{count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -60,7 +60,7 @@
 										{% trans %}
 										Create{% endtrans %}</a>
 								{% endif %}
-								{# {% endif %} #}
+
 								{% if count >= 100 %}
 
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
@@ -90,59 +90,65 @@
 									</div>
 								</div>
 							</form>
+							{% if operational_tasks %}
 
-							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>TaskName</th>
-										<th>Description</th>
-										<th>StartDate</th>
-										<th>EndDate</th>
-										<th>TimeGap</th>
-										<th>Weight</th>
-										<th>actions</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set count = 0 %}
-									{% for operational_task in operational_tasks %}
+
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
 										<tr>
-											{% set count = count + 1 %}
-											<td>{{ count}}</td>
-											<td>{{ operational_task.taskName }}</td>
-											<input type="hidden" class="task" value="{{operational_task.plan.id}}">
-											<input type="hidden" class="office" value="{{operational_task.plan.office}}">
-
-											<input type="hidden" class="userprincipal" value="{{app.user.id}}">
-											<td>{{ operational_task.description }}</td>
-											<td>{{ operational_task.startDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
-											<td>{{ operational_task.endDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
-											<td>{{ operational_task.timeGap }}</td>
-											<td>{{ operational_task.weight }}</td>
-											<td>
-												<a href="{{ path('operational_task_show', {'id': operational_task.id}) }}" class="btn btn-primary btn-sm">
-													<i class="fa fa-eye"></i>
-												</a>
-												<a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-													Assign
-												</a>
-											</td>
-
+											<th>#</th>
+											<th>TaskName</th>
+											<th>Description</th>
+											<th>StartDate</th>
+											<th>EndDate</th>
+											<th>TimeGap</th>
+											<th>Weight</th>
+											<th>actions</th>
 										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% for operational_task in operational_tasks %}
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{ count}}</td>
+												<td>{{ operational_task.taskName }}</td>
+												<input type="hidden" class="task" value="{{operational_task.plan.id}}">
+												<input type="hidden" class="office" value="{{operational_task.plan.office.id}}">
+
+												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
+												<td>{{ operational_task.description }}</td>
+												<td>{{ operational_task.startDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
+												<td>{{ operational_task.endDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
+												<td>{{ operational_task.timeGap }}</td>
+												<td>{{ operational_task.weight }}</td>
+
+												<td>
+													<a href="{{ path('operational_task_show', {'id': operational_task.id}) }}" class="btn btn-primary btn-sm">
+														<i class="fa fa-eye"></i>
+													</a>
+
+
+													<a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
+														Create</a>
+												</td>
+
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="8">no records found</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							{% endif %}
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
 				class="modal-dialog">
@@ -272,29 +278,21 @@
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 					</div>
 				</form>
-
 			</div>
-
-
 		</div>
 	{% endblock %}
 	{% block javascripts %}
-
 		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
 		<script>
 			$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })
 		</script>
-
 		<script>
-
-
 			$(document).ready(function () {
 
 var select = $('.user')
 var userprincipal = $('.office').val();
-console.log(userprincipal);
 $.ajax({
 url:"{{ path('user_fetch') }}",
 method: "POST",
@@ -303,6 +301,7 @@ userprincipal: userprincipal
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
+console.log(data)
 for (let [key, value] of Object.entries(data)) {
 
 
@@ -315,8 +314,6 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 })
 		</script>
 		<script>
-
-
 			$(document).ready(function () {
 var task = $('.task').val();
 
@@ -342,8 +339,6 @@ select.append('<option value="' + value.id + '">' + value.taskName + ' </option>
 })
 		</script>
 		<script src="{{ asset('select2/js/select2.full.min.js')}}"></script>
-
-
 		<script>
 			$(function () { // Initialize Select2 Elements
 

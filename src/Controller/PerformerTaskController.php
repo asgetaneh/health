@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\OperationalTask;
 use App\Entity\PerformerTask;
 use App\Entity\TaskMeasurement;
 use App\Form\PerformerTaskType;
@@ -20,9 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerformerTaskController extends AbstractController
 {
     /**
-     * @Route("/", name="performer_task_index")
+     * @Route("/{id}", name="performer_task_index", methods={"GET"})
      */
-    public function index(Request $request,TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
+    public function index(Request $request,OperationalTask $operationalTask, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
 
         // dd(3);
@@ -52,6 +53,7 @@ $count=0;
             'count'=>$count,
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),
+            'operationalTask'   => $operationalTask->getTaskName(),
 
             'formtask'=>$formtask->createView()
         ]);
