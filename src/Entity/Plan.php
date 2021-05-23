@@ -59,6 +59,11 @@ class Plan
      */
     private $office;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="plans")
+     */
+    private $quarter;
+
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
@@ -198,6 +203,18 @@ class Plan
     public function setOffice(?PrincipalOffice $office): self
     {
         $this->office = $office;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?PlanningQuarter
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?PlanningQuarter $quarter): self
+    {
+        $this->quarter = $quarter;
 
         return $this;
     }

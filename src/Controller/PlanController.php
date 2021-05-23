@@ -37,10 +37,10 @@ class PlanController extends AbstractController
           $plancount=0;
          
           foreach ($initiatives as $initiative) {
+              
             $planduplication=$planRepository->checkForDuplicationOfPlan($principaloffice,$initiative,$planningphase);
             if(!$planduplication){
             
-
             $plan = new Plan();
             $plan->setOffice($principaloffice);
             $plan->setPlanningPhase($planningphase);
@@ -67,7 +67,9 @@ class PlanController extends AbstractController
            
             'planphases'=> $activePlanningPhase,
             'offices'=>$offices,
-            'initiatives'=>$initiatives
+            'initiatives'=>$initiatives,
+            'pricipaloffice'=>$principaloffice,
+            'planphase'=>$planningphase
         ]);
         }
 

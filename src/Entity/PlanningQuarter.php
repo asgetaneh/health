@@ -49,9 +49,15 @@ class PlanningQuarter
      */
     private $planningPhases;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="quarter")
+     */
+    private $plans;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
+        $this->plans = new ArrayCollection();
     }
     public function __toString()
     {
@@ -145,6 +151,36 @@ class PlanningQuarter
     {
         if ($this->planningPhases->removeElement($planningPhase)) {
             $planningPhase->removeQuarter($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plan[]
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): self
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans[] = $plan;
+            $plan->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): self
+    {
+        if ($this->plans->removeElement($plan)) {
+            // set the owning side to null (unless already changed)
+            if ($plan->getQuarter() === $this) {
+                $plan->setQuarter(null);
+            }
         }
 
         return $this;
