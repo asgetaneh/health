@@ -26,9 +26,11 @@ class PlanController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $offices=$em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
-        
-        
-          $activePlanningPhase=$em->getRepository(PlanningPhase::class)->findBy(['isActive'=>1]);
+        $activePlanningPhase=$em->getRepository(PlanningPhase::class)->findBy(['isActive'=>1]);
+        if ($request->request->get('office') && $request->request->get('planphase')) {
+            dd($request->request->get('office'));
+        }
+
         return $this->render('plan/index.html.twig', [
             'plans' => $planRepository->findAll(),
             'planphases'=> $activePlanningPhase,

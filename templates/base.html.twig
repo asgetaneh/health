@@ -777,10 +777,11 @@ ace.settings.loadState('sidebar')
 										{#</li>#}
 									</ul>
 								</li>
-								{# {% endif %} #}
 
 
-								{% if is_granted('LIST_USER') %}
+
+
+								{# {% if is_granted('LIST_USER') %} #}
 									<li>
 										<a href="#" class="dropdown-toggle">
 											<i class=""></i>
@@ -794,6 +795,7 @@ ace.settings.loadState('sidebar')
 										</a>
 
 										<ul class="submenu">
+                                        {{ include('menu/user.html.twig') }}
 											{% if is_granted('LIST_USER') %}
 												<li>
 													<a href="{{ path('user_index') }}">
@@ -831,39 +833,8 @@ ace.settings.loadState('sidebar')
 											{% endif %}
 										</ul>
 									</li>
-									{#<li>#}
-								{#<a href="#" class="dropdown-toggle">#}
-									{#<i class=""></i>#}
-									{#<span class="menu-text">#}
-									{#{% trans %} Mail{% endtrans %}#}
-
-									{#</span>#}
-
-									{#<b class="arrow fa fa-angle-down"></b>#}
-									{#</a>#}
-
-									{#<ul class="submenu">#}
-									{#<li>#}
-									{#<a href="{{ path('mismail_index') }}">#}
-									{#<b class="fa fa-caret-right"></b>#}
-									{#{% trans %} Inbox {% endtrans %}#}
-									{#</a>#}
-									{#</li>#}
-									{#<li>#}
-									{#<a href="{{ path('mismail_new') }}">#}
-									{#<b class="fa fa-caret-right"></b>#}
-									{#{% trans %} Compose Mail {% endtrans %}#}
-									{#</a>#}
-									{#</li>#}
-									{#<li>#}
-									{#<a href="#">#}
-									{#<b class="fa fa-caret-right"></b>#}
-									{#{% trans %} View Mail {% endtrans %}#}
-									{#</a>#}
-									{#</li>#}
-									{#</ul>#}
-									{#</li>#}
-								{% endif %}
+									
+								{# {% endif %} #}
 
 								{#     {% if is_granted('SIS') %}
 																																                                <li>

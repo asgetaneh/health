@@ -125,8 +125,9 @@ class PlanningPhaseController extends AbstractController
        foreach ($principalManagers as $key => $principalManager) {
          foreach($principalManager->getPrincipalOffice()->getInitiatives() as $initiative){
              $planduplication=$em->getRepository(Plan::class)->checkForDuplicationOfPlan($principalManager->getPrincipalOffice(),$initiative,$planningPhase);
-             if(count($planduplication)<0){
            
+             if(!$planduplication){
+            
 
             $plan = new Plan();
             $plan->setOffice($principalManager->getPrincipalOffice());
@@ -140,7 +141,8 @@ class PlanningPhaseController extends AbstractController
             $this->addFlash('success',"plan is created successfuly! thank you for responding");
                }
                else
-               $this->addFlash('danger',"you are already respond to this Plan annousment");
+
+               $this->addFlash('warning',"you are already respond to this Plan annousment");
               
             
 

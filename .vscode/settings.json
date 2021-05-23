@@ -2,7 +2,6 @@
     "editor.fontSize": 16,
     "editor.definitionLinkOpensInPeek": true,
     "editor.detectIndentation": false,
-    "editor.wordWrap": "on",
     "editor.autoIndent": "advanced",
     "editor.codeLens": false,
     "editor.linkedEditing": true,
@@ -11,6 +10,11 @@
     "editor.tabCompletion": "on",
     "editor.wrappingIndent": "indent",
     "editor.wrappingStrategy": "advanced",
+    "diffEditor.wordWrap": "on",
     "editor.formatOnPaste": true,
-    "diffEditor.wordWrap": "on"
+    "editor.defaultFormatter": "VisualStudioExptTeam.vscodeintellicode",
+    "html.format.indentInnerHtml": true,
+    "json.format.enable": false,
+    "javascript.format.insertSpaceAfterCommaDelimiter": false,
+    "files.autoGuessEncoding": true
 }
