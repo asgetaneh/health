@@ -47,4 +47,13 @@ class InitiativeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findByPrincipalAndOffice($office){
+        $qb=$this->createQueryBuilder('i');
+        $qb
+        ->join('i.principalOffice','po')
+        ->andWhere('po.id = :office')
+        ->setParameter('office',$office);
+        return $qb->getQuery()->getResult();
+
+    }
 }

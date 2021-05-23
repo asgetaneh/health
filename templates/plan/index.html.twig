@@ -1,235 +1,187 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <div class="row">
-    <div class="col-xs-12">
-      <!-- PAGE CONTENT BEGINS -->
-      {# <h4 class="lighter">
-																																	<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-																																	<a href="#modal-wizard" data-toggle="modal" class="pink">
-																																		Wizard Inside a Modal Box
-																																	</a>
-																																</h4> #}
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+			{# <h4 class="lighter">
+																																																<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+																																																<a href="#modal-wizard" data-toggle="modal" class="pink">
+																																																	Wizard Inside a Modal Box
+																																																</a>
+																																															</h4> #}
 
-      {# <div class="hr hr-18 hr-double dotted"></div> #}
+			{# <div class="hr hr-18 hr-double dotted"></div> #}
+				<div>
+					<ul class="steps"> <li data-step="1" class={% if initiatives is defined %}
+                    "complete"
+                    {% else %}
+                        " active"
+                    {% endif %}>
+						<span class="step">1</span>
+						<span class="title">Select Report Period And Office</span>
+					</li>
 
-      <div class="widget-box">
-        <div class="widget-header widget-header-blue widget-header-flat">
-          <h4 class="widget-title lighter">
-            <strong>Cascading Plan Achievement</strong>
-          </h4>
+					<li data-step="2" class= {% if initiative is defined %}
+                    "active"
+                    {% else %}
+                        " "
+                    {% endif %}
+                    >
 
-          <div class="widget-toolbar">
-            <label>
-              <small class="green">
-                <b></b>
-              </small>
 
-              {# <input id="skip-validation" type="checkbox" class="ace ace-switch ace-switch-4"/> #}
-              <span class="lbl middle"></span>
-            </label>
-          </div>
-        </div>
+						<span class="step">2</span>
+						<span class="title">
+							Select Suitable Initiative with your teammates
+						</span>
+					</li>
 
-        <div class="widget-body">
-          <div class="widget-main">
-            <div id="fuelux-wizard-container">
-              <div>
-                <ul class="steps">
-                  <li data-step="1" class="active">
-                    <span class="step">1</span>
-                    <span class="title">Select Report Period And Office</span>
-                  </li>
+					<li data-step="3">
+						<span class="step">3</span>
+						<span class="title">Create And Assign Task</span>
+					</li>
 
-                  <li data-step="2">
-                    <span class="step">2</span>
-                    <span class="title">
-                      Select Suitable Initiative with your teammates
-                    </span>
-                  </li>
+					<li data-step="4">
+						<span class="step">4</span>
+						<span class="title">
+							Confirmation by Planning Directorate
+						</span>
+					</li>
+				</ul>
+			</div>
+			<div class="well well-sm">
+				<button type="reset" id="reset-widgets" class="btn btn-info btn-white btn-bold btn-round" data-toggle="modal" data-target="#myModal">
+					<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+					<strong>Select Report period and offices</strong>
+				</button>
 
-                  <li data-step="3">
-                    <span class="step">3</span>
-                    <span class="title">Create And Assign Task</span>
-                  </li>
+			</div>
 
-                  <li data-step="4">
-                    <span class="step">4</span>
-                    <span class="title">
-                      Confirmation by Planning Directorate
-                    </span>
-                  </li>
-                </ul>
-              </div>
 
-              <hr/>
+			<div class="widget-body">
+				<div class="widget-main">
+					
+								{% if initiatives is defined %}
+									<div class="table-responsive">
+										<form class="form-inline" method="post" style="display:inline;">
 
-              <div class="step-content pos-rel">
-                <div class="step-pane active" data-step="1">
+											<div class="input-group">
+												<input type="text" class="form-control" name="search" placeholder="search"/>
+												<div class="input-group-btn">
+													<button type="submit" class="btn btn-default no-border btn-sm">
+														<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+													</button>
+												</div>
+											</div>
+										</form>
 
-                  {# <div class="well well-sm"> #}
+										<table class="table table-condensed table-striped table-bordered table-hover" style="margin-top:10px;">
+											<thead>
+												<tr>
+													<th rowspan="2">#</th>
 
-                  {# </div> #}
-                  <button type="reset" id="reset-widgets" class="btn btn-info btn-white btn-bold btn-round" data-toggle="modal" data-target="#myModal">
-                    <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-                    <strong>Select Report period and offices</strong>
-                  </button>
+													<th rowspan="2">Name</th>
 
-                  <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
+													<th rowspan="2">initiative Behavior</th>
 
-                      <!-- Modal content-->
-                      <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title">select Plan announcements and Office</h4>
-                        </div>
-                        <div class="modal-body">
-                          <form id="sample-form" action="{{path('plan_index')}}" method="post">
+													{# <th rowspan="2">Year</th> #}
 
-                            <div class="form-group">
-                              <label class="control-label col-xs-12 col-sm-12 ">
-                                Select Period
-                              </label>
 
-                              <select class="select2" name="phase" id="planphase" required="required" placholder="select reporting period">
-                                {# <option value="null">select reporting period</option> #}
-                                {% for planphase in planphases %}
-                                  <option value="{{ planphase.id }}">
-                                    {{ planphase.name }}
-                                  </option>
-                                {% endfor %}
-                              </select>
+													<th rowspan="2">Yearly Plan</th>
 
-                            </div>
-                            <div class="form-group">
-                              <label class="control-label col-xs-12 col-sm-12 ">
-                                Select office
-                              </label>
+													<th colspan="2">
+														1st Quarter
+													</th>
+													<th colspan="2">
+														2nd Quarter
 
-                              <select class="select2" name="office" id="" required="required">
-                                <option value="null">select principal office</option>
-                                {% for office in offices %}
-                                  <option value="{{office.id}}}">{{office}}</option>
 
-                                {% endfor %}
-                              </select>
+													</th>
+													<th colspan="2">
+														3rd Quarter
 
-                            </div>
-                          </div>
 
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+													</th>
+													<th colspan="2">
+														4th Quarter</th>
 
-                            <button type="submit" class="btn btn-primary">submit</button>
 
-                          </form>
+													<th rowspan="2">actions</th>
 
-                        </div>
-                      </div>
+												</tr>
+												<tr>
+													<th>Plan</th>
+													<th>Accom.</th>
+													<th>Plan</th>
+													<th>Accom.</th>
+													<th>Plan</th>
+													<th>Accom.</th>
+													<th>Plan</th>
+													<th>Accom.</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for initiative in initiatives %}
+													<tr>
+														<td>{{ initiative.id }}</td>
+														<td>{{ initiative.name }}</td>
+														<td>{{ initiative.initiativeBehaviour}}</td>
+														<td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+                                                        <td>{{ "0"}}</td>
+					
+														<td>
+															<a  class="btn btn-info btn-xs " href="{{ path('initiatve_show', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i>     task</a>
+															<a data-toggle="modal" data-target="#{{initiative.id}}"   href="#">edit</a>
+														</td>
+													</tr>
+                                                    {% include 'plan/plan.modal.html.twig' with {'initiative': initiative } %}
+												{% else %}
+													<tr>
+														<td colspan="7">no records found</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+										{# <div class="pull-right">{{ knp_pagination_render(initiatives) }}</div> #}
+									</div>
 
-                    </div>
-                  </div>
 
-                </div>
+								{% endif %}
+							
 
-                <div class="step-pane" data-step="2">
-                  <div>
-                    <div class="alert alert-success">
-                      <button type="button" class="close" data-dismiss="alert">
-                        <i class="ace-icon fa fa-times"></i>
-                      </button>
+							
+					
 
-                      <strong>
-                        <i class="ace-icon fa fa-check"></i>
-                        Well done!
-                      </strong>
+					<hr/>
+					{# <div class="wizard-actions">
+																			              <button class="btn btn-prev">
+																			                <i class="ace-icon fa fa-arrow-left"></i>
+																			                Prev
+																			              </button>
+																			
+																			              <button class="btn btn-success btn-next" data-last="Finish">
+																			                Next
+																			                <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+																			              </button>
+																			            </div> #}
+				</div>
+				<!-- /.widget-main -->
+			</div>
+			<!-- /.widget-body -->
+		</div><!-- PAGE CONTENT ENDS --></div><!-- /.col -->
+   
+    {{ include('plan/modal.html.twig') }}
+	<script type="text/javascript">
+		jQuery(function ($) {
+$('.select2').css('width', '90%').select2({allowClear: false})
 
-                      You successfully read this important alert message.
-                      <br/>
-                    </div>
-
-                    <div class="alert alert-danger">
-                      <button type="button" class="close" data-dismiss="alert">
-                        <i class="ace-icon fa fa-times"></i>
-                      </button>
-
-                      <strong>
-                        <i class="ace-icon fa fa-times"></i>
-                        Oh snap!
-                      </strong>
-
-                      Change a few things up and try submitting again.
-                      <br/>
-                    </div>
-
-                    <div class="alert alert-warning">
-                      <button type="button" class="close" data-dismiss="alert">
-                        <i class="ace-icon fa fa-times"></i>
-                      </button>
-                      <strong>Warning!</strong>
-
-                      Best check yo self, you're not looking too good.
-                      <br/>
-                    </div>
-
-                    <div class="alert alert-info">
-                      <button type="button" class="close" data-dismiss="alert">
-                        <i class="ace-icon fa fa-times"></i>
-                      </button>
-                      <strong>Heads up!</strong>
-
-                      This alert needs your attention, but it's not super important.
-                      <br/>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="step-pane" data-step="3">
-                  <div class="center">
-                    <h3 class="blue lighter">
-                      This is step 3
-                    </h3>
-                  </div>
-                </div>
-
-                <div class="step-pane" data-step="4">
-                  <div class="center">
-                    <h3 class="green">
-                      Congrats!
-                    </h3>Your product is ready to ship! Click finish to continue!
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <hr/>
-            {# <div class="wizard-actions">
-						              <button class="btn btn-prev">
-						                <i class="ace-icon fa fa-arrow-left"></i>
-						                Prev
-						              </button>
-						
-						              <button class="btn btn-success btn-next" data-last="Finish">
-						                Next
-						                <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
-						              </button>
-						            </div> #}
-          </div>
-          <!-- /.widget-main -->
-        </div>
-        <!-- /.widget-body -->
-      </div>
-
-      <!-- PAGE CONTENT ENDS -->
-    </div>
-    <!-- /.col -->
-  </div>
-
-  <script type="text/javascript">
-    jQuery(function ($) {
-      $('.select2').css('width', '90%').select2({allowClear: false})
-
-    })
-  </script>
+})
+	</script>
 {% endblock %}

@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Initiative;
 use App\Entity\Plan;
 use App\Entity\PlanningPhase;
 use App\Entity\PrincipalOffice;
 use App\Form\PlanType;
 use App\Repository\PlanRepository;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,12 +29,50 @@ class PlanController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $offices=$em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningPhase=$em->getRepository(PlanningPhase::class)->findBy(['isActive'=>1]);
-        if ($request->request->get('office') && $request->request->get('planphase')) {
-            dd($request->request->get('office'));
+        if ($request->request->get('office') && $request->request->get('phase')) {
+            $planningphase=$em->getRepository(PlanningPhase::class)->find($request->request->get('phase'));
+         $principaloffice=$em->getRepository(PrincipalOffice::class)->find($request->request->get('office'));
+          $initiatives=$em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice->getId());
+          $countinitiative=count($initiatives);
+          $plancount=0;
+         
+          foreach ($initiatives as $initiative) {
+            $planduplication=$planRepository->checkForDuplicationOfPlan($principaloffice,$initiative,$planningphase);
+            if(!$planduplication){
+            
+
+            $plan = new Plan();
+            $plan->setOffice($principaloffice);
+            $plan->setPlanningPhase($planningphase);
+            $plan->setPlanningYear($planningphase->getPlanningYear());
+            $plan->setInitiative($initiative);
+            $plan->setCreatedAt(new DateTime('now'));
+            $plan->setCreatedBy($this->getUser());
+            $em->persist($plan);
+            $em->flush();
+            $this->addFlash('success',"plan is created successfuly! thank you for responding");
+               }
+               else
+              $this->addFlash('warning',"you are already respond to this Plan annousment");
+              
+            
+
+
+
+         
+          }
+         
+
+          return $this->render('plan/index.html.twig', [
+           
+            'planphases'=> $activePlanningPhase,
+            'offices'=>$offices,
+            'initiatives'=>$initiatives
+        ]);
         }
 
         return $this->render('plan/index.html.twig', [
-            'plans' => $planRepository->findAll(),
+           
             'planphases'=> $activePlanningPhase,
             'offices'=>$offices
         ]);

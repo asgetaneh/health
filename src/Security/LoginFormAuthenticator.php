@@ -77,7 +77,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
         // dd($credentials['username']);
 
-          $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => "gotamirat"]);
+          $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
     //   $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
         $this->user = $user;
         //  dd($user);
