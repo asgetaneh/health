@@ -18,7 +18,25 @@ class OperationalTaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalTask::class);
     }
+    public function filterDeliverBy($plan)
+    {
 
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->Select('s.taskName')  
+           
+            ->addSelect('s.id')
+            // ->addSelect('s.user')
+
+            ->orderBy('s.id', 'ASC')->
+            andWhere('s.plan = :plan')
+            ->setParameter('plan', $plan)
+
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return OperationalTask[] Returns an array of OperationalTask objects
     //  */

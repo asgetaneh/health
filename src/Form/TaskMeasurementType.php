@@ -14,6 +14,8 @@ class TaskMeasurementType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
+            ->add('expectedValue')
+
         ;
     }
 

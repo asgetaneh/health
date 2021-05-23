@@ -35,16 +35,16 @@ class OperationalTask
     private $plan;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
   /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDate;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $timeGap;
 
@@ -62,7 +62,10 @@ class OperationalTask
      * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="operationalTask")
      */
     private $taskAssigns;
-
+    public function __toString()
+    {
+        return $this->taskName;
+    }
     public function __construct()
     {
         $this->performerTasks = new ArrayCollection();

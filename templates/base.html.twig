@@ -66,6 +66,9 @@
 <script src="{{ asset('assets/assets/js/wizard.min.js') }}"></script>
 
 
+
+	<script src="{{asset('bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+
 		{#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
 		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
 
@@ -1298,6 +1301,9 @@ return true;
 }
 						</script>
 
+		{% block javascripts %}
+        
+        {% endblock %}
 
 					</body>
 				</html>

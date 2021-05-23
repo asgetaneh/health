@@ -20,7 +20,7 @@ class UserGroupController extends AbstractController
      */
     public function index(UserGroupRepository $userGroupRepository): Response
     {
-        $this->denyAccessUnlessGranted("sm_user");
+        // $this->denyAccessUnlessGranted("sm_user");
 
         return $this->render('user_group/index.html.twig', [
             'user_groups' => $userGroupRepository->findAll(),
@@ -32,7 +32,7 @@ class UserGroupController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $this->denyAccessUnlessGranted("sm_user");
+        // $this->denyAccessUnlessGranted("sm_user");
         $userGroup = new UserGroup();
         $form = $this->createForm(UserGroupType::class, $userGroup);
         $form->handleRequest($request);

@@ -54,9 +54,30 @@ class TaskAssign
      */
     private $taskAccomplishments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TaskMeasurement::class, mappedBy="taskAssign")
+     */
+    private $taskMeasurements;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TaskMeasurement::class, inversedBy="taskAssigns")
+     */
+    private $measurment;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expectedValue;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="taskAssignsTo")
+     */
+    private $assignedTo;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
+        $this->taskMeasurements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,4 +186,42 @@ class TaskAssign
 
         return $this;
     }
+
+    public function getMeasurment(): ?TaskMeasurement
+    {
+        return $this->measurment;
+    }
+
+    public function setMeasurment(?TaskMeasurement $measurment): self
+    {
+        $this->measurment = $measurment;
+
+        return $this;
+    }
+
+    public function getExpectedValue(): ?int
+    {
+        return $this->expectedValue;
+    }
+
+    public function setExpectedValue(?int $expectedValue): self
+    {
+        $this->expectedValue = $expectedValue;
+
+        return $this;
+    }
+
+    public function getAssignedTo(): ?User
+    {
+        return $this->assignedTo;
+    }
+
+    public function setAssignedTo(?User $assignedTo): self
+    {
+        $this->assignedTo = $assignedTo;
+
+        return $this;
+    }
+
+   
 }

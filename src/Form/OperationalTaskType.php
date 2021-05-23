@@ -14,10 +14,7 @@ class OperationalTaskType extends AbstractType
         $builder
             ->add('taskName')
             ->add('description')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('timeGap')
-            ->add('weight')
+                       ->add('weight')
         ;
     }
 
