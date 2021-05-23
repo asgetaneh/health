@@ -34,9 +34,30 @@ class TaskMeasurement
      */
     private $taskAccomplishments;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $expectedValue;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $outPutValue;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $correctValue;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="measurment")
+     */
+    private $taskAssigns;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
+        $this->taskAssigns = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +113,74 @@ class TaskMeasurement
             // set the owning side to null (unless already changed)
             if ($taskAccomplishment->getMeasurement() === $this) {
                 $taskAccomplishment->setMeasurement(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    public function getExpectedValue(): ?int
+    {
+        return $this->expectedValue;
+    }
+
+    public function setExpectedValue(int $expectedValue): self
+    {
+        $this->expectedValue = $expectedValue;
+
+        return $this;
+    }
+
+    public function getOutPutValue(): ?int
+    {
+        return $this->outPutValue;
+    }
+
+    public function setOutPutValue(?int $outPutValue): self
+    {
+        $this->outPutValue = $outPutValue;
+
+        return $this;
+    }
+
+    public function getCorrectValue(): ?int
+    {
+        return $this->correctValue;
+    }
+
+    public function setCorrectValue(?int $correctValue): self
+    {
+        $this->correctValue = $correctValue;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskAssign[]
+     */
+    public function getTaskAssigns(): Collection
+    {
+        return $this->taskAssigns;
+    }
+
+    public function addTaskAssign(TaskAssign $taskAssign): self
+    {
+        if (!$this->taskAssigns->contains($taskAssign)) {
+            $this->taskAssigns[] = $taskAssign;
+            $taskAssign->setMeasurment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAssign(TaskAssign $taskAssign): self
+    {
+        if ($this->taskAssigns->removeElement($taskAssign)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAssign->getMeasurment() === $this) {
+                $taskAssign->setMeasurment(null);
             }
         }
 

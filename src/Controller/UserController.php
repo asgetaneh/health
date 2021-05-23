@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\UserGroup;
+use App\Security\LoginFormAuthenticator;
 use App\Repository\UserRepository;
 use App\Repository\UserGroupRepository;
 use App\Repository\PermissionRepository;
@@ -21,7 +22,7 @@ class UserController extends AbstractController
      */
     public function index(UserGroupRepository $userGroupRepository): Response
     {
-        $this->denyAccessUnlessGranted("sm_user");
+        // $this->denyAccessUnlessGranted("sm_user");
         $user_groups = $userGroupRepository->findAll();
 
         return $this->render('user_group/index.html.twig', [
@@ -33,7 +34,7 @@ class UserController extends AbstractController
      */
     public function userList(UserGroupRepository $userGroupRepository,Request $request, PaginatorInterface $paginator, UserInfoRepository $userInfoRepository): Response
     {
-        $this->denyAccessUnlessGranted("sm_user");
+        // $this->denyAccessUnlessGranted("sm_user");
         $users = $userInfoRepository->findAll();
         $data = $paginator->paginate(
             $users,
@@ -44,28 +45,7 @@ class UserController extends AbstractController
             'users' => $data,
         ]);
     }
-    /**
-     * @Route("/user/serverteam", name="server_team")
-     */
-    public function serverTeam(Request $request, UserGroupRepository $userGroupRepository, UserInfoRepository $userInfoRepository): Response
-    {    $em=$this->getDoctrine()->getManager();
-        if ($request->request->get("out")) {
-            $out=$request->request->get("out");
-            $serverUserId=$request->request->get("userid");
-            $userinfos=$userInfoRepository->findoneBy(["user"=>$serverUserId]);
-            $userinfos->setServerTeam(null);
-            $em->flush();
-            return $this->redirectToRoute('user_list');
-            # code...
-        }
-        else {
-            $serverUserId=$request->request->get("userid");
-            $userinfos=$userInfoRepository->findoneBy(["user"=>$serverUserId]);
-            $userinfos->setServerTeam(1);
-            $em->flush();
-            return $this->redirectToRoute('user_list');        }
-     
-    }
+   
 
     /**
      * @Route("/{id}/users", name="user_group_users", methods={"POST"})
@@ -98,7 +78,7 @@ class UserController extends AbstractController
      */
     public function permission(UserGroup $userGroup, Request $request, PermissionRepository $permissionRepository)
     {
-        $this->denyAccessUnlessGranted("sm_user");
+        // $this->denyAccessUnlessGranted("sm_user");
         if ($request->request->get('usergrouppermission')) {
             $permissions = $permissionRepository->findAll();
             foreach ($permissions as $permission) {
@@ -118,4 +98,16 @@ class UserController extends AbstractController
 
         ]);
     }
+//     /**
+//      * @Route("/userFetch", name="user_group_permission")
+//      */
+//      public function setting(LoginFormAuthenticator $usernamecc)
+//      {
+//          $usernamed="abebe";
+// $usernamecc->getUserlist($usernamed);
+//          $srs = $this->getDoctrine()->getConnection('srs');
+//          $sis = $this->getDoctrine()->getConnection();
+
+ 
+//      }
 }

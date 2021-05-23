@@ -43,24 +43,6 @@
 									<td>{{ user.fullName }}</td>
 									<td>{{ user.email }}</td>
 
-									<td>
-										{% if user.serverTeam != 1 %}
-
-											<form class="d-inline" method="post" action="{{ path('server_team', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to Add this user to server team ?');">
-
-												<button class="btn btn-sm btn-outline-success" name="userid" value="{{ user.id}}" title="ServerTeam">
-													Add</button>
-											</form>
-										{% else %}
-
-											<form class="d-inline" method="post" action="{{ path('server_team', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to Remove this user to server team ?');">
-												<input type="hidden" name="out" value="out">
-												<button class="btn btn-sm btn-outline-danger" name="userid" value="{{ user.id}}" title="Remove from server team">
-													Remove</button>
-											</form>
-										{% endif %}
-									</td>
-
 
 								</tr>
 							{% else %}

@@ -3,27 +3,60 @@
 namespace App\Controller;
 
 use App\Entity\PerformerTask;
+use App\Entity\TaskMeasurement;
 use App\Form\PerformerTaskType;
+use App\Form\TaskMeasurementType;
 use App\Repository\PerformerTaskRepository;
+use App\Repository\TaskAssignRepository;
+use App\Repository\TaskMeasurementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/performer/task")
+ * @Route("/performertask")
  */
 class PerformerTaskController extends AbstractController
 {
     /**
-     * @Route("/", name="performer_task_index", methods={"GET"})
+     * @Route("/", name="performer_task_index")
      */
-    public function index(PerformerTaskRepository $performerTaskRepository): Response
+    public function index(Request $request,TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
+
+        // dd(3);
+        $performerTask = new PerformerTask();
+        $form = $this->createForm(PerformerTaskType::class, $performerTask);
+        $form->handleRequest($request);
+        $taskMeasurement = new TaskMeasurement();
+        $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
+        $formtask->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($performerTask);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('performer_task_index');
+        }
+$count=0;
+        $performerTasks = $performerTaskRepository->findAll();
+// dd($operationalTasks);
+        foreach($performerTasks as $operationals){
+             $count=$count+
+            $operationals->getWeight();
+        }
+        // dd($count);
         return $this->render('performer_task/index.html.twig', [
             'performer_tasks' => $performerTaskRepository->findAll(),
+            'count'=>$count,
+            'form' => $form->createView(),
+            'measurements' => $taskMeasurementRepository->findAll(),
+
+            'formtask'=>$formtask->createView()
         ]);
-    }
+        }
+      
 
     /**
      * @Route("/new", name="performer_task_new", methods={"GET","POST"})

@@ -18,7 +18,24 @@ class OperationalManagerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalManager::class);
     }
+    
+    public function findAllsUser($user)
+    {
 
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice','u')
+
+            ->Select('s.fullName')  
+           
+            ->addSelect('u.id')
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return OperationalManager[] Returns an array of OperationalManager objects
     //  */

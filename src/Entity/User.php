@@ -148,6 +148,11 @@ class User implements UserInterface
      */
     private $measures;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="assignedTo")
+     */
+    private $taskAssignsTo;
+
  
 
 
@@ -176,6 +181,7 @@ class User implements UserInterface
         $this->taskAssigns = new ArrayCollection();
         $this->measures = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
+        $this->taskAssignsTo = new ArrayCollection();
     }
     public function __toString()
     {
@@ -907,6 +913,36 @@ class User implements UserInterface
     public function getUserGroups(): Collection
     {
         return $this->userGroups;
+    }
+
+    /**
+     * @return Collection|TaskAssign[]
+     */
+    public function getTaskAssignsTo(): Collection
+    {
+        return $this->taskAssignsTo;
+    }
+
+    public function addTaskAssignsTo(TaskAssign $taskAssignsTo): self
+    {
+        if (!$this->taskAssignsTo->contains($taskAssignsTo)) {
+            $this->taskAssignsTo[] = $taskAssignsTo;
+            $taskAssignsTo->setAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAssignsTo(TaskAssign $taskAssignsTo): self
+    {
+        if ($this->taskAssignsTo->removeElement($taskAssignsTo)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAssignsTo->getAssignedTo() === $this) {
+                $taskAssignsTo->setAssignedTo(null);
+            }
+        }
+
+        return $this;
     }
 
     

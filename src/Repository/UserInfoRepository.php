@@ -34,20 +34,21 @@ class UserInfoRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function filterServerUser()
+    public function filterDeliverBy($user)
     {
-        $date = (new \DateTime())->format('y-m-d');
 
         //dd($productNmae);
-        return $this->createQueryBuilder('s')
+        return $this->createQueryBuilder('s')->leftJoin('s.user','u')
 
-
-            ->Select('s.fullName')
-           ->andWhere('s.serverTeam = 1')
+            ->Select('s.fullName')  
            
+            ->addSelect('u.id')
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $user)
             ->orderBy('s.id', 'ASC')
+          
             ->getQuery()
-
+            
             ->getResult();
     }
 
