@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Plan;
+use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 /**
  * @Route("/planning/phase")
@@ -17,12 +20,28 @@ use App\Entity\Plan;
 class PlanningPhaseController extends AbstractController
 {
     /**
-     * @Route("/", name="planning_phase_index", methods={"GET"})
+     * @Route("/", name="planning_phase_index", methods={"GET","POST"})
      */
-    public function index(PlanningPhaseRepository $planningPhaseRepository): Response
+    public function index(PlanningPhaseRepository $planningPhaseRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $planningPhase = new PlanningPhase();
+        $form = $this->createForm(PlanningPhaseType::class, $planningPhase);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $planningPhase->setCreatedAt(new DateTime('now'));
+            $planningPhase->setCreatedBy($this->getUser());
+            $entityManager->persist($planningPhase);
+            $entityManager->flush();
+              $this->addFlash('success','new Plan announcement is created');
+            return $this->redirectToRoute('planning_phase_index');
+        }
+        $data=$paginator->paginate($planningPhaseRepository->findAll(),$request->query->getInt('page',1),
+        10);
         return $this->render('planning_phase/index.html.twig', [
-            'planning_phases' => $planningPhaseRepository->findAll(),
+            'planning_phases' =>$data,
+            'form'=>$form->createView()
         ]);
     }
 
@@ -99,16 +118,40 @@ class PlanningPhaseController extends AbstractController
     {
         
        $em=$this->getDoctrine()->getManager();
-       $office=$this->getUser()->getPrincipalManagers()
+       $principalManagers=$this->getUser()->getPrincipalManagers()
        ;
-       $offices=array();
+      
 
-       foreach ($office as $key => $value) {
-          array_push ($offices,$value->getPrincipalOffice()->getName());
+       foreach ($principalManagers as $key => $principalManager) {
+         foreach($principalManager->getPrincipalOffice()->getInitiatives() as $initiative){
+             $planduplication=$em->getRepository(Plan::class)->checkForDuplicationOfPlan($principalManager->getPrincipalOffice(),$initiative,$planningPhase);
+             if(count($planduplication)<0){
+           
+
+            $plan = new Plan();
+            $plan->setOffice($principalManager->getPrincipalOffice());
+            $plan->setPlanningPhase($planningPhase);
+            $plan->setPlanningYear($planningPhase->getPlanningYear());
+            $plan->setInitiative($initiative);
+            $plan->setCreatedAt(new DateTime('now'));
+            $plan->setCreatedBy($this->getUser());
+            $em->persist($plan);
+            $em->flush();
+            $this->addFlash('success',"plan is created successfuly! thank you for responding");
+               }
+               else
+               $this->addFlash('danger',"you are already respond to this Plan annousment");
+              
+            
+
+
+
+         }
+         
        }
-       dd($offices);
-       $plan = new Plan();
-       $planningyear=$planningPhase->getPlanningYear();
+      
+       
+    
 
 
 

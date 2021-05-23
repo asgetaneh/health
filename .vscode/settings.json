@@ -1,5 +1,16 @@
 {
-    "editor.fontSize": 18,
+    "editor.fontSize": 16,
     "editor.definitionLinkOpensInPeek": true,
-    "editor.detectIndentation": false
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
+    "editor.autoIndent": "advanced",
+    "editor.codeLens": false,
+    "editor.linkedEditing": true,
+    "editor.multiCursorPaste": "full",
+    "editor.renderControlCharacters": true,
+    "editor.tabCompletion": "on",
+    "editor.wrappingIndent": "indent",
+    "editor.wrappingStrategy": "advanced",
+    "editor.formatOnPaste": true,
+    "diffEditor.wordWrap": "on"
 }

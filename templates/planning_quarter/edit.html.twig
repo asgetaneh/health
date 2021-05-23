@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PlanningQuarter{% endblock %}
+
+{% block body %}
+    <h1>Edit PlanningQuarter</h1>
+
+    {{ include('planning_quarter/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('planning_quarter_index') }}">back to list</a>
+
+    {{ include('planning_quarter/_delete_form.html.twig') }}
+{% endblock %}

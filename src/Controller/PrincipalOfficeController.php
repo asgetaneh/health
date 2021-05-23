@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\PrincipalOffice;
 use App\Form\PrincipalOfficeType;
 use App\Repository\PrincipalOfficeRepository;
+use DateTime;
+use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/principal/office")
@@ -16,12 +19,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class PrincipalOfficeController extends AbstractController
 {
     /**
-     * @Route("/", name="principal_office_index", methods={"GET"})
+     * @Route("/", name="principal_office_index", methods={"GET","POST"})
      */
-    public function index(PrincipalOfficeRepository $principalOfficeRepository): Response
+    public function index(PrincipalOfficeRepository $principalOfficeRepository,Request $request,PaginatorInterface $paginator): Response
     {
+         $principalOffice = new PrincipalOffice();
+        $form = $this->createForm(PrincipalOfficeType::class, $principalOffice);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $principalOffice->setCreateAt(new DateTime('now'));
+            $principalOffice->setCreatedBy($this->getUser());
+            $entityManager->persist($principalOffice);
+            $entityManager->flush();
+            $this->addFlash('success',"new Principal office is added successfuly");
+
+            return $this->redirectToRoute('principal_office_index');
+        }
+        $data=$paginator->paginate(
+             $principalOfficeRepository->findAll(),
+             $request->query->getInt('page',1),
+             10
+
+        );
         return $this->render('principal_office/index.html.twig', [
-            'principal_offices' => $principalOfficeRepository->findAll(),
+            'principal_offices' => $data,
+            'form'=>$form->createView()
         ]);
     }
 

@@ -54,6 +54,11 @@ class Plan
      */
     private $behavioralPlanningAccomplishments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PrincipalOffice::class, inversedBy="plans")
+     */
+    private $office;
+
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
@@ -181,6 +186,18 @@ class Plan
                 $behavioralPlanningAccomplishment->setPlan(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOffice(): ?PrincipalOffice
+    {
+        return $this->office;
+    }
+
+    public function setOffice(?PrincipalOffice $office): self
+    {
+        $this->office = $office;
 
         return $this;
     }

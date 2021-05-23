@@ -24,10 +24,7 @@ class PlanningPhase
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $code;
+   
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -52,7 +49,7 @@ class PlanningPhase
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="planningPhase")
@@ -74,9 +71,30 @@ class PlanningPhase
      */
     private $otherinfo;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $warning;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $endAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=PlanningQuarter::class, inversedBy="planningPhases")
+     */
+    private $quarter;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
+        $this->quarter = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,17 +114,7 @@ class PlanningPhase
         return $this;
     }
 
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): self
-    {
-        $this->code = $code;
-
-        return $this;
-    }
+    
 
     public function getDescription(): ?string
     {
@@ -230,6 +238,66 @@ class PlanningPhase
     public function setOtherinfo(?string $otherinfo): self
     {
         $this->otherinfo = $otherinfo;
+
+        return $this;
+    }
+
+    public function getWarning(): ?string
+    {
+        return $this->warning;
+    }
+
+    public function setWarning(?string $warning): self
+    {
+        $this->warning = $warning;
+
+        return $this;
+    }
+
+    public function getStartAt(): ?\DateTimeInterface
+    {
+        return $this->startAt;
+    }
+
+    public function setStartAt(?\DateTimeInterface $startAt): self
+    {
+        $this->startAt = $startAt;
+
+        return $this;
+    }
+
+    public function getEndAt(): ?\DateTimeInterface
+    {
+        return $this->endAt;
+    }
+
+    public function setEndAt(?\DateTimeInterface $endAt): self
+    {
+        $this->endAt = $endAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanningQuarter[]
+     */
+    public function getQuarter(): Collection
+    {
+        return $this->quarter;
+    }
+
+    public function addQuarter(PlanningQuarter $quarter): self
+    {
+        if (!$this->quarter->contains($quarter)) {
+            $this->quarter[] = $quarter;
+        }
+
+        return $this;
+    }
+
+    public function removeQuarter(PlanningQuarter $quarter): self
+    {
+        $this->quarter->removeElement($quarter);
 
         return $this;
     }

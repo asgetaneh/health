@@ -1,27 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}InitiativeAttribute index{% endblock %}
 
+
+
+ 
+
+{% block subTitle %}
+ <li class="active">{% trans %}
+    SMIS{% endtrans %}</li>
+  <li class="active">{% trans %}
+    Initiative Attribute{% endtrans %}</li>
+{% endblock %}
 {% block body %}
-    <h1>InitiativeAttribute index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for initiative_attribute in initiative_attributes %}
+  <div class="row">
+    <div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+      <div class="widget-box widget-color-blue" id="widget-box-8">
+        <div class="widget-header">
+          <h5 class="widget-title bigger lighter">
+           <strong>Initiative Attribute</strong> 
+          </h5>
+          <div class="widget-toolbar">
+            <span class="badge badge-info">
+              {% trans %}Total{% endtrans %}
+              :
+              <strong>{{initiative_attributes|length}}</strong>
+            </span>
+          </div>
+        </div>
+        <div class="widget-body">
+          <div class="widget-toolbox" id="widget-toolbox-1">
+            <div class="btn-toolbar">
+              <div class="btn-group">
+                <a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+                  <i class="ace-icon fa fa-plus bigger-110 blue"></i>
+                  {% trans %}
+                 Add New {% endtrans %}</a>
+                
+              </div>
+            </div>
+          </div>
+          <div class="widget-main padding-16">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                     <th>Category</th>
+                    <th>Description</th>
+                    {# <th>Code</th> #}
+                    <th>CreatedAt</th>
+                    {# <th>IsActive</th> #}
+                    <th>actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                     {% for initiative_attribute in initiative_attributes %}
             <tr>
                 <td>{{ initiative_attribute.id }}</td>
                 <td>{{ initiative_attribute.name }}</td>
+                 <td>{{ initiative_attribute.initiativeBehaviourCategory }}</td>
                 <td>{{ initiative_attribute.description }}</td>
-                <td>{{ initiative_attribute.createdAt ? initiative_attribute.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ initiative_attribute.createdAt ? initiative_attribute.createdAt|date('d-M-Y') : '' }}</td>
                 <td>
                     <a href="{{ path('initiative_attribute_show', {'id': initiative_attribute.id}) }}">show</a>
                     <a href="{{ path('initiative_attribute_edit', {'id': initiative_attribute.id}) }}">edit</a>
@@ -32,8 +72,15 @@
                 <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
-        </tbody>
-    </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
-    <a href="{{ path('initiative_attribute_new') }}">Create new</a>
+      </div>
+
+    </div>
+  </div>
+
 {% endblock %}

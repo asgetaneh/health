@@ -148,6 +148,11 @@ class User implements UserInterface
      */
     private $measures;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlanningQuarter::class, mappedBy="createdBy")
+     */
+    private $planningQuarters;
+
  
 
 
@@ -176,6 +181,7 @@ class User implements UserInterface
         $this->taskAssigns = new ArrayCollection();
         $this->measures = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
+        $this->planningQuarters = new ArrayCollection();
     }
     public function __toString()
     {
@@ -907,6 +913,36 @@ class User implements UserInterface
     public function getUserGroups(): Collection
     {
         return $this->userGroups;
+    }
+
+    /**
+     * @return Collection|PlanningQuarter[]
+     */
+    public function getPlanningQuarters(): Collection
+    {
+        return $this->planningQuarters;
+    }
+
+    public function addPlanningQuarter(PlanningQuarter $planningQuarter): self
+    {
+        if (!$this->planningQuarters->contains($planningQuarter)) {
+            $this->planningQuarters[] = $planningQuarter;
+            $planningQuarter->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningQuarter(PlanningQuarter $planningQuarter): self
+    {
+        if ($this->planningQuarters->removeElement($planningQuarter)) {
+            // set the owning side to null (unless already changed)
+            if ($planningQuarter->getCreatedBy() === $this) {
+                $planningQuarter->setCreatedBy(null);
+            }
+        }
+
+        return $this;
     }
 
     

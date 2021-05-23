@@ -47,4 +47,14 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findOfficeByUser($user){
+        $qb=$this->createQueryBuilder('po')
+        ->join('po.principalManagers','pm')
+        ->andWhere('pm.principal = :user')
+        ->andwhere('pm.isActive = 1')
+        ->setParameter('user',$user)
+        ;
+        return $qb->getQuery()->getResult();
+
+    }
 }

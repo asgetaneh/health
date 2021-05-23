@@ -27,7 +27,7 @@ class PrincipalOffice
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="principalOffices")
@@ -59,11 +59,17 @@ class PrincipalOffice
      */
     private $initiatives;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="office")
+     */
+    private $plans;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
         $this->principalManagers = new ArrayCollection();
         $this->initiatives = new ArrayCollection();
+        $this->plans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,6 +222,36 @@ class PrincipalOffice
     {
         if ($this->initiatives->removeElement($initiative)) {
             $initiative->removePrincipalOffice($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plan[]
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): self
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans[] = $plan;
+            $plan->setOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): self
+    {
+        if ($this->plans->removeElement($plan)) {
+            // set the owning side to null (unless already changed)
+            if ($plan->getOffice() === $this) {
+                $plan->setOffice(null);
+            }
         }
 
         return $this;

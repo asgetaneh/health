@@ -2,33 +2,29 @@
 
 namespace App\Form;
 
-use App\Entity\PlanningYear;
+use App\Entity\Plan;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PlanningYearType extends AbstractType
+class PlanType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('title')
-            ->add('year',DateType::class,[
-                'widget'=>'single_text',
-                'input_format'=>'Y',
-               
-            ])
-            ->add('description')
-           
-            
+            ->add('createdAt')
+            ->add('planningYear')
+            ->add('planningPhase')
+            ->add('initiative')
+            ->add('createdBy')
+            ->add('office')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PlanningYear::class,
+            'data_class' => Plan::class,
         ]);
     }
 }

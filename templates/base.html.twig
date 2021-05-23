@@ -21,7 +21,7 @@
 		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
 		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
 
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
 		<link
 		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
 		{#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
@@ -63,6 +63,8 @@
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/lib/moment.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('bundles/fullcalendar/js/fullcalendar/fullcalendar.default-settings.js') }}"></script>
+<script src="{{ asset('assets/assets/js/wizard.min.js') }}"></script>
+
 
 		{#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
 		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
@@ -1130,39 +1132,8 @@ ace.settings.loadState('sidebar')
 										<div id='ViewContentDiv'> {% block fos_user_content %}{% endblock %}{% block body %}{% endblock %}
 
 
-											<button class="btn btn-primary" onclick="topFunction()" id="myBtn" title="Go to top" class="">
-												<span class="glyphicon glyphicon-arrow-up"></span>
-											</button>
-											<button class="btn btn-primary" onclick="downFunction()" id="myBtnDown" title="Go to top" class="">
-												<span class="glyphicon glyphicon-arrow-down"></span>
-											</button>
-											<script>
-												// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function () {
-scrollFunction()
-};
-
-function scrollFunction() {
-if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-document.getElementById("myBtnDown").style.display = "none";
-document.getElementById("myBtn").style.display = "block";
-} else {
-document.getElementById("myBtn").style.display = "none";
-document.getElementById("myBtnDown").style.display = "block";
-}
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-document.body.scrollTop = 0;
-document.documentElement.scrollTop = 0;
-}
-// When the user clicks on the button, scroll to the top of the document
-function downFunction() {
-window.scrollTo(0, document.body.scrollHeight);
-}
-											</script>
-
+											
+											
 
 										</div>
 										<!--/.page-content-->

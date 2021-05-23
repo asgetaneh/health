@@ -5,25 +5,70 @@ namespace App\Controller;
 use App\Entity\PlanningYear;
 use App\Form\PlanningYearType;
 use App\Repository\PlanningYearRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/planning/year")
+ * @Route("/planningyear")
  */
 class PlanningYearController extends AbstractController
 {
     /**
-     * @Route("/", name="planning_year_index", methods={"GET"})
+     * @Route("/", name="planning_year_index", methods={"GET","POST"})
      */
-    public function index(PlanningYearRepository $planningYearRepository): Response
+    public function index(PlanningYearRepository $planningYearRepository,Request $request): Response
     {
+        $planningYear = new PlanningYear();
+        $form = $this->createForm(PlanningYearType::class, $planningYear);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $planningYear->setCreatedAt(new DateTime('now'));
+            $planningYear->setCreatedBy($this->getUser());
+            $planningYear->setIsActive(0);
+            $entityManager->persist($planningYear);
+
+            $entityManager->flush();
+            $this->addFlash('success',"planning year is added successfuly");
+
+            return $this->redirectToRoute('planning_year_index');
+        }
+
         return $this->render('planning_year/index.html.twig', [
             'planning_years' => $planningYearRepository->findAll(),
+            'form'=>$form->createView()
         ]);
     }
+    /**
+     * @Route("/{id}/activate", name="planning_year_activate", methods={"GET","POST"})
+     */
+    public function activatePlanningYear(Request $request,PlanningYear $planningYear): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        if($request->request->get('active')){
+            $planningYear->setIsActive(1);
+            $entityManager->persist($planningYear);
+            $this->addFlash('success',"planning year is Activated successfuly");
+
+
+        }
+        if($request->request->get('deactive')){
+            $planningYear->setIsActive(0);
+            $entityManager->persist($planningYear);
+            $this->addFlash('success',"planning year is deactivated successfuly");
+        }
+        $entityManager->flush();
+      return   $this->redirectToRoute('planning_year_index');
+
+        
+    }
+
+
 
     /**
      * @Route("/new", name="planning_year_new", methods={"GET","POST"})

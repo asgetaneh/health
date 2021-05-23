@@ -13,10 +13,10 @@ class PrincipalOfficeType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('isActive')
-            ->add('createAt')
+          
+            
             ->add('description')
-            ->add('createdBy')
+           
         ;
     }
 

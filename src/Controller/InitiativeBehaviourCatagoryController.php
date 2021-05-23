@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\InitiativeBehaviourCatagory;
 use App\Form\InitiativeBehaviourCatagoryType;
 use App\Repository\InitiativeBehaviourCatagoryRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 /**
  * @Route("/initiative/behaviour/catagory")
@@ -16,12 +18,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class InitiativeBehaviourCatagoryController extends AbstractController
 {
     /**
-     * @Route("/", name="initiative_behaviour_catagory_index", methods={"GET"})
+     * @Route("/", name="initiative_behaviour_catagory_index", methods={"GET","POST"})
      */
-    public function index(InitiativeBehaviourCatagoryRepository $initiativeBehaviourCatagoryRepository): Response
+    public function index(InitiativeBehaviourCatagoryRepository $initiativeBehaviourCatagoryRepository,Request $request): Response
     {
+        $initiativeBehaviourCatagory = new InitiativeBehaviourCatagory();
+        $form = $this->createForm(InitiativeBehaviourCatagoryType::class, $initiativeBehaviourCatagory);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $initiativeBehaviourCatagory->setCreatedBy($this->getUser());
+            $initiativeBehaviourCatagory->setCretedAt(new DateTime('now'));
+            $entityManager->persist($initiativeBehaviourCatagory);
+            $entityManager->flush();
+            $this->addFlash('success',"new Initiative behaviour is added successfuly");
+
+            return $this->redirectToRoute('initiative_behaviour_catagory_index');
+        }
         return $this->render('initiative_behaviour_catagory/index.html.twig', [
             'initiative_behaviour_catagories' => $initiativeBehaviourCatagoryRepository->findAll(),
+            'form'=>$form->createView()
         ]);
     }
 

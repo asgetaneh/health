@@ -2,28 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\InitiativeBehaviourCatagory;
+use App\Entity\PlanningQuarter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InitiativeBehaviourCatagoryType extends AbstractType
+class PlanningQuarterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
+            ->add('slug',ChoiceType::class,[
+                'choices'=>[  
+                  'First Quarter'=>1,
+                  'Second Quarter'=>2,
+                  'Third Quarter'=>3,
+                  'Fourth Quarter'=>4,
+                  'Yearly'=>5]
+            ])
             ->add('description')
-            ->add('code',ChoiceType::class,[
-                'choices' => [
-                    'Numerical' => 1,
-                    'Ration' => 2,
-                    'Social Behavior' => 3,
-                    ],
-            ]
-    
-            )
            
         ;
     }
@@ -31,7 +30,7 @@ class InitiativeBehaviourCatagoryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => InitiativeBehaviourCatagory::class,
+            'data_class' => PlanningQuarter::class,
         ]);
     }
 }

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PlanningQuarter{% endblock %}
+
+{% block body %}
+    <h1>Create new PlanningQuarter</h1>
+
+    {{ include('planning_quarter/_form.html.twig') }}
+
+    <a href="{{ path('planning_quarter_index') }}">back to list</a>
+{% endblock %}
