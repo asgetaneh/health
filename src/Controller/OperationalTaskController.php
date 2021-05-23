@@ -63,9 +63,13 @@ $count=0;
      * @Route("/userFetch", name="user_fetch")
      */
     public function OperationalFetch(Request $request,OperationalManagerRepository $operationalManagerRepository ,UserInfoRepository $userInfoRepository)
-    {
-        $users=$operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
-        $units = $userInfoRepository->filterDeliverBy($request->request->get('userprincipal'));
+    { 
+
+        $office=$request->request->get('userprincipal');
+        dd($office);
+        // $users=$operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
+        // dd($users);
+        $units = $userInfoRepository->filterDeliverBy($request->request->get('query'));
     // dd($units);,
         return new JsonResponse($units);
     }

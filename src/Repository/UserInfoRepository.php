@@ -34,7 +34,7 @@ class UserInfoRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function filterDeliverBy($user)
+    public function filterDeliverBy()
     {
 
         //dd($productNmae);
@@ -43,8 +43,8 @@ class UserInfoRepository extends ServiceEntityRepository
             ->Select('s.fullName')  
            
             ->addSelect('u.id')
-            ->andWhere('u.id = :val')
-            ->setParameter('val', $user)
+            // ->andWhere('u.id = :val')
+            // ->setParameter('val', $user)
             ->orderBy('s.id', 'ASC')
           
             ->getQuery()
