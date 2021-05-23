@@ -18,7 +18,21 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TaskAccomplishment::class);
     }
+    
+public function findTask($user)
+    {
 
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->leftJoin('s.taskUser','ts')
+           
+            ->andWhere('ts.assignedTo = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return TaskAccomplishment[] Returns an array of TaskAccomplishment objects
     //  */

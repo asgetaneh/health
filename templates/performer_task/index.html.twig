@@ -31,19 +31,16 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">OperationalTask
-																																																																																										                     TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					<h5 class="widget-title bigger lighter">OperationalTask =
+						{{operationalTask}}
 					</h5>
 
-					<div class="widget-toolbar"></div>
+<div class="widget-toolbar">
+	TotalWeight=<div class="badge badge-danger">{{count}}</div>
 
-					<div class="widget-toolbar">
-						<span class="badge badge-info">
-							{% trans %}Total{% endtrans %}
-							:
-							{# <strong>{{tasks|length}}</strong> #}
-						</span>
-					</div>
+</div>
+
+					
 				</div>
 
 				<div class="widget-body">
@@ -155,12 +152,11 @@
 							{{ form_widget(form.operationalTask,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        <div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.name) }}
 							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-					
 
 
 						<div class="form-group">

@@ -158,6 +158,11 @@ class User implements UserInterface
      */
     private $taskAssignsTo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TaskUser::class, mappedBy="assignedTo")
+     */
+    private $taskUsers;
+
 
  
 
@@ -191,6 +196,7 @@ class User implements UserInterface
         $this->planningQuarters = new ArrayCollection();
 
         $this->taskAssignsTo = new ArrayCollection();
+        $this->taskUsers = new ArrayCollection();
 
     }
     public function __toString()
@@ -983,6 +989,36 @@ class User implements UserInterface
             if ($taskAssignsTo->getAssignedTo() === $this) {
                 $taskAssignsTo->setAssignedTo(null);
 
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskUser[]
+     */
+    public function getTaskUsers(): Collection
+    {
+        return $this->taskUsers;
+    }
+
+    public function addTaskUser(TaskUser $taskUser): self
+    {
+        if (!$this->taskUsers->contains($taskUser)) {
+            $this->taskUsers[] = $taskUser;
+            $taskUser->setAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskUser(TaskUser $taskUser): self
+    {
+        if ($this->taskUsers->removeElement($taskUser)) {
+            // set the owning side to null (unless already changed)
+            if ($taskUser->getAssignedTo() === $this) {
+                $taskUser->setAssignedTo(null);
             }
         }
 

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
+use App\Entity\TaskUser;
 use App\Form\TaskAssignType;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\TaskAssignRepository;
@@ -61,49 +63,58 @@ class TaskAssignController extends AbstractController
 
         $users=$request->request->get('user');
         $tasks=$request->request->get('task');
+                $tasksss=$request->request->get('task');
         $measurementids=$request->request->get('measurementId');
         $expectedValues=$request->request->get('expectedValue');
 
-        foreach ($users as $key => $value) {
+   $taskAccoplishment=new TaskAccomplishment();
+           foreach ($tasks as $key => $value) {
+                 $taskAssign = new TaskAssign();
 
-            foreach ($tasks as $taskr) {
-                foreach ($measurementids as $me) {
-                    $taskAssign = new TaskAssign();
-
-            $task = $tasks[$key];
-
-            $measurementid = $measurementids[$key];
-            $expectedValue = $expectedValues[$key];
+            $task = $tasksss[$key];
              $userId=$userRepository->find($value);
              $taskId=$operationalTaskRepository->find($task);
-             $taskmeasurementId=$taskMeasurementRepository->find($measurementid);
-             $taskAssign->setAssignedTo($userId);
              $taskAssign->setOperationalTask($taskId);
-             $taskAssign->setMeasurment($taskmeasurementId);
-             $taskAssign->setExpectedValue($expectedValue);
+           
              $taskAssign->setAssignedAt(new \DateTime());
              $taskAssign->setAssignedBy($this->getUser());
              $taskAssign->setType(1);
              $taskAssign->setStatus(1);
              $entityManager->persist($taskAssign);
+              $entityManager->flush();
+           foreach ($users as $key => $valuet) { 
+              $taskUser=new TaskUser();
+                           $userId=$userRepository->find($valuet);
+              $taskUser->setAssignedTo($userId);
+             $taskUser->setTaskAssign($taskAssign);
 
-            }
-
-
-             
-            //  $userId=$userRepository->find($value);
-
-            // dump($value,$task,$measurementid,$expectedValue)
-
-          
-            $entityManager->persist($taskAssign);
-
-              ;}
-              $entityManager->persist($taskAssign);
-
+          $entityManager->persist($taskUser);
+              $entityManager->flush();
+              
+               foreach ($measurementids as  $key => $valuea) {
+              $taskAccoplishment=new TaskAccomplishment();
+            $measurementid = $measurementids[$key];
+            $expectedValue = $expectedValues[$key];
+           $taskmeasurementId=$taskMeasurementRepository->find($valuea);
+             $taskAccoplishment->setTaskUser($taskUser);
+            $taskAccoplishment->setMeasurement($taskmeasurementId);
+            $taskAccoplishment->setExpectedValue($expectedValue);
+             $entityManager->persist($taskAccoplishment);
               $entityManager->flush();
 
             }
+
+           $entityManager->persist($taskAssign);
+              $entityManager->flush();
+
+              }
+              $entityManager->persist($taskAssign);
+
+              $entityManager->flush();
+        }
+                      $entityManager->flush();
+
+            // dd(1);
             $this->addFlash('success', 'Task Assind successfully !');
             return $this->redirectToRoute('operational_task_index');
 

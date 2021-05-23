@@ -59,25 +59,23 @@ class TaskAssign
      */
     private $taskMeasurements;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=TaskMeasurement::class, inversedBy="taskAssigns")
-     */
-    private $measurment;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $expectedValue;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="taskAssignsTo")
      */
     private $assignedTo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TaskUser::class, mappedBy="taskAssign")
+     */
+    private $taskUsers;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
         $this->taskMeasurements = new ArrayCollection();
+        $this->taskUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,60 +155,9 @@ class TaskAssign
         return $this;
     }
 
-    /**
-     * @return Collection|TaskAccomplishment[]
-     */
-    public function getTaskAccomplishments(): Collection
-    {
-        return $this->taskAccomplishments;
-    }
+   
 
-    public function addTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
-    {
-        if (!$this->taskAccomplishments->contains($taskAccomplishment)) {
-            $this->taskAccomplishments[] = $taskAccomplishment;
-            $taskAccomplishment->setTaskAssign($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
-    {
-        if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
-            // set the owning side to null (unless already changed)
-            if ($taskAccomplishment->getTaskAssign() === $this) {
-                $taskAccomplishment->setTaskAssign(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getMeasurment(): ?TaskMeasurement
-    {
-        return $this->measurment;
-    }
-
-    public function setMeasurment(?TaskMeasurement $measurment): self
-    {
-        $this->measurment = $measurment;
-
-        return $this;
-    }
-
-    public function getExpectedValue(): ?int
-    {
-        return $this->expectedValue;
-    }
-
-    public function setExpectedValue(?int $expectedValue): self
-    {
-        $this->expectedValue = $expectedValue;
-
-        return $this;
-    }
-
+    
     public function getAssignedTo(): ?User
     {
         return $this->assignedTo;
@@ -219,6 +166,36 @@ class TaskAssign
     public function setAssignedTo(?User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskUser[]
+     */
+    public function getTaskUsers(): Collection
+    {
+        return $this->taskUsers;
+    }
+
+    public function addTaskUser(TaskUser $taskUser): self
+    {
+        if (!$this->taskUsers->contains($taskUser)) {
+            $this->taskUsers[] = $taskUser;
+            $taskUser->setTaskAssign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskUser(TaskUser $taskUser): self
+    {
+        if ($this->taskUsers->removeElement($taskUser)) {
+            // set the owning side to null (unless already changed)
+            if ($taskUser->getTaskAssign() === $this) {
+                $taskUser->setTaskAssign(null);
+            }
+        }
 
         return $this;
     }

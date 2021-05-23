@@ -17,10 +17,7 @@ class TaskAccomplishment
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=TaskAssign::class, inversedBy="taskAccomplishments")
-     */
-    private $taskAssign;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=TaskMeasurement::class, inversedBy="taskAccomplishments")
@@ -33,7 +30,7 @@ class TaskAccomplishment
     private $expectedValue;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $accomplishmentValue;
 
@@ -42,22 +39,17 @@ class TaskAccomplishment
      */
     private $note;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=TaskUser::class, inversedBy="taskAccomplishments")
+     */
+    private $taskUser;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTaskAssign(): ?TaskAssign
-    {
-        return $this->taskAssign;
-    }
-
-    public function setTaskAssign(?TaskAssign $taskAssign): self
-    {
-        $this->taskAssign = $taskAssign;
-
-        return $this;
-    }
+  
 
     public function getMeasurement(): ?TaskMeasurement
     {
@@ -103,6 +95,18 @@ class TaskAccomplishment
     public function setNote(?string $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getTaskUser(): ?TaskUser
+    {
+        return $this->taskUser;
+    }
+
+    public function setTaskUser(?TaskUser $taskUser): self
+    {
+        $this->taskUser = $taskUser;
 
         return $this;
     }

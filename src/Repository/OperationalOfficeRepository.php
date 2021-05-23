@@ -18,7 +18,7 @@ class OperationalOfficeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalOffice::class);
     }
-
+ 
     // /**
     //  * @return OperationalOffice[] Returns an array of OperationalOffice objects
     //  */
