@@ -1,44 +1,83 @@
  {% if initiative is defined %}
-<div id="{{initiative.id}}" class="modal fade" role="dialog">
+<div id="{{initiative.id}}" class="modal fade planmodal" role="dialog">
   <div class="modal-dialog">
 
     
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> {{initiative.name|title}} Plan</h4>
+        <h4 class="modal-title"> {{initiative.name|title}} Plan({{initiative.initiativeBehaviour|title}})</h4>
       </div>
       <div class="modal-body">
         <form class="form-horizontal" action="" method="post">
           <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-12">
          
           
-         
+              {% for plan in initiative.plans %}
+              {% if plan.office.id == pricipaloffice.id %}
+                  <div class="well well-sm"><strong>{{plan.quarter.slug}} Quarter</strong> </div>
+                  {% if initiative.initiativeBehaviour.category.code == "1" %}
+                  <div class="form-group">
+                   <input type="text" class="form-control" placeholder="expected value">
+                  </div>
+                  {% endif %}
+                      
+                  
               {% for attribute in initiative.initiativeBehaviour.category.initiativeAttributes %}
-             
-          <label class="control-label" for="email2">{{attribute.name}}</label>
-                   <input type="email" class="form-control" id="email2" placeholder="expected value">
+            
+            
+             {% if attribute.initiativeBehaviourCategory.code == "2" %}
+              <div class="form-group">
+                       <input type="text" class="form-control" id="{{attribute.id}}" placeholder="expected value">
+                         </div>
+                         <div class="form-group">  
+                         <label class="control-label" for="{{attribute.id}}">{{attribute.name|title}}</label>
+                        
+                          <input type="text" class="form-control" id="{{attribute.id}}" placeholder="denimanitor">
+
+                         </div>
+
+                          {% elseif attribute.initiativeBehaviourCategory.code =="3" %}
+                  <div class="form-group">
+                            <label class="control-label" for="{{attribute.id}}">{{attribute.name}}</label>
+
+                               <input type="text" class="form-control" id="{{attribute.id}}" placeholder="expected value">
+                                </div>
+                              
+             {% endif %}
+
+           
+            
+
+                       
+                            
+                               
+
+
+            
+
+            
+            
+                 
+
+          
               {% endfor %}
+              {% endif %}
+            
+               {% endfor %}
          
-          <label class="control-label" for="email">First quarter</label>
           
-      <input type="email" class="form-control" id="email" placeholder="expected value">
-    
           </div>
           
-           <div class="col-sm-6">
-          <label class="control-label" for="email"></label>
           
-      <input type="email" class="form-control" id="email" placeholder="Enter email">
-    
-          </div>
           </div>
   
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-info">sumbit</button>
       </div>
     </div>
 

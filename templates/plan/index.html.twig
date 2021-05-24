@@ -22,7 +22,7 @@
 						<span class="title">Select Report Period And Office</span>
 					</li>
 
-					<li data-step="2" class= {% if initiative is defined %}
+					<li data-step="2" class= {% if initiatives is defined %}
                     "active"
                     {% else %}
                         " "
@@ -54,7 +54,15 @@
 					<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
 					<strong>Select Report period and offices</strong>
 				</button>
-
+                <div class="pull-right">
+                {% if pricipaloffice is defined %}
+              <span class="badge badge-info"> Principal Office: {{pricipaloffice}}
+              </br>
+              Planning Quarter: {{planphase.name}}
+              </span>
+                {# <span class="badge badge-info"> Quarter: {{pricipaloffice}}</span> #}
+                {% endif %}
+                </div>
 			</div>
 
 
@@ -137,11 +145,12 @@
                                                         <td>{{ "0"}}</td>
 					
 														<td>
-															<a  class="btn btn-info btn-xs " href="{{ path('initiative_show', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i>     task</a>
-															<a data-toggle="modal" data-target="#{{initiative.id}}"   href="#">edit</a>
+															<a  class="btn btn-primary btn-xs " href="{{ path('initiative_show', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i></a>
+															<a  class ="modalbtn btn btn-warning btn-xs"  data-id="{{initiative.id}}"   href="#"> <i class="fa fa-edit"></i> edit</a>
 														</td>
 													</tr>
-                                                    {% include 'plan/plan.modal.html.twig' with {'initiative': initiative } %}
+                                             {% include 'plan/plan.modal.html.twig' with {'initiative': initiative } %}
+
 												{% else %}
 													<tr>
 														<td colspan="7">no records found</td>
@@ -176,11 +185,18 @@
 			</div>
 			<!-- /.widget-body -->
 		</div><!-- PAGE CONTENT ENDS --></div><!-- /.col -->
-   
+           
     {{ include('plan/modal.html.twig') }}
+    {% endblock %}
+    {% block javascripts %}
 	<script type="text/javascript">
 		jQuery(function ($) {
 $('.select2').css('width', '90%').select2({allowClear: false})
+$('.modalbtn').click(function(){
+    let id=$(this).attr('data-id');
+    
+    $('.planmodal').modal('show')
+})
 
 })
 	</script>

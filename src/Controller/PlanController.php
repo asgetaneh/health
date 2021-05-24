@@ -30,19 +30,22 @@ class PlanController extends AbstractController
         $offices=$em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningPhase=$em->getRepository(PlanningPhase::class)->findBy(['isActive'=>1]);
         if ($request->request->get('office') && $request->request->get('phase')) {
-            $planningphase=$em->getRepository(PlanningPhase::class)->find($request->request->get('phase'));
-         $principaloffice=$em->getRepository(PrincipalOffice::class)->find($request->request->get('office'));
-          $initiatives=$em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice->getId());
-          $countinitiative=count($initiatives);
+           $planningphase=$em->getRepository(PlanningPhase::class)->find($request->request->get('phase'));
+           $principaloffice=$em->getRepository(PrincipalOffice::class)->find($request->request->get('office'));
+           $initiatives=$em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice->getId());
+           $countinitiative=count($initiatives);
           $plancount=0;
          
           foreach ($initiatives as $initiative) {
-              
-            $planduplication=$planRepository->checkForDuplicationOfPlan($principaloffice,$initiative,$planningphase);
+            foreach($planningphase->getQuarter() as $quarter){
+
+      
+            $planduplication=$planRepository->checkForDuplicationOfPlan($principaloffice,$initiative,$planningphase,$quarter);
             if(!$planduplication){
             
             $plan = new Plan();
             $plan->setOffice($principaloffice);
+            $plan->setQuarter($quarter);
             $plan->setPlanningPhase($planningphase);
             $plan->setPlanningYear($planningphase->getPlanningYear());
             $plan->setInitiative($initiative);
@@ -50,10 +53,11 @@ class PlanController extends AbstractController
             $plan->setCreatedBy($this->getUser());
             $em->persist($plan);
             $em->flush();
-            $this->addFlash('success',"plan is created successfuly! thank you for responding");
                }
+
                else
-              $this->addFlash('warning',"you are already respond to this Plan annousment");
+               $plancount=$plancount+1;
+             
               
             
 
@@ -61,6 +65,13 @@ class PlanController extends AbstractController
 
          
           }
+
+                }
+                if($plancount>0)
+                 $this->addFlash('warning',"you are already respond to this Plan annousment");
+                 else
+                $this->addFlash('success',"plan is created successfuly! thank you for responding");
+
          
 
           return $this->render('plan/index.html.twig', [
