@@ -17,7 +17,6 @@ class PerformerTaskType extends AbstractType
             ->add('startDate')
             ->add('endDate')
             ->add('timeGap')
-            ->add('operationalTask')
         ;
     }
 

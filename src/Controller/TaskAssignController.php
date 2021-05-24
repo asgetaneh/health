@@ -60,7 +60,7 @@ class TaskAssignController extends AbstractController
     TaskMeasurementRepository $taskMeasurementRepository)
     {
         $entityManager = $this->getDoctrine()->getManager();
-
+          $initibativeId=0;
         $users=$request->request->get('user');
         $tasks=$request->request->get('task');
                 $tasksss=$request->request->get('task');
@@ -74,6 +74,8 @@ class TaskAssignController extends AbstractController
             $task = $tasksss[$key];
              $userId=$userRepository->find($value);
              $taskId=$operationalTaskRepository->find($task);
+             $initibativeId=$taskId->getPlan()->getInitiative()->getId();
+
              $taskAssign->setOperationalTask($taskId);
            
              $taskAssign->setAssignedAt(new \DateTime());
@@ -116,7 +118,7 @@ class TaskAssignController extends AbstractController
 
             // dd(1);
             $this->addFlash('success', 'Task Assind successfully !');
-            return $this->redirectToRoute('operational_task_index');
+            return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);
 
 
         
