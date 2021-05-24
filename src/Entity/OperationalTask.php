@@ -35,11 +35,11 @@ class OperationalTask
     private $plan;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $startDate;
   /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $endDate;
 
@@ -62,6 +62,16 @@ class OperationalTask
      * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="operationalTask")
      */
     private $taskAssigns;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="operationalTasks")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="operationalTasks")
+     */
+    private $quarter;
     public function __toString()
     {
         return $this->taskName;
@@ -113,24 +123,24 @@ class OperationalTask
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?string
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(string $startDate): self
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?string
     {
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): self
+    public function setEndDate(string $endDate): self
     {
         $this->endDate = $endDate;
 
@@ -217,6 +227,30 @@ class OperationalTask
                 $taskAssign->setOperationalTask(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?PlanningQuarter
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?PlanningQuarter $quarter): self
+    {
+        $this->quarter = $quarter;
 
         return $this;
     }

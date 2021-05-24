@@ -15,6 +15,12 @@ class OperationalTaskType extends AbstractType
             ->add('taskName')
             ->add('description')
                        ->add('weight')
+                         ->add('quarter')
+                ->add('startDate',NULL, array('attr'=>array('class'=>'popupDatepicker form-control'), 'required' => TRUE))
+                ->add('endDate',NULL, array('attr'=>array('class'=>'popupDatepicker1 form-control'), 'required' => TRUE))
+                  ->add('timeGap')
+
+
         ;
     }
 

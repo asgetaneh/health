@@ -35,12 +35,12 @@
 						{{operationalTask}}
 					</h5>
 
-<div class="widget-toolbar">
-	TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					<div class="widget-toolbar">
+						TotalWeight=<div class="badge badge-danger">{{count}}</div>
 
-</div>
+					</div>
 
-					
+
 				</div>
 
 				<div class="widget-body">
@@ -97,7 +97,7 @@
 										<th>EndDate</th>
 										<th>TimeGap</th>
 										<th>Weight</th>
-										<th>actions</th>
+										{# <th>actions</th> #}
 									</tr>
 								</thead>
 								<tbody>
@@ -112,14 +112,14 @@
 											<td>{{ performer_task.endDate  }}</td>
 											<td>{{ performer_task.timeGap }}</td>
 											<td>{{ performer_task.weight }}</td>
-											<td>
-												<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-													<i class="fa fa-eye"></i>
-												</a>
-												<a href="{{ path('performer_task_edit', {'id': performer_task.id}) }}" class="btn btn-warning btn-sm">
-													Assign
-												</a>
-											</td>
+											{# <td>
+																																		<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																			<i class="fa fa-eye"></i>
+																																		</a>
+																																		<a href="{{ path('performer_task_edit', {'id': performer_task.id}) }}" class="btn btn-warning btn-sm">
+																																			Assign
+																																		</a>
+																																	</td> #}
 
 										</tr>
 									{% else %}
@@ -147,11 +147,7 @@
 					</div>
 					<div class="modal-body">
 						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-						<div class="form-group">
-							{{ form_label(form.operationalTask) }}
-							{{ form_widget(form.operationalTask,{'attr':{ 'class': 'form-control'}}) }}
 
-						</div>
 						<div class="form-group">
 							{{ form_label(form.name) }}
 							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
@@ -216,10 +212,9 @@
 											Select Performer
 										</b>
 									</lable>
-									<select autocomplete="off" name="user" id="user" class="form-control user  ">
+									<select autocomplete="off" name="user[]" id="user" multiple="true" class="form-control user  select2">
 										<option></option>
 									</select>
-									<input type="button" class="sel" value="select">
 
 
 								</div>
@@ -230,39 +225,13 @@
 											Select Task
 										</b>
 									</lable>
-									<select autocomplete="off" name="crtask" id="crtask" class="form-control crtask  ">
-										<option></option>
-									</select>
-									<input type="button" class="seltask" value="select">
-
-
-								</div>
-								<div class="col-md-6">
-									<lable class=" control-label no-padding-right">
-										<b>
-											Selected Performer
-										</b>
-									</lable>
-									<select autocomplete="off" name="user[]" style='width: 100%;height: 100px;' multiple="true" class="form-control  selectedPerformer  ">
+									<select autocomplete="off" name="task[]" id="crtask"  multiple="true" class="form-control crtask select2 ">
 										<option></option>
 									</select>
 
 
-									<input type="button" class="ret" value="return">
 								</div>
-								<div class="col-md-6">
-									<lable class=" control-label no-padding-right">
-										<b>
-											Selected Task
-										</b>
-									</lable>
-									<select autocomplete="off" name="task[]" style='width: 100%;height: 100px;' multiple="true" class="form-control  selectedtask ">
-										<option></option>
-									</select>
 
-
-									<input type="button" class="rettask" value="return">
-								</div>
 							</div>
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
@@ -313,6 +282,12 @@
 	{% block javascripts %}
 
 		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+
+		<script>
+			$(function () {
+$('.select2').css('width', '100%').select2({allowClear: true})
+})
+		</script>
 		<script>
 
 

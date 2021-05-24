@@ -145,8 +145,9 @@
                                                         <td>{{ "0"}}</td>
 					
 														<td>
-															<a  class="btn btn-primary btn-xs " href="{{ path('initiative_show', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i></a>
-															<a  class ="modalbtn btn btn-warning btn-xs"  data-id="{{initiative.id}}"   href="#"> <i class="fa fa-edit"></i> edit</a>
+
+															<a  class="btn btn-info btn-xs " href="{{ path('operational_task_index', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i>     task</a>
+															<a data-toggle="modal" data-target="#{{initiative.id}}"   href="#">edit</a>
 														</td>
 													</tr>
                                              {% include 'plan/plan.modal.html.twig' with {'initiative': initiative } %}

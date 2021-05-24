@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerformerTaskController extends AbstractController
 {
     /**
-     * @Route("/{id}", name="performer_task_index", methods={"GET"})
+     * @Route("/{id}", name="performer_task_index")
      */
     public function index(Request $request,OperationalTask $operationalTask, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
@@ -35,13 +35,14 @@ class PerformerTaskController extends AbstractController
         $formtask->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $performerTask->setOperationalTask($operationalTask);
             $entityManager->persist($performerTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('performer_task_index');
+            return $this->redirectToRoute('performer_task_index',['id'=>$operationalTask->getId()]);
         }
 $count=0;
-        $performerTasks = $performerTaskRepository->findAll();
+        $performerTasks = $performerTaskRepository->findBy(['operationalTask'=>$operationalTask->getId()]);
 // dd($operationalTasks);
         foreach($performerTasks as $operationals){
              $count=$count+
@@ -49,7 +50,7 @@ $count=0;
         }
         // dd($count);
         return $this->render('performer_task/index.html.twig', [
-            'performer_tasks' => $performerTaskRepository->findAll(),
+            'performer_tasks' => $performerTaskRepository->findBy(['operationalTask'=>$operationalTask->getId()]),
             'count'=>$count,
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Initiative;
 use App\Entity\Measure;
 use App\Entity\OperationalTask;
 use App\Entity\TaskMeasurement;
@@ -10,6 +11,7 @@ use App\Form\TaskMeasurementType;
 use App\Repository\OperationalManagerRepository;
 use App\Repository\OperationalOfficeRepository;
 use App\Repository\OperationalTaskRepository;
+use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
@@ -27,10 +29,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class OperationalTaskController extends AbstractController
 {
     /**
-     * @Route("/", name="operational_task_index")
+     * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request,TaskMeasurementRepository $taskMeasurementRepository, OperationalTaskRepository $operationalTaskRepository): Response
+    public function index(Request $request ,Initiative $initiative, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, OperationalTaskRepository $operationalTaskRepository): Response
     {
+         $plans=$planRepository->findBy(['initiative'=>$initiative]);
+         
         $operationalTask = new OperationalTask();
         $form = $this->createForm(OperationalTaskType::class, $operationalTask);
         $form->handleRequest($request);
@@ -47,17 +51,26 @@ class OperationalTaskController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $weight=$form->getData()->getWeight();
-            if ($count + $weight > 100 ) {
-                            $this->addFlash('danger', 'Weight must be less than 100 !');
+            foreach ($plans as  $value) {
+                if ( $value->getQuarter() == $form->getData()->getQuarter()) {
+                    // dd(2);
+                    $operationalTask->setCreatedBy($this->getUser());
+                    $operationalTask->setPlan($value);
 
-            return $this->redirectToRoute('operational_task_index');
+               $weight=$form->getData()->getWeight();
+                if ($count + $weight > 100 ) {
+                 $this->addFlash('danger', 'Weight must be less than 100 !');
+
+            return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
 
             }
             $entityManager->persist($operationalTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('operational_task_index');
+            return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
+                }
+         }
+            
         }
 $count=0;
         $operationalTasks = $operationalTaskRepository->findAll();

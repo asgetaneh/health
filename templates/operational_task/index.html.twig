@@ -118,8 +118,8 @@
 
 												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
 												<td>{{ operational_task.description }}</td>
-												<td>{{ operational_task.startDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
-												<td>{{ operational_task.endDate ? operational_task.startDate|date('Y-m-d') : '' }}</td>
+												<td>{{ operational_task.startDate  }}</td>
+												<td>{{ operational_task.endDate }}</td>
 												<td>{{ operational_task.timeGap }}</td>
 												<td>{{ operational_task.weight }}</td>
 
@@ -129,8 +129,8 @@
 													</a>
 
 
-													<a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-														Create</a>
+													{# <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
+														Create</a> #}
 												</td>
 
 
@@ -176,6 +176,26 @@
 						<div class="form-group">
 							{{ form_label(form.weight) }}
 							{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+                        	<div class="form-group">
+							{{ form_label(form.startDate) }}
+							{{ form_widget(form.startDate,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+                        	<div class="form-group">
+							{{ form_label(form.endDate) }}
+							{{ form_widget(form.endDate,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+                        	<div class="form-group">
+							{{ form_label(form.timeGap) }}
+							{{ form_widget(form.timeGap,{'attr':{ 'class': 'form-control'}}) }}
+
+						</div>
+                        <div class="form-group">
+							{{ form_label(form.quarter) }}
+							{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
 
@@ -301,7 +321,6 @@ userprincipal: userprincipal
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
-console.log(data)
 for (let [key, value] of Object.entries(data)) {
 
 
@@ -358,4 +377,24 @@ $('.rettask').click(function () {
 return !$('.selectedtask option:selected').remove().appendTo('#crtask');
 })
 		</script>
+        	<link rel="stylesheet" href="{{ asset('js/css/redmond.calendars.picker.css')}}">
+
+	{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
+	<script src="{{ asset('js/js/jquery.plugin.js') }}"></script>
+
+	<script src="{{ asset('js/js/jquery.calendars.js') }}"></script>
+	<script src="{{ asset('js/js/jquery.calendars.plus.js') }}"></script>
+	<script src="{{ asset('js/js/jquery.calendars.picker.js') }}"></script>
+
+	<script src="{{ asset('js/js/jquery.calendars.ethiopian.js') }}"></script>
+	<script src="{{ asset('js/js/jquery.calendars.ethiopian-am.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/js/jquery.calendars.picker-am.js') }}"></script>
+	<script>
+		$(function () {
+var calendar = $.calendars.instance('ethiopian', 'am');
+console.log(calendar)
+$('.popupDatepicker1').calendarsPicker({calendar: calendar});
+$('.popupDatepicker').calendarsPicker({calendar: calendar});
+});
+	</script>
 	{% endblock %}

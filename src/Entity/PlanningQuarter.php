@@ -54,10 +54,16 @@ class PlanningQuarter
      */
     private $plans;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalTask::class, mappedBy="quarter")
+     */
+    private $operationalTasks;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
         $this->plans = new ArrayCollection();
+        $this->operationalTasks = new ArrayCollection();
     }
     public function __toString()
     {
@@ -180,6 +186,36 @@ class PlanningQuarter
             // set the owning side to null (unless already changed)
             if ($plan->getQuarter() === $this) {
                 $plan->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalTask[]
+     */
+    public function getOperationalTasks(): Collection
+    {
+        return $this->operationalTasks;
+    }
+
+    public function addOperationalTask(OperationalTask $operationalTask): self
+    {
+        if (!$this->operationalTasks->contains($operationalTask)) {
+            $this->operationalTasks[] = $operationalTask;
+            $operationalTask->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalTask(OperationalTask $operationalTask): self
+    {
+        if ($this->operationalTasks->removeElement($operationalTask)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalTask->getQuarter() === $this) {
+                $operationalTask->setQuarter(null);
             }
         }
 
