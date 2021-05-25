@@ -74,10 +74,16 @@ class Initiative
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SuitableInitiative::class, mappedBy="initiative")
+     */
+    private $suitableInitiatives;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->principalOffice = new ArrayCollection();
+        $this->suitableInitiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +249,36 @@ class Initiative
     public function setIsActive(?bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SuitableInitiative[]
+     */
+    public function getSuitableInitiatives(): Collection
+    {
+        return $this->suitableInitiatives;
+    }
+
+    public function addSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if (!$this->suitableInitiatives->contains($suitableInitiative)) {
+            $this->suitableInitiatives[] = $suitableInitiative;
+            $suitableInitiative->setInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if ($this->suitableInitiatives->removeElement($suitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($suitableInitiative->getInitiative() === $this) {
+                $suitableInitiative->setInitiative(null);
+            }
+        }
 
         return $this;
     }
