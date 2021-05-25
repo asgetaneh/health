@@ -18,7 +18,26 @@ class PerformerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Performer::class);
     }
+public function findAllsUser($user)
+    {
 
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice','oo')
+          ->leftJoin('oo.principalOffice','po')
+         ->leftJoin('s.performer','u')
+         ->leftJoin('u.userInfo','ui')
+
+            ->Select('ui.fullName')  
+           
+            ->addSelect('u.id')
+            ->andWhere('po.id = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return Performer[] Returns an array of Performer objects
     //  */

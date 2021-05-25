@@ -23,7 +23,7 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}Principal Office{% endtrans %}</li>
+	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
 
@@ -31,8 +31,14 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Principal Office
-																																																																																																																																																																														                     TotalWeight=<div class="badge badge-danger">{{count}}</div>
+                {% set office = 0 %}
+					<h5 class="widget-title bigger lighter">Operational 
+						{% for operational_task in operational_tasks %}
+                        {% set office = operational_task.plan.office.name %}
+
+						{%  endfor %}
+                         Office ={{office}}
+						TotalWeight=<div class="badge badge-danger">{{count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -130,7 +136,7 @@
 
 
 													{# <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-														Create</a> #}
+																											Create</a> #}
 												</td>
 
 
@@ -178,22 +184,22 @@
 							{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        	<div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.startDate) }}
 							{{ form_widget(form.startDate,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        	<div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.endDate) }}
 							{{ form_widget(form.endDate,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        	<div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.timeGap) }}
 							{{ form_widget(form.timeGap,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        <div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.quarter) }}
 							{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
 
@@ -358,43 +364,26 @@ select.append('<option value="' + value.id + '">' + value.taskName + ' </option>
 })
 		</script>
 		<script src="{{ asset('select2/js/select2.full.min.js')}}"></script>
+
+		<link
+		rel="stylesheet" href="{{ asset('js/css/redmond.calendars.picker.css')}}">
+
+		{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
+		<script src="{{ asset('js/js/jquery.plugin.js') }}"></script>
+
+		<script src="{{ asset('js/js/jquery.calendars.js') }}"></script>
+		<script src="{{ asset('js/js/jquery.calendars.plus.js') }}"></script>
+		<script src="{{ asset('js/js/jquery.calendars.picker.js') }}"></script>
+
+		<script src="{{ asset('js/js/jquery.calendars.ethiopian.js') }}"></script>
+		<script src="{{ asset('js/js/jquery.calendars.ethiopian-am.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/js/jquery.calendars.picker-am.js') }}"></script>
 		<script>
-			$(function () { // Initialize Select2 Elements
-
-$('.sel').click({theme: 'bootstrap4'});
-// $('#fil').remove()
-});
-$('.sel').click(function () {
-return !$('#user option:selected').remove().appendTo('.selectedPerformer');
-})
-$('.seltask').click(function () {
-return !$('#crtask option:selected').remove().appendTo('.selectedtask');
-})
-$('.ret').click(function () {
-return !$('.selectedPerformer option:selected').remove().appendTo('#user');
-})
-$('.rettask').click(function () {
-return !$('.selectedtask option:selected').remove().appendTo('#crtask');
-})
-		</script>
-        	<link rel="stylesheet" href="{{ asset('js/css/redmond.calendars.picker.css')}}">
-
-	{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
-	<script src="{{ asset('js/js/jquery.plugin.js') }}"></script>
-
-	<script src="{{ asset('js/js/jquery.calendars.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.plus.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.picker.js') }}"></script>
-
-	<script src="{{ asset('js/js/jquery.calendars.ethiopian.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.ethiopian-am.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/js/jquery.calendars.picker-am.js') }}"></script>
-	<script>
-		$(function () {
+			$(function () {
 var calendar = $.calendars.instance('ethiopian', 'am');
 console.log(calendar)
 $('.popupDatepicker1').calendarsPicker({calendar: calendar});
 $('.popupDatepicker').calendarsPicker({calendar: calendar});
 });
-	</script>
+		</script>
 	{% endblock %}

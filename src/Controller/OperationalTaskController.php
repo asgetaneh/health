@@ -11,6 +11,7 @@ use App\Form\TaskMeasurementType;
 use App\Repository\OperationalManagerRepository;
 use App\Repository\OperationalOfficeRepository;
 use App\Repository\OperationalTaskRepository;
+use App\Repository\PerformerRepository;
 use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
 use App\Repository\TaskAccomplishmentRepository;
@@ -113,13 +114,13 @@ $count=0;
  /**
      * @Route("/userFetch", name="user_fetch")
      */
-    public function OperationalFetch(Request $request,PrincipalOfficeRepository $principalOfficeRepository ,UserInfoRepository $userInfoRepository)
+    public function OperationalFetch(Request $request,PerformerRepository $performerRepository ,UserInfoRepository $userInfoRepository)
     { 
 
         $office=$request->request->get('userprincipal');
         // $users=$operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
         // dd($office);
-        $units = $principalOfficeRepository->findAllsUser($request->request->get('userprincipal'));
+        $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
     // dd($units);
         return new JsonResponse($units);
     }
