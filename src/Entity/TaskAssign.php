@@ -71,6 +71,21 @@ class TaskAssign
      */
     private $taskUsers;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $startDate;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $endDate;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $timeGap;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -200,6 +215,7 @@ class TaskAssign
         return $this;
     }
 
+<<<<<<< HEAD
     /**
      * @return Collection|TaskAccomplishment[]
      */
@@ -214,10 +230,21 @@ class TaskAssign
             $this->taskAccomplishments[] = $taskAccomplishment;
             $taskAccomplishment->setTaskAssign($this);
         }
+=======
+    public function getStartDate(): ?string
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(string $startDate): self
+    {
+        $this->startDate = $startDate;
+>>>>>>> 29bee507222b34f9a6408f462179ebc6d9f00843
 
         return $this;
     }
 
+<<<<<<< HEAD
     public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
     {
         if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
@@ -256,6 +283,28 @@ class TaskAssign
                 $taskMeasurement->setTaskAssign(null);
             }
         }
+=======
+    public function getEndDate(): ?string
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(string $endDate): self
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getTimeGap(): ?int
+    {
+        return $this->timeGap;
+    }
+
+    public function setTimeGap(int $timeGap): self
+    {
+        $this->timeGap = $timeGap;
+>>>>>>> 29bee507222b34f9a6408f462179ebc6d9f00843
 
         return $this;
     }

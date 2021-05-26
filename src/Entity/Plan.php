@@ -65,6 +65,7 @@ class Plan
     private $quarter;
 
     /**
+
      * @ORM\Column(type="boolean")
      */
     private $isActive=0;
@@ -73,11 +74,22 @@ class Plan
      * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="plans")
      */
     private $suitableInitiative;
+      /*
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="plan")
+     */
+    private $performerTasks;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
 
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
+        $this->performerTasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,6 +241,7 @@ class Plan
         return $this;
     }
 
+
     public function getIsActive(): ?bool
     {
         return $this->isActive;
@@ -237,9 +250,26 @@ class Plan
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+    }
 
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setPlan($this);
+        }
         return $this;
     }
+
 
     public function getSuitableInitiative(): ?SuitableInitiative
     {
@@ -249,6 +279,31 @@ class Plan
     public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
     {
         $this->suitableInitiative = $suitableInitiative;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getPlan() === $this) {
+                $performerTask->setPlan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+
+
 
         return $this;
     }

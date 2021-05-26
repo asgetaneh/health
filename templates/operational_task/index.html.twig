@@ -23,16 +23,68 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}Principal Office{% endtrans %}</li>
+	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
+	<div>
+		{# {% set taskUserid = 0 %}
+						{% set status = 0 %}#}
+		{% for operational_task in operational_tasks %}
+			{% if loop.first %}
 
+				{#{% set status = taskAccomplishment.taskUser.status %}
+												{% set taskUserid = taskAccomplishment.taskUser.id %} #}
+
+				<ul class="steps">
+					<li data-step="1" class={% if operational_task.plan.status == 1 %} "complete" {% elseif operational_task.plan.status >= 1 %} "active" {% else %} {% endif %}>
+						<span class="step">A</span>
+						<span class="title">
+							List Task</span>
+					</li>
+					<li data-step="2" class={% if operational_task.plan.status == 2 %} "complete" {% elseif operational_task.plan.status >= 2 %} "active" {% else %} {% endif %}>
+						<span class="step">B</span>
+						<span class="title">
+							Assign Task
+						</span>
+					</li>
+
+					<li
+						data-step="3">
+						{# class={% if taskAccomplishment.taskUser.status == 3 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 3 %} "active" {% else %} {% endif %}> #}
+						<span class="step">C</span>
+						<span class="title">Approve Performers Report
+						</span>
+					</li>
+
+					<li
+						data-step="4">
+						{# class={% if taskAccomplishment.taskUser.status == 4 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 4 %} "active" {% else %} {% endif %}> #}
+						<span class="step">D</span>
+						<span class="title">
+							Evaluate Performer
+						</span>
+					</li>
+					<li
+						data-step="5">
+						{# class={% if taskAccomplishment.taskUser.status == 5 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 5 %} "active" {% else %} {% endif %}> #}
+						<span class="step">E</span>
+						<span class="title">
+							Send Report to Principals
+						</span>
+					</li>
+				</ul>
+			{% endif %}
+
+		{% endfor %}
+	</div>
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Principal Office
-																																																																																																																																																																														                     TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					{% set office = 0 %}
+					<h5 class="widget-title bigger lighter">Operational Office
+																																																																																
+														TotalWeight=<div class="badge badge-danger">{{count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -41,6 +93,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
+
 							{# <strong>{{tasks|length}}</strong> #}
 						</span>
 					</div>
@@ -98,10 +151,8 @@
 										<tr>
 											<th>#</th>
 											<th>TaskName</th>
+											<th>Assigned To</th>
 											<th>Description</th>
-											<th>StartDate</th>
-											<th>EndDate</th>
-											<th>TimeGap</th>
 											<th>Weight</th>
 											<th>actions</th>
 										</tr>
@@ -112,25 +163,59 @@
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
-												<td>{{ operational_task.taskName }}</td>
+												<td>{{ operational_task.name }}</td>
+												<td>
+													<table class="table-bordered table-hover" style="margin-top:10px;">
+														<tr>
+															<th>Performer Name</th>
+															<th>Start Date
+															</th>
+															<th>End Date
+															</th>
+															<th>Time Gap</th>
+														</tr>
+														{% for taskUser in taskUsers %}
+															<tr>
+
+																{% if taskUser.taskAssign.performerTask.id == operational_task.id  %}
+
+																	<td>{{taskUser.assignedTo.userInfo}}</td>
+																	<td>
+																		{{taskUser.taskAssign.startDate}}</td>
+																	<td>
+																		{{taskUser.taskAssign.startDate}}
+																	</td>
+																	<td>{{taskUser.taskAssign.timeGap}}</td>
+
+
+																{% endif %}
+															</tr>
+														{% endfor %}
+
+													</table>
+
+												</td>
+
 												<input type="hidden" class="task" value="{{operational_task.plan.id}}">
 												<input type="hidden" class="office" value="{{operational_task.plan.office.id}}">
 
 												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
 												<td>{{ operational_task.description }}</td>
-												<td>{{ operational_task.startDate  }}</td>
-												<td>{{ operational_task.endDate }}</td>
-												<td>{{ operational_task.timeGap }}</td>
+
 												<td>{{ operational_task.weight }}</td>
 
 												<td>
-													<a href="{{ path('operational_task_show', {'id': operational_task.id}) }}" class="btn btn-primary btn-sm">
-														<i class="fa fa-eye"></i>
-													</a>
+													<form action="{{path('operational_task_show')}}" method="post">
+													<input type="hidden" name="taskUser" value="{{operational_task.id}}">
+													
+														<button class="btn btn-primary btn-sm">
+															Show
+														</button>
+												</form>
 
 
 													{# <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-														Create</a> #}
+																																																																																																																																																																																									Create</a> #}
 												</td>
 
 
@@ -162,8 +247,8 @@
 					<div class="modal-body">
 						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
 						<div class="form-group">
-							{{ form_label(form.taskName) }}
-							{{ form_widget(form.taskName,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_label(form.name) }}
+							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
 						<div class="form-group">
@@ -178,22 +263,8 @@
 							{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
 
 						</div>
-                        	<div class="form-group">
-							{{ form_label(form.startDate) }}
-							{{ form_widget(form.startDate,{'attr':{ 'class': 'form-control'}}) }}
 
-						</div>
-                        	<div class="form-group">
-							{{ form_label(form.endDate) }}
-							{{ form_widget(form.endDate,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-                        	<div class="form-group">
-							{{ form_label(form.timeGap) }}
-							{{ form_widget(form.timeGap,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-                        <div class="form-group">
+						<div class="form-group">
 							{{ form_label(form.quarter) }}
 							{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
 
@@ -255,6 +326,39 @@
 
 
 								</div>
+								<div class="col-md-6">
+
+									<lable class=" control-label no-padding-right">
+										<b>
+											Start Date
+										</b>
+									</lable>
+									<input type="text" name="startDate" class="form-control popupDatepicker" autocomplete="off" required>
+
+
+								</div>
+								<div class="col-md-6">
+
+									<lable class=" control-label no-padding-right">
+										<b>
+											End Date
+										</b>
+									</lable>
+									<input type="text" name="endDate" class="form-control popupDatepicker" autocomplete="off" required>
+
+
+								</div>
+								<div class="col-md-6">
+
+									<lable class=" control-label no-padding-right">
+										<b>
+											Time Gap
+										</b>
+									</lable>
+									<input type="number" name="timeGap" class="form-control " autocomplete="true" required>
+
+
+								</div>
 
 
 							</div>
@@ -264,6 +368,8 @@
 										<th>#</th>
 										<th>Name</th>
 										<th>ExpectedValue</th>
+										<th>Description</th>
+
 
 									</tr>
 								</thead>
@@ -277,6 +383,7 @@
 											<input type="hidden" name="measurementId[]" value={{measurement.id}}>
 
 											<td><input type="text" name="expectedValue[]" class="form-control"></td>
+											<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
 
 
 										</tr>
@@ -349,7 +456,7 @@ success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
 
 
-select.append('<option value="' + value.id + '">' + value.taskName + ' </option>');
+select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 
 
 }
@@ -357,44 +464,33 @@ select.append('<option value="' + value.id + '">' + value.taskName + ' </option>
 });
 })
 		</script>
-		<script src="{{ asset('select2/js/select2.full.min.js')}}"></script>
+		<link
+		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
+
+		{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
+		<script src="{{ asset('amharic/js/jquery.plugin.js')}}"></script>
+
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.plus.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.picker.js"></script>
+
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian-am.js"></script>
+		<script type="text/javascript" src="{{ asset('amharic/js/jquery.calendars')}}.picker-am.js"></script>
+
 		<script>
-			$(function () { // Initialize Select2 Elements
-
-$('.sel').click({theme: 'bootstrap4'});
-// $('#fil').remove()
-});
-$('.sel').click(function () {
-return !$('#user option:selected').remove().appendTo('.selectedPerformer');
-})
-$('.seltask').click(function () {
-return !$('#crtask option:selected').remove().appendTo('.selectedtask');
-})
-$('.ret').click(function () {
-return !$('.selectedPerformer option:selected').remove().appendTo('#user');
-})
-$('.rettask').click(function () {
-return !$('.selectedtask option:selected').remove().appendTo('#crtask');
-})
-		</script>
-        	<link rel="stylesheet" href="{{ asset('js/css/redmond.calendars.picker.css')}}">
-
-	{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
-	<script src="{{ asset('js/js/jquery.plugin.js') }}"></script>
-
-	<script src="{{ asset('js/js/jquery.calendars.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.plus.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.picker.js') }}"></script>
-
-	<script src="{{ asset('js/js/jquery.calendars.ethiopian.js') }}"></script>
-	<script src="{{ asset('js/js/jquery.calendars.ethiopian-am.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/js/jquery.calendars.picker-am.js') }}"></script>
-	<script>
-		$(function () {
+			$(function () {
 var calendar = $.calendars.instance('ethiopian', 'am');
-console.log(calendar)
-$('.popupDatepicker1').calendarsPicker({calendar: calendar});
+$('#popupDatepicker').calendarsPicker({calendar: calendar});
 $('.popupDatepicker').calendarsPicker({calendar: calendar});
+
+$('#inlineDatepicker').calendarsPicker({calendar: calendar, onSelect: showDate});
 });
-	</script>
+
+function showDate(date) {
+alert('The date chosen is ' + date);
+}
+		</script>
+
+
 	{% endblock %}

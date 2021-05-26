@@ -168,6 +168,11 @@ class User implements UserInterface
      */
     private $operationalTasks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="createdBy")
+     */
+    private $performerTasks;
+
 
  
 
@@ -203,6 +208,7 @@ class User implements UserInterface
         $this->taskAssignsTo = new ArrayCollection();
         $this->taskUsers = new ArrayCollection();
         $this->operationalTasks = new ArrayCollection();
+        $this->performerTasks = new ArrayCollection();
 
     }
     public function __toString()
@@ -1055,6 +1061,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($operationalTask->getCreatedBy() === $this) {
                 $operationalTask->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getCreatedBy() === $this) {
+                $performerTask->setCreatedBy(null);
             }
         }
 

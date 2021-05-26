@@ -19,6 +19,21 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+  
+    public function findPerformerTask($value)
+    {
+        return $this->createQueryBuilder('t')
+        ->leftJoin('t.taskAssign','ta')
+        ->leftJoin('ta.performerTask','p')
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $value)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
     // /**
     //  * @return Task[] Returns an array of Task objects
     //  */

@@ -4,13 +4,18 @@ namespace App\Controller;
 
 use App\Entity\OperationalTask;
 use App\Entity\PerformerTask;
+use App\Entity\TaskAccomplishment;
 use App\Entity\TaskMeasurement;
 use App\Form\PerformerTaskType;
 use App\Form\TaskMeasurementType;
 use App\Repository\PerformerTaskRepository;
+use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
+use App\Repository\TaskUserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DomCrawler\Image;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,45 +26,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerformerTaskController extends AbstractController
 {
     /**
-     * @Route("/{id}", name="performer_task_index")
+     * @Route("/", name="performer_task_index")
      */
-    public function index(Request $request,OperationalTask $operationalTask, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
+    public function index(Request $request,TaskUserRepository $taskUserRepository , TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
 
-        // dd(3);
-        $performerTask = new PerformerTask();
-        $form = $this->createForm(PerformerTaskType::class, $performerTask);
-        $form->handleRequest($request);
-        $taskMeasurement = new TaskMeasurement();
-        $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
-        $formtask->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $performerTask->setOperationalTask($operationalTask);
-            $entityManager->persist($performerTask);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('performer_task_index',['id'=>$operationalTask->getId()]);
-        }
-$count=0;
-        $performerTasks = $performerTaskRepository->findBy(['operationalTask'=>$operationalTask->getId()]);
-// dd($operationalTasks);
-        foreach($performerTasks as $operationals){
-             $count=$count+
-            $operationals->getWeight();
-        }
-        // dd($count);
+      $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$this->getUser()]);
+    //   dd($taskUsers);
+       
         return $this->render('performer_task/index.html.twig', [
-            'performer_tasks' => $performerTaskRepository->findBy(['operationalTask'=>$operationalTask->getId()]),
-            'count'=>$count,
-            'form' => $form->createView(),
-            'measurements' => $taskMeasurementRepository->findAll(),
-            'operationalTask'   => $operationalTask->getTaskName(),
-
-            'formtask'=>$formtask->createView()
+            'performer_tasks' => $taskUsers,
+            // 'count'=>$count,
+           
         ]);
         }
-      
+    
 
     /**
      * @Route("/new", name="performer_task_new", methods={"GET","POST"})
@@ -85,14 +66,66 @@ $count=0;
     }
 
     /**
-     * @Route("/{id}", name="performer_task_show", methods={"GET"})
+     * @Route("/show", name="performer_task_show", methods={"GET","POST"})
      */
-    public function show(PerformerTask $performerTask): Response
+    public function show(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
+        $em=$this->getDoctrine()->getManager();
+       
+        if ($report= $request->request->get('reportValue')) {
+            $reportValue= $request->request->get('reportValue');
+          $ids= $request->request->get('taskAccomplishmentId');
+          foreach ($ids as $key => $value) {
+            $taskAccomplishment=$taskAccomplishmentRepository->find($value);
+            $taskAccomplishment->setAccomplishmentValue($reportValue[$key]);
+            $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
+            $taskUser->setStatus(2);
+          }
+          $em->flush();
+                      $this->addFlash('success', 'Reported successfully !');
+                      return $this->redirectToRoute('performer_task_index');
+        }
+          if ($request->request->get('note')) {
+            $note= $request->request->get('note');
+          $id= $request->request->get('taskUserid');
+            $taskUserno=$taskUserRepository->find($id);
+
+             $taskUserno->setNote($note);
+            $taskUserno->setStatus(3);
+          $em->flush();
+                                $this->addFlash('success', 'Chalenge successfully !');
+                      return $this->redirectToRoute('performer_task_index');
+        }
+       $taskUser= $request->request->get('taskUser');
+      $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
+          $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
+          foreach ($taskUsers as $key ) {
+              if($key->getStatus()<1){
+                  $key->setStatus(1);
+                  $em->flush();
+              }      
+          }
+     
         return $this->render('performer_task/show.html.twig', [
-            'performer_task' => $performerTask,
+            'taskAccomplishments' => $taskAccomplishments,
+             'taskUsers' => $taskUsers,
         ]);
     }
+     /**
+     * @Route("/skip", name="task_narrative_skip")
+     */
+    public function skip(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em=$this->getDoctrine()->getManager();
+
+         $taskId=$request->request->get('taskId');
+        $taskUser=$taskUserRepository->find($request->request->get('taskId'));
+        $taskUser->setStatus(4);
+           $em->flush();
+        return new JsonResponse($taskUser);
+      
+    }
+
 
     /**
      * @Route("/{id}/edit", name="performer_task_edit", methods={"GET","POST"})

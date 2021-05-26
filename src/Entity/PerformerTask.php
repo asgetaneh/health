@@ -24,35 +24,40 @@ class PerformerTask
      */
     private $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=OperationalTask::class, inversedBy="performerTasks")
-     */
-    private $operationalTask;
-
+   
     /**
      * @ORM\Column(type="integer")
      */
     private $weight;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $startDate;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $endDate;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $timeGap;
+    
 
     /**
      * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="PerformerTask")
      */
     private $taskAssigns;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Plan::class, inversedBy="performerTasks")
+     */
+    private $plan;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="performerTasks")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="performerTasks")
+     */
+    private $quarter;
+
+    
 
     public function __construct()
     {
@@ -76,17 +81,7 @@ class PerformerTask
         return $this;
     }
 
-    public function getOperationalTask(): ?OperationalTask
-    {
-        return $this->operationalTask;
-    }
-
-    public function setOperationalTask(?OperationalTask $operationalTask): self
-    {
-        $this->operationalTask = $operationalTask;
-
-        return $this;
-    }
+  
 
     public function getWeight(): ?int
     {
@@ -100,42 +95,7 @@ class PerformerTask
         return $this;
     }
 
-    public function getStartDate(): ?string
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(string $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?string
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(string $endDate): self
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    public function getTimeGap(): ?int
-    {
-        return $this->timeGap;
-    }
-
-    public function setTimeGap(int $timeGap): self
-    {
-        $this->timeGap = $timeGap;
-
-        return $this;
-    }
-
+  
     /**
      * @return Collection|TaskAssign[]
      */
@@ -165,4 +125,54 @@ class PerformerTask
 
         return $this;
     }
+
+    public function getPlan(): ?Plan
+    {
+        return $this->plan;
+    }
+
+    public function setPlan(?Plan $plan): self
+    {
+        $this->plan = $plan;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?PlanningQuarter
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?PlanningQuarter $quarter): self
+    {
+        $this->quarter = $quarter;
+
+        return $this;
+    }
+
+   
 }

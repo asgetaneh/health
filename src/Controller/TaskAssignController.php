@@ -7,6 +7,8 @@ use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
 use App\Form\TaskAssignType;
 use App\Repository\OperationalTaskRepository;
+use App\Repository\PerformerTaskRepository;
+use App\Repository\PlanRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
@@ -56,31 +58,40 @@ class TaskAssignController extends AbstractController
 /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(Request $request,UserRepository $userRepository,OperationalTaskRepository $operationalTaskRepository,
+    public function performerFetch(Request $request,PlanRepository $planRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
     TaskMeasurementRepository $taskMeasurementRepository)
     {
         $entityManager = $this->getDoctrine()->getManager();
+        $status=0;
           $initibativeId=0;
-        $users=$request->request->get('user');
-        $tasks=$request->request->get('task');
-                $tasksss=$request->request->get('task');
-        $measurementids=$request->request->get('measurementId');
-        $expectedValues=$request->request->get('expectedValue');
+            $users=$request->request->get('user');
+            $tasks=$request->request->get('task');
+            $tasksss=$request->request->get('task');
+            $measurementids=$request->request->get('measurementId');
+            $measurementids=$request->request->get('measurementId');
+            $expectedValues=$request->request->get('expectedValue');
+            $startDate=$request->request->get('startDate');
+            $endDate=$request->request->get('endDate');
+            $timeGap=$request->request->get('timeGap');
+            $measurementDescriptions=$request->request->get("measurementDescription");
 
-   $taskAccoplishment=new TaskAccomplishment();
+//    $taskAccoplishment=new TaskAccomplishment();
            foreach ($tasks as $key => $value) {
                  $taskAssign = new TaskAssign();
 
             $task = $tasksss[$key];
-             $userId=$userRepository->find($value);
-             $taskId=$operationalTaskRepository->find($task);
+             $taskId=$performerTaskRepository->find($task);
              $initibativeId=$taskId->getPlan()->getInitiative()->getId();
-
-             $taskAssign->setOperationalTask($taskId);
+        $planId=$taskId->getPlan();
+             $taskAssign->setPerformerTask($taskId);
            
              $taskAssign->setAssignedAt(new \DateTime());
              $taskAssign->setAssignedBy($this->getUser());
              $taskAssign->setType(1);
+           $taskAssign->setStartDate($startDate);
+            $taskAssign->setEndDate($endDate);
+           $taskAssign->setTimeGap($timeGap);
+
              $taskAssign->setStatus(1);
              $entityManager->persist($taskAssign);
               $entityManager->flush();
@@ -89,6 +100,7 @@ class TaskAssignController extends AbstractController
                            $userId=$userRepository->find($valuet);
               $taskUser->setAssignedTo($userId);
              $taskUser->setTaskAssign($taskAssign);
+                          $taskUser->setStatus(0);
 
           $entityManager->persist($taskUser);
               $entityManager->flush();
@@ -97,10 +109,12 @@ class TaskAssignController extends AbstractController
               $taskAccoplishment=new TaskAccomplishment();
             $measurementid = $measurementids[$key];
             $expectedValue = $expectedValues[$key];
+            $measurementDescription = $measurementDescriptions[$key];
            $taskmeasurementId=$taskMeasurementRepository->find($valuea);
              $taskAccoplishment->setTaskUser($taskUser);
             $taskAccoplishment->setMeasurement($taskmeasurementId);
             $taskAccoplishment->setExpectedValue($expectedValue);
+          $taskAccoplishment->setMeasureDescription($measurementDescription);
              $entityManager->persist($taskAccoplishment);
               $entityManager->flush();
 
@@ -115,7 +129,13 @@ class TaskAssignController extends AbstractController
               $entityManager->flush();
         }
                       $entityManager->flush();
-
+                      $planId=$planRepository->find($planId);
+              if($planId->getStatus()<2){
+                  $planId->setStatus(2);
+                  $entityManager->flush();
+              }
+              
+          
             // dd(1);
             $this->addFlash('success', 'Task Assind successfully !');
             return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);
