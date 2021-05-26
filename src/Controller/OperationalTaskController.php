@@ -5,18 +5,23 @@ namespace App\Controller;
 use App\Entity\Initiative;
 use App\Entity\Measure;
 use App\Entity\OperationalTask;
+use App\Entity\Performer;
+use App\Entity\PerformerTask;
 use App\Entity\TaskMeasurement;
 use App\Form\OperationalTaskType;
+use App\Form\PerformerTaskType;
 use App\Form\TaskMeasurementType;
 use App\Repository\OperationalManagerRepository;
 use App\Repository\OperationalOfficeRepository;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerRepository;
+use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
+use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,40 +37,46 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request ,Initiative $initiative, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, OperationalTaskRepository $operationalTaskRepository): Response
+    public function index(Request $request ,Initiative $initiative,TaskUserRepository $taskUserRepository, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {
-         $plans=$planRepository->findBy(['initiative'=>$initiative]);
-         
-        $operationalTask = new OperationalTask();
-        $form = $this->createForm(OperationalTaskType::class, $operationalTask);
+        // dd($initiative->getPrincipalOffice());
+         $plans=$planRepository->findBy(['initiative'=>$initiative]); 
+        //  dd($plans);
+        $performerTask = new PerformerTask();
+        $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
+        // dd($form);
         $taskMeasurement = new TaskMeasurement();
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
         $count=0;
-        $operationalTasks = $operationalTaskRepository->findAll();
+        $operationalTasks = $performerTaskRepository->findAll();
 // dd($operationalTasks);
+       $taskUsers= $taskUserRepository->findAll();
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
         }
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $entityManager = $this->getDoctrine()->getManager();
+            // dd($form->getData());
             foreach ($plans as  $value) {
                 if ( $value->getQuarter() == $form->getData()->getQuarter()) {
                     // dd(2);
-                    $operationalTask->setCreatedBy($this->getUser());
-                    $operationalTask->setPlan($value);
+                    $performerTask->setCreatedBy($this->getUser());
+                    $performerTask->setPlan($value);
 
                $weight=$form->getData()->getWeight();
+            //    dd($weight);
                 if ($count + $weight > 100 ) {
                  $this->addFlash('danger', 'Weight must be less than 100 !');
 
             return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
 
             }
-            $entityManager->persist($operationalTask);
+            $entityManager->persist($performerTask);
             $entityManager->flush();
 
             return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
@@ -74,7 +85,7 @@ class OperationalTaskController extends AbstractController
             
         }
 $count=0;
-        $operationalTasks = $operationalTaskRepository->findAll();
+        $operationalTasks = $performerTaskRepository->findAll();
 // dd($operationalTasks);
         foreach($operationalTasks as $operationals){
              $count=$count+
@@ -83,8 +94,9 @@ $count=0;
         
 
         return $this->render('operational_task/index.html.twig', [
-            'operational_tasks' => $operationalTaskRepository->findAll(),
+            'operational_tasks' => $performerTaskRepository->findAll(),
             'count'=>$count,
+            'taskUsers'=> $taskUsers,
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),
 
@@ -127,9 +139,9 @@ $count=0;
     /**
      * @Route("/taskFetch", name="task_fetch")
      */
-    public function taskFetch(Request $request, OperationalTaskRepository $operationalTaskRepository)
+    public function taskFetch(Request $request, PerformerTaskRepository $performerTaskRepository)
     {
-        $units = $operationalTaskRepository->filterDeliverBy($request->request->get('task'));
+        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'));
     // dd($units);
         return new JsonResponse($units);
     }

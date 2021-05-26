@@ -1,42 +1,275 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}PerformerTask{% endblock %}
-
-{% block body %}
-    <h1>PerformerTask</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ performer_task.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ performer_task.name }}</td>
-            </tr>
-            <tr>
-                <th>Weight</th>
-                <td>{{ performer_task.weight }}</td>
-            </tr>
-            <tr>
-                <th>StartDate</th>
-                <td>{{ performer_task.startDate }}</td>
-            </tr>
-            <tr>
-                <th>EndDate</th>
-                <td>{{ performer_task.endDate }}</td>
-            </tr>
-            <tr>
-                <th>TimeGap</th>
-                <td>{{ performer_task.timeGap }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('performer_task_index') }}">back to list</a>
-
-    <a href="{{ path('performer_task_edit', {'id': performer_task.id}) }}">edit</a>
-
-    {{ include('performer_task/_delete_form.html.twig') }}
+{% block application_simple_title %}
+	<strong>
+		{% trans %}Strategic Management Information System{% endtrans %}</strong>
 {% endblock %}
+{% block mainTitle %}
+	<li>
+		<i class="icon-home home-icon"></i>
+		<a href="">{% trans %}MIS{% endtrans %}</a>
+
+		<span class="divider">
+			<i class="arrow-icon"></i>
+		</span>
+	</li>
+	<li>
+		<i class="icon-home home-icon"></i>
+		<a href="">{% trans %}SMIS{% endtrans %}</a>
+
+		<span class="divider">
+			<i class="arrow-icon"></i>
+		</span>
+	</li>
+
+{% endblock %}
+{% block subTitle %}
+	<li class="active">{% trans %}Performer Task{% endtrans %}</li>
+{% endblock %}
+{% block body %}
+	<div>
+		{% set taskUserid = 0 %}
+		{% set status = 0 %}
+		{% for taskAccomplishment in taskAccomplishments   %}
+			{% if loop.first %}
+
+				{% set status = taskAccomplishment.taskUser.status %}
+				{% set taskUserid = taskAccomplishment.taskUser.id %}
+
+				<ul class="steps">
+					<li data-step="1" class={% if taskAccomplishment.taskUser.status == 1 %} "complete" {% else %} "active" {% endif %}>
+						<span class="step">I</span>
+						<span class="title">Accept Or Reject Task</span>
+					</li>
+					<li data-step="2" class={% if taskAccomplishment.taskUser.status == 2 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 2 %} "active" {% else %} {% endif %}>
+						<span class="step">II</span>
+						<span class="title">Insert Report Timely
+						</span>
+					</li>
+
+					<li data-step="3" class={% if taskAccomplishment.taskUser.status == 3 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 3 %} "active" {% else %} {% endif %}>
+						<span class="step">III</span>
+						<span class="title">Chalenge Faced/Solutions</span>
+					</li>
+
+					<li data-step="4" class={% if taskAccomplishment.taskUser.status == 4 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 4 %} "active" {% else %} {% endif %}>
+						<span class="step">IV</span>
+						<span class="title">
+							Upload Narrative Report
+						</span>
+					</li>
+					<li data-step="5" class={% if taskAccomplishment.taskUser.status == 5 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 5 %} "active" {% else %} {% endif %}>
+						<span class="step">V</span>
+						<span class="title">
+							Send Report to Operational Manager
+						</span>
+					</li>
+				</ul>
+			{% endif %}
+
+		{% endfor %}
+	</div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">Performer Task
+						{# {{operationalTask}} #}
+					</h5>
+
+
+					<div class="widget-toolbar">
+						<span class="btn btn-success">
+							<a href="{{ path('performer_task_index') }}">back
+							</a>
+
+
+							{# <strong>{{tasks|length}}</strong> #}
+						</span>
+					</div>
+				</div>
+
+
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar">
+							<div
+								class="btn-group">{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+
+
+							</div>
+
+
+						</div>
+					</div>
+
+					<div class="widget-main padding-16">
+
+						<div class="table-responsive">
+
+							<form action="{{path('performer_task_show')}}" method="post">
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>TaskName</th>
+											<th>Weight</th>
+											<th>StartDate</th>
+											<th>EndDate</th>
+											<th>TimeGap</th>
+											<th>Measutrement</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										{% set count = 0 %}
+										{% for taskUser in taskUsers %}
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{ count}}</td>
+												<td>{{ taskUser.taskAssign.performerTask.name }}</td>
+												<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
+
+												<td>{{ taskUser.taskAssign.startDate  }}</td>
+												<td>{{ taskUser.taskAssign.endDate }}</td>
+												<td>{{ taskUser.taskAssign.timeGap}}</td>
+												<td>
+													<table class="table-bordered table-hover" style="margin-top:10px;">
+														<tr>
+															<th>Measurement
+															</th>
+															<th>Expected Value
+															</th>
+															<th>Report Value
+															</th>
+														</tr>
+														{% for taskAccomplishment in taskAccomplishments   %}
+															<tr>
+																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
+
+																	<td>{{ taskAccomplishment.measurement.name }}</td>
+																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
+																	<td>{{ taskAccomplishment.expectedValue }}</td>
+																	{% if taskAccomplishment.accomplishmentValue %}
+																		<td>{{ taskAccomplishment.accomplishmentValue }}</td>
+
+																	{% else %}
+																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
+																	{% endif %}
+																{% endif %}
+															</tr>
+														{% endfor %}
+
+
+													</table>
+												</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="8">no records found</td>
+											</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+								{% if status == 2 %}
+
+									<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
+								{% elseif status == 3 %}
+									<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button>
+									<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-warning  pull-right">Skip</button>
+
+								{% else %}
+									<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
+
+								{% endif %}
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade  chalenge" id="chalenge">
+			<div
+				class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Chalenge Faced/solutions
+						</h4>
+					</div>
+					<form action="{{path('performer_task_show')}}" method="post">
+						<div class="modal-body">
+							<input type="hidden" name="taskUserid" class="taskUserid">
+							<div class="form-group">
+								<textArea name="note" class="form-control"></textArea>
+
+							</div>
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Send{% endtrans %}"/>
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="modal fade  narrative" id="narrative">
+			<div
+				class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Narratrive Report</h4>
+					</div>
+					<form action="{{path('performer_task_show')}}" method="post">
+						<div class="modal-body">
+							<input type="hidden" name="taskUserid" class="taskUserid">
+							<div class="form-group">
+								<input type="file" name="narrativeFile" class="form-control">
+
+							</div>
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Upload{% endtrans %}"/>
+						<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
+					</div>
+				</form>
+			</div>
+		</div>
+	{% endblock %}
+	{% block javascripts %}
+		<script>
+			$('.show').click(function () {
+$('#chalenge').modal('show');
+
+var id = $(this).attr('data-taskUserId');
+$('.taskUserid').val(id);
+console.log(consumableGroupId);
+})
+		</script>
+		<script>
+			$('.narrative').click(function () {
+$('#narrative').modal('show');
+
+var id = $(this).attr('data-taskUserId');
+$('.taskUserid').val(id);
+console.log(consumableGroupId);
+})
+$('#cancel').click(function () {
+location.reload(true);
+
+})
+		</script>
+
+
+	{% endblock %}

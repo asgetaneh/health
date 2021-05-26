@@ -18,6 +18,25 @@ class PerformerTaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PerformerTask::class);
     }
+     public function filterDeliverBy($plan)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->Select('s.name')  
+           
+            ->addSelect('s.id')
+            // ->addSelect('s.user')
+
+            ->orderBy('s.id', 'ASC')->
+            andWhere('s.plan = :plan')
+            ->setParameter('plan', $plan)
+
+            ->getQuery()
+            
+            ->getResult();
+    }
 
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects

@@ -23,20 +23,20 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}OperationalTask{% endtrans %}</li>
+	<li class="active">{% trans %}Performer Task{% endtrans %}</li>
 {% endblock %}
 {% block body %}
-
+	
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">OperationalTask =
-						{{operationalTask}}
+					<h5 class="widget-title bigger lighter">Performer Task =
+						{# {{operationalTask}} #}
 					</h5>
 
-					<div class="widget-toolbar">
-						TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					<div
+						class="widget-toolbar">{# TotalWeight=<div class="badge badge-danger">{{count}}</div> #}
 
 					</div>
 
@@ -47,24 +47,7 @@
 					<div class="widget-toolbox" id="widget-toolbox-1">
 						<div class="btn-toolbar">
 							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
-
-								{% if count < 100 %}
-
-									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-										{% trans %}
-										Create{% endtrans %}</a>
-								{% endif %}
-								{# {% endif %} #}
-								{% if count >= 100 %}
-
-									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
-										<i class="ace-icon fa fa-check bigger-110 blue"></i>
-										{% trans %}
-										Assign{% endtrans %}</a>
-								{% endif %}
+								class="btn-group">{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
 
 							</div>
@@ -97,7 +80,7 @@
 										<th>EndDate</th>
 										<th>TimeGap</th>
 										<th>Weight</th>
-										{# <th>actions</th> #}
+										<th>actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -106,20 +89,37 @@
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
-											<td>{{ performer_task.name }}</td>
-											<input type="hidden" class="task" value="{{performer_task.operationalTask.plan.id}}">
-											<td>{{ performer_task.startDate  }}</td>
-											<td>{{ performer_task.endDate  }}</td>
-											<td>{{ performer_task.timeGap }}</td>
-											<td>{{ performer_task.weight }}</td>
+											<td>{{ performer_task.taskAssign.performerTask.name }}</td>
+											<td>{{ performer_task.taskAssign.startDate  }}</td>
+											<td>{{ performer_task.taskAssign.endDate  }}</td>
+											<td>{{ performer_task.taskAssign.timeGap }}</td>
+											<td>{{ performer_task.taskAssign.performerTask.weight }}</td>
+											<td>
+												<form action="{{path('performer_task_show')}}" method="post">
+													<input type="hidden" name="taskUser" value="{{performer_task.id}}">
+													{% if performer_task.status  %}
+														<button class="btn btn-primary btn-sm">
+															Show
+														</button>
+													{% else %}
+														<button class="btn btn-primary btn-sm">
+															Accept
+														</button>
+													{% endif %}
+												</form>
+												{% if performer_task.status == 0 %}
+													<a href="{{ path('operational_task_show', {'id': performer_task.id}) }}" class="btn btn-danger btn-sm">
+														Reject
+													</a>
+												{% endif %}
+
+
+											</td>
+
+
 											{# <td>
-																																		<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																			<i class="fa fa-eye"></i>
-																																		</a>
-																																		<a href="{{ path('performer_task_edit', {'id': performer_task.id}) }}" class="btn btn-warning btn-sm">
-																																			Assign
-																																		</a>
-																																	</td> #}
+																																																																																																																										<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																</td> #}
 
 										</tr>
 									{% else %}
@@ -135,230 +135,6 @@
 			</div>
 		</div>
 
-		<div id="myModal" class="modal fade" role="dialog">
-			<div
-				class="modal-dialog">
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Create Task</h4>
-					</div>
-					<div class="modal-body">
-						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-
-						<div class="form-group">
-							{{ form_label(form.name) }}
-							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-
-						<div class="form-group">
-							{{ form_label(form.weight) }}
-							{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-						<div class="form-group">
-							{{ form_label(form.startDate) }}
-							{{ form_widget(form.startDate,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-						<div class="form-group">
-							{{ form_label(form.endDate) }}
-							{{ form_widget(form.endDate,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-						<div class="form-group">
-							{{ form_label(form.timeGap) }}
-							{{ form_widget(form.timeGap,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-
-					</div>
-
-
-				</div>
-				<div class="modal-footer">
-					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-		<div id="assign" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<form
-					method="post" action="{{path('task_assign')}}">
-
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Assign Task</h4>
-						</div>
-						<div class="modal-body">
-
-							<div class="row">
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Select Performer
-										</b>
-									</lable>
-									<select autocomplete="off" name="user[]" id="user" multiple="true" class="form-control user  select2">
-										<option></option>
-									</select>
-
-
-								</div>
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Select Task
-										</b>
-									</lable>
-									<select autocomplete="off" name="task[]" id="crtask"  multiple="true" class="form-control crtask select2 ">
-										<option></option>
-									</select>
-
-
-								</div>
-
-							</div>
-							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Name</th>
-										<th>ExpectedValue</th>
-
-									</tr>
-								</thead>
-								<tbody>
-									{% set count = 0 %}
-									{% for measurement in measurements %}
-										<tr>
-											{% set count = count + 1 %}
-											<td>{{ count}}</td>
-											<td>{{ measurement.name }}</td>
-											<td><input type="hidden" name="measurementId[]" value={{measurement.id}}></td>
-
-											<td><input type="text" name="expectedValue[]" class="form-control"></td>
-
-
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-
-
-						</div>
-
-
-					</div>
-					<div class="modal-footer">
-						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Assign{% endtrans %}"/>
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					</div>
-				</form>
-
-			</div>
-
-
-		</div>
 	{% endblock %}
-	{% block javascripts %}
-
-		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
-
-		<script>
-			$(function () {
-$('.select2').css('width', '100%').select2({allowClear: true})
-})
-		</script>
-		<script>
-
-
-			$(document).ready(function () {
-
-var select = $('.user')
-
-$.ajax({
-url:"{{ path('user_fetch') }}",
-method: "POST",
-data: {},
-dataType: "json",
-success: function (data) { // $('.department').children().remove()
-for (let [key, value] of Object.entries(data)) {
-
-
-select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
-
-
-}
-}
-});
-})
-		</script>
-		<script>
-
-
-			$(document).ready(function () {
-var task = $('.task').val();
-
-var select = $('.crtask')
-
-$.ajax({
-url:"{{ path('task_fetch') }}",
-method: "POST",
-data: {
-task: task
-},
-dataType: "json",
-success: function (data) { // $('.department').children().remove()
-for (let [key, value] of Object.entries(data)) {
-
-
-select.append('<option value="' + value.id + '">' + value.taskName + ' </option>');
-
-
-}
-}
-});
-})
-		</script>
-		<script src="{{ asset('select2/js/select2.full.min.js')}}"></script>
-
-
-		<script>
-			$(function () { // Initialize Select2 Elements
-
-$('.sel').click({theme: 'bootstrap4'});
-// $('#fil').remove()
-});
-$('.sel').click(function () {
-return !$('#user option:selected').remove().appendTo('.selectedPerformer');
-})
-$('.seltask').click(function () {
-return !$('#crtask option:selected').remove().appendTo('.selectedtask');
-})
-$('.ret').click(function () {
-return !$('.selectedPerformer option:selected').remove().appendTo('#user');
-})
-$('.rettask').click(function () {
-return !$('.selectedtask option:selected').remove().appendTo('#crtask');
-})
-		</script>
-	{% endblock %}
+	{% block javascripts %}{% endblock %}
