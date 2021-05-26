@@ -34,19 +34,7 @@ class OperationalTask
      */
     private $plan;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $startDate;
-  /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $endDate;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $timeGap;
+   
 
     /**
      * @ORM\Column(type="integer")
@@ -123,41 +111,6 @@ class OperationalTask
         return $this;
     }
 
-    public function getStartDate(): ?string
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(string $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?string
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(string $endDate): self
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    public function getTimeGap(): ?int
-    {
-        return $this->timeGap;
-    }
-
-    public function setTimeGap(int $timeGap): self
-    {
-        $this->timeGap = $timeGap;
-
-        return $this;
-    }
 
     public function getWeight(): ?int
     {
@@ -171,35 +124,7 @@ class OperationalTask
         return $this;
     }
 
-    /**
-     * @return Collection|PerformerTask[]
-     */
-    public function getPerformerTasks(): Collection
-    {
-        return $this->performerTasks;
-    }
-
-    public function addPerformerTask(PerformerTask $performerTask): self
-    {
-        if (!$this->performerTasks->contains($performerTask)) {
-            $this->performerTasks[] = $performerTask;
-            $performerTask->setOperationalTask($this);
-        }
-
-        return $this;
-    }
-
-    public function removePerformerTask(PerformerTask $performerTask): self
-    {
-        if ($this->performerTasks->removeElement($performerTask)) {
-            // set the owning side to null (unless already changed)
-            if ($performerTask->getOperationalTask() === $this) {
-                $performerTask->setOperationalTask(null);
-            }
-        }
-
-        return $this;
-    }
+  
 
     /**
      * @return Collection|TaskAssign[]

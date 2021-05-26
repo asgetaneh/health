@@ -34,6 +34,16 @@ class TaskUser
      */
     private $taskAccomplishments;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $note;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -94,6 +104,30 @@ class TaskUser
                 $taskAccomplishment->setTaskUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }

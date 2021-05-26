@@ -13,10 +13,11 @@ class PerformerTaskType extends AbstractType
     {
         $builder
             ->add('name')
+             ->add('description')
             ->add('weight')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('timeGap')
+           ->add('quarter')
+
+           
         ;
     }
 
