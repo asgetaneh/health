@@ -28,7 +28,7 @@ class BehavioralPlanningAccomplishment
     private $plan;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $accomplishmentValue;
 
@@ -36,6 +36,11 @@ class BehavioralPlanningAccomplishment
      * @ORM\Column(type="text", nullable=true)
      */
     private $accomplishmentNote;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $planValue;
 
     public function getId(): ?int
     {
@@ -86,6 +91,18 @@ class BehavioralPlanningAccomplishment
     public function setAccomplishmentNote(?string $accomplishmentNote): self
     {
         $this->accomplishmentNote = $accomplishmentNote;
+
+        return $this;
+    }
+
+    public function getPlanValue(): ?int
+    {
+        return $this->planValue;
+    }
+
+    public function setPlanValue(int $planValue): self
+    {
+        $this->planValue = $planValue;
 
         return $this;
     }

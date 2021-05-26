@@ -200,5 +200,65 @@ class TaskAssign
         return $this;
     }
 
+    /**
+     * @return Collection|TaskAccomplishment[]
+     */
+    public function getTaskAccomplishments(): Collection
+    {
+        return $this->taskAccomplishments;
+    }
+
+    public function addTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
+    {
+        if (!$this->taskAccomplishments->contains($taskAccomplishment)) {
+            $this->taskAccomplishments[] = $taskAccomplishment;
+            $taskAccomplishment->setTaskAssign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
+    {
+        if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAccomplishment->getTaskAssign() === $this) {
+                $taskAccomplishment->setTaskAssign(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskMeasurement[]
+     */
+    public function getTaskMeasurements(): Collection
+    {
+        return $this->taskMeasurements;
+    }
+
+    public function addTaskMeasurement(TaskMeasurement $taskMeasurement): self
+    {
+        if (!$this->taskMeasurements->contains($taskMeasurement)) {
+            $this->taskMeasurements[] = $taskMeasurement;
+            $taskMeasurement->setTaskAssign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskMeasurement(TaskMeasurement $taskMeasurement): self
+    {
+        if ($this->taskMeasurements->removeElement($taskMeasurement)) {
+            // set the owning side to null (unless already changed)
+            if ($taskMeasurement->getTaskAssign() === $this) {
+                $taskMeasurement->setTaskAssign(null);
+            }
+        }
+
+        return $this;
+    }
+
    
 }

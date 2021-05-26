@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SuitableInitiativeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,21 @@ class SuitableInitiative
      * @ORM\ManyToOne(targetEntity=PlanningYear::class, inversedBy="suitableInitiatives")
      */
     private $planningYear;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="suitableInitiative")
+     */
+    private $plans;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive=0;
+
+    public function __construct()
+    {
+        $this->plans = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +86,48 @@ class SuitableInitiative
     public function setPlanningYear(?PlanningYear $planningYear): self
     {
         $this->planningYear = $planningYear;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Plan[]
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): self
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans[] = $plan;
+            $plan->setSuitableInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): self
+    {
+        if ($this->plans->removeElement($plan)) {
+            // set the owning side to null (unless already changed)
+            if ($plan->getSuitableInitiative() === $this) {
+                $plan->setSuitableInitiative(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

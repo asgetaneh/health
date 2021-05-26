@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SuitableInitiative index{% endblock %}
+
+{% block body %}
+    <h1>SuitableInitiative index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Initiative</th>
+                  <th>Office</th>
+                  <th>Planning Year</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for suitable_initiative in suitable_initiatives %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ suitable_initiative.initiative}}
+                 <td>{{ suitable_initiative.principalOffice}}
+                </td>
+                <td>{{suitable_initiative.planningYear}}</td>
+                <td>
+                    <a href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+                    <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('suitable_initiative_new') }}">Create new</a>
+{% endblock %}

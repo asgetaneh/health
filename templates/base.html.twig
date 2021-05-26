@@ -368,150 +368,7 @@ ace.settings.loadState('sidebar')
 																																								                                </a>
 																																								                            </li> #}
 
-								{% if is_granted('EMIS') %}
-									<li>
-
-										<a href="#" class="dropdown-toggle">
-											<i class=""></i>
-											<span class="menu-text">
-												{% trans %}EMIS{% endtrans %}
-											</span>
-
-											<b class="arrow fa fa-angle-down"></b>
-										</a>
-
-										<ul class="submenu">
-											{% if is_granted('STUDENT_SUMMARY_SRS') %}
-												<li>
-													<a href="{{ path('misquery_index_dynamic_query_template') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Student Information{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('STAFF_SUMMARY_HRM') %}
-												<li>
-													<a href="{{ path('misquery_index_dynamic_query_hrm') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Staff Information{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('LIST_MISQUERY') %}
-												<li>
-													<a href="{{ path('misquery_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Query{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('EMIS') and is_granted('SMIS') %}
-												<li>
-													<a href="{{ path('mistableattribute_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Table Attribute{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('mistable_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}EMIS Table{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('miswherecondition_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Where condition{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('misfromtable_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS From Table{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('misoperation_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Operation{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('misselectattribute_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS select Attribute{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('misgroupby_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Group By{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('misorderby_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}
-														EMIS Order By
-														{% endtrans %}
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('tag_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}Tags{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('BUILDING_SUMMARY_BUILDING') %}
-												<li>
-													<a href="{{ path('building_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}Facilities{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('BUDGET_SUMMARY_BUDGET') %}
-												<li>
-													<a href="{{ path('program_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}Budget{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{% if is_granted('RESEARCH_SUMMARY_RESEARCH') %}
-												<li>
-													<a href="{{ path('researchpaper_index') }}">
-														<b class="fa fa-caret-right"></b>
-														{% trans %}Research{% endtrans %}
-													</a>
-												</li>
-											{% endif %}
-											{#                               <li>
-																																																							                                            <a href="{{ path('thematicarea_index') }}">
-																																																							                                                <b class="fa fa-caret-right"></b>
-																																																							                                                {% trans %}Thematic Area{% endtrans %}
-																																																							                                            </a>
-																																																							                                        </li>
-																																																							                                         <li>
-																																																							                                            <a href="{{ path('costcenter_index') }}">
-																																																							                                                <b class="fa fa-caret-right"></b>
-																																																							                                                {% trans %}Cost center{% endtrans %}
-																																																							                                            </a>
-																																																							                                        </li>   #}
-										</ul>
-									</li>
-								{% endif %}
-								{# {% if is_granted('SMIS') %} #}
+							
 								<li>
 									<a href="#" class="dropdown-toggle ">
 										<i class=""></i>
@@ -776,195 +633,36 @@ ace.settings.loadState('sidebar')
 										{#</li>#}
 									</ul>
 								</li>
-
-
-								{# {% if is_granted('LIST_USER') %} #}
-								<li>
-									<a href="#" class="dropdown-toggle">
+                                <li>
+									<a href="#" class="dropdown-toggle ">
 										<i class=""></i>
 										<span class="menu-text">
-											{% trans %}
-											User Management{% endtrans %}
 
+											{% trans %}User Management{% endtrans %}
 										</span>
-
 										<b class="arrow fa fa-angle-down"></b>
 									</a>
+									<ul
+										class="submenu">
+										                                      
+										
 
-									<ul class="submenu">
 										{{ include('menu/user.html.twig') }}
-										{% if is_granted('LIST_USER') %}
-											<li>
-												<a href="{{ path('user_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}
-													User{% endtrans %}
-												</a>
-											</li>
-										{% endif %}
-										{% if is_granted('LIST_GROUP') %}
-											<li>
-												<a href="{{ path('group_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}
-													Group{% endtrans %}
-												</a>
-											</li>
-										{% endif %}
-										{% if is_granted('LIST_PERMISSION') %}
-											<li>
-												<a href="{{ path('permission_index') }}">
-													<b class="fa fa-caret-right"></b>
-													{% trans %}
-													Permission{% endtrans %}
-												</a>
-											</li>
-										{% endif %}
-										{% if is_granted('FETCH_UAS_USER') %}
-											<li>
-												<a href="{{ path('user_create_user_from_ldap') }}">
-													<b class="fa fa-caret-right"></b>
-													USER FROM LDAP
-												</a>
-											</li>
-										{% endif %}
+										
 									</ul>
 								</li>
 
-								{# {% endif %} #}
-
-								{#     {% if is_granted('SIS') %}
-																																								                                <li>
-																																								                                    <a href="#" class="dropdown-toggle">
-																																								                                        <i class=""></i>
-																																								                                        <span class="menu-text">
-																																								                                            {% trans %} SIS{% endtrans %}
-																																								
-																																								                                        </span>
-																																								
-																																								                                        <b class="arrow fa fa-angle-down"></b>
-																																								                                    </a>
-																																								
-																																								                                    {% if is_granted('SIS') %}
-																																								                                    <ul class="submenu">
-																																								                                        
-																																								                                            <li>
-																																								                                                <a href="{{ path('common_homepage') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Student Information{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        
-																																								                                        {% if is_granted('SIS') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('dinningroom_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Student Meal and  Dinning Room{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}
-																																								                                        {% if is_granted('SIS') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('disease_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Student Clinic{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}
-																																								                                        {% if is_granted('SIS') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('costsharinggroup_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Non-caffe and Non-dorm Cost Sharing{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}
-																																								                                       {% if is_granted('SIS') %}
-																																								                                            <li>
-																																								                                                <a href="{{ path('backup_index') }}">
-																																								                                                    <b class="fa fa-caret-right"></b>
-																																								                                                    {% trans %}Go{% endtrans %}
-																																								                                                </a>
-																																								                                            </li>
-																																								                                        {% endif %}
-																																								                                    </ul>
-																																								                                    {% endif %}
-																																								                                </li>
-																																								                            {% endif %}#}
 
 
-								{% if is_granted('SMIS') %}
-									<li>
-										<a href="{{ path('mismail_index') }}">
-											<b class="fa fa-caret-right"></b>
-											{% trans %}Mail{% endtrans %}
-										</a>
-									</li>
-								{% endif %}
-								{% if is_granted('IS_PPO_DIRECTOR') %}
-									{% if is_granted('LIST_LOG') %}
-										<li>
-											<a href="{{ path('extlogentries_index') }}">
-												<b class="fa fa-caret-right"></b>
-												{% trans %}Log{% endtrans %}
-											</a>
-										</li>
-									{% endif %}
-								{% endif %}
 
-								{% if is_granted('IS_PPO_DIRECTOR') %}
-									<li>
-										<a href="{{ path('juua_homepage') }}">
-											<b class="fa fa-caret-right"></b>
-											{% trans %}Login Statistics{% endtrans %}
-										</a>
-									</li>
-								{% endif %}
-
-								{% if is_granted('IS_PPO_DIRECTOR') %}
-									<li>
-										<a href="{{ path('downloadhistory_index') }}">
-											<b class="fa fa-caret-right"></b>
-											{% trans %}Download History{% endtrans %}
-										</a>
-									</li>
-								{% endif %}
-								{# {% if is_granted('SISS') %}
-																																								                                <a href="{{ path('jusis_homepage') }}">
-																																								                                    <b class="fa fa-caret-right"></b>
-																																								                                    {% trans %}SIS Home page  {% endtrans %}
-																																								                                </a>
-																																								                            {% endif %}#}
-
-								{% if is_granted('IS_PPO_DIRECTOR') %}
-									<li>
-										<a href="{{ path('plan_unasociated') }}">
-											<b class="fa fa-caret-right"></b>
-											{% trans %}Unasociated Plan Records{% endtrans %}
-										</a>
-
-									</li>
-								{% endif %}
-								{% if is_granted('IS_PPO_DIRECTOR') %}
-									<li>
-										<a href="{{ path('missurveyquestion_index') }}">
-											<b class="fa fa-caret-right"></b>
-											{% trans %}Survey quesstions{% endtrans %}
-										</a>
-
-									</li>
-								{% endif %}
+								
 
 
-								{#                            <li>
-																																								                                                            <a href="{{ path('jusis_homepage') }}">
-																																								                                                                <b class="fa fa-caret-right"></b>
-																																								                                                                {% trans %}SIS{% endtrans %}
-																																								                                                            </a>
-																																								                                                        </li>#}
+								
+																																								                                                            
 							</ul>
 
-							{#{% endblock %}#}
+						
 						</ul>
 						<!-- /.nav-list -->
 					{% endblock %}
@@ -992,22 +690,11 @@ ace.settings.loadState('sidebar')
 								{% block subTitle %}
 									<li class="active">{% trans %}Dashboard{% endtrans %}</li>
 								{% endblock %}
-								{# <li class="pull-right">
-																																								                            {% if app.user.userOffice %}
-																																								                                <span class="badge badge-info pull-right">{{ app.user.userOffice.name }}</span>
-																																								                            {% endif %}
-																																								                            {% if is_granted('IS_PRINCIPAL_OFFICE') %}
-																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PO </span>
-																																								                            {% endif %}
-																																								                            {% if is_granted('IS_PPO_DIRECTOR') %}
-																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> PPO </span>
-																																								                            {% endif %}
-																																								                            {% if is_granted('IS_TOP_MANAGER') %}
-																																								                                <span class="badge badge-success glyphicon glyphicon-chevron-right"> Top Management </span>
-																																								                            {% endif %}
-																																								                        </li> #}
+							
+																																								                           
+																																								                            
 							</ul>
-							<!--.breadcrumb-->
+							
 							{% block search %}{% endblock %}
 						</div>
 						<div style="text-align: center"> {% block title %}{% endblock %}
@@ -1054,8 +741,6 @@ ace.settings.loadState('sidebar')
 											</div>
 
 										{% endfor %}
-
-										{#
 																																																		                    
 																																																		                                        {% for message in app.flashes('success') %}
 																																																		                                            <div class="alert alert-block alert-success">
@@ -1070,7 +755,7 @@ ace.settings.loadState('sidebar')
 																																																		                                            </div>
 																																																		                    
 																																																		                                        {% endfor %}
-																																																		                    #}
+																																																		                    
 
 										{# pass an array argument to get the messages of those types  #}
 										{% for label, messages in app.flashes(['warning']) %}

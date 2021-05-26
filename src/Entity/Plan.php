@@ -64,6 +64,16 @@ class Plan
      */
     private $quarter;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive=0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="plans")
+     */
+    private $suitableInitiative;
+
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
@@ -215,6 +225,30 @@ class Plan
     public function setQuarter(?PlanningQuarter $quarter): self
     {
         $this->quarter = $quarter;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getSuitableInitiative(): ?SuitableInitiative
+    {
+        return $this->suitableInitiative;
+    }
+
+    public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
+    {
+        $this->suitableInitiative = $suitableInitiative;
 
         return $this;
     }

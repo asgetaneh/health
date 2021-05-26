@@ -47,4 +47,21 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findDuplication($plan){
+      $qb=$this->createQueryBuilder('pa');
+      $qb->select('count(pa.id)')
+      ->andWhere('pa.plan = :plan')
+      ->setParameter('plan',$plan);
+      return $qb->getQuery()->getSingleScalarResult();
+      
+    }
+     public function findBySuitable($suitable){
+      $qb=$this->createQueryBuilder('pa');
+      $qb->join('pa.plan','pl')
+      ->andwhere('pl.suitableInitiative in (:suitin)')
+      ->setParameter('suitin',$suitable);
+      return $qb->getQuery()->getResult();
+      
+    }
+
 }

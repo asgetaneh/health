@@ -47,4 +47,14 @@ class BehavioralPlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findDuplication($plan,$attrib){
+      $qb=$this->createQueryBuilder('pa');
+      $qb->select('count(pa.id)')
+      ->andWhere('pa.plan = :plan')
+      ->andWhere('pa.initiativeAttribute = :attrib')
+      ->setParameter('plan',$plan)
+       ->setParameter('attrib',$attrib);
+      return $qb->getQuery()->getSingleScalarResult();
+      
+    }
 }

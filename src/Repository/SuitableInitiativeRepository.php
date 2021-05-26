@@ -66,4 +66,15 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         ->setParameter('office',$principaloffice);
         return $qb->getQuery()->getResult();
     }
+    public function findAllActive($principaloffice,$planyear,$stat){
+         $qb=$this->createQueryBuilder('s')
+        ->andWhere('s.principalOffice = :office')
+         ->andwhere('s.planningYear = :planyear')
+         ->andwhere('s.isActive = :stat')
+         ->setParameter('stat',$stat)
+        ->setParameter('planyear',$planyear)
+        ->setParameter('office',$principaloffice);
+        return $qb->getQuery()->getResult();
+
+    }
 }

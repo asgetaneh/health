@@ -85,6 +85,10 @@ class Initiative
         $this->principalOffice = new ArrayCollection();
         $this->suitableInitiatives = new ArrayCollection();
     }
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {

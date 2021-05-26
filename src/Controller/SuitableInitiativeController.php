@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\SuitableInitiative;
+use App\Form\SuitableInitiativeType;
+use App\Repository\SuitableInitiativeRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * @Route("/suitable/initiative")
+ */
+class SuitableInitiativeController extends AbstractController
+{
+    /**
+     * @Route("/", name="suitable_initiative_index", methods={"GET"})
+     */
+    public function index(SuitableInitiativeRepository $suitableInitiativeRepository): Response
+    {
+        return $this->render('suitable_initiative/index.html.twig', [
+            'suitable_initiatives' => $suitableInitiativeRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="suitable_initiative_new", methods={"GET","POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $suitableInitiative = new SuitableInitiative();
+        $form = $this->createForm(SuitableInitiativeType::class, $suitableInitiative);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($suitableInitiative);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('suitable_initiative_index');
+        }
+
+        return $this->render('suitable_initiative/new.html.twig', [
+            'suitable_initiative' => $suitableInitiative,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="suitable_initiative_show", methods={"GET"})
+     */
+    public function show(SuitableInitiative $suitableInitiative): Response
+    {
+        return $this->render('suitable_initiative/show.html.twig', [
+            'suitable_initiative' => $suitableInitiative,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="suitable_initiative_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, SuitableInitiative $suitableInitiative): Response
+    {
+        $form = $this->createForm(SuitableInitiativeType::class, $suitableInitiative);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('suitable_initiative_index');
+        }
+
+        return $this->render('suitable_initiative/edit.html.twig', [
+            'suitable_initiative' => $suitableInitiative,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="suitable_initiative_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, SuitableInitiative $suitableInitiative): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$suitableInitiative->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($suitableInitiative);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('suitable_initiative_index');
+    }
+}

@@ -23,7 +23,7 @@ class PlanningAccomplishment
     private $plan;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $accompValue;
 
@@ -36,6 +36,13 @@ class PlanningAccomplishment
      * @ORM\Column(type="text", nullable=true)
      */
     private $accomplishNote;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $planValue;
+
+   
 
     public function getId(): ?int
     {
@@ -89,4 +96,18 @@ class PlanningAccomplishment
 
         return $this;
     }
+
+    public function getPlanValue(): ?int
+    {
+        return $this->planValue;
+    }
+
+    public function setPlanValue(int $planValue): self
+    {
+        $this->planValue = $planValue;
+
+        return $this;
+    }
+
+   
 }
