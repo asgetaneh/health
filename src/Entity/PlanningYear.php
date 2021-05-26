@@ -59,10 +59,21 @@ class PlanningYear
      */
     private $title;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SuitableInitiative::class, mappedBy="planningYear")
+     */
+    private $suitableInitiatives;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOfQuarter;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
         $this->plans = new ArrayCollection();
+        $this->suitableInitiatives = new ArrayCollection();
     }
     public function __toString()
     {
@@ -206,6 +217,48 @@ class PlanningYear
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SuitableInitiative[]
+     */
+    public function getSuitableInitiatives(): Collection
+    {
+        return $this->suitableInitiatives;
+    }
+
+    public function addSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if (!$this->suitableInitiatives->contains($suitableInitiative)) {
+            $this->suitableInitiatives[] = $suitableInitiative;
+            $suitableInitiative->setPlanningYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if ($this->suitableInitiatives->removeElement($suitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($suitableInitiative->getPlanningYear() === $this) {
+                $suitableInitiative->setPlanningYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNumberOfQuarter(): ?int
+    {
+        return $this->numberOfQuarter;
+    }
+
+    public function setNumberOfQuarter(?int $numberOfQuarter): self
+    {
+        $this->numberOfQuarter = $numberOfQuarter;
 
         return $this;
     }

@@ -13,17 +13,19 @@
 
 			{# <div class="hr hr-18 hr-double dotted"></div> #}
 				<div>
-					<ul class="steps"> <li data-step="1" class={% if initiatives is defined %}
+					<ul class="steps"> <li data-step="1" class={% if initiatives is defined or suitableInitiatives is defined %}
                     "complete"
                     {% else %}
                         " active"
                     {% endif %}>
 						<span class="step">1</span>
-						<span class="title">Select Report Period And Office</span>
+						<span class="title">Select Planning Year And Office</span>
 					</li>
 
 					<li data-step="2" class= {% if initiatives is defined %}
                     "active"
+                    {% elseif suitableInitiatives is defined %}
+                    "complete"
                     {% else %}
                         " "
                     {% endif %}
@@ -36,7 +38,10 @@
 						</span>
 					</li>
 
-					<li data-step="3">
+					<li data-step="3" class= {% if suitableInitiatives is defined %}
+                    "active"
+                    {% endif %}
+                   >
 						<span class="step">3</span>
 						<span class="title">Create And Assign Task</span>
 					</li>
@@ -58,7 +63,7 @@
                 {% if pricipaloffice is defined %}
               <span class="badge badge-info"> Principal Office: {{pricipaloffice}}
               </br>
-              Planning Quarter: {{planphase.name}}
+              Planning Year: {{planyear}}
               </span>
                 {# <span class="badge badge-info"> Quarter: {{pricipaloffice}}</span> #}
                 {% endif %}
@@ -69,7 +74,7 @@
 			<div class="widget-body">
 				<div class="widget-main">
 					
-								{% if initiatives is defined %}
+								{% if suitableInitiatives is defined %}
 									<div class="table-responsive">
 										<form class="form-inline" method="post" style="display:inline;">
 
@@ -129,11 +134,11 @@
 												</tr>
 											</thead>
 											<tbody>
-												{% for initiative in initiatives %}
+												{% for suitableInitiative in suitableInitiatives %}
 													<tr>
-														<td>{{ initiative.id }}</td>
-														<td>{{ initiative.name }}</td>
-														<td>{{ initiative.initiativeBehaviour}}</td>
+														<td>{{ loop.index }}</td>
+														<td>{{ suitableInitiative.initiative.name }}</td>
+														<td>{{ suitableInitiative.initiative.initiativeBehaviour}}</td>
 														<td>{{ "0"}}</td>
                                                         <td>{{ "0"}}</td>
                                                         <td>{{ "0"}}</td>
@@ -146,11 +151,11 @@
 					
 														<td>
 
-															<a  class="btn btn-info btn-xs " href="{{ path('operational_task_index', {'id': initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i>     task</a>
-															<a data-toggle="modal" data-target="#{{initiative.id}}"   href="#">edit</a>
+															<a  class="btn btn-info btn-xs " href="{{ path('operational_task_index', {'id':suitableInitiative.initiative.id}) }}" title="add task"> <span class="glyphicon glyphicon-tasks"></span></i>     task</a>
+															<button data-toggle="modal"  data-target ="#{{suitableInitiative.initiative.id}}" data-id="{{suitableInitiative.initiative.id}}"    data-backdrop="static"   >edit</button>
 														</td>
 													</tr>
-                                             {% include 'plan/plan.modal.html.twig' with {'initiative': initiative } %}
+                                                
 
 												{% else %}
 													<tr>
@@ -164,7 +169,391 @@
 
 
 								{% endif %}
-							
+							<div class="tab-content no-border no-padding">
+												<div id="inbox" class="tab-pane in active">
+													<div class="message-container">
+														<div id="id-message-list-navbar" class="message-navbar clearfix">
+															<div class="message-bar">
+																<div class="message-infobar hide" id="id-message-infobar">
+																	<span class="blue bigger-150">Inbox</span>
+																	<span class="grey bigger-110">(2 unread messages)</span>
+																</div>
+
+																<div class="message-toolbar">
+																	<div class="inline position-relative align-left">
+																		<button type="button" class="btn-white btn-primary btn btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+																			<span class="bigger-110">Action</span>
+
+																			<i class="ace-icon fa fa-caret-down icon-on-right"></i>
+																		</button>
+
+																		<ul class="dropdown-menu dropdown-lighter dropdown-caret dropdown-125">
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-mail-reply blue"></i>&nbsp; Reply
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-mail-forward green"></i>&nbsp; Forward
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-folder-open orange"></i>&nbsp; Archive
+																				</a>
+																			</li>
+
+																			<li class="divider"></li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-eye blue"></i>&nbsp; Mark as read
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-eye-slash green"></i>&nbsp; Mark unread
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-flag-o red"></i>&nbsp; Flag
+																				</a>
+																			</li>
+
+																			<li class="divider"></li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp; Delete
+																				</a>
+																			</li>
+																		</ul>
+																	</div>
+
+																	<div class="inline position-relative align-left open">
+																		<button type="button" class="btn-white btn-primary btn btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																			<i class="ace-icon fa fa-folder-o bigger-110 blue"></i>
+																			<span class="bigger-110">Move to</span>
+
+																			<i class="ace-icon fa fa-caret-down icon-on-right"></i>
+																		</button>
+
+																		<ul class="dropdown-menu dropdown-lighter dropdown-caret dropdown-125">
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-stop pink2"></i>&nbsp; Tag#1
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-stop blue"></i>&nbsp; Family
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-stop green"></i>&nbsp; Friends
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-stop grey"></i>&nbsp; Work
+																				</a>
+																			</li>
+																		</ul>
+																	</div>
+
+																	<button type="button" id="applicable" class="btn btn-xs btn-white btn-primary" onclick="return confirm('are you sure you want to select this initiative for opperational unit?')">
+																		<i class="ace-icon fa fa-trash-o bigger-125 orange"></i>
+																		<span class="bigger-110">select</span>
+																	</button>
+																</div>
+															</div>
+
+															<div>
+																<div class="messagebar-item-left">
+																	<label class="inline middle">
+																		<input type="checkbox" id="checkall" class="ace">
+																		<span class="lbl"></span>
+																	</label>
+
+																	&nbsp;
+																	<div class="inline position-relative">
+																		<a href="#" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="false">
+																			<i class="ace-icon fa fa-caret-down bigger-125 middle"></i>
+																		</a>
+
+																		<ul class="dropdown-menu dropdown-lighter dropdown-100">
+																			<li>
+																				<a id="id-select-message-all" href="#">All</a>
+																			</li>
+
+																			<li>
+																				<a id="id-select-message-none" href="#">None</a>
+																			</li>
+
+																			<li class="divider"></li>
+
+																			<li>
+																				<a id="id-select-message-unread" href="#">Unread</a>
+																			</li>
+
+																			<li>
+																				<a id="id-select-message-read" href="#">Read</a>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+
+																<div class="messagebar-item-right">
+																	<div class="inline position-relative">
+																		<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+																			Sort &nbsp;
+																			<i class="ace-icon fa fa-caret-down bigger-125"></i>
+																		</a>
+
+																		<ul class="dropdown-menu dropdown-lighter dropdown-menu-right dropdown-100">
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-check green"></i>
+																					Date
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-check invisible"></i>
+																					From
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-check invisible"></i>
+																					Subject
+																				</a>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+
+																<div class="nav-search minimized">
+																	<form class="form-search">
+																		<span class="input-icon">
+																			<input type="text" autocomplete="off" class="input-small nav-search-input" placeholder="Search inbox ...">
+																			<i class="ace-icon fa fa-search nav-search-icon"></i>
+																		</span>
+																	</form>
+																</div>
+															</div>
+														</div>
+
+														<div id="id-message-item-navbar" class="hide message-navbar clearfix">
+															<div class="message-bar">
+																<div class="message-toolbar">
+																	<div class="inline position-relative align-left">
+																		<button type="button" class="btn-white btn-primary btn btn-xs dropdown-toggle" data-toggle="dropdown">
+																			<span class="bigger-110">Action</span>
+
+																			<i class="ace-icon fa fa-caret-down icon-on-right"></i>
+																		</button>
+
+																		<ul class="dropdown-menu dropdown-lighter dropdown-caret dropdown-125">
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-mail-reply blue"></i>&nbsp; Reply
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-mail-forward green"></i>&nbsp; Forward
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-folder-open orange"></i>&nbsp; Archive
+																				</a>
+																			</li>
+
+																			<li class="divider"></li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-eye blue"></i>&nbsp; Mark as read
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-eye-slash green"></i>&nbsp; Mark unread
+																				</a>
+																			</li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-flag-o red"></i>&nbsp; Flag
+																				</a>
+																			</li>
+
+																			<li class="divider"></li>
+
+																			<li>
+																				<a href="#">
+																					<i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp; Delete
+																				</a>
+																			</li>
+																		</ul>
+																	</div>
+
+																	<div class="inline position-relative align-left">
+																		<button type="button" class="btn-white btn-primary btn btn-xs dropdown-toggle" data-toggle="dropdown">
+																			<i class="ace-icon fa fa-folder-o bigger-110 blue"></i>
+																			<span class="bigger-110">Move to</span>
+
+																			<i class="ace-icon fa fa-caret-down icon-on-right"></i>
+																		</button>
+
+																	</div>
+
+																	<button type="button" class="btn btn-xs btn-white btn-primary">
+																		<i class="ace-icon fa fa-trash-o bigger-125 orange"></i>
+																		<span class="bigger-110">Delete</span>
+																	</button>
+																</div>
+															</div>
+
+															<div>
+																<div class="messagebar-item-left">
+																	<a href="#" class="btn-back-message-list">
+																		<i class="ace-icon fa fa-arrow-left blue bigger-110 middle"></i>
+																		<b class="bigger-110 middle">Back</b>
+																	</a>
+																</div>
+
+																<div class="messagebar-item-right">
+																	<i class="ace-icon fa fa-clock-o bigger-110 orange"></i>
+																	<span class="grey">Today, 7:15 pm</span>
+																</div>
+															</div>
+														</div>
+
+														
+
+														<div class="message-list-container">
+															<div class="message-list" id="message-list">
+                                                            {% if initiatives is defined %}
+                                                            <form action="{{path('plan_index')}}" id="initiative_form" method="post">
+                                                            {% for initiative in initiatives %}
+                                                                <input type="hidden" name="planyear" value="{{planyear.id}}">
+                                                                <input type="hidden" name="office" value="{{pricipaloffice.id}}">
+                                                           
+																<div class="message-item message-unread selected">
+																	<label class="inline">
+																		<input type="checkbox" name="initiative[]" value="{{initiative.id}}" class="ace" required>
+																		<span class="lbl"></span>
+																	</label>
+
+																
+																	<span class="sender" title="Alex John Red Smith">{{initiative.name}} </span>
+																	<span class="time">1:33 pm</span>
+
+																	<span class="summary">
+																		<span class="text">
+																			{{initiative.description}}
+																		</span>
+																	</span>
+																</div>
+                                                                 {% endfor %}
+                                                                 </form>
+                                                                 {% endif %}
+
+																
+
+															</div><form id="id-message-form" class="form-horizontal message-form col-xs-12 hide">
+									                      <div>
+									
+
+										<div class="space"></div>
+									</div>
+								</form>
+														</div>
+
+														<div class="message-footer clearfix">
+															<div class="pull-right"> 151 messages total </div>
+
+															{# <div class="pull-right">
+																<div class="inline middle"> page 1 of 16 </div>
+
+																&nbsp; &nbsp;
+																<ul class="pagination middle">
+																	<li class="disabled">
+																		<span>
+																			<i class="ace-icon fa fa-step-backward middle"></i>
+																		</span>
+																	</li>
+
+																	<li class="disabled">
+																		<span>
+																			<i class="ace-icon fa fa-caret-left bigger-140 middle"></i>
+																		</span>
+																	</li>
+
+																	<li>
+																		<span>
+																			<input value="1" maxlength="3" type="text">
+																		</span>
+																	</li>
+
+																	<li>
+																		<a href="#">
+																			<i class="ace-icon fa fa-caret-right bigger-140 middle"></i>
+																		</a>
+																	</li>
+
+																	<li>
+																		<a href="#">
+																			<i class="ace-icon fa fa-step-forward middle"></i>
+																		</a>
+																	</li>
+																</ul>
+															</div> #}
+														</div>
+
+														<div class="hide message-footer message-footer-style2 clearfix">
+															<div class="pull-left"> simpler footer </div>
+
+															<div class="pull-right">
+																<div class="inline middle"> message 1 of 151 </div>
+
+																&nbsp; &nbsp;
+																<ul class="pagination middle">
+																	<li class="disabled">
+																		<span>
+																			<i class="ace-icon fa fa-angle-left bigger-150"></i>
+																		</span>
+																	</li>
+
+																	<li>
+																		<a href="#">
+																			<i class="ace-icon fa fa-angle-right bigger-150"></i>
+																		</a>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
 
 							
 					
@@ -186,19 +575,54 @@
 			</div>
 			<!-- /.widget-body -->
 		</div><!-- PAGE CONTENT ENDS --></div><!-- /.col -->
-           
+       {% if suitableInitiatives is defined %}
+        {% for suitableInitiative in suitableInitiatives %}
+         {% include 'plan/plan.modal.html.twig'%}
+        {% endfor %}
+        {% endif %}
     {{ include('plan/modal.html.twig') }}
     {% endblock %}
     {% block javascripts %}
 	<script type="text/javascript">
-		jQuery(function ($) {
+		$(function() {
 $('.select2').css('width', '90%').select2({allowClear: false})
-$('.modalbtn').click(function(){
-    let id=$(this).attr('data-id');
-    
-    $('.planmodal').modal('show')
+$('#applicable').click(function(){
+    $('#initiative_form').submit();
 })
+$('#checkall').click(function(){
+    var $chk=$(':checkbox');
+   $chk.prop('checked',$(this).is(':checked'));
+  // if($(this))
+     //   $chk.prop('checked',$chk.prop(':checked'));
+
+   // $('input[type=checkbox]').click();
+})
+$('.modalbtn').click(function(){
+   
+    var id1 = $(this).attr('data-id');
+   
+  // console.log(`${id1}`);
+  //$('.modal').modal('hide');
+    // {# $("[href!='default.htm']") #}
+   //$('.close-modal').trigger('click');
+ //var visible=$('.modal.show').attr('id');
+ // if(visible != id1){
+//$(".modal[id!= "+id1+"]").modal('hide');
+ // }
+ 
+ // alert(id1);
+
+  // $("#"+id1).modal({backdrop: 'false', keyboard: false});
+   //
+    //$("#"+id1).removeAttr("style");
+   // $('.planmodal').hide();
+   //$(`#${id1}`).css('display','block');
+   $(`#${id1}`).modal();
+   //alert(`#${id1}`);
+   
 
 })
+
+});
 	</script>
 {% endblock %}

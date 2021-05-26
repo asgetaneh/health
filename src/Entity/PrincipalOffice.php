@@ -64,12 +64,18 @@ class PrincipalOffice
      */
     private $plans;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SuitableInitiative::class, mappedBy="principalOffice")
+     */
+    private $suitableInitiatives;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
         $this->principalManagers = new ArrayCollection();
         $this->initiatives = new ArrayCollection();
         $this->plans = new ArrayCollection();
+        $this->suitableInitiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -251,6 +257,36 @@ class PrincipalOffice
             // set the owning side to null (unless already changed)
             if ($plan->getOffice() === $this) {
                 $plan->setOffice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SuitableInitiative[]
+     */
+    public function getSuitableInitiatives(): Collection
+    {
+        return $this->suitableInitiatives;
+    }
+
+    public function addSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if (!$this->suitableInitiatives->contains($suitableInitiative)) {
+            $this->suitableInitiatives[] = $suitableInitiative;
+            $suitableInitiative->setPrincipalOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuitableInitiative(SuitableInitiative $suitableInitiative): self
+    {
+        if ($this->suitableInitiatives->removeElement($suitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($suitableInitiative->getPrincipalOffice() === $this) {
+                $suitableInitiative->setPrincipalOffice(null);
             }
         }
 

@@ -47,17 +47,16 @@ class PlanRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function checkForDuplicationOfPlan($principaloffice,$initiative,$planphase,$quarter){
+    public function checkForDuplicationOfPlan($principaloffice,$initiative,$planyear,$quarter){
    $qb=$this->createQueryBuilder('p')
    ->andWhere('p.office = :office')
    ->andWhere('p.initiative = :intiative')
-   ->andwhere('p.planningPhase = :planphase')
+   ->andwhere('p.planningYear = :planyear')
     ->andwhere('p.quarter = :quarter')
    ->setParameter('office',$principaloffice)
    ->setParameter('intiative',$initiative)
    ->setParameter('quarter',$quarter)
-   
-   ->setParameter('planphase',$planphase);
+   ->setParameter('planyear',$planyear);
    return $qb->getQuery()->getResult();
 
     }
