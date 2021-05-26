@@ -26,16 +26,65 @@
 	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
+	<div>
+		{# {% set taskUserid = 0 %}
+						{% set status = 0 %}#}
+		{% for operational_task in operational_tasks %}
+			{% if loop.first %}
 
+				{#{% set status = taskAccomplishment.taskUser.status %}
+												{% set taskUserid = taskAccomplishment.taskUser.id %} #}
+
+				<ul class="steps">
+					<li data-step="1" class={% if operational_task.plan.status == 1 %} "complete" {% elseif operational_task.plan.status >= 1 %} "active" {% else %} {% endif %}>
+						<span class="step">A</span>
+						<span class="title">
+							List Task</span>
+					</li>
+					<li data-step="2" class={% if operational_task.plan.status == 2 %} "complete" {% elseif operational_task.plan.status >= 2 %} "active" {% else %} {% endif %}>
+						<span class="step">B</span>
+						<span class="title">
+							Assign Task
+						</span>
+					</li>
+
+					<li
+						data-step="3">
+						{# class={% if taskAccomplishment.taskUser.status == 3 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 3 %} "active" {% else %} {% endif %}> #}
+						<span class="step">C</span>
+						<span class="title">Approve Performers Report
+						</span>
+					</li>
+
+					<li
+						data-step="4">
+						{# class={% if taskAccomplishment.taskUser.status == 4 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 4 %} "active" {% else %} {% endif %}> #}
+						<span class="step">D</span>
+						<span class="title">
+							Evaluate Performer
+						</span>
+					</li>
+					<li
+						data-step="5">
+						{# class={% if taskAccomplishment.taskUser.status == 5 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 5 %} "active" {% else %} {% endif %}> #}
+						<span class="step">E</span>
+						<span class="title">
+							Send Report to Principals
+						</span>
+					</li>
+				</ul>
+			{% endif %}
+
+		{% endfor %}
+	</div>
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					{% set office = 0 %}
-					<h5 class="widget-title bigger lighter">Operational 
-																																																																		
-																																																												                         Office ={{app.user.id}}
-						TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					<h5 class="widget-title bigger lighter">Operational Office
+																																																																																
+														TotalWeight=<div class="badge badge-danger">{{count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -156,13 +205,17 @@
 												<td>{{ operational_task.weight }}</td>
 
 												<td>
-													<a href="{{ path('operational_task_show', {'id': operational_task.id}) }}" class="btn btn-primary btn-sm">
-														<i class="fa fa-eye"></i>
-													</a>
+													<form action="{{path('operational_task_show')}}" method="post">
+													<input type="hidden" name="taskUser" value="{{operational_task.id}}">
+													
+														<button class="btn btn-primary btn-sm">
+															Show
+														</button>
+												</form>
 
 
 													{# <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-																																																																																																																																																													Create</a> #}
+																																																																																																																																																																																									Create</a> #}
 												</td>
 
 

@@ -69,6 +69,11 @@ class Plan
      */
     private $performerTasks;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->operationalTasks = new ArrayCollection();
@@ -251,6 +256,18 @@ class Plan
                 $performerTask->setPlan(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

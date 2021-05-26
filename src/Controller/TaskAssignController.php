@@ -8,6 +8,7 @@ use App\Entity\TaskUser;
 use App\Form\TaskAssignType;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
+use App\Repository\PlanRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
@@ -57,10 +58,11 @@ class TaskAssignController extends AbstractController
 /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(Request $request,UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
+    public function performerFetch(Request $request,PlanRepository $planRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
     TaskMeasurementRepository $taskMeasurementRepository)
     {
         $entityManager = $this->getDoctrine()->getManager();
+        $status=0;
           $initibativeId=0;
             $users=$request->request->get('user');
             $tasks=$request->request->get('task');
@@ -78,10 +80,9 @@ class TaskAssignController extends AbstractController
                  $taskAssign = new TaskAssign();
 
             $task = $tasksss[$key];
-             $userId=$userRepository->find($value);
              $taskId=$performerTaskRepository->find($task);
              $initibativeId=$taskId->getPlan()->getInitiative()->getId();
-
+        $planId=$taskId->getPlan();
              $taskAssign->setPerformerTask($taskId);
            
              $taskAssign->setAssignedAt(new \DateTime());
@@ -128,7 +129,13 @@ class TaskAssignController extends AbstractController
               $entityManager->flush();
         }
                       $entityManager->flush();
-
+                      $planId=$planRepository->find($planId);
+              if($planId->getStatus()<2){
+                  $planId->setStatus(2);
+                  $entityManager->flush();
+              }
+              
+          
             // dd(1);
             $this->addFlash('success', 'Task Assind successfully !');
             return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);

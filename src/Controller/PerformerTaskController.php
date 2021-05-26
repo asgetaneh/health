@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\OperationalTask;
 use App\Entity\PerformerTask;
+use App\Entity\TaskAccomplishment;
 use App\Entity\TaskMeasurement;
 use App\Form\PerformerTaskType;
 use App\Form\TaskMeasurementType;
@@ -13,6 +14,8 @@ use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\TaskUserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DomCrawler\Image;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,6 +71,7 @@ class PerformerTaskController extends AbstractController
     public function show(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em=$this->getDoctrine()->getManager();
+       
         if ($report= $request->request->get('reportValue')) {
             $reportValue= $request->request->get('reportValue');
           $ids= $request->request->get('taskAccomplishmentId');
@@ -79,9 +83,7 @@ class PerformerTaskController extends AbstractController
           }
           $em->flush();
                       $this->addFlash('success', 'Reported successfully !');
-
                       return $this->redirectToRoute('performer_task_index');
-
         }
           if ($request->request->get('note')) {
             $note= $request->request->get('note');
@@ -92,32 +94,38 @@ class PerformerTaskController extends AbstractController
             $taskUserno->setStatus(3);
           $em->flush();
                                 $this->addFlash('success', 'Chalenge successfully !');
-
                       return $this->redirectToRoute('performer_task_index');
-
-
         }
        $taskUser= $request->request->get('taskUser');
-            //   $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$this->getUser(),'status'=>1]);
       $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
           $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
           foreach ($taskUsers as $key ) {
               if($key->getStatus()<1){
                   $key->setStatus(1);
                   $em->flush();
-              }
-              
-              # code...
+              }      
           }
-        //   if
-// dd($taskUsers);
- 
-    //   dd($taskAccomplishments);
+     
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
              'taskUsers' => $taskUsers,
         ]);
     }
+     /**
+     * @Route("/skip", name="task_narrative_skip")
+     */
+    public function skip(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em=$this->getDoctrine()->getManager();
+
+         $taskId=$request->request->get('taskId');
+        $taskUser=$taskUserRepository->find($request->request->get('taskId'));
+        $taskUser->setStatus(4);
+           $em->flush();
+        return new JsonResponse($taskUser);
+      
+    }
+
 
     /**
      * @Route("/{id}/edit", name="performer_task_edit", methods={"GET","POST"})

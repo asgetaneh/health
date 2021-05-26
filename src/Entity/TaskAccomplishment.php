@@ -46,6 +46,11 @@ class TaskAccomplishment
      */
     private $measureDescription;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $OperationalValue;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -111,6 +116,18 @@ class TaskAccomplishment
     public function setMeasureDescription(?string $measureDescription): self
     {
         $this->measureDescription = $measureDescription;
+
+        return $this;
+    }
+
+    public function getOperationalValue(): ?int
+    {
+        return $this->OperationalValue;
+    }
+
+    public function setOperationalValue(?int $OperationalValue): self
+    {
+        $this->OperationalValue = $OperationalValue;
 
         return $this;
     }

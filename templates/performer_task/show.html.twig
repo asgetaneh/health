@@ -116,7 +116,9 @@
 											<th>StartDate</th>
 											<th>EndDate</th>
 											<th>TimeGap</th>
-											<th>Measutrement</th>
+											<th>Measurement</th>
+											<th>Chalenge</th>
+
 										</tr>
 									</thead>
 
@@ -139,8 +141,11 @@
 															</th>
 															<th>Expected Value
 															</th>
+															<th>Measurement Description
+															</th>
 															<th>Report Value
 															</th>
+
 														</tr>
 														{% for taskAccomplishment in taskAccomplishments   %}
 															<tr>
@@ -149,6 +154,7 @@
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.expectedValue }}</td>
+																	<td>{{ taskAccomplishment.measureDescription }}</td>
 																	{% if taskAccomplishment.accomplishmentValue %}
 																		<td>{{ taskAccomplishment.accomplishmentValue }}</td>
 
@@ -162,103 +168,109 @@
 
 													</table>
 												</td>
+												<td>{{ taskUser.note}}</td>
 											</tr>
-										{% else %}
-											<tr>
-												<td colspan="8">no records found</td>
-											</tr>
-										{% endfor %}
 
-									</tbody>
-								</table>
-								{% if status == 2 %}
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="8">no records found</td>
+										</tr>
+									{% endfor %}
 
-									<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
-								{% elseif status == 3 %}
-									<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button>
-									<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-warning  pull-right">Skip</button>
+								</tbody>
+							</table>
+							{% if status == 2 %}
 
-								{% else %}
-									<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
+								<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
+							{% elseif status == 3 %}
+								<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button>
+								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
+							{% elseif status == 4 %}
+								<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary pull-right">Send Report</button>
+								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
 
-								{% endif %}
+							{% else %}
+								<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
 
-							</form>
-						</div>
+							{% endif %}
+
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="modal fade  chalenge" id="chalenge">
-			<div
-				class="modal-dialog">
+	</div>
+	<div class="modal fade  chalenge" id="chalenge">
+		<div
+			class="modal-dialog">
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Chalenge Faced/solutions
-						</h4>
-					</div>
-					<form action="{{path('performer_task_show')}}" method="post">
-						<div class="modal-body">
-							<input type="hidden" name="taskUserid" class="taskUserid">
-							<div class="form-group">
-								<textArea name="note" class="form-control"></textArea>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Chalenge Faced/solutions
+					</h4>
+				</div>
+				<form action="{{path('performer_task_show')}}" method="post">
+					<div class="modal-body">
+						<input type="hidden" name="taskUserid" class="taskUserid">
+						<div class="form-group">
+							<textArea name="note" class="form-control"></textArea>
 
-							</div>
 						</div>
+					</div>
 
 
-					</div>
-					<div class="modal-footer">
-						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Send{% endtrans %}"/>
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">cancel</button>
-					</div>
-				</form>
-			</div>
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Send{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">cancel</button>
+				</div>
+			</form>
 		</div>
-		<div class="modal fade  narrative" id="narrative">
-			<div
-				class="modal-dialog">
+	</div>
+	<div class="modal fade  narrative" id="narrative">
+		<div
+			class="modal-dialog">
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Narratrive Report</h4>
-					</div>
-					<form action="{{path('performer_task_show')}}" method="post">
-						<div class="modal-body">
-							<input type="hidden" name="taskUserid" class="taskUserid">
-							<div class="form-group">
-								<input type="file" name="narrativeFile" class="form-control">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Narratrive Report</h4>
+				</div>
+				<form action="{{path('performer_task_show')}}" method="post">
+					<div class="modal-body">
+						<input type="hidden" name="taskUserid" class="taskUserid">
+						<div class="form-group">
+							<input type="file" name="narrativeFile" class="form-control">
 
-							</div>
 						</div>
+					</div>
 
 
-					</div>
-					<div class="modal-footer">
-						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Upload{% endtrans %}"/>
-						<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
-					</div>
-				</form>
-			</div>
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Upload{% endtrans %}"/>
+					<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
+				</div>
+			</form>
 		</div>
-	{% endblock %}
-	{% block javascripts %}
-		<script>
-			$('.show').click(function () {
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		$('.show').click(function () {
 $('#chalenge').modal('show');
 
 var id = $(this).attr('data-taskUserId');
 $('.taskUserid').val(id);
 console.log(consumableGroupId);
 })
-		</script>
-		<script>
-			$('.narrative').click(function () {
+	</script>
+	<script>
+		$('.narrative').click(function () {
 $('#narrative').modal('show');
 
 var id = $(this).attr('data-taskUserId');
@@ -269,7 +281,26 @@ $('#cancel').click(function () {
 location.reload(true);
 
 })
-		</script>
+	</script>
+	<script>
+		$('.skip').click(function () {
 
+var select = $('.crtask')
+var taskId = $(this).attr('data-taskuseridd');
 
-	{% endblock %}
+$.ajax({
+url:"{{ path('task_narrative_skip') }}",
+method: "POST",
+data: {
+taskId: taskId
+},
+dataType: "json",
+success: function (data) { // $('.department').children().remove()
+
+}
+});
+location.reload(true);
+
+})
+	</script>
+{% endblock %}

@@ -57,6 +57,8 @@ class PerformerTask
      */
     private $quarter;
 
+    
+
     public function __construct()
     {
         $this->taskAssigns = new ArrayCollection();
@@ -171,4 +173,6 @@ class PerformerTask
 
         return $this;
     }
+
+   
 }
