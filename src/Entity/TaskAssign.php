@@ -215,7 +215,6 @@ class TaskAssign
         return $this;
     }
 
-<<<<<<< HEAD
     /**
      * @return Collection|TaskAccomplishment[]
      */
@@ -230,7 +229,8 @@ class TaskAssign
             $this->taskAccomplishments[] = $taskAccomplishment;
             $taskAccomplishment->setTaskAssign($this);
         }
-=======
+
+        return $this;}
     public function getStartDate(): ?string
     {
         return $this->startDate;
@@ -239,19 +239,17 @@ class TaskAssign
     public function setStartDate(string $startDate): self
     {
         $this->startDate = $startDate;
->>>>>>> 29bee507222b34f9a6408f462179ebc6d9f00843
 
         return $this;
     }
 
-<<<<<<< HEAD
     public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
     {
         if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
             // set the owning side to null (unless already changed)
             if ($taskAccomplishment->getTaskAssign() === $this) {
                 $taskAccomplishment->setTaskAssign(null);
-            }
+           }
         }
 
         return $this;
@@ -283,7 +281,10 @@ class TaskAssign
                 $taskMeasurement->setTaskAssign(null);
             }
         }
-=======
+
+        return $this;
+    }
+
     public function getEndDate(): ?string
     {
         return $this->endDate;
@@ -304,7 +305,6 @@ class TaskAssign
     public function setTimeGap(int $timeGap): self
     {
         $this->timeGap = $timeGap;
->>>>>>> 29bee507222b34f9a6408f462179ebc6d9f00843
 
         return $this;
     }

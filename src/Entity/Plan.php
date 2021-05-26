@@ -279,6 +279,8 @@ class Plan
     public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
     {
         $this->suitableInitiative = $suitableInitiative;
+                return $this;
+
     }
 
     public function removePerformerTask(PerformerTask $performerTask): self
