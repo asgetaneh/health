@@ -81,7 +81,7 @@ class TaskAssignController extends AbstractController
 
             $task = $tasksss[$key];
              $taskId=$performerTaskRepository->find($task);
-             $initibativeId=$taskId->getPlan()->getInitiative()->getId();
+             $initibativeId=$taskId->getPlan()->getSuitableInitiative()->getId();
         $planId=$taskId->getPlan();
              $taskAssign->setPerformerTask($taskId);
            

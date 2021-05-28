@@ -79,7 +79,7 @@
 
 					<div class="widget-toolbar">
 						<span class="btn btn-success">
-							<a href="{{ path('performer_task_index') }}">back
+							<a href="{{ path('performer_task_list') }}">back
 							</a>
 
 
@@ -180,134 +180,10 @@
 
 								</tbody>
 							</table>
-							{% if status == 2 %}
-
-								<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
-							{% elseif status == 3 %}
-								<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button>
-								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
-							{% elseif status == 4 %}
-								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
-
-							{% else %}
-								<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
-
-							{% endif %}
-
-						</form>
-						{% if status == 4 %}
-
-							<form action="{{path('performer_task_send')}}" method="post">
-								<input type="hidden" name="taskUserId" value="{{taskUserid}}">
-
-								<button type="submit" name="narrative" class="btn btn-primary pull-right">Send Report</button>
-							</form>
-						{% endif %}
+							
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="modal fade  chalenge" id="chalenge">
-		<div
-			class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header bg-info">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Chalenge Faced/solutions
-					</h4>
-				</div>
-				<form action="{{path('performer_task_show')}}" method="post">
-					<div class="modal-body">
-						<input type="hidden" name="taskUserid" class="taskUserid">
-						<div class="form-group">
-							<textArea name="note" class="form-control"></textArea>
-
-						</div>
-					</div>
-
-
-				</div>
-				<div class="modal-footer">
-					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Send{% endtrans %}"/>
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">cancel</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="modal fade  narrative" id="narrative">
-		<div
-			class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header bg-info">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Narratrive Report</h4>
-				</div>
-				<form action="{{path('performer_task_show')}}" method="post">
-					<div class="modal-body">
-						<input type="hidden" name="taskUserid" class="taskUserid">
-						<div class="form-group">
-							<input type="file" name="narrativeFile" class="form-control">
-
-						</div>
-					</div>
-
-
-				</div>
-				<div class="modal-footer">
-					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Upload{% endtrans %}"/>
-					<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
-				</div>
-			</form>
-		</div>
-	</div>
-{% endblock %}
-{% block javascripts %}
-	<script>
-		$('.show').click(function () {
-$('#chalenge').modal('show');
-
-var id = $(this).attr('data-taskUserId');
-$('.taskUserid').val(id);
-console.log(consumableGroupId);
-})
-	</script>
-	<script>
-		$('.narrative').click(function () {
-$('#narrative').modal('show');
-
-var id = $(this).attr('data-taskUserId');
-$('.taskUserid').val(id);
-console.log(consumableGroupId);
-})
-$('#cancel').click(function () {
-location.reload(true);
-
-})
-	</script>
-	<script>
-		$('.skip').click(function () {
-
-var select = $('.crtask')
-var taskId = $(this).attr('data-taskuseridd');
-
-$.ajax({
-url:"{{ path('task_narrative_skip') }}",
-method: "POST",
-data: {
-taskId: taskId
-},
-dataType: "json",
-success: function (data) { // $('.department').children().remove()
-
-}
-});
-location.reload(true);
-
-})
-	</script>
-{% endblock %}
+	{% endblock %}

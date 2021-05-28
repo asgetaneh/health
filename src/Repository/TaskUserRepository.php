@@ -18,12 +18,42 @@ class TaskUserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TaskUser::class);
     }
+      public function findPerformerTaskUsers($value)
+    {
+        return $this->createQueryBuilder('t')
+        ->leftJoin('t.taskAssign','ta')
+        // ->leftJoin('ta.performerTask','p')
+            ->andWhere('ta.assignedBy = :val')
+            ->andWhere('t.status < 5  ')
+            ->setParameter('val', $value)
+        //  ->setParameter('status', 5)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
       public function findPerformerTask($value)
     {
         return $this->createQueryBuilder('t')
         ->leftJoin('t.taskAssign','ta')
         // ->leftJoin('ta.performerTask','p')
-            ->andWhere('ta.PerformerTask = :val')
+            ->andWhere('ta.assignedBy = :val')
+            ->andWhere('t.status = 5  ')
+            ->setParameter('val', $value)
+        //  ->setParameter('status', 5)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+     public function findTaskUsers($value)
+    {
+        return $this->createQueryBuilder('t')
+        ->leftJoin('t.taskAssign','ta')
+         ->leftJoin('ta.PerformerTask','p')
+            ->andWhere('p.createdBy = :val')
             ->setParameter('val', $value)
             ->orderBy('t.id', 'ASC')
             ->setMaxResults(10)
@@ -31,6 +61,8 @@ class TaskUserRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    
+    
 
     // /**
     //  * @return TaskUser[] Returns an array of TaskUser objects

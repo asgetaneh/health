@@ -85,19 +85,19 @@
 								</thead>
 								<tbody>
 									{% set count = 0 %}
-									{% for taskUser in taskUsers %}
+									{% for performer_task in performer_tasks %}
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
-											<td>{{ taskUser.taskAssign.performerTask.name }}</td>
-											<td>{{ taskUser.taskAssign.startDate  }}</td>
-											<td>{{ taskUser.taskAssign.endDate  }}</td>
-											<td>{{ taskUser.taskAssign.timeGap }}</td>
-											<td>{{ taskUser.taskAssign.performerTask.weight }}</td>
+											<td>{{ performer_task.taskAssign.performerTask.name }}</td>
+											<td>{{ performer_task.taskAssign.startDate  }}</td>
+											<td>{{ performer_task.taskAssign.endDate  }}</td>
+											<td>{{ performer_task.taskAssign.timeGap }}</td>
+											<td>{{ performer_task.taskAssign.performerTask.weight }}</td>
 											<td>
-												<form action="{{path('operational_task_show_detail')}}" method="post">
-													<input type="hidden" name="taskUser" value="{{taskUser.id}}">
-													{% if taskUser.type == 2 %}
+												<form action="{{path('performer_task_list_show')}}" method="post">
+													<input type="hidden" name="taskUser" value="{{performer_task.id}}">
+													{% if performer_task.status  %}
 														<button class="btn btn-primary btn-sm">
 															Show
 														</button>
@@ -107,11 +107,7 @@
 														</button>
 													{% endif %}
 												</form>
-												{% if taskUser.status == 0 %}
-													<a href="{{ path('operational_task_show', {'id': performer_task.id}) }}" class="btn btn-danger btn-sm">
-														Reject
-													</a>
-												{% endif %}
+												
 
 
 											</td>
