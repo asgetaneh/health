@@ -37,11 +37,7 @@ class PerformerTask
      */
     private $taskAssigns;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Plan::class, inversedBy="performerTasks")
-     */
-    private $plan;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="performerTasks")
      */
@@ -56,6 +52,11 @@ class PerformerTask
      * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="performerTasks")
      */
     private $quarter;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="performerTasks")
+     */
+    private $PlanAcomplishment;
 
     
 
@@ -126,17 +127,7 @@ class PerformerTask
         return $this;
     }
 
-    public function getPlan(): ?Plan
-    {
-        return $this->plan;
-    }
-
-    public function setPlan(?Plan $plan): self
-    {
-        $this->plan = $plan;
-
-        return $this;
-    }
+   
 
     public function getCreatedBy(): ?User
     {
@@ -170,6 +161,18 @@ class PerformerTask
     public function setQuarter(?PlanningQuarter $quarter): self
     {
         $this->quarter = $quarter;
+
+        return $this;
+    }
+
+    public function getPlanAcomplishment(): ?PlanningAccomplishment
+    {
+        return $this->PlanAcomplishment;
+    }
+
+    public function setPlanAcomplishment(?PlanningAccomplishment $PlanAcomplishment): self
+    {
+        $this->PlanAcomplishment = $PlanAcomplishment;
 
         return $this;
     }
