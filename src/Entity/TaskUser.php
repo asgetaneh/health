@@ -44,6 +44,11 @@ class TaskUser
      */
     private $note;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $type;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -128,6 +133,18 @@ class TaskUser
     public function setNote(?string $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

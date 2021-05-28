@@ -27,21 +27,16 @@
 {% endblock %}
 {% block body %}
 	<div>
-		{# {% set taskUserid = 0 %}
-						{% set status = 0 %}#}
-		{% for operational_task in operational_tasks %}
+
+		{% for taskUser in taskUsers %}
 			{% if loop.first %}
-
-				{#{% set status = taskAccomplishment.taskUser.status %}
-												{% set taskUserid = taskAccomplishment.taskUser.id %} #}
-
 				<ul class="steps">
-					<li data-step="1" class={% if operational_task.plan.status == 1 %} "complete" {% elseif operational_task.plan.status >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="1" class={% if taskUser.type == 1 %} "complete" {% elseif taskUser.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">A</span>
 						<span class="title">
 							List Task</span>
 					</li>
-					<li data-step="2" class={% if operational_task.plan.status == 2 %} "complete" {% elseif operational_task.plan.status >= 2 %} "active" {% else %} {% endif %}>
+					<li data-step="2" class={% if taskUser.type == 1 %} "complete" {% elseif taskUser.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">B</span>
 						<span class="title">
 							Assign Task
@@ -50,15 +45,15 @@
 
 					<li
 						data-step="3">
-						{# class={% if taskAccomplishment.taskUser.status == 3 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 3 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskUser.type == 3 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 3 %} "active" {% else %} {% endif %}> #}
 						<span class="step">C</span>
-						<span class="title">Approve Performers Report
+						<span class="title">Accept Performers Report
 						</span>
 					</li>
 
 					<li
 						data-step="4">
-						{# class={% if taskAccomplishment.taskUser.status == 4 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 4 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskUser.type == 4 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 4 %} "active" {% else %} {% endif %}> #}
 						<span class="step">D</span>
 						<span class="title">
 							Evaluate Performer
@@ -66,7 +61,7 @@
 					</li>
 					<li
 						data-step="5">
-						{# class={% if taskAccomplishment.taskUser.status == 5 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 5 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskUser.type == 5 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 5 %} "active" {% else %} {% endif %}> #}
 						<span class="step">E</span>
 						<span class="title">
 							Send Report to Principals
@@ -82,9 +77,8 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					{% set office = 0 %}
-					<h5 class="widget-title bigger lighter">Operational Office
-																																																																																
-														TotalWeight=<div class="badge badge-danger">{{count}}</div>
+					<h5 class="widget-title bigger lighter">Operational Office																																																																																					
+																		Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -154,7 +148,8 @@
 											<th>Assigned To</th>
 											<th>Description</th>
 											<th>Weight</th>
-											<th>actions</th>
+											<th>Quarter</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -165,7 +160,8 @@
 												<td>{{ count}}</td>
 												<td>{{ operational_task.name }}</td>
 												<td>
-													<table class="table-bordered table-hover" style="margin-top:10px;">
+													{% set statusaccept = 0 %}
+													<table class="table-bordered  table-hover" style="margin-top:10px; width:5px; height:10px;">
 														<tr>
 															<th>Performer Name</th>
 															<th>Start Date
@@ -178,7 +174,7 @@
 															<tr>
 
 																{% if taskUser.taskAssign.performerTask.id == operational_task.id  %}
-
+																	{% set statusaccept = taskUser.status %}
 																	<td>{{taskUser.assignedTo.userInfo}}</td>
 																	<td>
 																		{{taskUser.taskAssign.startDate}}</td>
@@ -197,27 +193,13 @@
 												</td>
 
 												<input type="hidden" class="task" value="{{operational_task.plan.id}}">
-												<input type="hidden" class="office" value="{{operational_task.plan.office.id}}">
+												<input type="hidden" class="office" value="{{operational_task.plan.suitableInitiative.principalOffice.id}}">
 
 												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
 												<td>{{ operational_task.description }}</td>
 
 												<td>{{ operational_task.weight }}</td>
-
-												<td>
-													<form action="{{path('operational_task_show')}}" method="post">
-													<input type="hidden" name="taskUser" value="{{operational_task.id}}">
-													
-														<button class="btn btn-primary btn-sm">
-															Show
-														</button>
-												</form>
-
-
-													{# <a href="{{ path('operational_task_edit', {'id': operational_task.id}) }}" class="btn btn-warning btn-sm">
-																																																																																																																																																																																									Create</a> #}
-												</td>
-
+												<td>{{ operational_task.quarter }}</td>
 
 											</tr>
 										{% else %}

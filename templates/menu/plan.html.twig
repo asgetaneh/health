@@ -29,17 +29,31 @@
 			</a>
 		</li>
         <li>
-			<a href="{{ path('operational_task_list') }}">
+			<a href="{{ path('suitable_initiative_list') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Operational Task{% endtrans %}
 			</a>
 		</li>
+         <li>
+			<a href="{{ path('operational_task_show') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Operational Task List{% endtrans %}
+			</a>
+		</li>
+        
         <li>
 			<a href="{{ path('performer_task_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Performer Task{% endtrans %}
 			</a>
 		</li>
+        <li>
+			<a href="{{ path('performer_task_list') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Performer Task List{% endtrans %}
+			</a>
+		</li>
+        
 		
 		
 		

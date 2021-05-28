@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Initiative;
 use App\Entity\Measure;
+use App\Entity\OperationalManager;
 use App\Entity\OperationalTask;
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
+use App\Entity\SuitableInitiative;
 use App\Entity\TaskMeasurement;
 use App\Form\OperationalTaskType;
 use App\Form\PerformerTaskType;
@@ -18,6 +20,7 @@ use App\Repository\PerformerRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
+use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
@@ -37,23 +40,25 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request ,Initiative $initiative,TaskUserRepository $taskUserRepository, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
-    {
-        // dd($initiative->getPri>getManancipalOffice());
+    public function index(Request $request ,SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
+    {              $entityManager = $this->getDoctrine()->getManager();
+      
         $em=$this->getDoctrine()->getManager();
-         $plans=$planRepository->findBy(['initiative'=>$initiative]); 
-           
+         $plans=$planRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
-        // dd($form);
         $taskMeasurement = new TaskMeasurement();
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
         $count=0;
-        $operationalTasks = $performerTaskRepository->findAll();
-// dd($operationalTasks);
-       $taskUsers= $taskUserRepository->findAll();
+        $operationalTasks = $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]);
+       $taskUsers= $taskUserRepository->findTaskUsers($this->getUser());
+       foreach ($taskUsers as $value) {
+                  $value->setType(1);
+                  $entityManager->flush();
+
+       }
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
@@ -61,32 +66,27 @@ class OperationalTaskController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            $entityManager = $this->getDoctrine()->getManager();
-            // dd($form->getData());
             foreach ($plans as  $value) {
                 if ( $value->getQuarter() == $form->getData()->getQuarter()) {
-                    // dd(2);
                     $performerTask->setCreatedBy($this->getUser());
                     $performerTask->setPlan($value);
 
                $weight=$form->getData()->getWeight();
-            //    dd($weight);
                 if ($count + $weight > 100 ) {
                  $this->addFlash('danger', 'Weight must be less than 100 !');
 
-            return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
-
+            return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
             }
             $entityManager->persist($performerTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('operational_task_index',['id'=>$initiative->getId()]);
+            return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
                 }
          }
             
         }
 $count=0;
-        $operationalTasks = $performerTaskRepository->findAll();
+        $operationalTasks = $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]);
 // dd($operationalTasks);
         foreach($operationalTasks as $operationals){
              $count=$count+
@@ -99,10 +99,9 @@ $count=0;
               }
               
           }
-        
 
         return $this->render('operational_task/index.html.twig', [
-            'operational_tasks' => $performerTaskRepository->findAll(),
+            'operational_tasks' => $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]),
             'count'=>$count,
             'taskUsers'=> $taskUsers,
             'form' => $form->createView(),
@@ -113,19 +112,17 @@ $count=0;
         ]);
     }
     /**
-     * @Route("/list", name="operational_task_list")
+     * @Route("/suitableInitiative/list", name="suitable_initiative_list")
      */
-    public function listTask(Request $request,TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    public function suitableInitiative(Request $request,OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
         $user=$this->getUser();
-        $operational_tasks = $taskAccomplishmentRepository->findTask($user);
-        foreach ($operational_tasks as $key ) {
+        $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
+      $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
+        $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);
 
-        }
-        return $this->render('operational_task/taskList.html.twig', [
-            'operational_tasks_assigns' => $taskAccomplishmentRepository->findTask($user),
-           
-
+        return $this->render('operational_task/suitableInitiative.html.twig', [
+            'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
  /**
@@ -133,12 +130,8 @@ $count=0;
      */
     public function OperationalFetch(Request $request,PerformerRepository $performerRepository ,UserInfoRepository $userInfoRepository)
     { 
-
-        $office=$request->request->get('userprincipal');
-        // $users=$operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
-        // dd($office);
+        $office=$request->request->get('userprincipal'); 
         $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
-    // dd($units);
         return new JsonResponse($units);
     }
     /**
@@ -163,39 +156,50 @@ $count=0;
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($operationalTask);
             $entityManager->flush();
-
             return $this->redirectToRoute('operational_task_index');
         }
-
         return $this->render('operational_task/new.html.twig', [
             'operational_task' => $operationalTask,
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/show", name="operational_task_show")
      */
     public function show(Request $request,TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskUserRepository $taskUserRepository)
-    {
-         $taskUser= $request->request->get('taskUser');
-        //  dd($taskUser);
-         $taskUserId=0;
-          $taskUsers=$taskUserRepository->findPerformerTask($taskUser);
-          foreach ($taskUsers as  $value) {
-              $taskUserId=$value->getId();
-          }
-      
-
-      $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUserId]);
-        //   foreach ($taskUsers as $key ) {
-        //       if($key->getStatus()<1){
-        //           $key->setStatus(1);
-        //         //   $em->flush();
-        //       }      
-        //   }
-     
+    {   $em=$this->getDoctrine()->getManager();
+       
+        $taskUser=$this->getUser();
+          $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
         return $this->render('operational_task/show.html.twig', [
+             'taskUsers' => $taskUsers,
+        ]);
+    }
+     /**
+     * @Route("/show/detail", name="operational_task_show_detail")
+     */
+    public function showDetail(Request $request,TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskUserRepository $taskUserRepository)
+    {   $em=$this->getDoctrine()->getManager();
+       
+        // if ($taskUser= $request->request->get('taskUserId')) {
+        // $taskId= $request->request->get('taskUserId');
+        // $taskUsersr=$taskUserRepository->find($taskId);
+        // $taskUsersr->setType(2);  
+        // $em->flush();   
+        //    }
+   $taskUser= $request->request->get('taskUser');
+      $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
+          $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
+        //   dd($taskUsers);
+          foreach ($taskUsers as $key ) {
+              if($key->getType()<2){
+                  $key->setType(2);
+                  $em->flush();
+              }      
+          }
+        
+     
+        return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
              'taskUsers' => $taskUsers,
         ]);
@@ -209,12 +213,9 @@ $count=0;
         $em=$this->getDoctrine()->getManager();
 
          $taskId=$request->request->get('taskUserId');
-        //  dd($taskId);
         $taskUser=$taskUserRepository->find($taskId);
-        $taskUser->setStatus(6);
         $planId=$taskUser->getTaskAssign()->getPerformerTask()->getPlan()->getId();
         $plans=$planRepository->find($planId);
-        // dd($plans);
         $plans->setStatus(3);
 
            $em->flush();
@@ -226,8 +227,6 @@ $count=0;
           foreach ($taskUsers as  $value) {
               $taskUserId=$value->getId();
           }
-      
-
       $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUserId]);
        
      

@@ -51,6 +51,11 @@ class TaskAccomplishment
      */
     private $OperationalValue;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reportedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -128,6 +133,18 @@ class TaskAccomplishment
     public function setOperationalValue(?int $OperationalValue): self
     {
         $this->OperationalValue = $OperationalValue;
+
+        return $this;
+    }
+
+    public function getReportedAt(): ?string
+    {
+        return $this->reportedAt;
+    }
+
+    public function setReportedAt(?string $reportedAt): self
+    {
+        $this->reportedAt = $reportedAt;
 
         return $this;
     }

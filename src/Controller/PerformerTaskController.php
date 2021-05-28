@@ -31,7 +31,7 @@ class PerformerTaskController extends AbstractController
     public function index(Request $request,TaskUserRepository $taskUserRepository , TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
 
-      $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$this->getUser()]);
+      $taskUsers=$taskUserRepository->findPerformerTaskUsers($this->getUser());
     //   dd($taskUsers);
        
         return $this->render('performer_task/index.html.twig', [
@@ -40,8 +40,22 @@ class PerformerTaskController extends AbstractController
            
         ]);
         }
-    
+         /**
+     * @Route("/list", name="performer_task_list")
+     */
+    public function list(Request $request,TaskUserRepository $taskUserRepository , TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
+    {
 
+      $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$this->getUser(),'status'=>5]);
+    //  /   dd($taskUsers);
+       
+        return $this->render('performer_task/list.html.twig', [
+            'performer_tasks' => $taskUsers,
+            // 'count'=>$count,
+           
+        ]);
+        }
+    
     /**
      * @Route("/new", name="performer_task_new", methods={"GET","POST"})
      */
@@ -111,6 +125,20 @@ class PerformerTaskController extends AbstractController
              'taskUsers' => $taskUsers,
         ]);
     }
+    /**
+     * @Route("/list/show", name="performer_task_list_show", methods={"GET","POST"})
+     */
+    public function listShow(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+       $taskUser= $request->request->get('taskUser');
+      $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
+          $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
+     
+        return $this->render('performer_task/listShow.html.twig', [
+            'taskAccomplishments' => $taskAccomplishments,
+             'taskUsers' => $taskUsers,
+        ]);
+    }
      /**
      * @Route("/skip", name="task_narrative_skip")
      */
@@ -123,6 +151,21 @@ class PerformerTaskController extends AbstractController
         $taskUser->setStatus(4);
            $em->flush();
         return new JsonResponse($taskUser);
+      
+    }
+     /**
+     * @Route("/send", name="performer_task_send")
+     */
+    public function send(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em=$this->getDoctrine()->getManager();
+
+         $taskId=$request->request->get('taskUserId');
+        $taskUser=$taskUserRepository->find($taskId);
+        $taskUser->setStatus(5);
+        // $taskUser->setType(1);
+           $em->flush();
+            return $this->redirectToRoute('performer_task_index');
       
     }
 

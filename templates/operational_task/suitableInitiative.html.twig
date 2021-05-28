@@ -41,7 +41,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{operational_tasks_assigns|length}}</strong>
+							<strong>{{suitableInitiatives|length}}</strong>
 
 						</span>
 					</div>
@@ -78,55 +78,37 @@
 										<th>TaskName</th>
 										<th>Description</th>
 										<th>StartDate</th>
-										<th>EndDate</th>
-										<th>TimeGap</th>
-										<th>Weight</th>
-										<th>Measurement</th>
-										<th>Expected Value</th>
+									
 										<th>actions</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% set count = 0 %}
-									{% set lengthop = operational_tasks_assigns|length %}
+									{% set lengthop = suitableInitiatives|length %}
 
 
-									{% for operational_tasks_assign in operational_tasks_assigns %}
+									{% for suitableInitiative in suitableInitiatives %}
 
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.taskName }}</td>
+											<td>{{ suitableInitiative.initiative.name }}</td>
 
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.description }}</td>
-
-
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.startDate  }}</td>
+											<td>{{ suitableInitiative.principalOffice.name  }}</td>
 
 
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.endDate }}</td>
+											<td>{{ suitableInitiative.planningYear.year ? suitableInitiative.planningYear.year |date('Y-m-d ') : ''  }}</td>
 
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.timeGap }}</td>
-											<td>{{ operational_tasks_assign.taskUser.taskAssign.operationalTask.weight }}</td>
-											<td>{{ operational_tasks_assign.measurement.name }}</td>
-											<td>{{ operational_tasks_assign.expectedValue }}</td>
+
 
 
 											<td>
-												<a href="{{ path('operational_task_show', {'id': operational_tasks_assign.id}) }}" class="btn btn-primary btn-sm">
+												<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
 
 
 													<i class="fa fa-eye"></i>
 												</a>
-												<a href="{{ path('operational_task_show', {'id': operational_tasks_assign.id}) }}" class="btn btn-danger btn-sm">
-
-													Reject
-												</a>
-
-												<a href="{{ path('performer_task_index', {'id': operational_tasks_assign.taskUser.taskAssign.operationalTask.id}) }}" class="btn btn-warning btn-sm">
-
-
-													Create</a>
+												
 											</td>
 
 
