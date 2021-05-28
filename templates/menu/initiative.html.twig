@@ -7,6 +7,7 @@
 		</span>
 		<b class="arrow fa fa-angle-down"></b>
 	</a>
+    <b class="arrow"></b>
 	<ul class="submenu">
 		<li>
 			<a href="{{ path('initiative_index') }}">
@@ -17,15 +18,10 @@
         <li>
 			<a href="{{ path('suitable_initiative_index') }}">
 				<b class="fa fa-caret-right"></b>
-				{% trans %}suitable Initiatives{% endtrans %}
+				{% trans %}suitable Initiative{% endtrans %}
 			</a>
 		</li>
-		<li>
-			<a href="{{ path('initiative_behaviour_catagory_index') }}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Initiative Behavior Category{% endtrans %}
-			</a>
-		</li>
+		
 		<li>
 			<a href="{{ path('initiative_behaviour_index') }}">
 				<b class="fa fa-caret-right"></b>

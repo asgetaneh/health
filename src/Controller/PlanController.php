@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\BehavioralPlanningAccomplishment;
 use App\Entity\Initiative;
 use App\Entity\InitiativeAttribute;
+use App\Entity\InitiativeBehaviour;
 use App\Entity\Plan;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningPhase;
@@ -58,42 +59,24 @@ class PlanController extends AbstractController
                 foreach ( $selectedInitiatives as  $selectedInitiative) 
                 {
 
+
+
                       $existinitiative=$em->getRepository(SuitableInitiative::class)->findDuplication($principaloffice,$selectedInitiative,$planningyear);
                       if(!$existinitiative){
                       $suitableInitiative=new SuitableInitiative();
                       $suitableInitiative->setPrincipalOffice($principaloffice);
                       $suitableInitiative->setInitiative($selectedInitiative);
                       $suitableInitiative->setPlanningYear($planningyear);
-
-                    foreach ($planningquarters as $planningquarter) {
-                     $planduplication = $planRepository->checkForDuplicationOfPlan($principaloffice, $selectedInitiative, $planningyear, $planningquarter);
-                    if (!$planduplication)
-                     {
-                        $plan = new Plan();
-                       
-                        $plan->setQuarter($planningquarter);
-                        $plan->setSuitableInitiative($suitableInitiative);
-                
-                        $plan->setCreatedAt(new DateTime('now'));
-                        $plan->setCreatedBy($this->getUser());
-
-                        $em->persist($plan);
-                        //$em->flush();
-                    }
-                     else
-                        $plancount = $plancount + 1;
-                      }
-
+                    
+                   
                       $em->persist($suitableInitiative);
                       $em->flush();
 
                       }
                   
-                   
-                if ($plancount > 0)
-                    $this->addFlash('warning', "you are already respond to this Plan annousment");
-                else
-                    $this->addFlash('success', "plan is created successfuly! thank you for responding");
+
+                   $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
+               
                     
             }
              
@@ -102,6 +85,7 @@ class PlanController extends AbstractController
             
                 $suitableInitiatives=$em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice,$planningyear);
                  //  $this->addFlash('success','now select suitable initiative with your teammates');
+                 
                  
                 if ($suitableInitiatives) 
                 {
@@ -114,7 +98,8 @@ class PlanController extends AbstractController
                        'suitableInitiatives' =>  $suitableInitiatives,
                        'pricipaloffice' => $principaloffice,
                        'planyear' => $planningyear,
-                       'isAllActive'=> $isallActive
+                       'isAllActive'=> $isallActive,
+                       'quarters'=> $planningquarters
 
             ]);
                 }
@@ -148,21 +133,16 @@ class PlanController extends AbstractController
        
        $isAllActive=true;
        foreach ($suitableInitiatives as $suitableInitiative) {
-             $plans=$suitableInitiative->getPlans();
+             $plans=$suitableInitiative->getPlanningAccomplishments();
              if (sizeof($plans)<1) {
                    $isAllActive=false;
             
              
-             foreach ($plans as $plan) {
-                 if($plan->getIsActive() == false){
-                      $isAllActive=false;
-                      break;
-
-                 }
+           
 
                 
              }
-              }
+              
 
        }
        return  $isAllActive;
@@ -173,11 +153,16 @@ class PlanController extends AbstractController
      */
     public function addPlan(Request $request){
        $em = $this->getDoctrine()->getManager();
+       $quarters=$em->getRepository(PlanningQuarter::class)->findAll();
      
        if ($request->request->get('id')) {
         
          $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($request->request->get('id'));
-         $res = $this->renderView("plan/plan.modal.html.twig", ["suitableInitiative" =>  $suitableInitiative]);
+         $initiative=$em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
+        
+        // dd( count($initiative->getInitiativeBehaviour()),count($initiative->getSocialAtrribute()));
+         $res = $this->renderView("plan/plan.modal.html.twig", ["suitableInitiative" =>  $suitableInitiative,'quarters'=>$quarters,
+         'initiative'=>$initiative]);
             return new Response($res);
        }
        return new Response("done");
@@ -192,81 +177,100 @@ class PlanController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
-        if ($request->request->get('code')  )
-         {
-         
-          $plans=$em->getRepository(Plan::class)->findBy(['id'=>$request->request->get('plan')]);
-          $planValues=$request->request->get('planvalue');
-          $planslength=sizeof($plans);
+        $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        
+        if($request->request->get('planvalue')){
 
-          $planInitiative=$em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
-
-          if ($request->request->get('code') == 3) {
-             
-          $attributes=$em->getRepository(InitiativeAttribute::class)->findBy(['id'=>$request->request->get('attr')]);
-          $attributelength=sizeof($attributes);
-         
+        $planValues=$request->request->get('planvalue');
       
-          foreach ($plans as  $plan) {
-             foreach ($attributes as $key => $attribute) {
-                  $accomplishmentduplication=$em->getRepository(BehavioralPlanningAccomplishment::class)->findDuplication($plan,$attribute);
-                  if ($accomplishmentduplication<1) 
-                  {
-                    
-                  $behaviorAccomp= new BehavioralPlanningAccomplishment();
-                  $behaviorAccomp->setPlan($plan);
-                  $behaviorAccomp->getPlan()->setIsActive(true);
-                  $behaviorAccomp->getPlan()->getSuitableInitiative()->setIsActive(true);
-                  $behaviorAccomp->setInitiativeAttribute($attribute);
-                  $behaviorAccomp->setPlanValue($planValues[$key]);
+      
+        $planInitiative=$em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
 
-                  $em->persist($behaviorAccomp);
-                  $em->flush();
-                  }
-                    
-                 }
+         if ($request->request->get('denominator')) {
+             $planInitiative->setDenominator($request->request->get('denominator'));
+             $em->persist($planInitiative);
+             };
+
+         if (count($planInitiative->getInitiative()->getSocialAtrribute())>0){
+
+              $socalAttributes=$planInitiative->getInitiative()->getSocialAtrribute() ;
+             
+
+
+                 $numberOfQuarter=count($planningquarters);
+                 $numberOfAttributes=count($socalAttributes);
+                 $numberOfPlan = $numberOfAttributes*$numberOfQuarter;
                 
-           
-          }
-
-        }
+                $i=0;
+               
          
-         if (($request->request->get('code') == 2 || $request->request->get('code') == 1)) 
-         {
-            
-             $denimonators=null;
-             if($request->request->get('denimanitor'))
-              {
-                $denimonators=$request->request->get('denimanitor');
-             }
-               foreach ($plans as  $key => $plan) 
-                {
-                  $planAccomplishmentduplication=$em->getRepository(PlanningAccomplishment::class)->findDuplication($plan);
-                  if($planAccomplishmentduplication<1){
-                  $planAccomplishment=new PlanningAccomplishment();
-                  $planAccomplishment->setPlan($plan);
-                  $planAccomplishment->getPlan()->getSuitableInitiative()->setIsActive(true);
-                  $planAccomplishment->setPlanValue($planValues[$key]);
-                  $planAccomplishment->setDenominator($denimonators?$denimonators[$key]:null);
-            
-                  $em->persist($planAccomplishment);
-                  $em->flush();
-                  }
+                foreach ($planningquarters as $planningquarter) {
+                foreach ( $socalAttributes as $key=> $socalAttribute) {
                   
-              
+                $planAcomplishment=$em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, $socalAttribute,$planningquarter);
+                $edit=true;
+                if (!$planAcomplishment)
+                {
+                    $planAcomplishment=new PlanningAccomplishment();
+                    $edit=false;
+
                 }
+
+                   
+                   $planAcomplishment->setSuitableInitiative($planInitiative);
+                   $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
+                   if ((int) $planValues[$i]>0) {
+                  $planAcomplishment->setPlanValue((int) $planValues[$i]);
+
+                   }
+                   $planAcomplishment->setQuarter($planningquarter);
+                   if ($edit==false) {
+                      $em->persist($planAcomplishment);
+                     }
+                   
+
+                   $i++;
+               
+              }
+              }
+              $em->flush();
+
+         }
+         else {
+        
+              
+ 
+                foreach ($planningquarters as $key => $planningquarter) {
+                    $planAcomplishment=$em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative,null,$planningquarter);
+                if (!$planAcomplishment)
+                   $planAcomplishment=new PlanningAccomplishment();
+
+                    $planAcomplishment->setSuitableInitiative($planInitiative);
+                    $planAcomplishment->setPlanValue($planValues[$key]);
+                    $planAcomplishment->setQuarter($planningquarter);
+                     $em->persist($planAcomplishment);
+
+                    }
+
+                    $em->flush();
+
+               
+           
+         }
+
+        
+
+       
+        
+          
+
          
-        }
+       
    
 
 
-    $suitableplan=$em->getRepository(SuitableInitiative::class)->findByoffice($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear());
-    $activesuitable=$em->getRepository(SuitableInitiative::class)->findAllActive($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear(),true);
-  
-       
-    
-    if(count($suitableplan) == count($activesuitable)){
-    $planAccomplishments=$em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableplan);
+      $suitableplan=$em->getRepository(SuitableInitiative::class)->findByoffice($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear());
+      
    
     return $this->render('plan/index.html.twig',[
          'suitableplans'=>$suitableplan,
@@ -274,24 +278,15 @@ class PlanController extends AbstractController
         'offices' => $offices,
         'pricipaloffice' => $planInitiative->getPrincipalOffice(),
         'planyear' => $planInitiative->getPlanningYear(),
-        'planAcomps'=>$planAccomplishments
+        'quarters'=>$planningquarters
+        
     ]);
     }
     
     
 
-              $isallActive=$this->getActivePlan($suitableplan);
-              return $this->render('plan/index.html.twig', [
-
-                       'planningYears' =>  $activePlanningYear,
-                       'offices' => $offices,
-                       'suitableInitiatives' => $suitableplan,
-                       'pricipaloffice' => $planInitiative->getPrincipalOffice(),
-                       'planyear' => $planInitiative->getPlanningYear(),
-                       'isAllActive'=> $isallActive
-
-            ]);
-                }
+             
+               
 
 
     

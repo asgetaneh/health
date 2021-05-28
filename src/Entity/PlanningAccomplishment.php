@@ -17,20 +17,14 @@ class PlanningAccomplishment
      */
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Plan::class, cascade={"persist", "remove"})
-     */
-    private $plan;
+    
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $accompValue;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $denominator;
+   
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -42,6 +36,26 @@ class PlanningAccomplishment
      */
     private $planValue;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="planningAccomplishments")
+     */
+    private $suitableInitiative;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="planningAccomplishments")
+     */
+    private $quarter;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="planningAccomplishments")
+     */
+    private $socialAttribute;
+
    
 
     public function getId(): ?int
@@ -49,17 +63,7 @@ class PlanningAccomplishment
         return $this->id;
     }
 
-    public function getPlan(): ?Plan
-    {
-        return $this->plan;
-    }
-
-    public function setPlan(?Plan $plan): self
-    {
-        $this->plan = $plan;
-
-        return $this;
-    }
+   
 
     public function getAccompValue(): ?int
     {
@@ -73,17 +77,7 @@ class PlanningAccomplishment
         return $this;
     }
 
-    public function getDenominator(): ?int
-    {
-        return $this->denominator;
-    }
-
-    public function setDenominator(?int $denominator): self
-    {
-        $this->denominator = $denominator;
-
-        return $this;
-    }
+   
 
     public function getAccomplishNote(): ?string
     {
@@ -105,6 +99,54 @@ class PlanningAccomplishment
     public function setPlanValue(int $planValue): self
     {
         $this->planValue = $planValue;
+
+        return $this;
+    }
+
+    public function getSuitableInitiative(): ?SuitableInitiative
+    {
+        return $this->suitableInitiative;
+    }
+
+    public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
+    {
+        $this->suitableInitiative = $suitableInitiative;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?PlanningQuarter
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?PlanningQuarter $quarter): self
+    {
+        $this->quarter = $quarter;
+
+        return $this;
+    }
+
+    public function getSocialAttribute(): ?InitiativeAttribute
+    {
+        return $this->socialAttribute;
+    }
+
+    public function setSocialAttribute(?InitiativeAttribute $socialAttribute): self
+    {
+        $this->socialAttribute = $socialAttribute;
 
         return $this;
     }

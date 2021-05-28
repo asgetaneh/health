@@ -67,22 +67,29 @@
                     <th>Description</th>
                     <th>MaximumValue</th>
                     <th>MinimumValue</th>
+                     <th>principal Office</th>
                     <th>CreatedAt</th>
                     <th>actions</th>
                   </tr>
                 </thead>
                 <tbody>
+                {% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
                   {% for initiative in initiatives %}
+                   {% set count = count + 1 %}
                     <tr>
-                      <td>{{ initiative.id }}</td>
+                      <td>{{ count }}</td>
                       <td>{{ initiative.name }}</td>
                       <td>{{ initiative.description }}</td>
                       <td>{{ initiative.maximumValue }}</td>
                       <td>{{ initiative.minimumValue }}</td>
+                      <td>{% for office in initiative.principalOffice %}
+                      {{office}}
+                          
+                      {% endfor %}</td>
                       <td>{{ initiative.createdAt ? initiative.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                       <td>
-                        <a href="{{ path('initiative_show', {'id': initiative.id}) }}">show</a>
-                        <a href="{{ path('initiative_edit', {'id': initiative.id}) }}">edit</a>
+                        <a href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
+                        <a href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
                       </td>
                     </tr>
                   {% else %}
@@ -128,6 +135,12 @@
             {{ form_widget(form.initiativeBehaviour,{'attr':{ 'class': 'select2 form-control'}}) }}
 
           </div>
+           <div class="form-group">
+            {{ form_label(form.socialAtrribute) }}
+            {{ form_widget(form.socialAtrribute,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+          </div>
+         
           <div class="form-group">
             {{ form_label(form.principalOffice) }}
             {{ form_widget(form.principalOffice,{'attr':{ 'class': 'select2 form-control'}}) }}

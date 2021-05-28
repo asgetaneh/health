@@ -39,10 +39,7 @@ class Initiative
      */
     private $minimumValue;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=InitiativeBehaviour::class, inversedBy="initiatives")
-     */
-    private $initiativeBehaviour;
+    
 
     /**
      * @ORM\ManyToOne(targetEntity=KeyPerformanceIndicator::class, inversedBy="initiatives")
@@ -79,11 +76,23 @@ class Initiative
      */
     private $suitableInitiatives;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=InitiativeAttribute::class, inversedBy="initiatives")
+     */
+    private $socialAtrribute;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=InitiativeBehaviour::class, inversedBy="initiatives")
+     */
+    private $initiativeBehaviour;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->principalOffice = new ArrayCollection();
         $this->suitableInitiatives = new ArrayCollection();
+        $this->socialAtrribute = new ArrayCollection();
+        $this->initiativeBehaviour = new ArrayCollection();
     }
     public function __toString()
     {
@@ -143,17 +152,7 @@ class Initiative
         return $this;
     }
 
-    public function getInitiativeBehaviour(): ?InitiativeBehaviour
-    {
-        return $this->initiativeBehaviour;
-    }
-
-    public function setInitiativeBehaviour(?InitiativeBehaviour $initiativeBehaviour): self
-    {
-        $this->initiativeBehaviour = $initiativeBehaviour;
-
-        return $this;
-    }
+   
 
     public function getKeyPerformanceIndicator(): ?KeyPerformanceIndicator
     {
@@ -283,6 +282,54 @@ class Initiative
                 $suitableInitiative->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeAttribute[]
+     */
+    public function getSocialAtrribute(): Collection
+    {
+        return $this->socialAtrribute;
+    }
+
+    public function addSocialAtrribute(InitiativeAttribute $socialAtrribute): self
+    {
+        if (!$this->socialAtrribute->contains($socialAtrribute)) {
+            $this->socialAtrribute[] = $socialAtrribute;
+        }
+
+        return $this;
+    }
+
+    public function removeSocialAtrribute(InitiativeAttribute $socialAtrribute): self
+    {
+        $this->socialAtrribute->removeElement($socialAtrribute);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeBehaviour[]
+     */
+    public function getInitiativeBehaviour(): Collection
+    {
+        return $this->initiativeBehaviour;
+    }
+
+    public function addInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
+    {
+        if (!$this->initiativeBehaviour->contains($initiativeBehaviour)) {
+            $this->initiativeBehaviour[] = $initiativeBehaviour;
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
+    {
+        $this->initiativeBehaviour->removeElement($initiativeBehaviour);
 
         return $this;
     }

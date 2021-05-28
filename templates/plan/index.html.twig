@@ -28,7 +28,8 @@
 					</span>
 				</li>
              
-				<li data-step="4" class={% if  suitableplans is defined %} "active" 
+				<li data-step="4" class={% if  suitableplans is defined or (isAllActive is defined and isAllActive == true) %} "active"  
+               
               
                  {% endif %}>
 					<span class="step">4</span>
@@ -145,7 +146,7 @@
 
 
 			<div class="pull-right">
-				<div class="widget-toolbar no-border open">
+				<div class="widget-toolbar no-border">
 
 
 					<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -185,8 +186,13 @@
 					
                     <th>#</th>
 					<th>Name</th>
-					<th>Weight</th>
-					<th>description</th>
+					<th>Yearly Plan</th>
+                  
+                    <th>Quarter 1</th>
+                    <th>Quarter 2</th>
+                    <th>Quarter 3</th>
+                    <th>Quarter 4</th>
+				    <th>Denominator</th>
 					<th>actions</th>
 				</tr>
 			</thead>
@@ -205,16 +211,56 @@
 							   
 						</td>
 						<td>{{suitableInitiative.initiative.name }}</td>
-						<td>{{ suitableInitiative.initiative.minimumValue }}</td>
 
-						<td>{{suitableInitiative.initiative.description }}</td>
+						<td>{{ "__" }}</td>
+
+						
+                         {% for quarter in quarters %}
+                            <td>
+                        {% if suitableInitiative.planningAccomplishments|length > 0 %}
+                         {% if suitableInitiative.initiative.socialAtrribute|length > 0 %}
+                         {% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+                         
+                         <p>{{plan.socialAttribute.name|title}} : {{plan.planValue}}</p>
+                           
+                                                     
+                        {% endfor %}
+                         {% else %}
+                             {% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+                            
+
+                             {{plan.planValue }}
+                           
+                             {% endfor %}
+                         {% endif %}
+                         {% else %}
+                         {% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
+                          <p>{{plan.socialAttribute.name|title}} : __</p>
+                          {% else %}
+                              __
+
+                         {% endfor %}
+                             
+                         {% endif %}
+                       
+                         </td>
+                       {% endfor %}
+                       <td>
+                       {{suitableInitiative.denominator ? suitableInitiative.denominator: " __"}}
+                       </td>
 						<td>
 							{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
 								<i class="fa fa-eye"></i>
 							</a> #}
                            
-							<a href="#"  data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
-								 <span class="glyphicon glyphicon-plus"></span> Add Plan
+							<a href="#" title="add plan"  data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
+								 <span class="glyphicon glyphicon-plus"></span> 
+                                 {% if suitableInitiative.planningAccomplishments|length > 0 %}
+                                 Edit Plan
+                                 {% else %}
+                                     
+                                 Add Plan
+                                 {% endif %}
 							</a>
                              <a href="#" class="btn btn-primary btn-sm">
 								 <span class="glyphicon glyphicon-tasks"></span>
@@ -291,15 +337,15 @@
 
 
 			<div class="pull-right">
-				<div class="widget-toolbar no-border open">
+				<div class="widget-toolbar no-border">
 
 
-					<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+					<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
 						<b class="text-primary">Action</b>
 						<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
 					</button>
 
-					<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+					<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
 						<li>
 							<a href="#" id="suitablebutton">
 								<i class="ace-icon fa fa-stop green"></i>

@@ -49,10 +49,7 @@ class PlanningYear
      */
     private $planningPhases;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Plan::class, mappedBy="planningYear")
-     */
-    private $plans;
+    
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -72,7 +69,7 @@ class PlanningYear
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
-        $this->plans = new ArrayCollection();
+      
         $this->suitableInitiatives = new ArrayCollection();
     }
     public function __toString()
@@ -179,35 +176,10 @@ class PlanningYear
         return $this;
     }
 
-    /**
-     * @return Collection|Plan[]
-     */
-    public function getPlans(): Collection
-    {
-        return $this->plans;
-    }
+    
+  
 
-    public function addPlan(Plan $plan): self
-    {
-        if (!$this->plans->contains($plan)) {
-            $this->plans[] = $plan;
-            $plan->setPlanningYear($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlan(Plan $plan): self
-    {
-        if ($this->plans->removeElement($plan)) {
-            // set the owning side to null (unless already changed)
-            if ($plan->getPlanningYear() === $this) {
-                $plan->setPlanningYear(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     public function getTitle(): ?string
     {

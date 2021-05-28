@@ -49,14 +49,29 @@ class InitiativeAttribute
      */
     private $behavioralPlanningAccomplishments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="socialAtrribute")
+     */
+    private $initiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlanningAccomplishment::class, mappedBy="socialAttribute")
+     */
+    private $planningAccomplishments;
+
     public function __construct()
     {
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
+        $this->initiatives = new ArrayCollection();
+        $this->planningAccomplishments = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function __toString(){
+        return $this->name;
     }
 
     public function getName(): ?string
@@ -143,6 +158,63 @@ class InitiativeAttribute
             // set the owning side to null (unless already changed)
             if ($behavioralPlanningAccomplishment->getInitiativeAttribute() === $this) {
                 $behavioralPlanningAccomplishment->setInitiativeAttribute(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Initiative[]
+     */
+    public function getInitiatives(): Collection
+    {
+        return $this->initiatives;
+    }
+
+    public function addInitiative(Initiative $initiative): self
+    {
+        if (!$this->initiatives->contains($initiative)) {
+            $this->initiatives[] = $initiative;
+            $initiative->addSocialAtrribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiative(Initiative $initiative): self
+    {
+        if ($this->initiatives->removeElement($initiative)) {
+            $initiative->removeSocialAtrribute($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanningAccomplishment[]
+     */
+    public function getPlanningAccomplishments(): Collection
+    {
+        return $this->planningAccomplishments;
+    }
+
+    public function addPlanningAccomplishment(PlanningAccomplishment $planningAccomplishment): self
+    {
+        if (!$this->planningAccomplishments->contains($planningAccomplishment)) {
+            $this->planningAccomplishments[] = $planningAccomplishment;
+            $planningAccomplishment->setSocialAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningAccomplishment(PlanningAccomplishment $planningAccomplishment): self
+    {
+        if ($this->planningAccomplishments->removeElement($planningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($planningAccomplishment->getSocialAttribute() === $this) {
+                $planningAccomplishment->setSocialAttribute(null);
             }
         }
 

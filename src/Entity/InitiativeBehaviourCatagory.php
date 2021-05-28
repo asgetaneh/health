@@ -44,10 +44,7 @@ class InitiativeBehaviourCatagory
      */
     private $createdBy;
 
-    /**
-     * @ORM\OneToMany(targetEntity=InitiativeBehaviour::class, mappedBy="category")
-     */
-    private $initiativeBehaviours;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=InitiativeAttribute::class, mappedBy="initiativeBehaviourCategory")
@@ -56,7 +53,7 @@ class InitiativeBehaviourCatagory
 
     public function __construct()
     {
-        $this->initiativeBehaviours = new ArrayCollection();
+       
         $this->initiativeAttributes = new ArrayCollection();
     }
     public function __toString()
@@ -129,36 +126,7 @@ class InitiativeBehaviourCatagory
         return $this;
     }
 
-    /**
-     * @return Collection|InitiativeBehaviour[]
-     */
-    public function getInitiativeBehaviours(): Collection
-    {
-        return $this->initiativeBehaviours;
-    }
-
-    public function addInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
-    {
-        if (!$this->initiativeBehaviours->contains($initiativeBehaviour)) {
-            $this->initiativeBehaviours[] = $initiativeBehaviour;
-            $initiativeBehaviour->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
-    {
-        if ($this->initiativeBehaviours->removeElement($initiativeBehaviour)) {
-            // set the owning side to null (unless already changed)
-            if ($initiativeBehaviour->getCategory() === $this) {
-                $initiativeBehaviour->setCategory(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection|InitiativeAttribute[]
      */

@@ -21,7 +21,8 @@ class InitiativeController extends AbstractController
      * @Route("/", name="initiative_index", methods={"GET","POST"})
      */
     public function index(InitiativeRepository $initiativeRepository,Request $request,PaginatorInterface $paginator): Response
-    {
+    {  
+        
         $initiative = new Initiative();
         $form = $this->createForm(InitiativeType::class, $initiative);
         $form->handleRequest($request);

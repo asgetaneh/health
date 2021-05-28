@@ -24,10 +24,7 @@ class InitiativeBehaviour
      */
     private $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=InitiativeBehaviourCatagory::class, inversedBy="initiativeBehaviours")
-     */
-    private $category;
+    
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -52,12 +49,21 @@ class InitiativeBehaviour
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="initiativeBehaviour")
+     * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="initiativeBehaviour")
      */
     private $initiatives;
+
+    
+
+      const CONSTANT = 0;
+      const ADDITIVE = 1;
+      const INCREMENTAL = 2;
+      const DECREMENTAL = 3;
+      const RATIO = 4;
+     
 
     public function __construct()
     {
@@ -85,17 +91,7 @@ class InitiativeBehaviour
         return $this;
     }
 
-    public function getCategory(): ?InitiativeBehaviourCatagory
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?InitiativeBehaviourCatagory $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
+    
 
     public function getDescription(): ?string
     {
@@ -169,7 +165,7 @@ class InitiativeBehaviour
     {
         if (!$this->initiatives->contains($initiative)) {
             $this->initiatives[] = $initiative;
-            $initiative->setInitiativeBehaviour($this);
+            $initiative->addInitiativeBehaviour($this);
         }
 
         return $this;
@@ -178,12 +174,11 @@ class InitiativeBehaviour
     public function removeInitiative(Initiative $initiative): self
     {
         if ($this->initiatives->removeElement($initiative)) {
-            // set the owning side to null (unless already changed)
-            if ($initiative->getInitiativeBehaviour() === $this) {
-                $initiative->setInitiativeBehaviour(null);
-            }
+            $initiative->removeInitiativeBehaviour($this);
         }
 
         return $this;
     }
+
+   
 }

@@ -64,12 +64,24 @@ class PlanningQuarter
      */
     private $performerTasks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlanningAccomplishment::class, mappedBy="quarter")
+     */
+    private $planningAccomplishments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BehavioralPlanningAccomplishment::class, mappedBy="quarter")
+     */
+    private $behavioralPlanningAccomplishments;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
         $this->plans = new ArrayCollection();
         $this->operationalTasks = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
+        $this->planningAccomplishments = new ArrayCollection();
+        $this->behavioralPlanningAccomplishments = new ArrayCollection();
     }
     public function __toString()
     {
@@ -252,6 +264,66 @@ class PlanningQuarter
             // set the owning side to null (unless already changed)
             if ($performerTask->getQuarter() === $this) {
                 $performerTask->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanningAccomplishment[]
+     */
+    public function getPlanningAccomplishments(): Collection
+    {
+        return $this->planningAccomplishments;
+    }
+
+    public function addPlanningAccomplishment(PlanningAccomplishment $planningAccomplishment): self
+    {
+        if (!$this->planningAccomplishments->contains($planningAccomplishment)) {
+            $this->planningAccomplishments[] = $planningAccomplishment;
+            $planningAccomplishment->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanningAccomplishment(PlanningAccomplishment $planningAccomplishment): self
+    {
+        if ($this->planningAccomplishments->removeElement($planningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($planningAccomplishment->getQuarter() === $this) {
+                $planningAccomplishment->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BehavioralPlanningAccomplishment[]
+     */
+    public function getBehavioralPlanningAccomplishments(): Collection
+    {
+        return $this->behavioralPlanningAccomplishments;
+    }
+
+    public function addBehavioralPlanningAccomplishment(BehavioralPlanningAccomplishment $behavioralPlanningAccomplishment): self
+    {
+        if (!$this->behavioralPlanningAccomplishments->contains($behavioralPlanningAccomplishment)) {
+            $this->behavioralPlanningAccomplishments[] = $behavioralPlanningAccomplishment;
+            $behavioralPlanningAccomplishment->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBehavioralPlanningAccomplishment(BehavioralPlanningAccomplishment $behavioralPlanningAccomplishment): self
+    {
+        if ($this->behavioralPlanningAccomplishments->removeElement($behavioralPlanningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($behavioralPlanningAccomplishment->getQuarter() === $this) {
+                $behavioralPlanningAccomplishment->setQuarter(null);
             }
         }
 

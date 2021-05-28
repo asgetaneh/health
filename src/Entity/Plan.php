@@ -19,10 +19,7 @@ class Plan
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=PlanningYear::class, inversedBy="plans")
-     */
-    private $planningYear;
+    
 
     /**
      * @ORM\ManyToOne(targetEntity=PlanningPhase::class, inversedBy="plans")
@@ -97,17 +94,7 @@ class Plan
         return $this->id;
     }
 
-    public function getPlanningYear(): ?PlanningYear
-    {
-        return $this->planningYear;
-    }
-
-    public function setPlanningYear(?PlanningYear $planningYear): self
-    {
-        $this->planningYear = $planningYear;
-
-        return $this;
-    }
+    
 
     public function getPlanningPhase(): ?PlanningPhase
     {
@@ -250,6 +237,7 @@ class Plan
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+        return $this;
     }
 
 

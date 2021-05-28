@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\PlanningYear;
+use App\Entity\PrincipalOffice;
 use App\Entity\SuitableInitiative;
 use App\Form\SuitableInitiativeType;
 use App\Repository\SuitableInitiativeRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +19,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class SuitableInitiativeController extends AbstractController
 {
     /**
-     * @Route("/", name="suitable_initiative_index", methods={"GET"})
+     * @Route("/", name="suitable_initiative_index", methods={"GET","POST"})
      */
-    public function index(SuitableInitiativeRepository $suitableInitiativeRepository): Response
+    public function index(SuitableInitiativeRepository $suitableInitiativeRepository,Request $request): Response
     {
+       $filterForm=$this->createFormBuilder()
+       ->add("planyear",EntityType::class,[
+           'class'=>PlanningYear::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add('principaloffice',EntityType::class,[
+           'class'=>PrincipalOffice::class,
+            'multiple' => true,
+            'required'=>false,
+            
+              'placeholder' => 'Choose an principal office',
+       ])->getForm();
+       $filterForm->handleRequest($request);
+       if($filterForm->isSubmitted()&& $filterForm->isValid()){
+         
+           $suitableInitiatives=$suitableInitiativeRepository->search($filterForm->getData());
+        
+        }
+        else
+         $suitableInitiatives=$suitableInitiativeRepository->findAll();
+       
         return $this->render('suitable_initiative/index.html.twig', [
-            'suitable_initiatives' => $suitableInitiativeRepository->findAll(),
+            'suitable_initiatives' => $suitableInitiatives,
+            'filterform'=>$filterForm->createView()
         ]);
     }
 

@@ -77,4 +77,20 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    public function search($search=[]){
+
+        $qb=$this->createQueryBuilder('s');
+        if(isset($search['planyear']) && sizeof($search['planyear'])>0){
+            $qb->andWhere('s.planningYear in (:planyear)')
+            ->setParameter('planyear',$search['planyear']);
+
+        }
+          if(isset($search['principaloffice']) && sizeof($search['principaloffice'])>0 ){
+            $qb->andWhere('s.principalOffice in (:principalOffice)')
+            ->setParameter('principalOffice',$search['principaloffice']);
+            
+        }
+        return $qb->getQuery()->getResult();
+    }
+    
 }

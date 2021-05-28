@@ -19,6 +19,7 @@ class InitiativeType extends AbstractType
             ->add('initiativeBehaviour')
             ->add('keyPerformanceIndicator')
             ->add('principalOffice')
+            ->add('socialAtrribute')
         ;
     }
 

@@ -43,7 +43,7 @@
 
 
 			<div class="pull-right">
-				<div class="widget-toolbar no-border open">
+				<div class="widget-toolbar no-border">
 
 
 					<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -105,21 +105,31 @@
 						<td>{{suitableplan.initiative.name }}</td>
 					
                         <td>{{"0"}}</td>
+                       {% for quarter in quarters %}
+                            <td>
                       
-                        {% for planAcomp in planAcomps %}
-                        {% if planAcomp.plan.suitableInitiative.id == suitableplan.id %}
-                        <td>
-                        {{
-                            planAcomp.planValue
-                        }}
-                        </td>
-                        {% endif %}
-                            
+                         {% if suitableplan.initiative.socialAtrribute|length > 0 %}
+                         {% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+                         
+                         <p>{{plan.socialAttribute.name|title}} : {{plan.planValue}}</p>
+                           
+                                                     
                         {% endfor %}
+                       {% else %}
+                             {% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+                            
+
+                             {{plan.planValue }}
+                           
+                             {% endfor %}
+                         {% endif %}
+                         
+                       
+                         </td>
+                       {% endfor %}
+                       
 						<td>
-							{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
-								<i class="fa fa-eye"></i>
-							</a> #}
+						 
                            
 							<a href="#"  data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
 								 <span class="glyphicon glyphicon-plus"></span> Edit Plan

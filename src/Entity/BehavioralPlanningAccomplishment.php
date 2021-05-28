@@ -42,6 +42,21 @@ class BehavioralPlanningAccomplishment
      */
     private $planValue;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="behavioralPlanningAccomplishments")
+     */
+    private $suitableInitiative;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningQuarter::class, inversedBy="behavioralPlanningAccomplishments")
+     */
+    private $quarter;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +118,42 @@ class BehavioralPlanningAccomplishment
     public function setPlanValue(int $planValue): self
     {
         $this->planValue = $planValue;
+
+        return $this;
+    }
+
+    public function getSuitableInitiative(): ?SuitableInitiative
+    {
+        return $this->suitableInitiative;
+    }
+
+    public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
+    {
+        $this->suitableInitiative = $suitableInitiative;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?PlanningQuarter
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?PlanningQuarter $quarter): self
+    {
+        $this->quarter = $quarter;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

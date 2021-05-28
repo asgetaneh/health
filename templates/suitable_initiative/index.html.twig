@@ -1,40 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SuitableInitiative index{% endblock %}
 
 {% block body %}
-    <h1>SuitableInitiative index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Initiative</th>
-                  <th>Office</th>
-                  <th>Planning Year</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for suitable_initiative in suitable_initiatives %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ suitable_initiative.initiative}}
-                 <td>{{ suitable_initiative.principalOffice}}
-                </td>
-                <td>{{suitable_initiative.planningYear}}</td>
-                <td>
-                    <a href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
-                    <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('suitable_initiative_new') }}">Create new</a>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter"> <strong>Suitable Initiative</strong> </h5>
+
+					<div class="widget-toolbar"></div>
+
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{suitable_initiatives|length}}</strong>
+						</span>
+					</div>
+				</div>
+
+				<div class="widget-body">
+
+
+					<div class="widget-main padding-16">
+						<div class="row">
+							<div class="search-area well col-xs-12">
+
+								<div class="row" style="margin-bottom:10px;">
+									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.planyear,'Planning Year') }}
+											{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.principaloffice,"Principal Office") }}
+											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit"  class="btn btn-primary btn-sm " value="Filter">
+										</div>
+									</div>
+
+
+									{{ form_end(filterform) }}
+								</div>
+								<div class="pull-left">
+
+
+									<form class="form-inline" method="post" style="display:inline;">
+
+										<div class="input-group">
+											<input type="text" class="form-control" name="search" placeholder="search"/>
+											<div class="input-group-btn">
+												<button type="submit" class="btn btn-default no-border btn-sm">
+													<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+
+								</div>
+
+
+								<div class="pull-right">
+									<div class="widget-toolbar no-border">
+
+
+										<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+											<b class="text-primary">Action</b>
+											<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+										</button>
+
+										<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+											<li>
+												<a href="#" id="suitablebutton">
+													<i class="ace-icon fa fa-stop green"></i>
+													Select As Suitable</a>
+											</li>
+
+											<li>
+
+												<a href="#">
+													<i class="ace-icon fa fa-stop pink2"></i>
+													Select As Non Suitable</a>
+											</li>
+
+
+										</ul>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+
+						<div
+							class="table-responsive">
+							{# <form class="form-inline" method="post" style="display:inline;">
+														
+																						<div class="input-group">
+																							<input type="text" class="form-control" name="search" placeholder="search"/>
+																							<div class="input-group-btn">
+																								<button type="submit" class="btn btn-default no-border btn-sm">
+																									<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																								</button>
+																							</div>
+																						</div>
+																					</form> #}
+
+							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Initiative</th>
+										<th>Office</th>
+										<th>Planning Year</th>
+										<th>actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{# {% set count =  strategies.getItemNumberPerPage() * (strategies.getCurrentPageNumber() -1) %} #}
+									{% for suitable_initiative in suitable_initiatives %}
+										<tr>
+											<td>{{ loop.index }}</td>
+											<td>{{ suitable_initiative.initiative}}</td>
+											<td>{{ suitable_initiative.principalOffice}}
+											</td>
+											<td>{{suitable_initiative.planningYear}}</td>
+											<td>
+												<a href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+												<a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
+											</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="3">no records found</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(strategies) }}</div> #}
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
 {% endblock %}
+{% block javascripts %}
+
+<script>
+    $(function () {
+      $('.select2').css('width', '100%').select2({allowClear: false})
+      
+      
+
+    })
+  </script>{% endblock %}

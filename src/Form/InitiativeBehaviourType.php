@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\InitiativeBehaviour;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,12 +14,22 @@ class InitiativeBehaviourType extends AbstractType
     {
         $builder
             ->add('name')
+          
+            ->add('code',ChoiceType::class,[
+                'choice'=>[
+                    'CONSTANT'=>0,
+                    'ADDITIVE'=>1,
+                    'INCREMENTAL'=>2,
+                    'DECREMENTAL'=>3,
+                    'RATIO'=>4
+                     
+                ]
+            ])
             ->add('description')
-            ->add('code')
-            ->add('createdAt')
-            ->add('isActive')
-            ->add('category')
-            ->add('createdBy')
+         
+            
+           
+            
         ;
     }
 
