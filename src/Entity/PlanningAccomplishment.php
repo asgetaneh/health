@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlanningAccomplishmentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +57,16 @@ class PlanningAccomplishment
      * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="planningAccomplishments")
      */
     private $socialAttribute;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="PlanAcomplishment")
+     */
+    private $performerTasks;
+
+    public function __construct()
+    {
+        $this->performerTasks = new ArrayCollection();
+    }
 
    
 
@@ -147,6 +159,36 @@ class PlanningAccomplishment
     public function setSocialAttribute(?InitiativeAttribute $socialAttribute): self
     {
         $this->socialAttribute = $socialAttribute;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setPlanAcomplishment($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getPlanAcomplishment() === $this) {
+                $performerTask->setPlanAcomplishment(null);
+            }
+        }
 
         return $this;
     }

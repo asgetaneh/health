@@ -8,6 +8,7 @@ use App\Entity\OperationalManager;
 use App\Entity\OperationalTask;
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
+use App\Entity\PlanningAccomplishment;
 use App\Entity\SuitableInitiative;
 use App\Entity\TaskMeasurement;
 use App\Form\OperationalTaskType;
@@ -18,6 +19,7 @@ use App\Repository\OperationalOfficeRepository;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerRepository;
 use App\Repository\PerformerTaskRepository;
+use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
 use App\Repository\SuitableInitiativeRepository;
@@ -40,11 +42,11 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request ,SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanRepository $planRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
+    public function index(Request $request ,SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {              $entityManager = $this->getDoctrine()->getManager();
       
         $em=$this->getDoctrine()->getManager();
-         $plans=$planRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
+         $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -69,7 +71,7 @@ class OperationalTaskController extends AbstractController
             foreach ($plans as  $value) {
                 if ( $value->getQuarter() == $form->getData()->getQuarter()) {
                     $performerTask->setCreatedBy($this->getUser());
-                    $performerTask->setPlan($value);
+                    $performerTask->setPlanAcomplishment($value);
 
                $weight=$form->getData()->getWeight();
                 if ($count + $weight > 100 ) {
@@ -190,7 +192,7 @@ $count=0;
    $taskUser= $request->request->get('taskUser');
       $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
           $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
-        //   dd($taskUsers);
+          dd($taskUsers);
           foreach ($taskUsers as $key ) {
               if($key->getType()<2){
                   $key->setType(2);

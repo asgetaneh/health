@@ -241,23 +241,7 @@ class Plan
     }
 
 
-    /**
-     * @return Collection|PerformerTask[]
-     */
-    public function getPerformerTasks(): Collection
-    {
-        return $this->performerTasks;
-    }
-
-    public function addPerformerTask(PerformerTask $performerTask): self
-    {
-        if (!$this->performerTasks->contains($performerTask)) {
-            $this->performerTasks[] = $performerTask;
-            $performerTask->setPlan($this);
-        }
-        return $this;
-    }
-
+    
 
     public function getSuitableInitiative(): ?SuitableInitiative
     {
