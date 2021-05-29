@@ -9,6 +9,7 @@ use App\Entity\OperationalTask;
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningAccomplishment;
+use App\Entity\StaffEvaluationBehaviorCriteria;
 use App\Entity\SuitableInitiative;
 use App\Entity\TaskMeasurement;
 use App\Form\OperationalTaskType;
@@ -22,12 +23,14 @@ use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
 use App\Repository\PrincipalOfficeRepository;
+use App\Repository\StaffEvaluationBehaviorCriteriaRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -180,19 +183,38 @@ $count=0;
      /**
      * @Route("/show/detail", name="operational_task_show_detail")
      */
-    public function showDetail(Request $request,TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskUserRepository $taskUserRepository)
+    public function showDetail(Request $request,StaffEvaluationBehaviorCriteriaRepository $staffEvaluationBehaviorCriteriaRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskUserRepository $taskUserRepository)
     {   $em=$this->getDoctrine()->getManager();
        
-        // if ($taskUser= $request->request->get('taskUserId')) {
-        // $taskId= $request->request->get('taskUserId');
-        // $taskUsersr=$taskUserRepository->find($taskId);
-        // $taskUsersr->setType(2);  
-        // $em->flush();   
-        //    }
+       
+        if ($report= $request->request->get('reportValue')) {
+            $reportValue= $request->request->get('reportValue');
+          $ids= $request->request->get('taskAccomplishmentId');
+          foreach ($ids as $key => $value) {
+            $taskAccomplishment=$taskAccomplishmentRepository->find($value);
+            $taskAccomplishment->setOperationalValue($reportValue[$key]);
+            $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
+            $taskUser->setType(3);
+          }
+          $em->flush();
+                      $this->addFlash('success', 'successfully Operational Manager set Acomplisment value  !');
+                      return $this->redirectToRoute('operational_task_show');
+        }
+          $staffCriterias=$staffEvaluationBehaviorCriteriaRepository->findAll();
    $taskUser= $request->request->get('taskUser');
       $taskAccomplishments=$taskAccomplishmentRepository->findBy(['taskUser'=>$taskUser]);
           $taskUsers=$taskUserRepository->findBy(['id'=>$taskUser]);
-          dd($taskUsers);
+          foreach ($taskUsers as $value) {
+              $endDate=$value->getTaskAssign()->getEndDate();
+              $endDates=explode('/',$endDate);
+              $date = new DateTime();
+        //       dump($endDate);
+        //       dump($date);
+        //  $dates=date_format($date, 'd/m/Y');
+        //       dd($dates);
+
+          }
+        //   dd($taskUsers);
           foreach ($taskUsers as $key ) {
               if($key->getType()<2){
                   $key->setType(2);
@@ -204,6 +226,7 @@ $count=0;
         return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
              'taskUsers' => $taskUsers,
+             'staffCriterias'=>$staffCriterias
         ]);
     }
 
