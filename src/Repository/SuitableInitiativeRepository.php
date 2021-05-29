@@ -90,6 +90,11 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('principalOffice',$search['principaloffice']);
             
         }
+        if(isset($search['initiative']) && sizeof($search['initiative'])>0 ){
+            $qb->andWhere('s.initiative in (:initiative)')
+            ->setParameter('initiative',$search['initiative']);
+            
+        }
         return $qb->getQuery()->getResult();
     }
     

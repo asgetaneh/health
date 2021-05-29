@@ -32,8 +32,7 @@
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
 
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>
-		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
 
 
 		{#        <script src="{{ asset('assets/assets/js/forgraph.js') }}"></script>#}<script src="{{ asset('assets/assets/js/ace-extra.js') }}"> </script>
@@ -73,8 +72,6 @@
 		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
 
 
-		
-
 	</head>
 
 	<body style='font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif; color: black' class="no-skin">
@@ -109,6 +106,17 @@
 						{% block navbar_right %}
 							<div class="navbar-buttons navbar-header pull-right" role="navigation">
 								{% block nav_list %}
+                                {# <form class="" id="language" id="language" {% if app.user %} action="#" {% else %} action="{{ path('change_locale')}}" {% endif %}>
+					<div class="input-group input-group-sm">
+						<select name="lang" id="lang" class="form-control ">
+
+							<option value="en" {% if app.request.getLocale() == 'en' %} selected {% endif %}>English</option>
+							<option value="am" {% if app.request.getLocale() == 'am' %} selected {% endif %}>አማርኛ</option>
+							<option value="or" {% if app.request.getLocale() == 'or' %} selected {% endif %}>Afaan Oromo</option>
+						</select>
+
+					</div>
+				</form> #}
 									<ul class="nav ace-nav">
 										{% if is_granted('IS_PPO_DIRECTOR') %}
 											<li>
@@ -117,29 +125,32 @@
 										{% endif %}
 
 										<li>
-											{# <div class="dropdown">
-																																																																		                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
-																																																																		                                                <span class="caret"></span></button>
-																																																																		                                            <ul class="dropdown-menu">
-																																																																		                                                <li><a href="{{ path('switch_language', { '_locale': 'am' }) }}">{% trans %}Amharic{% endtrans %}</a></li>
-																																																																		                                                <li><a href="{{ path('switch_language', { '_locale': 'en' }) }}">{% trans %}English{% endtrans %}</a></li>
-																																																																		                                                 <li><a href="{{ path('switch_language', { '_locale': 'or' }) }}">{% trans %}Afaan Oromo{% endtrans %}</a></li>
-																																																																		                                            </ul>
-																																																																		                                        </div> #}
+											<div class="dropdown">
+                                            
+												<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu">
+													<li>
+														<a href="#">{% trans %}Amharic{% endtrans %}</a>
+													</li>
+													<li>
+														<a href="#">{% trans %}English{% endtrans %}</a>
+													</li>
+													<li>
+														<a href="#">{% trans %}Afaan Oromo{% endtrans %}</a>
+													</li>
+												</ul>
+											</div>
+
 										</li>
-										{#########################################################################################################################################################################################################}
-										{#######################################################################################################################################################################################################
-																																																												                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-																																																												                                    #######################################################################################################################################################################################################
-																																																												                                    #######################################################################################################################################################################################################}
+										
 										<li>
 											<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ColorHelpModal">
 												<span class="glyphicon glyphicon-question-sign"></button>
 											</li>
-											{##################################################################################################################################################################################################
-																																																																		                                    ########################## COLOR HELP BUTTON ######################################################################################################################################################
-																																																																		                                    ###################################################################################################################################################################################################
-																																																																		                                    ###################################################################################################################################################################################################}
+											
+																																																																													                                  
 										</li>
 										<li class="green dropdown-modal">
 											<a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -254,8 +265,11 @@
 					</div>
 					<!-- /.navbar-container -->
 				{% endblock %}
+                
 			</div>
+            
 		{% endblock %}
+        
 
 		<div class="modal fade" id="ColorHelpModal" role="dialog">
 			<div
@@ -319,24 +333,25 @@ ace.settings.loadState('sidebar')
 					</script>
                     
 
+
 					<ul class="nav nav-list">
 						{% block app_menu %}
 							{% block homepageMenu %}{% endblock %}
 						{% endblock %}
 
-
+               
 						{% block tobologyMenu %}
 							{# <li>
-																																															                                <a href="{{ path('homepage') }} " style="text-align: center" >
-																																															                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
-																																															                                    <span class="menu-text"></span>
-																																															                                    <b class=""></b>
-																																															                                </a>
-																																															                            </li> #}
+																																																						                                <a href="{{ path('homepage') }} " style="text-align: center" >
+																																																						                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
+																																																						                                    <span class="menu-text"></span>
+																																																						                                    <b class=""></b>
+																																																						                                </a>
+																																																						                            </li> #}
 
 
 							<li>
-								<a  class="dropdown-toggle" href="#">
+								<a class="dropdown-toggle" href="#">
 									<i class=""></i>
 									<span class="menu-text">
 
@@ -626,10 +641,17 @@ $("#ViewContentDiv").html(result);
 }
 							</script>
 
+							<script>
+								$(function () {
+$('.select2').css('width', '90%').select2({allowClear: false})
 
+
+})
+							</script>
 							<script>
 
 								jQuery(function ($) {
+
 if (!ace.vars['touch']) {
 $('.chosen-select').chosen({allow_single_deselect: true});
 // resize the chosen on window resize
@@ -702,8 +724,8 @@ element.classList.remove("navbar-fixed-top");
 							</script>
 
 							<!--[if IE]>
-																																						{% block script %} {% endblock %}
-																																						<![endif]-->
+																																													{% block script %} {% endblock %}
+																																													<![endif]-->
 
 							{% block additional_script_file %}{% endblock %}
 							<!-- inline scripts related to this page -->

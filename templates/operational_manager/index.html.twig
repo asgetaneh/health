@@ -1,35 +1,162 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}OperationalManager index{% endblock %}
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+		<li class="active">
+        <a href="{{path('operational_manager_index')}}">{% trans %}
+        <strong>
+		Operational Manager{% endtrans %}
+        </strong></a>
+        </li>
+{% endblock %}
 
 {% block body %}
-    <h1>OperationalManager index</h1>
+   
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>IsActive</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for operational_manager in operational_managers %}
-            <tr>
-                <td>{{ operational_manager.id }}</td>
-                <td>{{ operational_manager.isActive ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('operational_manager_show', {'id': operational_manager.id}) }}">show</a>
-                    <a href="{{ path('operational_manager_edit', {'id': operational_manager.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="row">
+	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+		<div class="widget-box widget-color-blue" id="widget-box-8">
+			<div class="widget-header">
+				<h5 class="widget-title bigger lighter">
+					<strong>Operational Managers</strong>
+				</h5>
+				<div class="widget-toolbar">
+					<span class="badge badge-info">
+						{% trans %}Total{% endtrans %}
+						:
+						<strong>{{operational_managers|length}}</strong>
 
-    <a href="{{ path('operational_manager_new') }}">Create new</a>
+					</span>
+				</div>
+			</div>
+			<div class="widget-body">
+				<div class="widget-toolbox" id="widget-toolbox-1">
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+								<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+								{% trans %}
+								New Assign
+								{% endtrans %}</a>
+
+						</div>
+					</div>
+				</div>
+				<div class="widget-main padding-16">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover">
+
+							<thead>
+								<tr></tr>
+								<tr>
+									<th>#</th>
+									
+									<th>Manager</th>
+                                    <th>Operational Office</th>
+                                     <th>Principal Manager</th>
+                                      <th>Principal Office</th>
+									<th>Status</th>
+
+									{# <th>Description</th> #}
+									<th>actions</th>
+								</tr>
+							</thead>
+						</tr>
+					</thead>
+					<tbody>
+						{% set count =  operational_managers.getItemNumberPerPage() * (operational_managers.getCurrentPageNumber() -1) %}
+						{% for operational_manager in operational_managers %}
+							<tr>
+								{% set count = count + 1 %}
+								<td>{{ count }}</td>
+								
+								<td>
+									
+                                       {{operational_manager.manager}}  
+										
+
+								</td>
+                                <td>{{ operational_manager.operationalOffice}}</td>
+                                <td>{% for principal_manager in operational_manager.operationalOffice.principalOffice.principalManagers|filter(principal => principal.isActive == true) %}
+                                    {{principal_manager.principal}}
+                                {% endfor %}</td>
+                                 <td>{{ operational_manager.operationalOffice.principalOffice}}
+                              
+                                 </td>
+
+								<td>
+									{% if operational_manager.isActive %}
+										<span class="label label-success">Active</span>
+									{% else %}
+										<span class="label label-danger">deactive</span>
+
+									{% endif %}
+
+								</td>
+								{# <td>{{ operational_manager.createAt ? operational_manager.createAt|date('d-M-Y') : '' }}</td> #}
+								{# <td>{{ operational_manager.description }}</td> #}
+								<td>
+									<a class="btn btn-primary btn-xs" href="{{ path('operational_manager_show', {'id': operational_manager.id}) }}" title="view details">
+										<i class="fa fa-eye"></i>
+										show</a>
+									<a class="btn btn-warning btn-xs" href="{{ path('operational_manager_edit', {'id': operational_manager.id}) }}" title="edit">
+										<i class="fa fa-edit"></i>
+										edit</a>
+                                         <form  class="" style="display:inline;" action="" method="post">
+                                            
+                                                  
+                                                    <input type="hidden" name="{{operational_manager.isActive ?"deactive":"active"}}" value ="{{ operational_manager.id}}">
+                                                    <input type="submit" class="btn btn-sm {{operational_manager.isActive?"btn-danger":"btn-success"}}" value="{{operational_manager.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{operational_manager.isActive?"deactivate":"activate"}}')">
+                                                      
+                                            </form>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">no records found</td>
+							</tr>
+						{% endfor %}
+
+					</tbody>
+				</table>
+				<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operational_managers) }}</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div></div></div><div id="myModal" class="modal fade" role="dialog"><div
+class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header bg-primary">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h4 class="modal-title">Assign Operational Manager</h4>
+	</div>
+
+	<div class="modal-body">
+		{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+		<div class="form-group">
+			{{ form_label(form.manager," Operational Manager") }}
+			{{ form_widget(form.manager,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+		</div>
+        <div class="form-group">
+			{{ form_label(form.operationalOffice," operational office") }}
+			{{ form_widget(form.operationalOffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+		</div>
+
+		
+
+	</div>
+
+</div>
+<div class="modal-footer">
+	<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Assign{% endtrans %}"/>
+	<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+	{{ form_end(form) }}
+</div></div></div>
 {% endblock %}

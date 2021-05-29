@@ -1,6 +1,6 @@
 
-<li style="background-color:blue;" >
-	<a href="#" class="dropdown-toggle ">
+<li  >
+	<a href="#" class="dropdown-toggle " style="background:#3f87a6; color: #f5f6f8">
 		<i class="menu-icon fa fa-caret-right"></i>
 		<span class="menu-text">
 
@@ -9,9 +9,9 @@
 		<b class="arrow fa fa-angle-down"></b>
 	</a>
     <b class="arrow"></b>
-	<ul class="submenu nav-show" >
+	<ul class="submenu nav-show" style="background:#3f87a6; color: #f5f6f8" >
 		<li>
-			<a href="{{ path('principal_office_index') }}" class="bg-primary">
+			<a href="{{ path('principal_office_index') }}" style="background:#3f87a6; color: #f5f6f8" class="bg-primary">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Plan{% endtrans %}
 			</a>
@@ -19,41 +19,47 @@
 		</li>
         
         <li>
-			<a href="{{ path('plan_index') }}">
+			<a href="{{ path('plan_index') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Cascading Achievement{% endtrans %}
 			</a>
             <b class="arrow"></b>
 		</li>
          <li>
-			<a href="{{ path('plan_achievement') }}">
+			<a href="{{ path('plan_achievement') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Plan Achievement{% endtrans %}
 			</a>
 		</li>
         <li>
-			<a href="{{ path('suitable_initiative_list') }}">
+			<a href="{{ path('plan_achievement') }}" style="background:#3f87a6; color: #f5f6f8">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Principal Office Report{% endtrans %}
+			</a>
+		</li>
+        <li>
+			<a href="{{ path('suitable_initiative_list') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Operational Task{% endtrans %}
 			</a>
             <b class="arrow"></b>
 		</li>
          <li>
-			<a href="{{ path('operational_task_show') }}">
+			<a href="{{ path('operational_task_show') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Operational Task List{% endtrans %}
 			</a>
 		</li>
         
         <li>
-			<a href="{{ path('performer_task_index') }}">
+			<a href="{{ path('performer_task_index') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Performer Task{% endtrans %}
 			</a>
             <b class="arrow"></b>
 		</li>
         <li>
-			<a href="{{ path('performer_task_list') }}">
+			<a href="{{ path('performer_task_list') }}" style="background:#3f87a6; color: #f5f6f8">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Performer Task List{% endtrans %}
 			</a>

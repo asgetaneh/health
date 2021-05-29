@@ -1,26 +1,139 @@
 {% extends 'base.html.twig' %}
+{% block subTitle %}
+<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active"> <a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a></li>
+{% endblock %}
 
-{% block title %}SuitableInitiative{% endblock %}
+
 
 {% block body %}
-    <h1>SuitableInitiative</h1>
+<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter"><strong>Suitable Initiative</strong>
+					</h5>
 
-    <table class="table">
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							<a href="{{ path('suitable_initiative_index') }}" class="btn btn-success">
+								{% trans %}
+								back
+								{% endtrans %}
+							</a>
+						</span>
+					</div>
+
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar"></div>
+					</div>
+
+					<div class="widget-main padding-16">
+   <div class="table-responsive">
+	<table class="table  table-bordered table-hover" style="margin-top:10px;">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ suitable_initiative.id }}</td>
+                <th>Suitable Initiative</th>
+                <td>{{ suitable_initiative.initiative.name|title  }}</td>
+            </tr>
+             <tr>
+                <th>Initiative Behavior</th>
+                <td> {% for behavior in suitable_initiative.initiative.initiativeBehaviour %}
+                   {% if loop.last %}
+                    {{behavior}}
+                    {% else %}
+                         {{behavior}},
+                    {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+             <tr>
+                <th>Planning Year</th>
+                <td> {{suitable_initiative.planningYear}} 
+              </td>
             </tr>
             <tr>
-                <th>IsActive</th>
-                <td>{{ suitable_initiative.isActive ? 'Yes' : 'No' }}</td>
+                <th>Principal Office </th>
+                <td>{{ suitable_initiative.principalOffice}}</td>
             </tr>
+           
+            {% for quarter in quarters %}
+                
+            
+            
+                 <tr>
+                 <th class="text-info">{{quarter.name|title}} Quarter Plan</th>
+                 <th class="text-info">{{quarter.name|title}} Quarter Accomplishment </th>
+                 </tr>
+                  <tr>
+                 <td>
+                   {% for socialattribute in suitable_initiative.initiative.socialAtrribute %}
+                  
+                   {% for plan in suitable_initiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id and plan.socialAttribute.id == socialattribute.id ) %}
+                     <p>{{socialattribute.name|title}} :  {{ plan.planValue}}</p>
+                      {% else %}
+                           <p>{{socialattribute.name|title}} : -</p>
+                            
+                   {% endfor %}
+                     {% else %}
+                      {% for plan in suitable_initiative.planningAccomplishments|filter(plan => plan.quarter == quarter ) %}
+                     <p>{{ plan.planValue}}</p>
+                       {% else %}
+                            <p>plan is not entered</p>
+                   {% endfor %}
+                          
+                   {% endfor %}
+                 </td>
+                 <td>
+                  {% for socialattribute in suitable_initiative.initiative.socialAtrribute %}
+                  
+                   {% for plan in suitable_initiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id and plan.socialAttribute.id == socialattribute.id ) %}
+                     <p>{{socialattribute.name|title}} :  {{ plan.accompValue?plan.accompValue: "__"}}</p>
+                      {% else %}
+                           <p>{{socialattribute.name|title}} : -</p>
+                            
+                   {% endfor %}
+                     {% else %}
+                      {% for plan in suitable_initiative.planningAccomplishments|filter(plan => plan.quarter == quarter ) %}
+                     <p> {{ plan.accompValue?plan.accompValue: "__"}}</p>
+                       {% else %}
+                            <p>plan is not entered</p>
+                   {% endfor %}
+                          
+                   {% endfor %}
+                 </td>
+
+                 </tr>
+                  {% endfor %}
+           
+            {% if suitable_initiative.denominator %}
+             <tr>
+                <th>Denominator</th>
+                <td>{{suitable_initiative.denominator}}</td>
+            </tr>
+            {% endif %}
+          
+                
+             
+            
+
         </tbody>
     </table>
 
-    <a href="{{ path('suitable_initiative_index') }}">back to list</a>
+    <a class="btn btn-info" href="{{ path('suitable_initiative_index') }}">back to list</a>
 
-    <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
+   
 
-    {{ include('suitable_initiative/_delete_form.html.twig') }}
+    {# {{ include('suitable_initiative/_delete_form.html.twig') }} #}
+    </div>
+    </div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+		
 {% endblock %}

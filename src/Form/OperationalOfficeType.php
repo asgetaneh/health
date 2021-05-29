@@ -13,11 +13,9 @@ class OperationalOfficeType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('createdAt')
-            ->add('isActive')
             ->add('description')
             ->add('principalOffice')
-            ->add('createdBy')
+          
         ;
     }
 

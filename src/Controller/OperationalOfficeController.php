@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\OperationalOffice;
 use App\Form\OperationalOfficeType;
 use App\Repository\OperationalOfficeRepository;
+use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +18,51 @@ use Symfony\Component\Routing\Annotation\Route;
 class OperationalOfficeController extends AbstractController
 {
     /**
-     * @Route("/", name="operational_office_index", methods={"GET"})
+     * @Route("/", name="operational_office_index", methods={"GET","POST"})
      */
-    public function index(OperationalOfficeRepository $operationalOfficeRepository): Response
+    public function index(OperationalOfficeRepository $operationalOfficeRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $operationalOffice = new OperationalOffice();
+        $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $operationalOffice->setCreatedAt(new DateTime('now'));
+            $operationalOffice->setCreatedBy($this->getUser());
+            $entityManager->persist($operationalOffice);
+            $entityManager->flush();
+            $this->addFlash('success',"registered successfuly");
+
+            return $this->redirectToRoute('operational_office_index');
+        }
+        if($request->request->get('deactive')){
+            $operationalOffice=$operationalOfficeRepository->find($request->request->get('deactive'));
+            $operationalOffice->setIsActive(false);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"deactivated successfuly");
+              return $this->redirectToRoute('operational_office_index');
+           
+        }
+          if($request->request->get('active')){
+            $operationalOffice=$operationalOfficeRepository->find($request->request->get('active'));
+            $operationalOffice->setIsActive(true);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"activated successfuly");
+              return $this->redirectToRoute('operational_office_index');
+           
+         }
+        
+         $data=$paginator->paginate(
+             $operationalOfficeRepository->findAll(),
+             $request->query->getInt('page',1),
+             10
+
+        );
+
         return $this->render('operational_office/index.html.twig', [
-            'operational_offices' => $operationalOfficeRepository->findAll(),
+            'operational_offices' => $data,
+            'form'=>$form->createView()
         ]);
     }
 

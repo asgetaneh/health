@@ -12,7 +12,7 @@ class OperationalManagerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('isActive')
+          
             ->add('manager')
             ->add('operationalOffice')
         ;

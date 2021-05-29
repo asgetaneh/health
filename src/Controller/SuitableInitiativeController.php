@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Initiative;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Entity\SuitableInitiative;
 use App\Form\SuitableInitiativeType;
+use App\Repository\PlanningQuarterRepository;
 use App\Repository\SuitableInitiativeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +28,13 @@ class SuitableInitiativeController extends AbstractController
        $filterForm=$this->createFormBuilder()
        ->add("planyear",EntityType::class,[
            'class'=>PlanningYear::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+        ->add("initiative",EntityType::class,[
+           'class'=>Initiative::class,
            'multiple' => true,
            'placeholder' => 'Choose an planning year',
            'required'=>false,
@@ -79,10 +88,12 @@ class SuitableInitiativeController extends AbstractController
     /**
      * @Route("/{id}", name="suitable_initiative_show", methods={"GET"})
      */
-    public function show(SuitableInitiative $suitableInitiative): Response
+    public function show(SuitableInitiative $suitableInitiative,PlanningQuarterRepository $planningQuarterRepository): Response
     {
+         $quarter=$planningQuarterRepository->findAll();
         return $this->render('suitable_initiative/show.html.twig', [
             'suitable_initiative' => $suitableInitiative,
+            'quarters'=>$quarter
         ]);
     }
 

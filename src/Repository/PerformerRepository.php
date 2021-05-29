@@ -66,4 +66,17 @@ public function findAllsUser($user)
         ;
     }
     */
+     public function findActive($operationaloffice,$performer){
+        $qb=$this->createQueryBuilder('om');
+       
+             $qb->andWhere('om.operationalOffice = :po')
+             ->andwhere('om.performer = :manager')
+            
+             ->setParameter('manager',$performer)
+             ->setParameter('po',$operationaloffice);
+       
+       
+        return $qb->getQuery()->getResult();
+      
+    }
 }

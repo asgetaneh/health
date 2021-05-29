@@ -3,8 +3,12 @@
 {% block subTitle %}
 	<li class="active">{% trans %}
 		SMIS{% endtrans %}</li>
-	<li class="active">{% trans %}
-		Principal Office{% endtrans %}</li>
+		<li class="active">
+        <a href="{{path('principal_office_index')}}">{% trans %}
+        <strong>
+		Principal Office{% endtrans %}
+        </strong></a>
+        </li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -43,12 +47,12 @@
 								<thead>
 									<tr></tr>
 									<tr>
-										<th>Id</th>
+										<th>#</th>
 										<th>Name</th>
 										<th>Director</th>
 
 										<th>Status</th>
-										<th>CreateAt</th>
+										
 										<th>Description</th>
 										<th>actions</th>
 									</tr>
@@ -56,9 +60,11 @@
 							</tr>
 						</thead>
 						<tbody>
+                        	{% set count =  principal_offices.getItemNumberPerPage() * (principal_offices.getCurrentPageNumber() -1) %}
 							{% for principal_office in principal_offices %}
 								<tr>
-									<td>{{ principal_office.id }}</td>
+                                {% set count = count + 1 %}
+									<td>{{ count }}</td>
 									<td>{{ principal_office.name }}</td>
 									<td>
 										{% for director in  
@@ -77,13 +83,13 @@
 										{% endif %}
 
 									</td>
-									<td>{{ principal_office.createAt ? principal_office.createAt|date('d-M-Y') : '' }}</td>
+									{# <td>{{ principal_office.createAt ? principal_office.createAt|date('d-M-Y') : '' }}</td> #}
 									<td>{{ principal_office.description }}</td>
 									<td>
-										<a class="btn btn-primary btn-xs" href="{{ path('principal_office_show', {'id': principal_office.id}) }}">
+										<a class="btn btn-primary btn-xs" href="{{ path('principal_office_show', {'id': principal_office.id}) }}" title="view details">
 											<i class="fa fa-eye"></i>
 											show</a>
-										<a class="btn btn-warning btn-xs" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}">
+										<a class="btn btn-warning btn-xs" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
 											edit</a>
 									</td>

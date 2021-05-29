@@ -12,7 +12,7 @@ class PerformerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('isActive')
+           
             ->add('performer')
             ->add('operationalOffice')
         ;

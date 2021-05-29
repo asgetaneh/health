@@ -47,4 +47,21 @@ class PrincipalManagerRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findActive($principaloffice,$principal=null){
+        $qb=$this->createQueryBuilder('pm');
+        if ($principal) {
+             $qb->andWhere('pm.principalOffice = :po')
+             ->andwhere('pm.principal = :principal')
+            
+             ->setParameter('principal',$principal)
+             ->setParameter('po',$principaloffice);
+        }
+        else{
+             $qb->andWhere('pm.principalOffice = :po')
+             ->andwhere('pm.isActive = true')
+             ->setParameter('po',$principaloffice);
+        }
+        return $qb->getQuery()->getResult();
+      
+    }
 }

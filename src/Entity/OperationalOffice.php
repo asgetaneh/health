@@ -42,7 +42,7 @@ class OperationalOffice
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\Column(type="text", nullable=true)

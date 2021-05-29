@@ -15,7 +15,7 @@ class PrincipalManagerType extends AbstractType
             
         ->add('principal')
         ->add('principalOffice')
-        ->add('isActive')
+       
             
         ;
     }

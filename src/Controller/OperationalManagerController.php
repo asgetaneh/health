@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\OperationalManager;
 use App\Form\OperationalManagerType;
 use App\Repository\OperationalManagerRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,70 @@ use Symfony\Component\Routing\Annotation\Route;
 class OperationalManagerController extends AbstractController
 {
     /**
-     * @Route("/", name="operational_manager_index", methods={"GET"})
+     * @Route("/", name="operational_manager_index", methods={"GET","POST"})
      */
-    public function index(OperationalManagerRepository $operationalManagerRepository): Response
+    public function index(OperationalManagerRepository $operationalManagerRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $operationalManager = new OperationalManager();
+        $form = $this->createForm(OperationalManagerType::class, $operationalManager);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+             $isAlreadyAssigned=$operationalManagerRepository->findActive($form->getData()->getOperationalOffice(),$form->getData()->getManager());
+             $isActivePrincipal=$operationalManagerRepository->findActive($form->getData()->getOperationalOffice(),null);
+            
+             if ($isAlreadyAssigned) {
+                  $this->addFlash('danger'," operational manager  is already assigned to this office");
+
+                     return $this->redirectToRoute('operational_manager_index');
+             }
+             if ($isActivePrincipal) {
+                  $this->addFlash('danger',"sorry unable to assign! the other operational manager  is already assigned to this office");
+
+                     return $this->redirectToRoute('operational_manager_index');
+             }
+
+            $entityManager->persist($operationalManager);
+            $entityManager->flush();
+
+             $this->addFlash('success',"operational manager is assigned  successfuly");
+
+            return $this->redirectToRoute('operational_manager_index');
+        }
+         if($request->request->get('deactive')){
+            $operationalManager=$operationalManagerRepository->find($request->request->get('deactive'));
+            $operationalManager->setIsActive(false);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"deactivated successfuly");
+              return $this->redirectToRoute('operational_manager_index');
+           
+        }
+          if($request->request->get('active')){
+            $operationalManager=$operationalManagerRepository->find($request->request->get('active'));
+           
+              $isActivePrincipal=$operationalManagerRepository->findActive($operationalManager->getOperationalOffice(),null);
+               if ($isActivePrincipal) {
+                  $this->addFlash('danger',"sorry unable to activate! b/c this office has Active operational manager");
+
+                     return $this->redirectToRoute('operational_manager_index');
+                  }
+            $operationalManager->setIsActive(true);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"activated successfuly");
+              return $this->redirectToRoute('operational_manager_index');
+           
+         }
+           $data=$paginator->paginate(
+             $operationalManagerRepository->findAll(),
+             $request->query->getInt('page',1),
+             10
+
+        );
         return $this->render('operational_manager/index.html.twig', [
-            'operational_managers' => $operationalManagerRepository->findAll(),
+            'operational_managers' => $data,
+            'form'=>$form->createView()
         ]);
     }
 

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Performer;
 use App\Form\PerformerType;
 use App\Repository\PerformerRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,58 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerformerController extends AbstractController
 {
     /**
-     * @Route("/", name="performer_index", methods={"GET"})
+     * @Route("/", name="performer_index", methods={"GET","POST"})
      */
-    public function index(PerformerRepository $performerRepository): Response
+    public function index(PerformerRepository $performerRepository,Request $request,PaginatorInterface $paginator): Response
     {
+         
+        $performer = new Performer();
+        $form = $this->createForm(PerformerType::class, $performer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $isActivePrincipal=$performerRepository->findActive($performer->getOperationalOffice(),$performer->getPerformer());
+               if ($isActivePrincipal) {
+                  $this->addFlash('danger',"performer is already assigned");
+
+                     return $this->redirectToRoute('performer_index');
+                  }
+            $entityManager->persist($performer);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('performer_index');
+        }
+         if($request->request->get('deactive')){
+             $performer=$performerRepository->find($request->request->get('deactive'));
+             $performer->setIsActive(false);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"deactivated successfuly");
+              return $this->redirectToRoute('performer_index');
+           
+        }
+          if($request->request->get('active')){
+             $performer=$performerRepository->find($request->request->get('active'));
+           
+              
+             $performer->setIsActive(true);
+              $this->getDoctrine()->getManager()->flush();
+               $this->addFlash('success',"activated successfuly");
+              return $this->redirectToRoute('performer_index');
+           
+         }
+         
+         $data=$paginator->paginate(
+             $performerRepository->findAll(),
+             $request->query->getInt('page',1),
+             10
+
+        );
+
         return $this->render('performer/index.html.twig', [
-            'performers' => $performerRepository->findAll(),
+            'performers' => $data,
+            'form'=> $form->createView()
+
         ]);
     }
 

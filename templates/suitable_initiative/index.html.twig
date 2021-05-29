@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block subTitle %}
+<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active"> <a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a></li>
+{% endblock %}
 
 {% block body %}
 
@@ -30,19 +34,25 @@
 
 								<div class="row" style="margin-bottom:10px;">
 									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
-									<div class="col-md-4">
+                                    <div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.initiative,'Planning Year') }}
+											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
 										<div class="form-group">
 											{{ form_label(filterform.planyear,'Planning Year') }}
 											{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
 										</div>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-3">
 										<div class="form-group">
 											{{ form_label(filterform.principaloffice,"Principal Office") }}
 											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
 										</div>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-3">
 										<div class="form-group" style="margin-top:25px;">
 											<input type="submit"  class="btn btn-primary btn-sm " value="Filter">
 										</div>
@@ -119,7 +129,7 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Initiative</th>
+										<th>Suitable Initiative</th>
 										<th>Office</th>
 										<th>Planning Year</th>
 										<th>actions</th>
@@ -135,8 +145,8 @@
 											</td>
 											<td>{{suitable_initiative.planningYear}}</td>
 											<td>
-												<a href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
-												<a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
+												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+												{# <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a> #}
 											</td>
 										</tr>
 									{% else %}

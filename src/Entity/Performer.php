@@ -25,7 +25,7 @@ class Performer
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\ManyToOne(targetEntity=OperationalOffice::class, inversedBy="performers")

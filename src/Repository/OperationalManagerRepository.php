@@ -47,4 +47,21 @@ class OperationalManagerRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findActive($operationaloffice,$manager=null){
+        $qb=$this->createQueryBuilder('om');
+        if ($manager) {
+             $qb->andWhere('om.operationalOffice = :po')
+             ->andwhere('om.manager = :manager')
+            
+             ->setParameter('manager',$manager)
+             ->setParameter('po',$operationaloffice);
+        }
+        else{
+             $qb->andWhere('om.operationalOffice = :po')
+             ->andwhere('om.isActive = true')
+             ->setParameter('po',$operationaloffice);
+        }
+        return $qb->getQuery()->getResult();
+      
+    }
 }

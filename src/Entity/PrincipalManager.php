@@ -32,7 +32,17 @@ class PrincipalManager
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive = 0;
+    private $isActive = 1;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $assignedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $assignedBy;
 
     public function getId(): ?int
     {
@@ -73,6 +83,30 @@ class PrincipalManager
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getAssignedAt(): ?\DateTimeInterface
+    {
+        return $this->assignedAt;
+    }
+
+    public function setAssignedAt(?\DateTimeInterface $assignedAt): self
+    {
+        $this->assignedAt = $assignedAt;
+
+        return $this;
+    }
+
+    public function getAssignedBy(): ?User
+    {
+        return $this->assignedBy;
+    }
+
+    public function setAssignedBy(?User $assignedBy): self
+    {
+        $this->assignedBy = $assignedBy;
 
         return $this;
     }
