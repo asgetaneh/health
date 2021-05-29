@@ -49,9 +49,15 @@ class TaskUser
      */
     private $type;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StaffEvaluationBehaviorCriteria::class, mappedBy="taskUser")
+     */
+    private $staffEvaluationBehaviorCriterias;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
+        $this->staffEvaluationBehaviorCriterias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +151,36 @@ class TaskUser
     public function setType(?int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StaffEvaluationBehaviorCriteria[]
+     */
+    public function getStaffEvaluationBehaviorCriterias(): Collection
+    {
+        return $this->staffEvaluationBehaviorCriterias;
+    }
+
+    public function addStaffEvaluationBehaviorCriteria(StaffEvaluationBehaviorCriteria $staffEvaluationBehaviorCriteria): self
+    {
+        if (!$this->staffEvaluationBehaviorCriterias->contains($staffEvaluationBehaviorCriteria)) {
+            $this->staffEvaluationBehaviorCriterias[] = $staffEvaluationBehaviorCriteria;
+            $staffEvaluationBehaviorCriteria->setTaskUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStaffEvaluationBehaviorCriteria(StaffEvaluationBehaviorCriteria $staffEvaluationBehaviorCriteria): self
+    {
+        if ($this->staffEvaluationBehaviorCriterias->removeElement($staffEvaluationBehaviorCriteria)) {
+            // set the owning side to null (unless already changed)
+            if ($staffEvaluationBehaviorCriteria->getTaskUser() === $this) {
+                $staffEvaluationBehaviorCriteria->setTaskUser(null);
+            }
+        }
 
         return $this;
     }

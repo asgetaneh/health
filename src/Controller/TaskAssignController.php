@@ -8,6 +8,7 @@ use App\Entity\TaskUser;
 use App\Form\TaskAssignType;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
+use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
@@ -58,7 +59,7 @@ class TaskAssignController extends AbstractController
 /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(Request $request,PlanRepository $planRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
+    public function performerFetch(Request $request,PlanningAccomplishmentRepository $planningAccomplishmentRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
     TaskMeasurementRepository $taskMeasurementRepository)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -81,8 +82,8 @@ class TaskAssignController extends AbstractController
 
             $task = $tasksss[$key];
              $taskId=$performerTaskRepository->find($task);
-             $initibativeId=$taskId->getPlan()->getSuitableInitiative()->getId();
-        $planId=$taskId->getPlan();
+             $initibativeId=$taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
+        $planId=$taskId->getPlanAcomplishment();
              $taskAssign->setPerformerTask($taskId);
            
              $taskAssign->setAssignedAt(new \DateTime());
@@ -98,6 +99,7 @@ class TaskAssignController extends AbstractController
            foreach ($users as $key => $valuet) { 
               $taskUser=new TaskUser();
                            $userId=$userRepository->find($valuet);
+                        //    dd($userId);
               $taskUser->setAssignedTo($userId);
              $taskUser->setTaskAssign($taskAssign);
                           $taskUser->setStatus(0);
@@ -129,7 +131,7 @@ class TaskAssignController extends AbstractController
               $entityManager->flush();
         }
                       $entityManager->flush();
-                      $planId=$planRepository->find($planId);
+                      $planId=$planningAccomplishmentRepository->find($planId);
               if($planId->getStatus()<2){
                   $planId->setStatus(2);
                   $entityManager->flush();

@@ -23,7 +23,7 @@ class TaskUserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
         ->leftJoin('t.taskAssign','ta')
         // ->leftJoin('ta.performerTask','p')
-            ->andWhere('ta.assignedBy = :val')
+            ->andWhere('t.assignedTo = :val')
             ->andWhere('t.status < 5  ')
             ->setParameter('val', $value)
         //  ->setParameter('status', 5)
