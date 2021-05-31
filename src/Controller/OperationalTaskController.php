@@ -130,6 +130,20 @@ $count=0;
             'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
+      /**
+     * @Route("/intiative/accomplishment", name="initiative_accomplishment_list")
+     */
+    public function acomplishmentList(Request $request, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    {
+        $user=$this->getUser();
+        $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
+      $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
+        $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);
+        // $taskAccomplishs=$taskAccomplishmentRepository->findWeight();
+        return $this->render('operational_task/initiativeAccomplishment.html.twig', [
+            'suitableInitiatives' => $suitableInitiatives,
+        ]);
+    }
  /**
      * @Route("/userFetch", name="user_fetch")
      */
@@ -192,7 +206,7 @@ $count=0;
           $ids= $request->request->get('taskAccomplishmentId');
           foreach ($ids as $key => $value) {
             $taskAccomplishment=$taskAccomplishmentRepository->find($value);
-            $taskAccomplishment->setOperationalValue($reportValue[$key]);
+            $taskAccomplishment->setAccomplishmentValue($reportValue[$key]);
             $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
             $taskUser->setType(3);
           }

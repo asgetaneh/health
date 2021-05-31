@@ -91,7 +91,7 @@ class PerformerTaskController extends AbstractController
           $ids= $request->request->get('taskAccomplishmentId');
           foreach ($ids as $key => $value) {
             $taskAccomplishment=$taskAccomplishmentRepository->find($value);
-            $taskAccomplishment->setAccomplishmentValue($reportValue[$key]);
+            $taskAccomplishment->setReportedValue($reportValue[$key]);
             $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
             $taskUser->setStatus(2);
           }
