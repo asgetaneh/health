@@ -1,0 +1,10 @@
+{% extends 'general.html.twig' %}
+
+{% block title %}New FeedBack{% endblock %}
+
+{% block body %}
+   
+    {{ include('feed_back/_form.html.twig') }}
+
+    <a href="{{ path('feed_back_index') }}">back to list</a>
+{% endblock %}

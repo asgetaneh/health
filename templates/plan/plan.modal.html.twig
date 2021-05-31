@@ -1,5 +1,5 @@
 {% if suitableInitiative is defined %}
-	<div  class="modal fade planmodal" role="dialog">
+	<div class="modal fade planmodal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-primary">
@@ -9,92 +9,199 @@
 						Plan</h4>
 				</div>
 				<div class="modal-body">
-					<form method="post"  action="{{path('plan_phase_office')}}"  class="form-horizontal" >
+					<form method="post" action="{{path('plan_phase_office')}}" id="planform" class="form-horizontal">
 						<div class="row">
 							<div class="col-sm-12">
-                             {% set attr = suitableInitiative.initiative %}
-                             {% set  atr = attr.socialAtrribute %}
-								
-                                <input type="hidden" name="suitableInitiative" value="{{suitableInitiative.id}}">
-                                
-                                {% for quarter in quarters %}
+
+								{% set constant = false %}
+								{% set attr = suitableInitiative.initiative %}
+								{% set  atr = attr.socialAtrribute %}
+								{% for behavior in initiative.initiativeBehaviour %}
+									<input type="hidden" name="behav[]" value="{{behavior.code}}">
+									{% if behavior.code == 0 %}
+										{% set constant = true %}
+									{% endif %}
+								{% endfor %}
+
                                 <div class="well well-sm">
-											<strong>{{quarter.name|title}}
-												Quarter</strong>
-										</div>
-                                        <div class="row">
-                                                                     
-                                   
-                                {% if initiative.socialAtrribute|length > 0 %}
-                                
-                                
+										<strong>Yearly Plan({% for behavior in initiative.initiativeBehaviour %}
+                                        {% if loop.last %}
+                                        {{behavior}}
+                                        {% else %}
+                                             {{behavior}},
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        )
+                                        <div class="yearylplans pull-right">
+                                        </div>
 
-                                {% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
-                                <div class="col-sm-6">
-                                      <div class="form-group">
-												 <label class="control-label  col-sm-4" for="{{socialattribute.id}}">{{ socialattribute.name|title}}: </label>
-                                                 <div class="col-sm-8">
-												<input type="text" name="planvalue[]" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value">
-										     	</div>
-                                         </div>
-                                         </div>
-                                        
-                                             
-                                       
-                                        
-                                    
-                                {% endfor %}
-                                {% else %}
-                                             
-                                    <div class="col-sm-6">
-                                      <div class="form-group">
-												 <label class="control-label  col-sm-4" for="">Plan Value</label>
-                                                 <div class="col-sm-8">
-												<input type="text" name="planvalue[]" class="form-control" placeholder="enter your plan value">
-										     	</div>
-                                         </div>
-                                         </div>
-                               
-                                {% endif %}
-                                  </div>
-                                    
-                                {% endfor %}
-                                 {% for behavior in initiative.initiativeBehaviour|filter( initiativeBehaviour => initiativeBehaviour.code == 4 ) %}
-                                     <div class="col-sm-10">
-                                  <div class="form-group">
-												 <label class="control-label  col-sm-2" for="">Of Total</label>
-                                                 <div class="col-sm-6">
+                                        <span class="text-warning  pull-right" id="yearlyplan"></span>
+											</strong>
+									</div>
+
+								<input type="hidden" name="suitableInitiative" value="{{suitableInitiative.id}}">
+
+								{% for quarter in quarters %}
+									<div class="well well-sm">
+										<strong>{{quarter.name|title}}
+											Quarter</strong>
+									</div>
+									<div class="row">
+
+
+										{% if initiative.socialAtrribute|length > 0 %}
+
+
+											{% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
+												{% if constant == true %}
+													<div class="col-sm-6">
+
+														<div class="form-group">
+															<label class="control-label  col-sm-4" for="{{socialattribute.id}}">{{ socialattribute.name|title}}:
+															</label>
+															<div class="col-sm-8">
+																<input type="text" name="planvalue[]" {{ quarter.slug == 1 ?" ":"readonly" }} data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value">
+															</div>
+														</div>
+													</div>
+												{% else %}
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="control-label  col-sm-4" for="{{socialattribute.id}}">{{ socialattribute.name|title}}:
+															</label>
+															<div class="col-sm-8">
+																<input type="text" name="planvalue[]" data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value">
+															</div>
+														</div>
+													</div>
+
+												{% endif %}
+
+
+											{% endfor %}
+										{% else %}
+											{% if constant == true %}
+
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label class="control-label  col-sm-4" for="">Plan Value</label>
+														<div class="col-sm-8">
+															<input type="text" name="planvalue[]" {{quarter.slug == 1? "":"readonly"}} class="form-control" placeholder="enter your plan value">
+														</div>
+													</div>
+												</div>
+											{% else %}
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label class="control-label  col-sm-4" for="">Plan Value</label>
+														<div class="col-sm-8">
+															<input type="text" name="planvalue[]" class="form-control" placeholder="enter your plan value">
+														</div>
+													</div>
+												</div>
+											{% endif %}
+
+										{% endif %}
+									</div>
+
+								{% endfor %}
+
+
+								{% for behavior in initiative.initiativeBehaviour|filter(initiativeBehaviour => initiativeBehaviour.code == 4 ) %}
+									<div class="col-sm-10">
+										<div class="form-group">
+											<label class="control-label  col-sm-2" for="">Of Total</label>
+											<div class="col-sm-6">
 												<input type="text" name="denominator" class="form-control" placeholder="enter Of Total">
-										     	</div>
-                                         </div>
-                                         </div>
-                                 {% endfor %}
-                               
-                               
-                                
-                               
-                               
-                                
+											</div>
+										</div>
+									</div>
+								{% endfor %}
 
 
-							
+							</div>
 
 
+						</div>
+
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
+
+
+						</div>
+					</form>
 				</div>
-
-
 			</div>
-
-		
-	
-	<div class="modal-footer">
-	
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-
-
+		</div>
 	</div>
-      </form>
-</div>
-</div></div></div>
 {% endif %}
+
+<script>
+function behavior(value){
+ var behav = [];
+     
+    
+    $("input:hidden[name^='behav']").each(function () {
+    behav.push($(this).val());
+
+    });
+    if (behav.includes(value))
+     return true;
+     else
+     return false;
+}
+$("input:enabled:text[data-attr]").focusout(function(){
+      var yearplans =[];
+      var yearlyplan={name:" ",plan:0};
+      var atr2=$(this);
+      yearlyplan.name=$(this).attr('data-name');
+      yearlyplan.plan=$(this).val();
+      yearplans.push(yearlyplan);
+     
+     
+    
+    if (behavior("0")){
+    $("input[data-attr]:text[readonly]").each(function(){
+           
+            if(typeof $(this).attr('data-attr') !== "undefined" && $(this).attr('data-attr') !== null){
+            if(atr2.attr('data-attr') == $(this).attr('data-attr')){
+                $(this).val(atr2.val());
+            }
+            }
+          
+    });
+      
+             yearplans.forEach(function(value,index, array){
+                 $('div.yearylplans').append($('<span class="text-primary" style="margin-right:10px;">'+value.name+"="+value.plan+'</span>'));
+           
+          
+      })
+           
+    
+    }
+       
+ });
+ $("input:enabled:text:not([data-attr])").focusout(function(){
+       var inpt=$(this);
+    if(behavior("0")){
+     
+   $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">'+"="+inpt.val()+'</span>'));
+    $("input:text[readonly]:not([data-attr])").each(function(){
+           
+           
+     $(this).val(inpt.val());
+               
+               
+          
+    });
+     }
+     
+       
+ });
+	
+
+</script>

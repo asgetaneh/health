@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FeedBack{% endblock %}
+
+{% block body %}
+    <h1>FeedBack</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ feed_back.id }}</td>
+            </tr>
+            <tr>
+                <th>Contact</th>
+                <td>{{ feed_back.contact }}</td>
+            </tr>
+            <tr>
+                <th>FullName</th>
+                <td>{{ feed_back.fullName }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ feed_back.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('feed_back_index') }}">back to list</a>
+
+    <a href="{{ path('feed_back_edit', {'id': feed_back.id}) }}">edit</a>
+
+    {{ include('feed_back/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FeedBack index{% endblock %}
+
+{% block body %}
+    <h1>FeedBack index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Contact</th>
+                <th>FullName</th>
+                <th>Comment</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feed_back in feed_back %}
+            <tr>
+                <td>{{ feed_back.id }}</td>
+                <td>{{ feed_back.contact }}</td>
+                <td>{{ feed_back.fullName }}</td>
+                <td>{{ feed_back.comment }}</td>
+                <td>
+                    <a href="{{ path('feed_back_show', {'id': feed_back.id}) }}">show</a>
+                    <a href="{{ path('feed_back_edit', {'id': feed_back.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('feed_back_new') }}">Create new</a>
+{% endblock %}

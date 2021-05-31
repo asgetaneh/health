@@ -435,23 +435,39 @@
 </div></div>
 </div>
 {% endif %}<!-- PAGE CONTENT ENDS -->
-</div><!-- /.col -->
+</div>
+<!-- /.col -->
+
 <div class="plandiv" id="plandiv">
 </div>
+
 {{ include('plan/modal.html.twig') }}
+
 {% endblock %}
+
+
 {% block javascripts %}
+
 <script type="text/javascript">
+  
 $(function () {
 $('.select2').css('width', '90%').select2({allowClear: false})
+
+
 $('#suitablebutton').click(function () {
+   
 $('#initiative_form').submit();
 })
+
+
+
+
 $('#checkall').click(function () {
 var $chk = $(':checkbox');
 $chk.prop('checked', $(this).is(':checked'));
 
 })
+
 
 $('.addPlan').click(function(){
     var $initiativeId=$(this).attr('data-id');
@@ -476,30 +492,8 @@ $('.planmodal').modal('toggle');
 }
 });
 })
-$('.modalbtn').click(function () {
-
-var id1 = $(this).attr('data-id');
-
-// console.log(`${id1}`);
-// $('.modal').modal('hide');
-// {# $("[href!='default.htm']") #}
-// $('.close-modal').trigger('click');
-// var visible=$('.modal.show').attr('id');
-// if(visible != id1){
-// $(".modal[id!= "+id1+"]").modal('hide');
-// }
-
-// alert(id1);
-
-// $("#"+id1).modal({backdrop: 'false', keyboard: false});
-//
-// $("#"+id1).removeAttr("style");
-// $('.planmodal').hide();
-// $(`#${id1}`).css('display','block');
-$ (`#${id1}`).modal();
-// alert(`#${id1}`);
 
 
-})
+
 
 });</script>{% endblock %}
