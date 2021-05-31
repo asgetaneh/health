@@ -49,7 +49,7 @@ class TaskAccomplishment
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $OperationalValue;
+    private $reportedValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -125,14 +125,14 @@ class TaskAccomplishment
         return $this;
     }
 
-    public function getOperationalValue(): ?int
+    public function getReportedValue(): ?int
     {
-        return $this->OperationalValue;
+        return $this->reportedValue;
     }
 
-    public function setOperationalValue(?int $OperationalValue): self
+    public function setReportedValue(?int $reportedValue): self
     {
-        $this->OperationalValue = $OperationalValue;
+        $this->reportedValue = $reportedValue;
 
         return $this;
     }
