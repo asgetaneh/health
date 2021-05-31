@@ -23,7 +23,7 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}Performer Task{% endtrans %}</li>
+	<li class="active">{% trans %}Operational Task{% endtrans %}</li>
 {% endblock %}
 {% block body %}
 	<div>
@@ -76,7 +76,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Performer Task
+					<h5 class="widget-title bigger lighter">Operational Task
 						{# {{operationalTask}} #}
 					</h5>
 
@@ -109,45 +109,46 @@
 					<div class="widget-main padding-16">
 
 						<div class="table-responsive">
+							<form action="{{path('operational_task_show_detail')}}" method="post">
 
-							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>TaskName</th>
-										<th>Weight</th>
-										<th>StartDate</th>
-										<th>EndDate</th>
-										<th>TimeGap</th>
-										<th>Chalenge</th>
-										<th>Measurement</th>
-
-									</tr>
-								</thead>
-
-								<tbody>
-									{% set count = 0 %}
-									{% for taskUser in taskUsers %}
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
 										<tr>
-											{% set count = count + 1 %}
-											<td>{{ count}}</td>
-											<td>{{ taskUser.taskAssign.performerTask.name }}</td>
-											<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
+											<th>#</th>
+											<th>TaskName</th>
+											<th>Weight</th>
+											<th>StartDate</th>
+											<th>EndDate</th>
+											<th>TimeGap</th>
+											<th>Chalenge</th>
+											<th>Measurement</th>
 
-											<td>{{ taskUser.taskAssign.startDate  }}</td>
-											<td>{{ taskUser.taskAssign.endDate }}</td>
-											<td>{{ taskUser.taskAssign.timeGap}}</td>
-											<td>{{ taskUser.note}}</td>
+										</tr>
+									</thead>
 
-											<td>
+									<tbody>
+										{% set count = 0 %}
+										{% for taskUser in taskUsers %}
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{ count}}</td>
+												<td>{{ taskUser.taskAssign.performerTask.name }}</td>
+												<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
+
+												<td>{{ taskUser.taskAssign.startDate  }}</td>
+												<td>{{ taskUser.taskAssign.endDate }}</td>
+												<td>{{ taskUser.taskAssign.timeGap}}</td>
+												<td>{{ taskUser.note}}</td>
+
+												<td>
 
 													<table class="table-bordered table-hover" style="margin-top:10px;">
 														<tr>
 															<th>Measurement
 															</th>
-															<th>Expected Value
-															</th>
 															<th>Measurement Description
+															</th>
+															<th>Expected Value
 															</th>
 															<th>Report Value
 															</th>
@@ -161,8 +162,8 @@
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
-																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
+																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.accomplishmentValue }}</td>
 																	{% if taskAccomplishment.operationalValue %}
 																		<td>{{ taskAccomplishment.operationalValue }}</td>
@@ -177,8 +178,88 @@
 
 
 													</table>
-											
-											</td>
+
+												</td>
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="8">no records found</td>
+											</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+								{% if type == 1 %}
+
+									<button type="button" name="chalenge" data-taskuseridoperational="{{taskUseridoperational}}" class="btn btn-primary show pull-right">Chalenge</button>
+								{% elseif type == 3 %}
+									<button type="button" name="criteria" data-taskuseridoperational="{{taskUseridoperational}}" class="btn btn-primary criteria pull-right">Criteria Report</button>
+
+								{% elseif type == 4 %}
+									{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
+
+								{% else %}
+									<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
+
+								{% endif %}
+
+							</form>
+							{% if type == 4 %}
+
+								<form action="{{path('performer_task_send')}}" method="post">
+									<input type="hidden" name="taskUserId" value="{{taskUserid}}">
+
+									<button type="submit" name="narrative" class="btn btn-primary pull-right">Send Report</button>
+								</form>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade  criteria" id="criteria">
+			<div
+				class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Criteria Report</h4>
+					</div>
+					<form action="{{path('performer_task_show')}}" method="post">
+						<div class="modal-body">
+							<input type="hidden" name="taskUserid" class="taskUserid">
+							<div class="form-group">
+
+								<table class="table-bordered table-hover" style="margin-top:10px;">
+									<tr>
+                                      <th>#
+										</th>
+										<th>Name
+										</th>
+										<th>Behavioural Value
+										</th>
+										<th>Total
+										</th>
+										<th>Values
+										</th>
+                                      
+
+
+									</tr>
+                                    {% set count = 0 %}
+									{% for staffCriteria in staffCriterias   %}
+										<tr>
+                                           {% set count = count + 1 %}
+                                           <td>{{count}}</td>
+											<td>{{ staffCriteria.name }}</td>
+											<td>{{ staffCriteria.behavioralVariables }}</td>
+											<td>{{ staffCriteria.total }}</td>
+											<td>
+												<input type="text" name="evaluattonValues" class=" form-control"></td>
+
 
 										</tr>
 									{% else %}
@@ -187,37 +268,19 @@
 										</tr>
 									{% endfor %}
 
-								</tbody>
-							</table>
-                            {% if type == 1 %}
-
-								<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
-							{% elseif type == 3 %}
-								<button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button>
-								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
-							{% elseif type == 4 %}
-								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
-
-							{% else %}
-								<button type="submit" name="report" class="btn btn-primary pull-right">Report</button>
-
-							{% endif %}
-
-						</form>
-						{% if type == 4 %}
-
-							<form action="{{path('performer_task_send')}}" method="post">
-								<input type="hidden" name="taskUserId" value="{{taskUserid}}">
-
-								<button type="submit" name="narrative" class="btn btn-primary pull-right">Send Report</button>
-							</form>
-						{% endif %}
+								</table>
+							</div>
 						</div>
+
+
 					</div>
-				</div>
+					<div class="modal-footer">
+						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Set{% endtrans %}"/>
+						<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
+					</div>
+				</form>
 			</div>
 		</div>
-
 	{% endblock %}
 	{% block javascripts %}
 		<script>
@@ -230,10 +293,10 @@ console.log(consumableGroupId);
 })
 		</script>
 		<script>
-			$('.narrative').click(function () {
-$('#narrative').modal('show');
+			$('.criteria').click(function () {
+$('#criteria').modal('show');
 
-var id = $(this).attr('data-taskUserId');
+var id = $(this).attr('data-taskUseridoperational');
 $('.taskUserid').val(id);
 console.log(consumableGroupId);
 })
@@ -241,6 +304,10 @@ $('#cancel').click(function () {
 location.reload(true);
 
 })
+$('.close').click(function () {
+location.reload(true);
+
+})
 		</script>
-		
+
 	{% endblock %}

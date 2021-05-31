@@ -78,7 +78,7 @@
 				<div class="widget-header">
 					{% set office = 0 %}
 					<h5 class="widget-title bigger lighter">Operational Office																																																																																					
-																		Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
+																														Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -358,14 +358,17 @@
 								<tbody>
 									{% set count = 0 %}
 									{% for measurement in measurements %}
+
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
 											<td>{{ measurement.name }}</td>
 											<input type="hidden" name="measurementId[]" value={{measurement.id}}>
+											{% if loop.first %}
 
-											<td><input type="text" name="expectedValue[]" class="form-control"></td>
-											<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
+												<td><input type="text" name="expectedValue[]" class="form-control"></td>
+												<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
+											{% endif %}
 
 
 										</tr>

@@ -23,15 +23,15 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}Performer Task{% endtrans %}</li>
+	<li class="active">{% trans %}Operational Task{% endtrans %}</li>
 {% endblock %}
 {% block body %}
-	
+
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Performer Task 
+					<h5 class="widget-title bigger lighter">Operational Task
 						{# {{operationalTask}} #}
 					</h5>
 
@@ -76,6 +76,7 @@
 									<tr>
 										<th>#</th>
 										<th>TaskName</th>
+										<th>Performer Name</th>
 										<th>StartDate</th>
 										<th>EndDate</th>
 										<th>TimeGap</th>
@@ -90,6 +91,8 @@
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
 											<td>{{ taskUser.taskAssign.performerTask.name }}</td>
+											<td>{{taskUser.assignedTo.userInfo}}</td>
+
 											<td>{{ taskUser.taskAssign.startDate  }}</td>
 											<td>{{ taskUser.taskAssign.endDate  }}</td>
 											<td>{{ taskUser.taskAssign.timeGap }}</td>
@@ -99,16 +102,16 @@
 													<input type="hidden" name="taskUser" value="{{taskUser.id}}">
 													{% if taskUser.type == 2 %}
 														<button class="btn btn-primary btn-sm">
-															Show
+															Accept
 														</button>
 													{% else %}
 														<button class="btn btn-primary btn-sm">
-															Accept
+															Show
 														</button>
 													{% endif %}
 												</form>
-												{% if taskUser.status == 0 %}
-													<a href="{{ path('operational_task_show', {'id': performer_task.id}) }}" class="btn btn-danger btn-sm">
+												{% if taskUser.type == 1 %}
+													<a href="{{ path('operational_task_show', {'id': taskUser.id}) }}" class="btn btn-danger btn-sm">
 														Reject
 													</a>
 												{% endif %}
@@ -118,8 +121,8 @@
 
 
 											{# <td>
-																																																																																																																										<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																</td> #}
+																																																																																																																																																<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																																						</td> #}
 
 										</tr>
 									{% else %}

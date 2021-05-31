@@ -30,7 +30,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             // ->addSelect('s.user')
 
             ->orderBy('s.id', 'ASC')->
-            andWhere('s.plan = :plan')
+            andWhere('s.PlanAcomplishment = :plan')
             ->setParameter('plan', $plan)
 
             ->getQuery()
