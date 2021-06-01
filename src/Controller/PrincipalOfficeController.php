@@ -37,6 +37,21 @@ class PrincipalOfficeController extends AbstractController
 
             return $this->redirectToRoute('principal_office_index');
         }
+        if ($request->request->get('deactive')) {
+            $principalOffice =  $principalOfficeRepository->find($request->request->get('deactive'));
+            $principalOffice->setIsActive(false);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "deactivated successfuly");
+           return $this->redirectToRoute('principal_office_index');
+        }
+        if ($request->request->get('active')) {
+            $principalOffice =  $principalOfficeRepository->find($request->request->get('active'));
+            $principalOffice->setIsActive(true);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "activated successfuly");
+           return $this->redirectToRoute('principal_office_index');
+        } 
+
         $data=$paginator->paginate(
              $principalOfficeRepository->findAll(),
              $request->query->getInt('page',1),

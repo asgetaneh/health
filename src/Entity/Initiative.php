@@ -32,12 +32,12 @@ class Initiative
     /**
      * @ORM\Column(type="float")
      */
-    private $maximumValue;
+    private $maximumValue = 1000000;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $minimumValue;
+    private $minimumValue = 0;
 
     
 
@@ -69,7 +69,7 @@ class Initiative
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\OneToMany(targetEntity=SuitableInitiative::class, mappedBy="initiative")

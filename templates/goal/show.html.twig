@@ -1,6 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Show Goal
+
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+		<li class="active">
+        <a href="{{path('goal_index')}}">{% trans %}
+        <strong>
+		Goal{% endtrans %}
+        </strong></a>
+        </li>
 {% endblock %}
 
 {% block body %}
@@ -8,7 +17,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Show Goal
+					<h5 class="widget-title bigger lighter"> <strong>Show Goal</strong> 
 					</h5>
 
 					<div class="widget-toolbar">
@@ -31,46 +40,127 @@
 					<div class="widget-main padding-16">
 
 						<div class="table-responsive">
-							<table class="table">
-								<tbody>
-									<tr>
-										<th>Id</th>
-										<td>{{ goal.id }}</td>
-									</tr>
-									<tr>
-										<th>Name</th>
-										<td>{{ goal.name }}</td>
-									</tr>
-									<tr>
-										<th>Description</th>
-										<td>{{ goal.description }}</td>
-									</tr>
-									<tr>
-										<th>OutPut</th>
-										<td>{{ goal.outPut }}</td>
-									</tr>
-									<tr>
-										<th>OutCome</th>
-										<td>{{ goal.outCome }}</td>
-									</tr>
-									<tr>
-										<th>Status</th>
-										{% if  goal.isActive %}
+						<table class="table table-bordered ">
+						<tbody>
+							<tr>
+								<th>{% trans %}Name{% endtrans %}</th>
+								<td>{{ goal.name|title }}</td>
+							</tr>
+                            <tr>
+								<th>{% trans %}OutPut{% endtrans %}</th>
+								<td>{{ goal.outPut|title }}</td>
+							</tr>
+							<tr>
+								<th>{% trans %}OutCome{% endtrans %}</th>
+								<td>{{ goal.outcome|title }}</td>
+							</tr>
+							<tr>
+								<th style="vertical-align:middle;">{% trans %}Objective{% endtrans %}</th>
+								<td>
+									<ul class="list-unstyled spaced">
+										{% for objective  in goal.objectives %}
 
-											<td>Active</td>
-										{% else %}
-											<td>InActive</td>
-										{% endif %}
 
-									</tr>
-									<tr>
-										<th>CreatedAt</th>
-										<td>{{ goal.createdAt ? goal.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-									</tr>
-									
-								</tbody>
-							</table>
+											<li>
+												<i class="ace-icon fa fa-check green"></i>
+												{{objective.name|title}}
 
+											</li>
+										{% endfor %}
+									</ul>
+								</td>
+							</tr>
+							<tr></tr>
+							<tr>
+								<th style="vertical-align:middle;">Strategy</th>
+
+								<td>
+									{% for objective  in goal.objectives %}
+										<ul class="list-unstyled spaced">
+											<li class="dd-item">
+												<div class="dd-handle">The Strategy of
+													<strong class="blue">{{objective.name|title}}</strong>
+													Objective (Total Strategy:
+													{{objective.strategies|length}})</div>
+												{% if objective.strategies|length < 1 %}
+													<span class="red" style="margin-left:20px;">
+														No Strategy  is added for this Objective</span>
+												{% endif %}
+
+
+												{# <i class="menu-icon fa fa-caret-right"></i> <span>  The Strategy of   <strong class="bg-info">{{objective.name}}</strong> Objective </span>  #}
+												<ul class="list-unstyled spaced">
+													{% for strategy in objective.strategies %}
+														<li style="margin-left:20px;">
+															<i class="ace-icon fa fa-check green"></i>
+															{{strategy.name|title}}</li>
+													{% endfor %}
+												</ul>
+											</li>
+										</ul>
+									{% endfor %}
+								</td>
+							</tr>
+							<tr>
+								<th style="vertical-align:middle;">Key Performance Indicators</th>
+
+								<td>
+									{% for objective  in goal.objectives %}
+										{% for strategy in objective.strategies %}
+
+											<ul class="list-unstyled spaced2 ">
+												<li class="dd-item">
+
+													<div class="dd-handle label-lg label-info">The KPI of
+
+														<b class="blue">{{strategy.name|title}}</b>
+														Strategy (Total kPi:
+														{{strategy.keyPerformanceIndicators|length}})</div>
+													{# <i class="menu-icon fa fa-caret-right"></i> <span>  The Strategy of  {{objective.name|title}} Objective </span>  #}
+													<ul class="list-unstyled spaced">
+														{% if strategy.keyPerformanceIndicators|length  < 1 %}
+															<span class="red" style="margin-left:20px;">
+																&nbsp; No kpi is added for this strategy
+															</span>
+															{# <strong class="text-warning text-center" style="margin-left:20px;"> No kpi is added for this strategy</strong> #}
+														{% endif %}
+														{% for indicator in strategy.keyPerformanceIndicators %}
+															<li style="margin-left:20px;">
+																<i class="ace-icon fa fa-check green"></i>
+																{{indicator.name|title}}</li>
+														{% endfor %}
+
+													</ul>
+												</li>
+											</ul>
+										{% endfor %}
+									{% endfor %}
+								</td>
+							</tr>
+							<th>{% trans %}status{% endtrans %}</th>
+							<td>
+								{% if goal.isActive %}
+									<span class="badge badge-success">Active</span>
+								{% else %}
+									<span class="badge badge-danger">Deactived</span>
+								{% endif %}
+							</td>
+					
+					</tr>
+					<tr>
+						<th>{% trans %}Created At{% endtrans %}</th>
+						<td>{{ goal.createdAt|date('D-M-Y')}}</td>
+					</tr>
+					<tr>
+						<th>{% trans %}Created By{% endtrans %}</th>
+						<td>{{ goal.createdBy|title}}</td>
+					</tr>
+					<tr>
+						<th>{% trans %}Description{% endtrans %}</th>
+						<td>{{ goal.description|title }}</td>
+					</tr>
+				</tbody>
+			   </table>
 
 							<div class="col-md-6">
 								<a href="{{ path('goal_index', {'id': goal.id}) }}" class="btn btn-warning">edit</a>

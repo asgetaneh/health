@@ -1,182 +1,276 @@
 {% extends 'base.html.twig' %}
 {% block subTitle %}
-  <li class="active">{% trans %}Initiatives{% endtrans %}</li>
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('initiative_index')}}">{% trans %}Initiatives{% endtrans %}</a>
+	</li>
 {% endblock %}
 
 {% block body %}
 
-  <div class="row">
-    <div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-      <div class="widget-box widget-color-blue" id="widget-box-8">
-        <div class="widget-header">
-          <h5 class="widget-title bigger lighter">Initiative</h5>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>Initiative</strong>
+					</h5>
 
-          <div class="widget-toolbar"></div>
+					<div class="widget-toolbar"></div>
 
-          <div class="widget-toolbar">
-            <span class="badge badge-info">
-              {% trans %}Total{% endtrans %}
-              :
-              <strong>{{initiatives|length}}</strong>
-            </span>
-          </div>
-        </div>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{initiatives|length}}</strong>
+						</span>
+					</div>
+				</div>
 
-        <div class="widget-body">
-          <div class="widget-toolbox" id="widget-toolbox-1">
-            <div class="btn-toolbar">
-              <div class="btn-group">
-                {# {% if is_granted('CREATE_PERSPECTIVE') %} #}
-                <a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-                  <i class="ace-icon fa fa-plus bigger-110 blue"></i>
-                  {% trans %}
-                  New Initiatives{% endtrans %}</a>
-                <form class="form-inline" method="post" style="display:inline;">
-                  <input type="hidden" name="nonapplicable" value="nonapp"/>
-                  <button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-                    <i class="ace-icon fa fa-times bigger-110 red2"></i>
-                    {% trans %}
-                    None Applicable Initiatives{% endtrans %}</button>
-                </form>
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar">
+							<div
+								class="btn-group">
+								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+									{% trans %}
+									New Initiatives{% endtrans %}</a>
+								<form class="form-inline" method="post" style="display:inline;">
+									<input type="hidden" name="nonapplicable" value="nonapp"/>
+									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+										<i class="ace-icon fa fa-times bigger-110 red2"></i>
+										{% trans %}
+										None Applicable Initiatives{% endtrans %}</button>
+								</form>
 
-              </div>
+							</div>
 
-            </div>
-          </div>
+						</div>
+					</div>
 
-          <div class="widget-main padding-16">
+					<div class="widget-main padding-16">
+						<div class="row">
+							<div class="search-area well col-md-12">
 
-            <div class="table-responsive">
-              <form class="form-inline" method="post" style="display:inline;">
+								<div class="row">
+									{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+									<div class="col-md-4">
+										<div class="form-group form-group-sm">
+											{{ form_label(filterform.goal,'Goal') }}
+											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+										</div>
+									</div>
 
-                <div class="input-group">
-                  <input type="text" class="form-control" name="search" placeholder="search"/>
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default no-border btn-sm">
-                      <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.perspective,'Perspective') }}
+											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+										</div>
+									</div>
 
-              <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>MaximumValue</th>
-                    <th>MinimumValue</th>
-                     <th>principal Office</th>
-                    <th>CreatedAt</th>
-                    <th>actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
-                  {% for initiative in initiatives %}
-                   {% set count = count + 1 %}
-                    <tr>
-                      <td>{{ count }}</td>
-                      <td>{{ initiative.name }}</td>
-                      <td>{{ initiative.description }}</td>
-                      <td>{{ initiative.maximumValue }}</td>
-                      <td>{{ initiative.minimumValue }}</td>
-                      <td>{% for office in initiative.principalOffice %}
-                      {{office}}
-                          
-                      {% endfor %}</td>
-                      <td>{{ initiative.createdAt ? initiative.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                      <td>
-                        <a href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
-                        <a href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
-                      </td>
-                    </tr>
-                  {% else %}
-                    <tr>
-                      <td colspan="7">no records found</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              <div class="pull-right">{{ knp_pagination_render(initiatives) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.objective,'Objective') }}
+											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
+										</div>
+									</div>
 
-  </div>
+									<div class="clearfix "></div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.strategy,'Strategy') }}
+											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.kpi,'KPI') }}
+											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.principaloffice,'Responsible Office') }}
+											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
+										</div>
+									</div>
 
-  <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+									<div class="col-md-1">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+										</div>
+									</div>
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header bg-primary">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">New Initiative</h4>
-        </div>
 
-        <div class="modal-body">
-          {{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-          <div class="form-group">
-            {{ form_label(form.name) }}
-            {{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+									{{ form_end(filterform) }}
+								</div>
 
-          </div>
-          <div class="form-group">
-            {{ form_label(form.keyPerformanceIndicator) }}
-            {{ form_widget(form.keyPerformanceIndicator,{'attr':{ 'class': 'select2 form-control'}}) }}
 
-          </div>
-          <div class="form-group">
-            {{ form_label(form.initiativeBehaviour) }}
-            {{ form_widget(form.initiativeBehaviour,{'attr':{ 'class': 'select2 form-control'}}) }}
+							</div>
 
-          </div>
-           <div class="form-group">
-            {{ form_label(form.socialAtrribute) }}
-            {{ form_widget(form.socialAtrribute,{'attr':{ 'class': 'select2 form-control'}}) }}
+						</div>
+						<div class="table-responsive">
+							<form class="form-inline" method="post" style="display:inline;">
 
-          </div>
-         
-          <div class="form-group">
-            {{ form_label(form.principalOffice) }}
-            {{ form_widget(form.principalOffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+								<div class="input-group">
+									<input type="text" class="form-control" name="search" placeholder="search"/>
+									<div class="input-group-btn">
+										<button type="submit" class="btn btn-default no-border btn-sm">
+											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+										</button>
+									</div>
+								</div>
+							</form>
 
-          </div>
-          <div class="form-group">
-            {{ form_label(form.minimumValue) }}
-            {{ form_widget(form.minimumValue,{'attr':{ 'class': 'form-control'}}) }}
+							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Initiative</th>
 
-          </div>
-          <div class="form-group">
-            {{ form_label(form.maximumValue) }}
-            {{ form_widget(form.maximumValue,{'attr':{ 'class': 'form-control'}}) }}
+										<th>MaxValue</th>
+										<th>MinValue</th>
+										<th>KPI</th>
+										<th>Strategy</th>
+										<th>Objective</th>
+										<th>Goal</th>
+										<th>principal Office</th>
+										<th>status</th>
 
-          </div>
-          <div class="form-group">
-            {{ form_label(form.description) }}
-            {{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
+										<th>Description</th>
+										<th>actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
+									{% for initiative in initiatives %}
+										{% set count = count + 1 %}
+										<tr>
+											<td>{{ count }}</td>
+											<td>{{ initiative.name }}</td>
 
-          </div>
+											<td>{{ initiative.maximumValue }}</td>
+											<td>{{ initiative.minimumValue }}</td>
 
-        </div>
+											<td>{{ initiative.keyPerformanceIndicator }}</td>
+											<td>{{ initiative.keyPerformanceIndicator.strategy }}</td>
+											<td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td>
+											<td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td>
+											<td>
+												{% for office in initiative.principalOffice %}
+													{{office}}
 
-      </div>
-      <div class="modal-footer">
-        <input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-        {{ form_end(form) }}
-      </div>
-    </div>
+												{% endfor %}
+											</td>
+											<td>
+												{% if initiative.isActive %}
+													<span class="badge badge-success">Active</span>
+												{% else %}
+													<span class="badge badge-danger">Deactived</span>
+												{% endif %}
+											</td>
+											<td>{{ initiative.description }}</td>
 
-  </div>
+											<td>
+												<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
+												<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
+                                                  <form  class="" style="display:inline;" action="" method="post">
+                                            
+                                                  
+                                                    <input type="hidden" name="{{initiative.isActive ?"deactive":"active"}}" value ="{{ initiative.id}}">
+                                                    <input type="submit" style="display:inline;" class="btn btn-xs {{ initiative.isActive?"btn-danger":"btn-success"}}" value="{{initiative.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{initiative.isActive?"deactivate":"activate"}}')">
+                                                      
+                                            </form>
+											</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="7">no records found</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							<div class="pull-right">{{ knp_pagination_render(initiatives) }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  <script>
-    $(function () {
-      $('.select2').css('width', '100%').select2({allowClear: true})
-    })
-  </script>
+	</div>
+
+	<div id="myModal" class="modal fade" role="dialog">
+		<div
+			class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-primary">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">New Initiative</h4>
+				</div>
+
+				<div class="modal-body">
+					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+					<div class="form-group">
+						{{ form_label(form.name) }}
+						{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.keyPerformanceIndicator) }}
+						{{ form_widget(form.keyPerformanceIndicator,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.initiativeBehaviour) }}
+						{{ form_widget(form.initiativeBehaviour,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.socialAtrribute) }}
+						{{ form_widget(form.socialAtrribute,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+					</div>
+
+					<div class="form-group">
+						{{ form_label(form.principalOffice) }}
+						{{ form_widget(form.principalOffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.minimumValue) }}
+						{{ form_widget(form.minimumValue,{'attr':{ 'class': 'form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.maximumValue) }}
+						{{ form_widget(form.maximumValue,{'attr':{ 'class': 'form-control'}}) }}
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.description) }}
+						{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
+
+					</div>
+
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+				{{ form_end(form) }}
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+		$(function () {
+$('.select2').css('width', '100%').select2({allowClear: true})
+})
+	</script>
 {% endblock %}

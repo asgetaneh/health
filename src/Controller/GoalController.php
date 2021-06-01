@@ -19,7 +19,7 @@ class GoalController extends AbstractController
     /**
      * @Route("/", name="goal_index")
      */
-    public function index(Request $request,GoalRepository $goalRepository,PaginatorInterface $paginator): Response
+    public function index(Request $request, GoalRepository $goalRepository, PaginatorInterface $paginator): Response
     {
         $goal = new Goal();
         $form = $this->createForm(GoalType::class, $goal);
@@ -32,18 +32,19 @@ class GoalController extends AbstractController
             $goal->setCreatedBy($this->getUser());
             $entityManager->persist($goal);
             $entityManager->flush();
-
+            $this->addFlash('success', "new goal is added successfuly");
             return $this->redirectToRoute('goal_index');
         }
-        $goals=$goalRepository->findAlls(); 
+
+        $goals = $goalRepository->findAlls();
         $data = $paginator->paginate(
             $goals,
             $request->query->getInt('page', 1),
             6
-        );      
-          return $this->render('goal/index.html.twig', [
+        );
+        return $this->render('goal/index.html.twig', [
             'goals' => $data,
-            'totalGoals'=>$goalRepository->findAll(),
+            'totalGoals' => $goalRepository->findAll(),
             'form' => $form->createView(),
 
         ]);
@@ -69,6 +70,22 @@ class GoalController extends AbstractController
         return $this->render('goal/new.html.twig', [
             'goal' => $goal,
             'form' => $form->createView(),
+        ]);
+    }
+  /**
+     * @Route("/startegicPlan", name="startegic_plan", methods={"GET","POST"})
+     */
+    public function startegicPlan(Request $request, GoalRepository $goalRepository, PaginatorInterface $paginator): Response
+    {
+         $goals = $goalRepository->findAlls();
+          $data = $paginator->paginate(
+            $goals,
+            $request->query->getInt('page', 1),
+            3
+        );
+        
+        return $this->render('goal/strategicplan.html.twig', [
+           'goals'=>$data
         ]);
     }
 
@@ -107,7 +124,7 @@ class GoalController extends AbstractController
      */
     public function delete(Request $request, Goal $goal): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$goal->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $goal->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($goal);
             $entityManager->flush();

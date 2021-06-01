@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\KeyPerformanceIndicator;
+use App\Entity\Strategy;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,7 +18,14 @@ class KeyPerformanceIndicatorType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('weight')
-            ->add('strategy')
+            ->add('strategy',EntityType::class,[
+                 'class' => Strategy::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->where('s.isActive =1')
+                        ->orderBy('s.id', 'ASC');
+                },
+            ])
         ;
     }
 

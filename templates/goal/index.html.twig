@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
 {% block subTitle %}
-	<li class="active">{% trans %}Goal{% endtrans %}</li>
+<li class=""> <a href="#">{% trans %}SMIS{% endtrans %}</a></li>
+	<li class="active"> <a href="{{ path('goal_index')}}">{% trans %}Goal{% endtrans %}</a></li>
 {% endblock %}
 {% block body %}
 
@@ -8,7 +9,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Goal</h5>
+					<h5 class="widget-title bigger lighter"> <strong>Goal</strong> </h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -69,6 +70,7 @@
 									<tr>
 										<th>#</th>
 										<th>Name</th>
+                                        <th>OutPut</th>
 										<th>OutCome</th>
 										<th>Description</th>
 										<th>actions</th>
@@ -81,15 +83,16 @@
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{count }}</td>
-											<td>{{ goal.name }}</td>
-											<td>{{ goal.outCome }}</td>
+											<td>{{ goal.name|title }}</td>
+                                            <td>{{ goal.outPut|title }}</td>
+											<td>{{ goal.outCome|title }}</td>
 
-											<td>{{ goal.description|title|raw }}</td>
+											<td>{{ goal.description|title }}</td>
 											<td>
-												<a href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
+												<a title="view details" style="margin-bottom:5px;" href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
 													<i class="fa fa-eye"></i>
 												</a>
-												<a href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
+												<a  title="edit" href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
 													<i class="fa fa-edit"></i>
 												</a>
 
@@ -117,7 +120,7 @@
 
 				<!-- Modal content-->
 				<div class="modal-content">
-					<div class="modal-header bg-info">
+					<div class="modal-header bg-primary">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">New Goal</h4>
 					</div>
@@ -130,17 +133,17 @@
 						</div>
 						<div class="form-group">
 							{{ form_label(form.outCome) }}
-							{{ form_widget(form.outCome,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.outCome,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
 
 						</div>
 						<div class="form-group">
 							{{ form_label(form.outPut) }}
-							{{ form_widget(form.outPut,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.outPut,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
 
 						</div>
 						<div class="form-group">
 							{{ form_label(form.description) }}
-							{{ form_widget(form.description ,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.description ,{'attr':{ 'class': 'autosize-transition form-control'},}) }}
 
 						</div>
 

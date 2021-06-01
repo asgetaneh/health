@@ -47,6 +47,13 @@ class InitiativeRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+            
+            ->getQuery();
+        
+    }
     public function findByPrincipalAndOffice($office){
         $qb=$this->createQueryBuilder('i');
         $qb
@@ -55,5 +62,54 @@ class InitiativeRepository extends ServiceEntityRepository
         ->setParameter('office',$office);
         return $qb->getQuery()->getResult();
 
+    }
+    public function search($search=[]){
+   
+        $qb=$this->createQueryBuilder('i')
+        ->innerJoin('i.keyPerformanceIndicator','k')
+        ->innerJoin('k.strategy','s')
+        ->innerJoin('s.objective','o')
+         ->innerJoin('i.principalOffice','p')
+    
+        ;
+        if(isset($search['goal']) && sizeof($search['goal'])>0){
+            $qb->andWhere('o.goal in (:goal)')
+            ->setParameter('goal',$search['goal']);
+
+        }
+          if(isset($search['perspective']) && sizeof($search['perspective'])>0 ){
+            $qb->andWhere('o.perspective in (:perspective)')
+            ->setParameter('perspective',$search['perspective']);
+            
+        }
+         if(isset($search['objective']) && sizeof($search['objective'])>0 ){
+            $qb->andWhere('s.objective in (:objective)')
+            ->setParameter('objective',$search['objective']);
+            
+        }
+         if(isset($search['strategy']) && sizeof($search['strategy'])>0 ){
+            $qb->andWhere('k.strategy in (:strategy)')
+            ->setParameter('strategy',$search['strategy']);
+            
+        }
+          if(isset($search['kpi']) && sizeof($search['kpi'])>0 ){
+            $qb->andWhere('i.keyPerformanceIndicator in (:kpi)')
+            ->setParameter('kpi',$search['kpi']);
+            
+        }
+         if(isset($search['principaloffice']) && sizeof($search['principaloffice'])>0 ){
+            $qb->andWhere('p.id in (:principalOffice)')
+            ->setParameter('principalOffice',$search['principaloffice']);
+            
+        }
+        if(isset($search['name']) ){
+           
+            $qb->andWhere("i.name  LIKE '%" . $search['name']. "%' ");
+        
+
+            
+        }
+
+        return $qb->orderBy('i.id','ASC')->getQuery();
     }
 }

@@ -2,7 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Goal;
 use App\Entity\Initiative;
+use App\Entity\KeyPerformanceIndicator;
+use App\Entity\Objective;
+use App\Entity\Perspective;
+use App\Entity\PrincipalOffice;
+use App\Entity\Strategy;
 use App\Form\InitiativeType;
 use App\Repository\InitiativeRepository;
 use DateTime;
@@ -11,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * @Route("/initiative")
@@ -20,30 +27,100 @@ class InitiativeController extends AbstractController
     /**
      * @Route("/", name="initiative_index", methods={"GET","POST"})
      */
-    public function index(InitiativeRepository $initiativeRepository,Request $request,PaginatorInterface $paginator): Response
-    {  
-        
-        $initiative = new Initiative();
+    public function index(InitiativeRepository $initiativeRepository, Request $request, PaginatorInterface $paginator): Response
+    {
+
+         $initiative = new Initiative();
         $form = $this->createForm(InitiativeType::class, $initiative);
         $form->handleRequest($request);
+       
+         $filterform = $this->createFormBuilder()
+            ->add('goal', EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'required' => false
+            ])
+            ->add('objective', EntityType::class, [
+                'class' => Objective::class,
+                'multiple' => true,
+                'required' => false
 
+            ])
+            ->add('perspective', EntityType::class, [
+                'class' => Perspective::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->add('strategy', EntityType::class, [
+                'class' => Strategy::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->add('kpi', EntityType::class, [
+                'class' => KeyPerformanceIndicator::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->getForm();
+      
+       
+     
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $initiative->setCreatedAt(new DateTime('now'));
             $initiative->setCreatedBy($this->getUser());
             $entityManager->persist($initiative);
             $entityManager->flush();
-            $this->addFlash('success',"initatives are added seccuss");
+            $this->addFlash('success', "initatives are added seccussfuly");
             return $this->redirectToRoute('initiative_index');
         }
-        $data=$paginator->paginate(
-            $initiativeRepository->findAll(),
-            $request->query->getInt('page',1),
+
+
+       
+
+
+         if ($request->request->get('deactive')) {
+            $initiatives = $initiativeRepository->find($request->request->get('deactive'));
+            $initiatives->setIsActive(false);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "deactivated successfuly");
+            return $this->redirectToRoute('initiative_index');
+        }
+        if ($request->request->get('active')) {
+            $initiatives = $initiativeRepository->find($request->request->get('active'));
+            $initiatives->setIsActive(true);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "activated successfuly");
+            return $this->redirectToRoute('initiative_index');
+        } 
+
+         $filterform->handleRequest($request);
+
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $initiatives = $initiativeRepository->search($filterform->getData());
+        } elseif ($request->request->get('search')) {
+            $initiatives = $initiativeRepository->search(['name' => $request->request->get('search')]);
+        } else
+            $initiatives = $initiativeRepository->findAlls();
+
+        $data = $paginator->paginate(
+            $initiatives,
+            $request->query->getInt('page', 1),
             10
         );
         return $this->render('initiative/index.html.twig', [
             'initiatives' => $data,
-            'form'=>$form->createView()
+            'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
         ]);
     }
 
@@ -105,7 +182,7 @@ class InitiativeController extends AbstractController
      */
     public function delete(Request $request, Initiative $initiative): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$initiative->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $initiative->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($initiative);
             $entityManager->flush();

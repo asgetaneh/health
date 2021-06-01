@@ -32,7 +32,7 @@ class KeyPerformanceIndicator
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=0;
 
     /**
      * @ORM\Column(type="float")

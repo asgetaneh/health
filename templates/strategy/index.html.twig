@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 {% block subTitle %}
-	<li class="active">{% trans %}Strategy{% endtrans %}</li>
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('strategy_index')}}">{% trans %}Strategy{% endtrans %}</a>
+	</li>
 {% endblock %}
 {% block body %}
 
@@ -8,7 +11,9 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Strategy</h5>
+					<h5 class="widget-title bigger lighter">
+						<strong>Strategy</strong>
+					</h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -16,7 +21,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{totalStrategies|length}}</strong>
+							<strong>{{strategies.getTotalItemCount()}}</strong>
 						</span>
 					</div>
 				</div>
@@ -50,7 +55,44 @@
 					</div>
 
 					<div class="widget-main padding-16">
+						<div class="row">
+							<div class="search-area well col-xs-12">
 
+								<div class="row" style="">
+									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.goal,'Goal') }}
+											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose goal' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.perspective,'Perspective') }}
+											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.objective,'Objective') }}
+											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+										</div>
+									</div>
+
+
+									{{ form_end(filterform) }}
+								</div>
+
+
+							</div>
+
+						</div>
 						<div class="table-responsive">
 							<form class="form-inline" method="post" style="display:inline;">
 
@@ -69,6 +111,12 @@
 									<tr>
 										<th>#</th>
 										<th>Name</th>
+										<th>Objective</th>
+										
+										<th>Kpi</th>
+                                        <th>Goal</th>
+										<th>Prespective</th>
+										<th>status</th>
 										<th>Description</th>
 										<th>actions</th>
 									</tr>
@@ -81,15 +129,44 @@
 
 											<td>{{ count }}</td>
 											<td>{{ strategy.name }}</td>
+											<td>{{ strategy.objective|title }}</td>
 											
+											<td>
+												<ul class="list-unstyled spaced">
+													{% for kpi in strategy.keyPerformanceIndicators %}
+														<li>
+															<i class="ace-icon fa fa-check green"></i>
+															{{kpi.name}}
+														</li>
+
+													{% endfor %}
+												</ul>
+											</td>
+                                            <td>{{ strategy.objective.goal|title }}</td>
+											<td>{{ strategy.objective.perspective|title }}</td>
+											<td>
+												{% if strategy.isActive %}
+													<span class="badge badge-success">Active</span>
+												{% else %}
+													<span class="badge badge-danger">Deactived</span>
+												{% endif %}
+											</td>
+
 											<td>{{ strategy.description }}</td>
 											<td>
-												<a href="{{ path('strategy_show', {'id': strategy.id}) }}" class="btn btn-primary btn-sm">
+												<a title="view details" href="{{ path('strategy_show', {'id': strategy.id}) }}" class="btn btn-primary btn-sm">
 													<i class="fa fa-eye"></i>
 												</a>
-												<a href="{{ path('strategy_edit', {'id': strategy.id}) }}" class="btn btn-warning btn-sm">
+												<a title="edit" href="{{ path('strategy_edit', {'id': strategy.id}) }}" class="btn btn-warning btn-sm">
 													<i class="fa fa-edit"></i>
 												</a>
+                                                 <form  class="" style="display:inline;" action="" method="post">
+                                            
+                                                  
+                                                    <input type="hidden" name="{{strategy.isActive ?"deactive":"active"}}" value ="{{ strategy.id}}">
+                                                    <input type="submit" style="display:inline;" class="btn btn-sm {{ strategy.isActive?"btn-danger":"btn-success"}}" value="{{strategy.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{strategy.isActive?"deactivate":"activate"}}')">
+                                                      
+                                            </form>
 
 											</td>
 										</tr>
@@ -114,7 +191,7 @@
 
 				<!-- Modal content-->
 				<div class="modal-content">
-					<div class="modal-header bg-info">
+					<div class="modal-header bg-primary">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">New Strategy</h4>
 					</div>
@@ -127,13 +204,13 @@
 						</div>
 						<div class="form-group">
 							{{ form_label(form.objective) }}
-							{{ form_widget(form.objective,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.objective,{'attr':{ 'class': 'select2 form-control'}}) }}
 
 						</div>
-						
+
 						<div class="form-group">
 							{{ form_label(form.description) }}
-							{{ form_widget(form.description ,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.description ,{'attr':{ 'class': ' autosize-transition form-control'}}) }}
 
 						</div>
 

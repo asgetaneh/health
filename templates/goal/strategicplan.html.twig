@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('goal_index')}}">{% trans %}
+			<strong>
+				Goal{% endtrans %}
+			</strong>
+		</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		{% for goal in goals %}
+
+
+			<div class="col-xs-12">
+				<div class="media search-media">
+
+
+					<div class="media-body">
+						<div>
+							<h4 class="media-heading">
+								<a href="#" class="blue">{{goal}}</a>
+							</h4>
+						</div>
+						{% for objective in goal.objectives %}
+							<caption>{{objective}}</caption>
+							<div class="table-responsive">
+								<table class="table  table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>Strategies</th>
+											<th>Key Performance Indicators
+											</th>
+											<th>Initiatives/ Projects
+											</th>
+											<th>Responsible office (exhaustive list)
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for strategy in objective.strategies %}
+											<tr>
+												<td rowspan="{{strategy.keyPerformanceIndicators|length}}">{{strategy}}</td>
+
+												<td>
+
+													{% for kpi in strategy.keyPerformanceIndicators %}
+
+
+														{{kpi}}
+													{% endfor %}
+
+												</td>
+
+
+												<td rowspan="">
+													{% for kpi in strategy.keyPerformanceIndicators %}
+														{% for initiative in kpi.initiatives %}
+															{{initiative}}
+														{% endfor %}
+													{% endfor %}
+												</td>
+												<td></td>
+											</tr>
+
+										{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+
+						{% endfor %}
+					</div>
+				</div>
+
+
+			</div>
+
+		{% endfor %}
+		<div class="pull-right pagination" id="custompaginator">{{ knp_pagination_render(goals) }}</div>
+
+	</div>
+{% endblock %}

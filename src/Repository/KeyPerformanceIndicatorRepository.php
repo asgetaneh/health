@@ -54,4 +54,40 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function search($search=[]){
+
+        $qb=$this->createQueryBuilder('k')
+        ->join('k.strategy','s')
+        ->join('s.objective','o')
+        ;
+        if(isset($search['goal']) && sizeof($search['goal'])>0){
+            $qb->andWhere('o.goal in (:goal)')
+            ->setParameter('goal',$search['goal']);
+
+        }
+          if(isset($search['perspective']) && sizeof($search['perspective'])>0 ){
+            $qb->andWhere('o.perspective in (:perspective)')
+            ->setParameter('perspective',$search['perspective']);
+            
+        }
+         if(isset($search['objective']) && sizeof($search['objective'])>0 ){
+            $qb->andWhere('s.objective in (:objective)')
+            ->setParameter('objective',$search['objective']);
+            
+        }
+         if(isset($search['strategy']) && sizeof($search['strategy'])>0 ){
+            $qb->andWhere('k.strategy in (:strategy)')
+            ->setParameter('strategy',$search['strategy']);
+            
+        }
+        if(isset($search['name']) ){
+           
+            $qb->andWhere("k.name  LIKE '%" . $search['name']. "%' ");
+        
+
+            
+        }
+
+        return $qb->orderBy('k.id','ASC')->getQuery();
+    }
 }

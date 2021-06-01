@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Goal;
+use App\Entity\Objective;
+use App\Entity\Perspective;
 use App\Entity\Strategy;
 use App\Form\StrategyType;
 use App\Repository\StrategyRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +23,34 @@ class StrategyController extends AbstractController
     /**
      * @Route("/", name="strategy_index")
      */
-    public function index(Request $request, StrategyRepository $strategyRepository,PaginatorInterface $paginator): Response
+    public function index(Request $request, StrategyRepository $strategyRepository, PaginatorInterface $paginator): Response
     {
         $strategy = new Strategy();
         $form = $this->createForm(StrategyType::class, $strategy);
         $form->handleRequest($request);
+
+
+        $filterform = $this->createFormBuilder()
+            ->add('goal', EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'required' => false
+            ])
+            ->add('objective', EntityType::class, [
+                'class' => Objective::class,
+                'multiple' => true,
+                'required' => false
+
+            ])
+            ->add('perspective', EntityType::class, [
+                'class' => Perspective::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->getForm();
+        $filterform->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -32,20 +59,47 @@ class StrategyController extends AbstractController
             $strategy->setCreatedBy($this->getUser());
             $entityManager->persist($strategy);
             $entityManager->flush();
-
+            $this->addFlash('success', 'new strategy is registered successfuly');
             return $this->redirectToRoute('strategy_index');
         }
-        $strategies=$strategyRepository->findAlls(); 
+
+
+        if ($request->request->get('deactive')) {
+            $strategy = $strategyRepository->find($request->request->get('deactive'));
+            $strategy->setIsActive(false);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "deactivated successfuly");
+            return $this->redirectToRoute('strategy_index');
+        }
+        if ($request->request->get('active')) {
+            $strategy = $strategyRepository->find($request->request->get('active'));
+            $strategy->setIsActive(true);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "activated successfuly");
+            return $this->redirectToRoute('strategy_index');
+        }
+
+
+
+
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $strategies = $strategyRepository->search($filterform->getData());
+        } elseif ($request->request->get('search')) {
+            $strategies = $strategyRepository->search(['name' => $request->request->get('search')]);
+        } else
+
+            $strategies = $strategyRepository->findAlls();
         $data = $paginator->paginate(
             $strategies,
             $request->query->getInt('page', 1),
             6
-        );     
-          
+        );
+
         return $this->render('strategy/index.html.twig', [
             'strategies' => $data,
-            'totalStrategies'=>$strategyRepository->findAll(),
+
             'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
 
 
         ]);
@@ -109,7 +163,7 @@ class StrategyController extends AbstractController
      */
     public function delete(Request $request, Strategy $strategy): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$strategy->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $strategy->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($strategy);
             $entityManager->flush();

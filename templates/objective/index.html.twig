@@ -1,6 +1,11 @@
 {% extends "base.html.twig" %}
 {% block subTitle %}
-	<li class="active">{% trans %}Objective{% endtrans %}</li>
+	<li class="">
+		<a href="#">{% trans %}SMIS{% endtrans %}</a>
+	</li>
+	<li class="active">
+		<a href="{{ path('objective_index')}}">{% trans %}Objective{% endtrans %}</a>
+	</li>
 {% endblock %}
 {% block body %}
 
@@ -8,7 +13,9 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Objective</h5>
+					<h5 class="widget-title bigger lighter lead">
+						<strong>Objective</strong>
+					</h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -16,7 +23,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{totalObjectives|length}}</strong>
+							<strong>{{objectives.getTotalItemCount()}}</strong>
 						</span>
 					</div>
 				</div>
@@ -48,8 +55,56 @@
 
 						</div>
 					</div>
-                    
+
 					<div class="widget-main padding-16">
+						<div class="row">
+							<div class="search-area well col-xs-12">
+
+								<div class="row" style="margin-bottom:10px;">
+									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.goal,'Goal') }}
+											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose goal' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.perspective,'Perspective') }}
+											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+										</div>
+									</div>
+
+
+									{{ form_end(filterform) }}
+								</div>
+								{# <div class="pull-left">
+								
+								
+																	<form class="form-inline" method="post" style="display:inline;">
+								
+																		<div class="input-group">
+																			<input type="text" class="form-control" name="search" placeholder="search"/>
+																			<div class="input-group-btn">
+																				<button type="submit" class="btn btn-default no-border btn-sm">
+																					<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																				</button>
+																			</div>
+																		</div>
+																	</form>
+								
+																</div> #}
+
+
+							</div>
+
+						</div>
 
 						<div class="table-responsive">
 							<form class="form-inline" method="post" style="display:inline;">
@@ -69,7 +124,12 @@
 									<tr>
 										<th>#</th>
 										<th>Name</th>
+										<th>Goal</th>
+										<th>Prespective</th>
+										<th>outPut</th>
+										<th>outCome</th>
 										<th>Weight</th>
+                                        <th>Status</th>
 										<th>description</th>
 										<th>actions</th>
 									</tr>
@@ -82,17 +142,35 @@
 											{% set count = count + 1 %}
 
 											<td>{{ count}}</td>
-											<td>{{ objective.name }}</td>
+											<td>{{ objective.name|title }}</td>
+											<td>{{ objective.goal|title }}</td>
+											<td>{{ objective.perspective|title }}</td>
+											<td>{{ objective.outPut|title }}</td>
+											<td>{{ objective.outcome|title }}</td>
 											<td>{{ objective.weight }}</td>
+											<td>
+												{% if objective.isActive %}
+													<span class="badge badge-success">Active</span>
+												{% else %}
+													<span class="badge badge-danger">Deactived</span>
+												{% endif %}
+											</td>
 
 											<td>{{ objective.description }}</td>
 											<td>
-												<a href="{{ path('objective_show', {'id': objective.id}) }}" class="btn btn-primary btn-sm">
+												<a title="view details" href="{{ path('objective_show', {'id': objective.id}) }}" class="btn btn-primary btn-xs">
 													<i class="fa fa-eye"></i>
 												</a>
-												<a href="{{ path('objective_edit', {'id': objective.id}) }}" class="btn btn-warning btn-sm">
+												<a title="edit" href="{{ path('objective_edit', {'id': objective.id}) }}" class="btn btn-warning btn-xs">
 													<i class="fa fa-edit"></i>
 												</a>
+												<form class="" style="display:inline;" action="" method="post">
+
+
+													<input type="hidden" name="{{objective.isActive ?"deactive":"active"}}" value="{{ objective.id}}">
+													<input type="submit" style="display:inline;" class="btn btn-xs {{ objective.isActive?" btn-danger":" btn-success"}}" value="{{objective.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{objective.isActive?" deactivate":" activate"}}')">
+
+												</form>
 
 											</td>
 										</tr>
@@ -122,7 +200,7 @@
 						<h4 class="modal-title">New Objective</h4>
 					</div>
 					<div class="modal-body">
-						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+						{{ form_start(form,{'attr': {'class': 'form-horizontal'} }) }}
 						<div class="form-group">
 							{{ form_label(form.name) }}
 							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
@@ -130,22 +208,22 @@
 						</div>
 						<div class="form-group">
 							{{ form_label(form.perspective) }}
-							{{ form_widget(form.perspective,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.perspective,{'attr':{ 'class': 'select2 form-control'}}) }}
 
 						</div>
 						<div class="form-group">
 							{{ form_label(form.goal) }}
-							{{ form_widget(form.goal,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.goal,{'attr':{ 'class': 'select2 form-control'}}) }}
 
 						</div>
 						<div class="form-group">
 							{{ form_label(form.outCome) }}
-							{{ form_widget(form.outCome,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.outCome,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
 
 						</div>
 						<div class="form-group">
 							{{ form_label(form.outPut) }}
-							{{ form_widget(form.outPut,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.outPut,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
 
 						</div>
 						<div class="form-group">
@@ -155,7 +233,7 @@
 						</div>
 						<div class="form-group">
 							{{ form_label(form.description) }}
-							{{ form_widget(form.description ,{'attr':{ 'class': 'form-control'}}) }}
+							{{ form_widget(form.description ,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
 
 						</div>
 

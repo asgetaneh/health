@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\OperationalOffice;
 use App\Entity\Performer;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,7 +17,14 @@ class PerformerType extends AbstractType
         $builder
            
             ->add('performer')
-            ->add('operationalOffice')
+            ->add('operationalOffice',EntityType::class,[
+                'class'=>OperationalOffice::class,
+                 'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->andWhere('g.isActive = 1')
+                        ->orderBy('g.id', 'ASC');
+                },
+            ])
         ;
     }
 

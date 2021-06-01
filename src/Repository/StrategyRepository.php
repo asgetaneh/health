@@ -54,4 +54,34 @@ class StrategyRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function search($search=[]){
+
+        $qb=$this->createQueryBuilder('s')
+        ->join('s.objective','o')
+        ;
+        if(isset($search['goal']) && sizeof($search['goal'])>0){
+            $qb->andWhere('o.goal in (:goal)')
+            ->setParameter('goal',$search['goal']);
+
+        }
+          if(isset($search['perspective']) && sizeof($search['perspective'])>0 ){
+            $qb->andWhere('o.perspective in (:perspective)')
+            ->setParameter('perspective',$search['perspective']);
+            
+        }
+         if(isset($search['objective']) && sizeof($search['objective'])>0 ){
+            $qb->andWhere('s.objective in (:objective)')
+            ->setParameter('objective',$search['objective']);
+            
+        }
+        if(isset($search['name']) ){
+           
+            $qb->andWhere("s.name  LIKE '%" . $search['name']. "%' ");
+        
+
+            
+        }
+
+        return $qb->orderBy('s.id','ASC')->getQuery();
+    }
 }

@@ -3,12 +3,13 @@
 {% block subTitle %}
 	<li class="active">{% trans %}
 		SMIS{% endtrans %}</li>
-		<li class="active">
-        <a href="{{path('principal_office_index')}}">{% trans %}
-        <strong>
-		Principal Office{% endtrans %}
-        </strong></a>
-        </li>
+	<li class="active">
+		<a href="{{path('principal_office_index')}}">{% trans %}
+			<strong>
+				Principal Office{% endtrans %}
+			</strong>
+		</a>
+	</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -48,11 +49,12 @@
 									<tr></tr>
 									<tr>
 										<th>#</th>
-										<th>Name</th>
+										<th>Principal Office</th>
+										<th>Operational Office</th>
 										<th>Director</th>
 
 										<th>Status</th>
-										
+
 										<th>Description</th>
 										<th>actions</th>
 									</tr>
@@ -60,17 +62,32 @@
 							</tr>
 						</thead>
 						<tbody>
-                        	{% set count =  principal_offices.getItemNumberPerPage() * (principal_offices.getCurrentPageNumber() -1) %}
+							{% set count =  principal_offices.getItemNumberPerPage() * (principal_offices.getCurrentPageNumber() -1) %}
 							{% for principal_office in principal_offices %}
 								<tr>
-                                {% set count = count + 1 %}
+									{% set count = count + 1 %}
 									<td>{{ count }}</td>
 									<td>{{ principal_office.name }}</td>
+
+									<td>
+										<ul class="list-unstyled spaced">
+                        
+											{% for office in  
+                                        principal_office.operationalOffices|filter(office => office.isActive == 1) %}
+												<li>
+													<i class="ace-icon fa fa-check green"></i>
+													{{office|title}}
+												</li>
+
+											{% endfor %}
+										</ul>
+
+									</td>
 									<td>
 										{% for director in  
-                                        principal_office.principalManagers %}
-                                        {{director.principal|title}}
-                                        {% endfor %}
+                                        principal_office.principalManagers|filter(director => director.isActive == 1) %}
+											{{director.principal|title}}
+										{% endfor %}
 
 									</td>
 
@@ -92,6 +109,13 @@
 										<a class="btn btn-warning btn-xs" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
 											edit</a>
+										<form class="" style="display:inline;" action="" method="post">
+
+
+											<input type="hidden" name="{{principal_office.isActive ?"deactive":"active"}}" value="{{ principal_office.id}}">
+											<input type="submit" style="display:inline;" class="btn btn-sm {{ principal_office.isActive?" btn-danger":" btn-success"}}" value="{{principal_office.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{principal_office.isActive?" deactivate":" activate"}}')">
+
+										</form>
 									</td>
 								</tr>
 							{% else %}

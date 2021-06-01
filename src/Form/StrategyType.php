@@ -2,10 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\Objective;
 use App\Entity\Strategy;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class StrategyType extends AbstractType
 {
@@ -14,7 +17,14 @@ class StrategyType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('objective')
+            ->add('objective',EntityType::class,[
+                 'class' => Objective::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->where('g.isActive =1')
+                        ->orderBy('g.id', 'ASC');
+                },
+            ])
         ;
     }
 
