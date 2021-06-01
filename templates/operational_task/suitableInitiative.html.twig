@@ -76,9 +76,8 @@
 									<tr>
 										<th>#</th>
 										<th>TaskName</th>
-										<th>Description</th>
-										<th>StartDate</th>
-									
+										<th>Office</th>
+
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -97,18 +96,18 @@
 											<td>{{ suitableInitiative.principalOffice.name  }}</td>
 
 
-											<td>{{ suitableInitiative.planningYear.year ? suitableInitiative.planningYear.year |date('Y-m-d ') : ''  }}</td>
-
-
-
-
 											<td>
 												<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
 
 
+													Assign
+												</a>
+												<a href="{{ path('acomplishment_task_detail', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-success btn-sm">
+
+
 													<i class="fa fa-eye"></i>
 												</a>
-												
+
 											</td>
 
 
