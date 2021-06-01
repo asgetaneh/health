@@ -145,10 +145,11 @@
 										<tr>
 											<th>#</th>
 											<th>TaskName</th>
-											<th>Assigned To</th>
-											<th>Description</th>
+                                            <th>Description</th>
 											<th>Weight</th>
 											<th>Quarter</th>
+											<th>Assigned To</th>
+											
 
 										</tr>
 									</thead>
@@ -159,11 +160,15 @@
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
 												<td>{{ operational_task.name }}</td>
+                                                <td>{{ operational_task.description }}</td>
+
+												<td>{{ operational_task.weight }}</td>
+												<td>{{ operational_task.quarter }}</td>
 												<td>
 													{% set statusaccept = 0 %}
-													<table class="table-bordered  table-hover" style="margin-top:10px; width:5px; height:10px;">
+													<table class="table table-bordered table-responsive-xg table-hover" >
 														<tr>
-															<th>Performer Name</th>
+															<th></th>
 															<th>Start Date
 															</th>
 															<th>End Date
@@ -196,10 +201,7 @@
 												<input type="hidden" class="office" value="{{operational_task.planAcomplishment.suitableInitiative.principalOffice.id}}">
 
 												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
-												<td>{{ operational_task.description }}</td>
-
-												<td>{{ operational_task.weight }}</td>
-												<td>{{ operational_task.quarter }}</td>
+												
 
 											</tr>
 										{% else %}

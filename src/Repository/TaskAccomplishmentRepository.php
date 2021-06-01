@@ -33,6 +33,24 @@ public function findTask($user)
             
             ->getResult();
     }
+    public function findDetailAccomplish($suitableInitiative)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->
+        leftJoin('s.taskUser','ts')
+        ->leftJoin('ts.taskAssign','ta')
+        ->leftJoin('ta.PerformerTask','ps')
+        ->leftJoin('ps.PlanAcomplishment','pa')
+        ->andWhere('pa.suitableInitiative = :val')
+            ->setParameter('val', $suitableInitiative)
+            ->orderBy('ps.name', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
+    
     // /**
     //  * @return TaskAccomplishment[] Returns an array of TaskAccomplishment objects
     //  */

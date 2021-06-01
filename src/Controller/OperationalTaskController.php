@@ -130,6 +130,41 @@ $count=0;
             'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
+     /**
+     * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
+     */
+    public function accomplishment(Request $request ,PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
+    {              $entityManager = $this->getDoctrine()->getManager();
+      
+        $em=$this->getDoctrine()->getManager();
+        $initiativeName=$suitableInitiative->getInitiative()->getName();
+
+         $planAcomplish=$planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitableInitiative]); 
+         $performerTasks=$performerTaskRepository->findBy(['PlanAcomplishment'=>$planAcomplish]);
+        //  dd($performerTasks);
+        $total1=0;
+                $total2=0;
+
+            $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative); 
+               foreach ($taskAcomolishs as $value) {
+                        
+                   $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ;
+                 
+               }
+ 
+  $taskUser=$this->getUser();
+
+                 $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
+            // dd($taskAcomolishs);
+        return $this->render('operational_task/accomplishmentDetail.html.twig', [
+            'taskAcomolishs' => $taskAcomolishs,
+            'initiativeName'=>$initiativeName,
+            'performerTasks'=>$performerTasks,
+            'taskUsers'=>$taskUsers
+            
+        ]);
+    }
+    
       /**
      * @Route("/intiative/accomplishment", name="initiative_accomplishment_list")
      */
@@ -140,6 +175,7 @@ $count=0;
       $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
         $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);
         // $taskAccomplishs=$taskAccomplishmentRepository->findWeight();
+        // dd($suitableInitiatives);
         return $this->render('operational_task/initiativeAccomplishment.html.twig', [
             'suitableInitiatives' => $suitableInitiatives,
         ]);
