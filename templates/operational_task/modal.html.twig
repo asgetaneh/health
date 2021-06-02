@@ -1,0 +1,182 @@
+<div id="myModal" class="modal fade" role="dialog">
+	<div
+		class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Create Task</h4>
+			</div>
+			<div class="modal-body">
+				{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+                 {# {% if social == 1 %} #}
+                
+                <div class="form-group social"  style="display:none">
+					{{ form_label(form.social) }}
+					{{ form_widget(form.social,{'attr':{ 'class': 'form-control'}}) }}
+
+				</div>
+                {# {% endif %} #}
+				<div class="form-group">
+					{{ form_label(form.name) }}
+					{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+
+				</div>
+				<div class="form-group">
+					{{ form_label(form.description) }}
+					{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
+
+				</div>
+
+
+				<div class="form-group">
+					{{ form_label(form.weight) }}
+					{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
+
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.quarter) }}
+					{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
+
+				</div>
+
+
+			</div>
+
+
+		</div>
+		<div class="modal-footer">
+			<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+			<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+<div id="assign" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<form
+			method="post" action="{{path('task_assign')}}">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Assign Task</h4>
+				</div>
+				<div class="modal-body">
+
+					<div class="row">
+						<div class="col-md-6">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									Select Performer
+								</b>
+							</lable>
+							<select autocomplete="off" name="user[]" id="user" class="form-control user select2  " multiple="true">
+
+
+								<option></option>
+							</select>
+
+
+						</div>
+						<div class="col-md-6">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									Select Task
+								</b>
+							</lable>
+							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true">
+
+
+								<option></option>
+							</select>
+
+
+						</div>
+						<div class="col-md-6">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									Start Date
+								</b>
+							</lable>
+							<input type="text" name="startDate" class="form-control popupDatepicker" autocomplete="off" required>
+
+
+						</div>
+						<div class="col-md-6">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									End Date
+								</b>
+							</lable>
+							<input type="text" name="endDate" class="form-control popupDatepicker" autocomplete="off" required>
+
+
+						</div>
+						<div class="col-md-6">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									Time Gap
+								</b>
+							</lable>
+							<input type="number" name="timeGap" class="form-control " autocomplete="true" required>
+
+
+						</div>
+
+
+					</div>
+					<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>ExpectedValue</th>
+								<th>Description</th>
+
+
+							</tr>
+						</thead>
+						<tbody>
+							{% set count = 0 %}
+							{% for measurement in measurements %}
+
+								<tr>
+									{% set count = count + 1 %}
+									<td>{{ count}}</td>
+									<td>{{ measurement.name }}</td>
+									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
+
+									<td><input type="text" name="expectedValue[]" class="form-control"></td>
+									<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
+
+
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="8">no records found</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Assign{% endtrans %}"/>
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+			</div>
+		</form>
+	</div>
+</div>

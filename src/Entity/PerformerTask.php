@@ -58,6 +58,12 @@ class PerformerTask
      */
     private $PlanAcomplishment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="performerTasks")
+     */
+    private $social;
+
+    
     
 
     public function __construct()
@@ -176,6 +182,20 @@ class PerformerTask
 
         return $this;
     }
+
+    public function getSocial(): ?InitiativeAttribute
+    {
+        return $this->social;
+    }
+
+    public function setSocial(?InitiativeAttribute $social): self
+    {
+        $this->social = $social;
+
+        return $this;
+    }
+
+   
 
    
 }

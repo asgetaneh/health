@@ -59,11 +59,17 @@ class InitiativeAttribute
      */
     private $planningAccomplishments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="social")
+     */
+    private $performerTasks;
+
     public function __construct()
     {
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
         $this->initiatives = new ArrayCollection();
         $this->planningAccomplishments = new ArrayCollection();
+        $this->performerTasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +221,36 @@ class InitiativeAttribute
             // set the owning side to null (unless already changed)
             if ($planningAccomplishment->getSocialAttribute() === $this) {
                 $planningAccomplishment->setSocialAttribute(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setSocial($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getSocial() === $this) {
+                $performerTask->setSocial(null);
             }
         }
 
