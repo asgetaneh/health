@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Perspective;
 use App\Form\PerspectiveType;
+use App\Helper\Helper;
 use App\Repository\PerspectiveRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,14 +24,26 @@ class PerspectiveController extends AbstractController
         $perspective = new Perspective();
         $form = $this->createForm(PerspectiveType::class, $perspective);
         $form->handleRequest($request);
+            
+        $locales= Helper::locales();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+             foreach ($locales as $key => $value) {
+               $perspective->translate($value)->setName($request->request->get('perspective')[$value]);
+              
+               $perspective->translate($value)->setDescription($request->request->get('perspective')[$value]);
+            }
             $perspective->setCreatedAt(new \DateTime());
             $perspective->setUsedToPlan(1);
             $perspective->setCreatedBy($this->getUser());
             $entityManager->persist($perspective);
+            $perspective->mergeNewTranslations();
+             
             $entityManager->flush();
+
+          $this->addFlash('success',"successfuly registered");
+
 
             return $this->redirectToRoute('perspective_index');
         }

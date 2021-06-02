@@ -6,12 +6,15 @@ use App\Repository\KeyPerformanceIndicatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=KeyPerformanceIndicatorRepository::class)
  */
-class KeyPerformanceIndicator
+class KeyPerformanceIndicator implements TranslatableInterface
 {
+    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,16 +22,7 @@ class KeyPerformanceIndicator
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
+    
     /**
      * @ORM\Column(type="boolean")
      */
@@ -58,10 +52,16 @@ class KeyPerformanceIndicator
      * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="keyPerformanceIndicator")
      */
     private $initiatives;
+   private  $locale="en";
     public function __toString()
     {
-        return $this->name;
+        return $this->getName();
     }
+     public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
 
     public function __construct()
     {
@@ -74,29 +74,7 @@ class KeyPerformanceIndicator
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
+    
 
     public function getIsActive(): ?bool
     {

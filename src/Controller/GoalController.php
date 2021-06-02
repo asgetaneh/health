@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Helper\Helper;
 
 /**
  * @Route("/goal")
@@ -24,13 +25,21 @@ class GoalController extends AbstractController
         $goal = new Goal();
         $form = $this->createForm(GoalType::class, $goal);
         $form->handleRequest($request);
-
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            foreach ($locales as $key => $value) {
+                $goal->translate($value)->setName($request->request->get('goal')[$value]);
+                $goal->translate($value)->setOutPut($request->request->get('goal')[$value]);
+                $goal->translate($value)->setOutCome($request->request->get('goal')[$value]);
+                $goal->translate($value)->setDescription($request->request->get('goal')[$value]);
+            }
+
             $goal->setCreatedAt(new \DateTime());
             $goal->setIsActive(1);
             $goal->setCreatedBy($this->getUser());
             $entityManager->persist($goal);
+            $goal->mergeNewTranslations();
             $entityManager->flush();
             $this->addFlash('success', "new goal is added successfuly");
             return $this->redirectToRoute('goal_index');
@@ -72,20 +81,20 @@ class GoalController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-  /**
+    /**
      * @Route("/startegicPlan", name="startegic_plan", methods={"GET","POST"})
      */
     public function startegicPlan(Request $request, GoalRepository $goalRepository, PaginatorInterface $paginator): Response
     {
-         $goals = $goalRepository->findAlls();
-          $data = $paginator->paginate(
+        $goals = $goalRepository->findAlls();
+        $data = $paginator->paginate(
             $goals,
             $request->query->getInt('page', 1),
             3
         );
-        
+
         return $this->render('goal/strategicplan.html.twig', [
-           'goals'=>$data
+            'goals' => $data
         ]);
     }
 

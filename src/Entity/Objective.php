@@ -6,12 +6,15 @@ use App\Repository\ObjectiveRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=ObjectiveRepository::class)
  */
-class Objective
+class Objective implements TranslatableInterface
 {
+    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,20 +22,7 @@ class Objective
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="text", length=255)
-     */
-    private $outPut;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $outCome;
+    
 
     /**
      * @ORM\Column(type="float")
@@ -69,13 +59,10 @@ class Objective
      */
     private $strategies;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    private $locales="en";
     public function __toString()
     {
-        return $this->name;
+        return $this->getName();
     }
     public function __construct()
     {
@@ -86,42 +73,13 @@ class Objective
     {
         return $this->id;
     }
-
-    public function getName(): ?string
+    
+    public function __call($method, $arguments)
     {
-        return $this->name;
+        return $this->proxyCurrentLocaleTranslation($method,$arguments);
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getOutPut(): ?string
-    {
-        return $this->outPut;
-    }
-
-    public function setOutPut(string $outPut): self
-    {
-        $this->outPut = $outPut;
-
-        return $this;
-    }
-
-    public function getOutCome(): ?string
-    {
-        return $this->outCome;
-    }
-
-    public function setOutCome(string $outCome): self
-    {
-        $this->outCome = $outCome;
-
-        return $this;
-    }
+   
 
     public function getWeight(): ?float
     {
@@ -225,15 +183,5 @@ class Objective
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
+   
 }

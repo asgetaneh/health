@@ -10,6 +10,7 @@ use App\Entity\Perspective;
 use App\Entity\PrincipalOffice;
 use App\Entity\Strategy;
 use App\Form\InitiativeType;
+use App\Helper\Helper;
 use App\Repository\InitiativeRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +34,23 @@ class InitiativeController extends AbstractController
          $initiative = new Initiative();
         $form = $this->createForm(InitiativeType::class, $initiative);
         $form->handleRequest($request);
-       
+         $locales=Helper::locales();
+         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($locales as $key => $value) {
+               $initiative->translate($value)->setName($request->request->get('initiative')[$value]);
+              
+               $initiative->translate($value)->setDescription($request->request->get('initiative')[$value]);
+            }
+            $initiative->setCreatedAt(new DateTime('now'));
+            $initiative->setCreatedBy($this->getUser());
+            $entityManager->persist($initiative);
+            $initiative->mergeNewTranslations();
+            $entityManager->flush();
+
+            $this->addFlash('success', "initatives are added seccussfuly");
+            return $this->redirectToRoute('initiative_index');
+        }
          $filterform = $this->createFormBuilder()
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
@@ -71,18 +88,11 @@ class InitiativeController extends AbstractController
 
             ])
             ->getForm();
-      
+        
+       
        
      
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $initiative->setCreatedAt(new DateTime('now'));
-            $initiative->setCreatedBy($this->getUser());
-            $entityManager->persist($initiative);
-            $entityManager->flush();
-            $this->addFlash('success', "initatives are added seccussfuly");
-            return $this->redirectToRoute('initiative_index');
-        }
+      
 
 
        

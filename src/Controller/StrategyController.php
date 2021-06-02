@@ -7,6 +7,7 @@ use App\Entity\Objective;
 use App\Entity\Perspective;
 use App\Entity\Strategy;
 use App\Form\StrategyType;
+use App\Helper\Helper;
 use App\Repository\StrategyRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -51,13 +52,19 @@ class StrategyController extends AbstractController
             ->getForm();
         $filterform->handleRequest($request);
 
-
+       $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            foreach ($locales as $key => $value) {
+               $strategy->translate($value)->setName($request->request->get('strategy')[$value]);
+              
+               $strategy->translate($value)->setDescription($request->request->get('strategy')[$value]);
+            }
             $strategy->setCreatedAt(new \DateTime());
             $strategy->setIsActive(1);
             $strategy->setCreatedBy($this->getUser());
             $entityManager->persist($strategy);
+            $strategy->mergeNewTranslations();
             $entityManager->flush();
             $this->addFlash('success', 'new strategy is registered successfuly');
             return $this->redirectToRoute('strategy_index');

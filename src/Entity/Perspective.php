@@ -6,12 +6,15 @@ use App\Repository\PerspectiveRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=PerspectiveRepository::class)
  */
-class Perspective
+class Perspective implements TranslatableInterface
 {
+    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,16 +22,7 @@ class Perspective
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $description;
-
+    
     /**
      * @ORM\Column(type="datetime")
      */
@@ -52,7 +46,7 @@ class Perspective
     private $objectives;
     public function __toString()
     {
-        return $this->name;
+        return $this->getName();
     }
     public function __construct()
     {
@@ -64,28 +58,9 @@ class Perspective
         return $this->id;
     }
 
-    public function getName(): ?string
+     public function __call($method, $arguments)
     {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
+        return $this->proxyCurrentLocaleTranslation($method,$arguments);
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

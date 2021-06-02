@@ -6,12 +6,16 @@ use App\Repository\StrategyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=StrategyRepository::class)
  */
-class Strategy
+class Strategy implements TranslatableInterface
+
 {
+    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,10 +23,6 @@ class Strategy
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
 
     /**
      * @ORM\Column(type="boolean")
@@ -34,11 +34,7 @@ class Strategy
      */
     private $objective;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
+   
     /**
      * @ORM\Column(type="datetime")
      */
@@ -53,13 +49,18 @@ class Strategy
      * @ORM\OneToMany(targetEntity=KeyPerformanceIndicator::class, mappedBy="strategy")
      */
     private $keyPerformanceIndicators;
+
     public function __toString()
     {
-        return $this->name;
+        return $this->getName();
     }
     public function __construct()
     {
         $this->keyPerformanceIndicators = new ArrayCollection();
+    }
+     public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method,$arguments);
     }
 
     public function getId(): ?int
@@ -67,17 +68,7 @@ class Strategy
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    
 
     public function getIsActive(): ?bool
     {
@@ -103,17 +94,7 @@ class Strategy
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
+    
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

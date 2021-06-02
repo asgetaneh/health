@@ -8,6 +8,7 @@ use App\Entity\Objective;
 use App\Entity\Perspective;
 use App\Entity\Strategy;
 use App\Form\KeyPerformanceIndicatorType;
+use App\Helper\Helper;
 use App\Repository\KeyPerformanceIndicatorRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,13 +59,19 @@ class KeyPerformanceIndicatorController extends AbstractController
             ])
             ->getForm();
         $filterform->handleRequest($request);
-
+        $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+             foreach ($locales as $key => $value) {
+               $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
+              
+               $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value]);
+            }
             $keyPerformanceIndicator->setCreatedAt(new \DateTime());
             $keyPerformanceIndicator->setIsActive(1);
             $keyPerformanceIndicator->setCreatedBy($this->getUser());
             $entityManager->persist($keyPerformanceIndicator);
+            $keyPerformanceIndicator->mergeNewTranslations();
             $entityManager->flush();
             $this->addFlash('success', 'new key performance indicator is registered successfuly');
 

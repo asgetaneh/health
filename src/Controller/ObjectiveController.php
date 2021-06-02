@@ -6,6 +6,7 @@ use App\Entity\Objective;
 use App\Entity\Perspective;
 use App\Entity\Goal;
 use App\Form\ObjectiveType;
+use App\Helper\Helper;
 use App\Repository\ObjectiveRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -41,14 +42,21 @@ class ObjectiveController extends AbstractController
          ])
          ->getForm();
          $filterform->handleRequest($request);
-
+         $locales=Helper::locales();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+             foreach ($locales as $key => $value) {
+               $objective->translate($value)->setName($request->request->get('objective')[$value]);
+               $objective->translate($value)->setOutPut($request->request->get('objective')[$value]);
+               $objective->translate($value)->setOutCome($request->request->get('objective')[$value]);
+               $objective->translate($value)->setDescription($request->request->get('objective')[$value]);
+            }
             $objective->setCreatedAt(new \DateTime());
             $objective->setIsActive(1);
             $objective->setCreatedBy($this->getUser());
             $entityManager->persist($objective);
+             $objective->mergeNewTranslations();
             $entityManager->flush();
             $this->addFlash('success',"objective is registered successfuly");
             return $this->redirectToRoute('objective_index');

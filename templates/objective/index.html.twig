@@ -188,7 +188,7 @@
 				</div>
 			</div>
 		</div>
-
+{{ form_start(form,{'attr': {'role':'form'} }) }}
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
 				class="modal-dialog">
@@ -200,42 +200,19 @@
 						<h4 class="modal-title">New Objective</h4>
 					</div>
 					<div class="modal-body">
-						{{ form_start(form,{'attr': {'class': 'form-horizontal'} }) }}
-						<div class="form-group">
-							{{ form_label(form.name) }}
-							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+						<div class="row">
 
+				{% for f in form  %}
+					{% if f != form._token %}
+						<div class="form-group col-6">
+							<label>{{ form_label(f) }}</label>
+							{{ form_widget(f) }}
 						</div>
-						<div class="form-group">
-							{{ form_label(form.perspective) }}
-							{{ form_widget(form.perspective,{'attr':{ 'class': 'select2 form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.goal) }}
-							{{ form_widget(form.goal,{'attr':{ 'class': 'select2 form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.outCome) }}
-							{{ form_widget(form.outCome,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.outPut) }}
-							{{ form_widget(form.outPut,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.weight) }}
-							{{ form_widget(form.weight ,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.description) }}
-							{{ form_widget(form.description ,{'attr':{ 'class': 'autosize-transition form-control'}}) }}
-
-						</div>
+					
+					{% endif %}
+                    
+                {% endfor %}
+				</div>
 
 
 					</div>
@@ -245,11 +222,12 @@
 				<div class="modal-footer">
 					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
 					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					{{ form_end(form) }}
+					
 				</div>
 			</div>
 
 		</div>
+        {{ form_end(form) }}
 	</div>
 
 {% endblock %}

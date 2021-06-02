@@ -214,47 +214,19 @@
 
 				<div class="modal-body">
 					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-					<div class="form-group">
-						{{ form_label(form.name) }}
-						{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
+					<div class="row">
 
-					</div>
-					<div class="form-group">
-						{{ form_label(form.keyPerformanceIndicator) }}
-						{{ form_widget(form.keyPerformanceIndicator,{'attr':{ 'class': 'select2 form-control'}}) }}
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
 
-					</div>
-					<div class="form-group">
-						{{ form_label(form.initiativeBehaviour) }}
-						{{ form_widget(form.initiativeBehaviour,{'attr':{ 'class': 'select2 form-control'}}) }}
+								{% endif %}
 
-					</div>
-					<div class="form-group">
-						{{ form_label(form.socialAtrribute) }}
-						{{ form_widget(form.socialAtrribute,{'attr':{ 'class': 'select2 form-control'}}) }}
-
-					</div>
-
-					<div class="form-group">
-						{{ form_label(form.principalOffice) }}
-						{{ form_widget(form.principalOffice,{'attr':{ 'class': 'select2 form-control'}}) }}
-
-					</div>
-					<div class="form-group">
-						{{ form_label(form.minimumValue) }}
-						{{ form_widget(form.minimumValue,{'attr':{ 'class': 'form-control'}}) }}
-
-					</div>
-					<div class="form-group">
-						{{ form_label(form.maximumValue) }}
-						{{ form_widget(form.maximumValue,{'attr':{ 'class': 'form-control'}}) }}
-
-					</div>
-					<div class="form-group">
-						{{ form_label(form.description) }}
-						{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
-
-					</div>
+							{% endfor %}
+						</div>
 
 				</div>
 
