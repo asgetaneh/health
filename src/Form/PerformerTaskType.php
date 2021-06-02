@@ -16,6 +16,8 @@ class PerformerTaskType extends AbstractType
              ->add('description')
             ->add('weight')
            ->add('quarter')
+             ->add('social')
+
 
            
         ;

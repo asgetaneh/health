@@ -77,8 +77,13 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					{% set office = 0 %}
-					<h5 class="widget-title bigger lighter">Operational Office																																																																																					
-																																				Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
+					<h5 class="widget-title bigger lighter">Operational Office
+						{% if social == 1 %}
+							Social itableInitiative
+							{% else %}
+
+						{% endif %}
+						Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -87,6 +92,9 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
+						{# <pre>
+																								                                {{ dump(performerTasks.planningAccomplishment) }}
+																								                            </pre> #}
 
 							{# <strong>{{tasks|length}}</strong> #}
 						</span>
@@ -101,15 +109,20 @@
 								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
 								{% if count < 100 %}
+									{% if social == 1 %}
+										<a class="btn btn-primary btn-sm btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
+											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+											{% trans %}
+											Create{% endtrans %}</a>
+									{% else  %}
+										<a class="btn btn-primary btn-sm btn-white btn-round social" data-toggle="modal" data-target="#myModal">
+											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+											{% trans %}
+											Create{% endtrans %}</a>
+									{% endif %}
 
-									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-										{% trans %}
-										Create{% endtrans %}</a>
 								{% endif %}
-
 								{% if count >= 100 %}
-
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
 										<i class="ace-icon fa fa-check bigger-110 blue"></i>
 										{% trans %}
@@ -137,7 +150,7 @@
 									</div>
 								</div>
 							</form>
-							{% if operational_tasks %}
+							{% if performerTasks %}
 
 
 								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
@@ -145,28 +158,35 @@
 										<tr>
 											<th>#</th>
 											<th>TaskName</th>
-                                            <th>Description</th>
+											{% if social == 1 %}
+												<th>Social</th>
+											{% endif %}
+
+											<th>Description</th>
 											<th>Weight</th>
 											<th>Quarter</th>
 											<th>Assigned To</th>
-											
+
 
 										</tr>
 									</thead>
 									<tbody>
 										{% set count = 0 %}
-										{% for operational_task in operational_tasks %}
+										{% for performerTask in performerTasks %}
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
-												<td>{{ operational_task.name }}</td>
-                                                <td>{{ operational_task.description }}</td>
+												<td>{{ performerTask.name }}</td>
+												{% if social == 1 %}
 
-												<td>{{ operational_task.weight }}</td>
-												<td>{{ operational_task.quarter }}</td>
+													<td>{{ performerTask.social }}</td>
+												{% endif %}
+												<td>{{ performerTask.description }}</td>
+												<td>{{ performerTask.weight }}</td>
+												<td>{{ performerTask.quarter }}</td>
 												<td>
 													{% set statusaccept = 0 %}
-													<table class="table table-bordered table-responsive-xg table-hover" >
+													<table class="table table-bordered table-responsive-xg table-hover">
 														<tr>
 															<th></th>
 															<th>Start Date
@@ -178,7 +198,7 @@
 														{% for taskUser in taskUsers %}
 															<tr>
 
-																{% if taskUser.taskAssign.performerTask.id == operational_task.id  %}
+																{% if taskUser.taskAssign.performerTask.id == performerTask.id  %}
 																	{% set statusaccept = taskUser.status %}
 																	<td>{{taskUser.assignedTo.userInfo}}</td>
 																	<td>
@@ -197,11 +217,11 @@
 
 												</td>
 
-												<input type="hidden" class="task" value="{{operational_task.planAcomplishment.id}}">
-												<input type="hidden" class="office" value="{{operational_task.planAcomplishment.suitableInitiative.principalOffice.id}}">
+												<input type="hidden" class="task" value="{{performerTask.planAcomplishment.id}}">
+												<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
 
 												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
-												
+
 
 											</tr>
 										{% else %}
@@ -218,180 +238,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="myModal" class="modal fade" role="dialog">
-			<div
-				class="modal-dialog">
+		{{ include('operational_task/modal.html.twig') }}
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Create Task</h4>
-					</div>
-					<div class="modal-body">
-						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-						<div class="form-group">
-							{{ form_label(form.name) }}
-							{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-						<div class="form-group">
-							{{ form_label(form.description) }}
-							{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-
-						<div class="form-group">
-							{{ form_label(form.weight) }}
-							{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-						<div class="form-group">
-							{{ form_label(form.quarter) }}
-							{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
-
-						</div>
-
-
-					</div>
-
-
-				</div>
-				<div class="modal-footer">
-					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-		<div id="assign" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<form
-					method="post" action="{{path('task_assign')}}">
-
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header bg-info">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Assign Task</h4>
-						</div>
-						<div class="modal-body">
-
-							<div class="row">
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Select Performer
-										</b>
-									</lable>
-									<select autocomplete="off" name="user[]" id="user" class="form-control user select2  " multiple="true">
-
-
-										<option></option>
-									</select>
-
-
-								</div>
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Select Task
-										</b>
-									</lable>
-									<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true">
-
-
-										<option></option>
-									</select>
-
-
-								</div>
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Start Date
-										</b>
-									</lable>
-									<input type="text" name="startDate" class="form-control popupDatepicker" autocomplete="off" required>
-
-
-								</div>
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											End Date
-										</b>
-									</lable>
-									<input type="text" name="endDate" class="form-control popupDatepicker" autocomplete="off" required>
-
-
-								</div>
-								<div class="col-md-6">
-
-									<lable class=" control-label no-padding-right">
-										<b>
-											Time Gap
-										</b>
-									</lable>
-									<input type="number" name="timeGap" class="form-control " autocomplete="true" required>
-
-
-								</div>
-
-
-							</div>
-							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Name</th>
-										<th>ExpectedValue</th>
-										<th>Description</th>
-
-
-									</tr>
-								</thead>
-								<tbody>
-									{% set count = 0 %}
-									{% for measurement in measurements %}
-
-										<tr>
-											{% set count = count + 1 %}
-											<td>{{ count}}</td>
-											<td>{{ measurement.name }}</td>
-											<input type="hidden" name="measurementId[]" value={{measurement.id}}>
-
-											<td><input type="text" name="expectedValue[]" class="form-control"></td>
-											<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
-
-
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-
-
-						</div>
-
-
-					</div>
-					<div class="modal-footer">
-						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Assign{% endtrans %}"/>
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					</div>
-				</form>
-			</div>
-		</div>
 	{% endblock %}
 	{% block javascripts %}
 		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
@@ -447,6 +295,13 @@ select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 }
 }
 });
+})
+		</script>
+		<script>
+			$('.socialbtn').click(function () {
+$('.social').show();
+
+
 })
 		</script>
 		<link

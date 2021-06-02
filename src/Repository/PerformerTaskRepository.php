@@ -37,6 +37,26 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+    public function findPerformerInitiativeTask($user,$initiative)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.PlanAcomplishment','pl')  
+           ->andWhere('pl.suitableInitiative = :initiative')
+            ->andWhere('s.createdBy = :user')
+
+
+            ->setParameter('initiative', $initiative)
+                        ->setParameter('user', $user)
+
+                        ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
+    
 
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects

@@ -47,7 +47,16 @@ class OperationalTaskController extends AbstractController
      */
     public function index(Request $request ,SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {              $entityManager = $this->getDoctrine()->getManager();
-      
+    $social=0;
+    //    dump($suitableInitiative);
+            // foreach ($suitableInitiative as $value) {
+                foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
+                    if($va->getName()){
+                        $social=1;
+                    }
+                
+            }
+            // dd($social);
         $em=$this->getDoctrine()->getManager();
          $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
         $performerTask = new PerformerTask();
@@ -57,7 +66,7 @@ class OperationalTaskController extends AbstractController
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
         $count=0;
-        $operationalTasks = $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]);
+        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative);
        $taskUsers= $taskUserRepository->findTaskUsers($this->getUser());
        foreach ($taskUsers as $value) {
                   $value->setType(1);
@@ -91,7 +100,8 @@ class OperationalTaskController extends AbstractController
             
         }
 $count=0;
-        $operationalTasks = $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]);
+        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative);
+
 // dd($operationalTasks);
         foreach($operationalTasks as $operationals){
              $count=$count+
@@ -106,12 +116,12 @@ $count=0;
           }
 
         return $this->render('operational_task/index.html.twig', [
-            'operational_tasks' => $performerTaskRepository->findBy(['createdBy'=>$this->getUser()]),
+            'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative),
             'count'=>$count,
             'taskUsers'=> $taskUsers,
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),
-
+              'social'=>$social,
             'formtask'=>$formtask->createView()
 
         ]);
@@ -122,10 +132,11 @@ $count=0;
     public function suitableInitiative(Request $request,OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
         $user=$this->getUser();
+        $social=0;
         $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
       $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
         $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);
-
+           
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'suitableInitiatives' => $suitableInitiatives,
         ]);
@@ -135,7 +146,15 @@ $count=0;
      */
     public function accomplishment(Request $request ,PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
     {              $entityManager = $this->getDoctrine()->getManager();
-      
+       $social=0;
+    //    dump($suitableInitiative);
+            // foreach ($suitableInitiative as $value) {
+                foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
+                    if($va->getName()){
+                        $social=1;
+                    }
+                
+            }
         $em=$this->getDoctrine()->getManager();
         $initiativeName=$suitableInitiative->getInitiative()->getName();
 
@@ -160,6 +179,7 @@ $count=0;
             'taskAcomolishs' => $taskAcomolishs,
             'initiativeName'=>$initiativeName,
             'performerTasks'=>$performerTasks,
+            'social'=>$social,
             'taskUsers'=>$taskUsers
             
         ]);
