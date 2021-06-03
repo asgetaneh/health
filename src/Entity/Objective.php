@@ -22,7 +22,7 @@ class Objective implements TranslatableInterface
      */
     private $id;
 
-    
+
 
     /**
      * @ORM\Column(type="float")
@@ -32,7 +32,7 @@ class Objective implements TranslatableInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive = 0;
 
     /**
      * @ORM\Column(type="datetime")
@@ -59,11 +59,9 @@ class Objective implements TranslatableInterface
      */
     private $strategies;
 
-    private $locales="en";
-    public function __toString()
-    {
-        return $this->getName();
-    }
+    private $locales = "en";
+
+
     public function __construct()
     {
         $this->strategies = new ArrayCollection();
@@ -73,13 +71,16 @@ class Objective implements TranslatableInterface
     {
         return $this->id;
     }
-    
+
     public function __call($method, $arguments)
     {
-        return $this->proxyCurrentLocaleTranslation($method,$arguments);
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+    public function __toString()
+    {
+        return $this->getName();
     }
 
-   
 
     public function getWeight(): ?float
     {
@@ -182,6 +183,4 @@ class Objective implements TranslatableInterface
 
         return $this;
     }
-
-   
 }

@@ -1,78 +1,119 @@
 {% extends 'base.html.twig' %}
 {% block subTitle %}
-  <li class="active">{% trans %}
-    InitiativeBehaviour{% endtrans %}</li>
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+        <li class="active">{% trans %}
+		InitiativeBehaviour{% endtrans %}</li>
 {% endblock %}
 {% block body %}
-  <div class="row">
-    <div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-      <div class="widget-box widget-color-blue" id="widget-box-8">
-        <div class="widget-header">
-          <h5 class="widget-title bigger lighter">
-            Initiative Behaviour
-          </h5>
-          <div class="widget-toolbar">
-            <span class="badge badge-info">
-              {% trans %}Total{% endtrans %}
-              :
-              <strong>{{initiative_behaviours |length}}</strong>
-            </span>
-          </div>
-        </div>
-        <div class="widget-body">
-          <div class="widget-toolbox" id="widget-toolbox-1">
-            <div class="btn-toolbar">
-              <div class="btn-group">
-                <a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-                  <i class="ace-icon fa fa-plus bigger-110 blue"></i>
-                  {% trans %}
-                  New Initiative Behavior{% endtrans %}</a>
-                
-              </div>
-            </div>
-          </div>
-          <div class="widget-main padding-16">
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Code</th>
-                    <th>CreatedAt</th>
-                    <th>IsActive</th>
-                    <th>actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for initiative_behaviour in initiative_behaviours %}
-                    <tr>
-                      <td>{{ loop.index}}</td>
-                      <td>{{ initiative_behaviour.name }}</td>
-                      <td>{{ initiative_behaviour.description }}</td>
-                      <td>{{ initiative_behaviour.code }}</td>
-                      <td>{{ initiative_behaviour.createdAt ? initiative_behaviour.createdAt|date('d-M-Y') : '' }}</td>
-                      <td>{{ initiative_behaviour.isActive ? 'Yes' : 'No' }}</td>
-                      <td>
-                        <a href="{{ path('initiative_behaviour_show', {'id': initiative_behaviour.id}) }}">show</a>
-                        <a href="{{ path('initiative_behaviour_edit', {'id': initiative_behaviour.id}) }}">edit</a>
-                      </td>
-                    </tr>
-                  {% else %}
-                    <tr>
-                      <td colspan="7">no records found</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						Initiative Behaviour
+					</h5>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{initiative_behaviours|length}}</strong>
+						</span>
+					</div>
+				</div>
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar">
+							<div class="btn-group">
+								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+									{% trans %}
+									New Initiative Behavior{% endtrans %}</a>
 
-      </div>
+							</div>
+						</div>
+					</div>
+					<div class="widget-main padding-16">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Name</th>
 
-    </div>
-  </div>
+										<th>Code</th>
+
+										<th>IsActive</th>
+										<th>Description</th>
+										<th>actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for initiative_behaviour in initiative_behaviours %}
+										<tr>
+											<td>{{ loop.index}}</td>
+											<td>{{ initiative_behaviour.name }}</td>
+
+											<td>{{ initiative_behaviour.code }}</td>
+											{# <td>{{ initiative_behaviour.createdAt ? initiative_behaviour.createdAt|date('d-M-Y') : '' }}</td> #}
+											<td>{{ initiative_behaviour.isActive ? 'Yes' : 'No' }}</td>
+											<td>{{ initiative_behaviour.description }}</td>
+											<td>
+												<a href="{{ path('initiative_behaviour_show', {'id': initiative_behaviour.id}) }}">show</a>
+												<a href="{{ path('initiative_behaviour_edit', {'id': initiative_behaviour.id}) }}">edit</a>
+											</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="7">no records found</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<div id="myModal" class="modal fade" role="dialog">
+			<div
+				class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">New Initiative Behaviour</h4>
+					</div>
+					<div class="modal-body">
+						{{ form_start(form) }}
+						<div class="row">
+
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
+
+								{% endif %}
+
+							{% endfor %}
+						</div>
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					{{ form_end(form) }}
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 {% endblock %}

@@ -6,12 +6,15 @@ use App\Repository\InitiativeAttributeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=InitiativeAttributeRepository::class)
  */
-class InitiativeAttribute
+class InitiativeAttribute implements TranslatableInterface
 {
+    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -19,20 +22,7 @@ class InitiativeAttribute
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=InitiativeBehaviourCatagory::class, inversedBy="initiativeAttributes")
-     */
-    private $initiativeBehaviourCategory;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    
 
     /**
      * @ORM\Column(type="datetime")
@@ -63,7 +53,10 @@ class InitiativeAttribute
      * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="social")
      */
     private $performerTasks;
+    private $locale="en";
 
+    
+    
     public function __construct()
     {
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
@@ -71,51 +64,23 @@ class InitiativeAttribute
         $this->planningAccomplishments = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
     }
-
+    public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
     public function getId(): ?int
     {
         return $this->id;
     }
-    public function __toString(){
-        return $this->name;
-    }
+   public function __toString()
 
-    public function getName(): ?string
     {
-        return $this->name;
+       
+        return $this->getName();
+
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getInitiativeBehaviourCategory(): ?InitiativeBehaviourCatagory
-    {
-        return $this->initiativeBehaviourCategory;
-    }
-
-    public function setInitiativeBehaviourCategory(?InitiativeBehaviourCatagory $initiativeBehaviourCategory): self
-    {
-        $this->initiativeBehaviourCategory = $initiativeBehaviourCategory;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
+   
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;

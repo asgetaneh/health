@@ -1,8 +1,13 @@
 
 
 {% extends 'base.html.twig' %}
-
-{% block title %}Edit Objective
+{% block subTitle %}
+	<li class="">
+		<a href="#">{% trans %}SMIS{% endtrans %}</a>
+	</li>
+	<li class="active">
+		<a href="{{ path('objective_index')}}">{% trans %}Objective{% endtrans %}</a>
+	</li>
 {% endblock %}
 
 {% block body %}
@@ -10,7 +15,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Edit Objective
+					<h5 class="widget-title bigger lighter"><strong>Edit Objective</strong> 
 					</h5>
 
 					<div class="widget-toolbar">
@@ -32,14 +37,21 @@
 
 					<div class="widget-main padding-16">
 
-						<div class="table-responsive">
+							{{ form_start(form) }}
+                            <div class="row">
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
 
+								{% endif %}
 
-							{{ include('objective/_form.html.twig', {'button_label': 'Update'}) }}
-							<div class="col-md-8">
-								{{ include('objective/_delete_form.html.twig') }}
-							</div>
+							{% endfor %}
+							<button class="btn btn-primary pull-right form-controll">{{ button_label|default('update') }}</button>
 						</div>
+						{{ form_end(form) }}
 
 					</div>
 

@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\InitiativeAttribute;
 use App\Form\InitiativeAttributeType;
+use App\Helper\Helper;
 use App\Repository\InitiativeAttributeRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +18,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class InitiativeAttributeController extends AbstractController
 {
     /**
-     * @Route("/", name="initiative_attribute_index", methods={"GET"})
+     * @Route("/", name="initiative_attribute_index")
      */
-    public function index(InitiativeAttributeRepository $initiativeAttributeRepository): Response
+    public function index(InitiativeAttributeRepository $initiativeAttributeRepository,Request $request): Response
     {
+         $initiativeAttribute = new InitiativeAttribute();
+        $form = $this->createForm(InitiativeAttributeType::class, $initiativeAttribute);
+        $form->handleRequest($request);
+         $locales=Helper::locales();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+             foreach ($locales as $key => $value) {
+               $initiativeAttribute->translate($value)->setName($request->request->get('initiative_attribute')[$value]);
+
+               $initiativeAttribute->translate($value)->setDescription($request->request->get('initiative_attribute')[$value]);
+            }
+            $initiativeAttribute->setCreatedAt(new DateTime('now'));
+            $initiativeAttribute->setCreatedBy($this->getUser());
+            $entityManager->persist($initiativeAttribute);
+            $initiativeAttribute->mergeNewTranslations();
+            $entityManager->flush();
+            $this->addFlash('success', "registered successfuly");
+
+            return $this->redirectToRoute('initiative_attribute_index');
+        }
         return $this->render('initiative_attribute/index.html.twig', [
             'initiative_attributes' => $initiativeAttributeRepository->findAll(),
+             'form' => $form->createView(),
         ]);
     }
 

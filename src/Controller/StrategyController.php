@@ -155,6 +155,7 @@ class StrategyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', ' edited successfuly');
 
             return $this->redirectToRoute('strategy_index');
         }

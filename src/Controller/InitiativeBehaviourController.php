@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\InitiativeBehaviour;
 use App\Form\InitiativeBehaviourType;
+use App\Helper\Helper;
 use App\Repository\InitiativeBehaviourRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +18,34 @@ use Symfony\Component\Routing\Annotation\Route;
 class InitiativeBehaviourController extends AbstractController
 {
     /**
-     * @Route("/", name="initiative_behaviour_index", methods={"GET"})
+     * @Route("/", name="initiative_behaviour_index")
      */
-    public function index(InitiativeBehaviourRepository $initiativeBehaviourRepository): Response
+    public function index(InitiativeBehaviourRepository $initiativeBehaviourRepository, Request $request): Response
     {
+        $initiativeBehaviour = new InitiativeBehaviour();
+        $form = $this->createForm(InitiativeBehaviourType::class, $initiativeBehaviour);
+        $form->handleRequest($request);
+        $locales = Helper::locales();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($locales as $key => $value) {
+                $initiativeBehaviour->translate($value)->setName($request->request->get('initiative_behaviour')[$value]);
+
+                $initiativeBehaviour->translate($value)->setDescription($request->request->get('initiative_behaviour')[$value]);
+            }
+             $initiativeBehaviour->setCreatedAt(new DateTime('now'));
+             $initiativeBehaviour->setCreatedBy($this->getUser());
+            $entityManager->persist($initiativeBehaviour);
+            $initiativeBehaviour->mergeNewTranslations();
+
+            $entityManager->flush();
+
+            $this->addFlash('success', "registered successfuly");
+            return $this->redirectToRoute('initiative_behaviour_index');
+        }
         return $this->render('initiative_behaviour/index.html.twig', [
             'initiative_behaviours' => $initiativeBehaviourRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -83,7 +107,7 @@ class InitiativeBehaviourController extends AbstractController
      */
     public function delete(Request $request, InitiativeBehaviour $initiativeBehaviour): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$initiativeBehaviour->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $initiativeBehaviour->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($initiativeBehaviour);
             $entityManager->flush();

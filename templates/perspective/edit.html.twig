@@ -1,17 +1,24 @@
-
-
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Perspective
-{% endblock %}
 
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+
+	<li class="active">
+		<a href="{{ path('perspective_index') }}" >
+			{% trans %}
+			Perspective
+			{% endtrans %}</a>
+	</li>
+	<li class="active">{% trans %}Edit{% endtrans %}</li>
+{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Edit Perspective
+					<h5 class="widget-title bigger lighter">
+						<strong>Edit Perspective</strong>
 					</h5>
 
 					<div class="widget-toolbar">
@@ -32,15 +39,21 @@
 					</div>
 
 					<div class="widget-main padding-16">
+						{{ form_start(form) }}
+                            <div class="row">
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
 
-						<div class="table-responsive">
+								{% endif %}
 
-
-							{{ include('perspective/_form.html.twig', {'button_label': 'Update'}) }}
-							<div class="col-md-8">
-								{{ include('perspective/_delete_form.html.twig') }}
-							</div>
+							{% endfor %}
+							<button class="btn btn-primary pull-right form-controll">{{ button_label|default('update') }}</button>
 						</div>
+						{{ form_end(form) }}
 
 					</div>
 

@@ -133,13 +133,13 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="#">{% trans %}Amharic{% endtrans %}</a>
+														<a href="{{path('change_locale',{'locale':'am'})}}">{% trans %}Amharic{% endtrans %}</a>
 													</li>
 													<li>
-														<a href="#">{% trans %}English{% endtrans %}</a>
+														<a href="{{path('change_locale',{'locale':'en'})}}">{% trans %}English{% endtrans %}</a>
 													</li>
 													<li>
-														<a href="#">{% trans %}Afaan Oromo{% endtrans %}</a>
+														<a href="{{path('change_locale',{'locale':'or'})}}">{% trans %}Afaan Oromo{% endtrans %}</a>
 													</li>
 												</ul>
 											</div>
@@ -349,7 +349,22 @@ ace.settings.loadState('sidebar')
 																																																													                                </a>
 																																																													                            </li> #}
 
+                    <li>
+								<a href="#" class="dropdown-toggle ">
+									<i class=""></i>
+									<span class="menu-text">
 
+										{% trans %}EMIS{% endtrans %}
+									</span>
+									<b class="arrow fa fa-angle-down"></b>
+								</a>
+								<ul class="submenu">
+
+
+									{{ include('menu/emis.html.twig') }}
+
+								</ul>
+							</li>
 							<li>
 								<a class="dropdown-toggle" href="#">
 									<i class=""></i>

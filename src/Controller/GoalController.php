@@ -118,6 +118,8 @@ class GoalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+         $this->addFlash('success',"goal is edited successfuly");
+
 
             return $this->redirectToRoute('goal_index');
         }

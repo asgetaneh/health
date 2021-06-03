@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=InitiativeBehaviourCatagoryRepository::class)
  */
-class InitiativeBehaviourCatagory
+class InitiativeBehaviourCatagory 
 {
     /**
      * @ORM\Id
@@ -46,16 +46,8 @@ class InitiativeBehaviourCatagory
 
    
 
-    /**
-     * @ORM\OneToMany(targetEntity=InitiativeAttribute::class, mappedBy="initiativeBehaviourCategory")
-     */
-    private $initiativeAttributes;
-
-    public function __construct()
-    {
-       
-        $this->initiativeAttributes = new ArrayCollection();
-    }
+    
+    
     public function __toString()
     {
         return $this->name;
@@ -127,33 +119,5 @@ class InitiativeBehaviourCatagory
     }
 
    
-    /**
-     * @return Collection|InitiativeAttribute[]
-     */
-    public function getInitiativeAttributes(): Collection
-    {
-        return $this->initiativeAttributes;
-    }
-
-    public function addInitiativeAttribute(InitiativeAttribute $initiativeAttribute): self
-    {
-        if (!$this->initiativeAttributes->contains($initiativeAttribute)) {
-            $this->initiativeAttributes[] = $initiativeAttribute;
-            $initiativeAttribute->setInitiativeBehaviourCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInitiativeAttribute(InitiativeAttribute $initiativeAttribute): self
-    {
-        if ($this->initiativeAttributes->removeElement($initiativeAttribute)) {
-            // set the owning side to null (unless already changed)
-            if ($initiativeAttribute->getInitiativeBehaviourCategory() === $this) {
-                $initiativeAttribute->setInitiativeBehaviourCategory(null);
-            }
-        }
-
-        return $this;
-    }
+    
 }

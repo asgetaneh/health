@@ -1,13 +1,64 @@
+
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Initiative{% endblock %}
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('initiative_index')}}">{% trans %}Initiative{% endtrans %}</a>
+	</li>
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Initiative</h1>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter"><strong>Edit Initiative</strong> 
+					</h5>
 
-    {{ include('initiative/_form.html.twig', {'button_label': 'Update'}) }}
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							<a href="{{ path('key_performance_indicator_index') }}" class="btn btn-success">
+								{% trans %}
+								back
+								{% endtrans %}
+							</a>
+						</span>
+					</div>
 
-    <a href="{{ path('initiative_index') }}">back to list</a>
+				</div>
 
-    {{ include('initiative/_delete_form.html.twig') }}
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						<div class="btn-toolbar"></div>
+					</div>
+
+					<div class="widget-main padding-16">
+
+						{{ form_start(form) }}
+                            <div class="row">
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
+
+								{% endif %}
+
+							{% endfor %}
+							<button class="btn btn-primary pull-right form-controll">{{ button_label|default('update') }}</button>
+						</div>
+						{{ form_end(form) }}
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 {% endblock %}
+

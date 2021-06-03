@@ -173,6 +173,11 @@ class User implements UserInterface
      */
     private $performerTasks;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $locale;
+
 
  
 
@@ -1093,6 +1098,18 @@ class User implements UserInterface
                 $performerTask->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): self
+    {
+        $this->locale = $locale;
 
         return $this;
     }
