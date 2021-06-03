@@ -75,5 +75,17 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
       return $qb->getQuery()->getResult();
       
     }
+     public function findplanAccomp($suitable,$social){
+      $qb=$this->createQueryBuilder('pa')
+      ->leftjoin('pa.socialAttribute','sa')
+      ->andwhere('pa.suitableInitiative = :suitin')
+     ->andwhere('sa.name = :name')
+      ->setParameter('suitin',$suitable)
+     ->setParameter('name',$social);
+
+      return $qb->getQuery()->getResult();
+      
+    }
+    
 
 }

@@ -58,7 +58,6 @@ class OperationalTaskController extends AbstractController
             }
             // dd($social);
         $em=$this->getDoctrine()->getManager();
-         $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -73,17 +72,27 @@ class OperationalTaskController extends AbstractController
                   $entityManager->flush();
 
        }
+    //    $plans=0;
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
         }
-        
+ 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            if ($social == 1) {
+       $plans=$planningAccomplishmentRepository->findplanAccomp($suitableInitiative,$form->getData()->getSocial()->getName()); 
+
+            }
+            else{
+                 $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
+            }
+          
             foreach ($plans as  $value) {
+
                 if ( $value->getQuarter() == $form->getData()->getQuarter()) {
+                    $performerTask->setPlanAcomplishment($value);                
+                        
                     $performerTask->setCreatedBy($this->getUser());
-                    $performerTask->setPlanAcomplishment($value);
 
                $weight=$form->getData()->getWeight();
                 if ($count + $weight > 100 ) {
@@ -107,13 +116,13 @@ $count=0;
              $count=$count+
             $operationals->getWeight();
         }
-        foreach ($plans as $key ) {
-              if($key->getStatus()<1){
-                  $key->setStatus(1);
-                  $em->flush();
-              }
+        // foreach ($plans as $key ) {
+        //       if($key->getStatus()<1){
+        //           $key->setStatus(1);
+        //           $em->flush();
+        //       }
               
-          }
+        //   }
 
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative),
@@ -147,8 +156,7 @@ $count=0;
     public function accomplishment(Request $request ,PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
     {              $entityManager = $this->getDoctrine()->getManager();
        $social=0;
-    //    dump($suitableInitiative);
-            // foreach ($suitableInitiative as $value) {
+    
                 foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
                     if($va->getName()){
                         $social=1;
@@ -158,8 +166,8 @@ $count=0;
         $em=$this->getDoctrine()->getManager();
         $initiativeName=$suitableInitiative->getInitiative()->getName();
 
-         $planAcomplish=$planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitableInitiative]); 
-         $performerTasks=$performerTaskRepository->findBy(['PlanAcomplishment'=>$planAcomplish]);
+        //  $planAcomplish=$planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitableInitiative]); 
+         $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative);
         //  dd($performerTasks);
         $total1=0;
                 $total2=0;

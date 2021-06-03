@@ -23,6 +23,9 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
+        ->leftJoin('s.PlanAcomplishment','pa')
+         ->leftJoin('pa.suitableInitiative','su')
+
 
             ->Select('s.name')  
            
@@ -30,7 +33,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             // ->addSelect('s.user')
 
             ->orderBy('s.id', 'ASC')->
-            andWhere('s.PlanAcomplishment = :plan')
+            andWhere('su.id = :plan')
             ->setParameter('plan', $plan)
 
             ->getQuery()
@@ -50,6 +53,23 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->setParameter('initiative', $initiative)
                         ->setParameter('user', $user)
+
+                        ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
+     public function findInitiativeBy($suitableinitiative)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.PlanAcomplishment','pl')  
+           ->andWhere('pl.suitableInitiative = :initiative')
+
+
+            ->setParameter('initiative', $suitableinitiative)
 
                         ->orderBy('s.id', 'ASC')
             ->getQuery()

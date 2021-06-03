@@ -173,6 +173,16 @@ class User implements UserInterface
      */
     private $performerTasks;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $userType;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $emailLocalPart;
+
 
  
 
@@ -1093,6 +1103,30 @@ class User implements UserInterface
                 $performerTask->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserType(): ?int
+    {
+        return $this->userType;
+    }
+
+    public function setUserType(?int $userType): self
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    public function getEmailLocalPart(): ?string
+    {
+        return $this->emailLocalPart;
+    }
+
+    public function setEmailLocalPart(?string $emailLocalPart): self
+    {
+        $this->emailLocalPart = $emailLocalPart;
 
         return $this;
     }
