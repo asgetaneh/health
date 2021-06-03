@@ -85,21 +85,21 @@
 									{{ form_end(filterform) }}
 								</div>
 								{# <div class="pull-left">
-								
-								
-																	<form class="form-inline" method="post" style="display:inline;">
-								
-																		<div class="input-group">
-																			<input type="text" class="form-control" name="search" placeholder="search"/>
-																			<div class="input-group-btn">
-																				<button type="submit" class="btn btn-default no-border btn-sm">
-																					<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																				</button>
-																			</div>
-																		</div>
-																	</form>
-								
-																</div> #}
+																
+																
+																									<form class="form-inline" method="post" style="display:inline;">
+																
+																										<div class="input-group">
+																											<input type="text" class="form-control" name="search" placeholder="search"/>
+																											<div class="input-group-btn">
+																												<button type="submit" class="btn btn-default no-border btn-sm">
+																													<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																												</button>
+																											</div>
+																										</div>
+																									</form>
+																
+																								</div> #}
 
 
 							</div>
@@ -129,7 +129,7 @@
 										<th>outPut</th>
 										<th>outCome</th>
 										<th>Weight</th>
-                                        <th>Status</th>
+										<th>Status</th>
 										<th>description</th>
 										<th>actions</th>
 									</tr>
@@ -188,7 +188,7 @@
 				</div>
 			</div>
 		</div>
-{{ form_start(form,{'attr': {'role':'form'} }) }}
+		{{ form_start(form,{'attr': {'role':'form'} }) }}
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
 				class="modal-dialog">
@@ -202,17 +202,17 @@
 					<div class="modal-body">
 						<div class="row">
 
-				{% for f in form  %}
-					{% if f != form._token %}
-						<div class="form-group col-6">
-							<label>{{ form_label(f) }}</label>
-							{{ form_widget(f) }}
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
+
+								{% endif %}
+
+							{% endfor %}
 						</div>
-					
-					{% endif %}
-                    
-                {% endfor %}
-				</div>
 
 
 					</div>
@@ -222,12 +222,12 @@
 				<div class="modal-footer">
 					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
 					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					
+
 				</div>
 			</div>
 
 		</div>
-        {{ form_end(form) }}
+		{{ form_end(form) }}
 	</div>
 
 {% endblock %}

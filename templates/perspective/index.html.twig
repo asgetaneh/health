@@ -70,7 +70,7 @@
 										<th>#</th>
 										<th>Name</th>
 										<th>Description</th>
-										
+
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -80,7 +80,7 @@
 											<td>{{ loop.index }}</td>
 											<td>{{ perspective.name }}</td>
 											<td>{{ perspective.description }}</td>
-											
+
 											<td>
 												<a href="{{ path('perspective_show', {'id': perspective.id}) }}" class="btn btn-primary btn-sm">
 													<i class="fa fa-eye"></i>
@@ -88,7 +88,7 @@
 												<a href="{{ path('perspective_edit', {'id': perspective.id}) }}" class="btn btn-warning btn-sm">
 													<i class="fa fa-edit"></i>
 												</a>
-											
+
 											</td>
 										</tr>
 									{% else %}
@@ -115,20 +115,20 @@
 						<h4 class="modal-title">New Perspective</h4>
 					</div>
 					<div class="modal-body">
-                    {{ form_start(form) }}
+						{{ form_start(form) }}
 						<div class="row">
 
-				{% for f in form  %}
-					{% if f != form._token %}
-						<div class="form-group col-6">
-							<label>{{ form_label(f) }}</label>
-							{{ form_widget(f) }}
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
+
+								{% endif %}
+
+							{% endfor %}
 						</div>
-					
-					{% endif %}
-                    
-                {% endfor %}
-				</div>
 					</div>
 
 

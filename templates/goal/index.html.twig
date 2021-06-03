@@ -1,7 +1,11 @@
 {% extends "base.html.twig" %}
 {% block subTitle %}
-<li class=""> <a href="#">{% trans %}SMIS{% endtrans %}</a></li>
-	<li class="active"> <a href="{{ path('goal_index')}}">{% trans %}Goal{% endtrans %}</a></li>
+	<li class="">
+		<a href="#">{% trans %}SMIS{% endtrans %}</a>
+	</li>
+	<li class="active">
+		<a href="{{ path('goal_index')}}">{% trans %}Goal{% endtrans %}</a>
+	</li>
 {% endblock %}
 {% block body %}
 
@@ -9,7 +13,9 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter"> <strong>Goal</strong> </h5>
+					<h5 class="widget-title bigger lighter">
+						<strong>Goal</strong>
+					</h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -70,7 +76,7 @@
 									<tr>
 										<th>#</th>
 										<th>Name</th>
-                                        <th>OutPut</th>
+										<th>OutPut</th>
 										<th>OutCome</th>
 										<th>Description</th>
 										<th>actions</th>
@@ -84,7 +90,7 @@
 											{% set count = count + 1 %}
 											<td>{{count }}</td>
 											<td>{{ goal.name|title }}</td>
-                                            <td>{{ goal.outPut|title }}</td>
+											<td>{{ goal.outPut|title }}</td>
 											<td>{{ goal.outCome|title }}</td>
 
 											<td>{{ goal.description|title }}</td>
@@ -92,7 +98,7 @@
 												<a title="view details" style="margin-bottom:5px;" href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
 													<i class="fa fa-eye"></i>
 												</a>
-												<a  title="edit" href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
+												<a title="edit" href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
 													<i class="fa fa-edit"></i>
 												</a>
 
@@ -113,10 +119,10 @@
 				</div>
 			</div>
 		</div>
-      {{ form_start(form) }}
+		{{ form_start(form) }}
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
-				class="modal-dialog">
+				class="modal-dialog modal-lg">
 
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -127,21 +133,20 @@
 					<div class="modal-body">
 						<div class="row">
 
-				{% for f in form  %}
-					{% if f != form._token %}
-						<div class="form-group col-6">
-							<label>{{ form_label(f) }}</label>
-							{{ form_widget(f) }}
+							{% for f in form  %}
+								{% if f != form._token %}
+									<div class="form-group col-md-6">
+										<label>{{ form_label(f) }}</label>
+										{{ form_widget(f) }}
+									</div>
+
+								{% endif %}
+
+							{% endfor %}
 						</div>
-					
-					{% endif %}
-                    
-                {% endfor %}
-				</div>
-                {# {% if edit %}
-                <input hidden name="edit" value="{{country.id}}">
-                {% endif %} #}
-			
+						{# {% if edit %}
+						                <input hidden name="edit" value="{{country.id}}">
+						                {% endif %} #}
 
 
 					</div>
@@ -151,12 +156,12 @@
 				<div class="modal-footer">
 					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
 					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					
+
 				</div>
 			</div>
 
 		</div>
-        {{ form_end(form) }}
+		{{ form_end(form) }}
 	</div>
 
 
