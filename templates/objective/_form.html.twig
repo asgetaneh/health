@@ -5,53 +5,53 @@
 	<div class="form-group">
 		<label class="floating-label" for="Name">
 			Name</label>
-		{{ form_widget(form.name,{'attr':{'class':'form-control price','required' : 'true'}}) }}
+		{{ form_widget(form.name,{'attr':{'class':'form-control ','required' : 'true'}}) }}
 	</div>
 </div>
 <div class="col-md-3">
 	<div class="form-group">
 		<label class="floating-label" for="Name">
 			OutPut</label>
-		{{ form_widget(form.outPut,{'attr':{'class':'form-control price','required' : 'true'}}) }}
+		{{ form_widget(form.outPut,{'attr':{'class':'form-control ','required' : 'true'}}) }}
+	</div>
+</div>
+
+
+<div class="col-md-3">
+	<div class="form-group">
+		<label class="floating-label" for="Name">
+			OutCome</label>
+		{{ form_widget(form.outCome,{'attr':{'class':'form-control ','required' : 'true'}}) }}
 	</div>
 </div>
 <div class="col-md-3">
 	<div class="form-group">
+		<label class="floating-label" for="Name">Description</label>
+		{{ form_widget(form.description,{'attr':{'class':'form-control ','required' : 'true'}}) }}
+	</div>
+</div>
+
+<div class="col-md-3">
+	<div class="form-group">
 		<label class="floating-label" for="Name">
 			Perspective</label>
-		{{ form_widget(form.perspective,{'attr':{'class':'form-control price','required' : 'true'}}) }}
+		{{ form_widget(form.perspective,{'attr':{'class':'form-control ','required' : 'true'}}) }}
 	</div>
 </div>
 <div class="col-md-3">
 	<div class="form-group">
 		<label class="floating-label" for="Name">
 			Goal</label>
-		{{ form_widget(form.goal,{'attr':{'class':'form-control price','required' : 'true'}}) }}
+		{{ form_widget(form.goal,{'attr':{'class':'form-control ','required' : 'true'}}) }}
 	</div>
 </div>
 <div class="col-md-3">
 	<div class="form-group">
 		<label class="floating-label" for="Name">
 			Weight</label>
-		{{ form_widget(form.weight,{'attr':{'class':'form-control price','required' : 'true'}}) }}
+		{{ form_widget(form.weight,{'attr':{'class':'form-control ','required' : 'true'}}) }}
 	</div>
 </div>
-
-<div class="col-md-3">
-	<div class="form-group">
-		<label class="floating-label" for="Name">
-			OutCome</label>
-		{{ form_widget(form.outCome,{'attr':{'class':'form-control price','required' : 'true'}}) }}
-	</div>
-</div>
-<div class="col-md-3">
-	<div class="form-group">
-		<label class="floating-label" for="Name">Description</label>
-		{{ form_widget(form.description,{'attr':{'class':'form-control price','required' : 'true'}}) }}
-	</div>
-</div>
-
-
 <div class="col-md-3">
 	<button class="btn btn-primary float-right form-controll">{{ button_label|default('Save') }}</button>
 
