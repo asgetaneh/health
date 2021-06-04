@@ -59,11 +59,17 @@ class SuitableInitiative
      */
     private $behavioralPlanningAccomplishments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalInitiative::class, mappedBy="initiative")
+     */
+    private $operationalInitiatives;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->planningAccomplishments = new ArrayCollection();
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
+        $this->operationalInitiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +221,36 @@ class SuitableInitiative
             // set the owning side to null (unless already changed)
             if ($behavioralPlanningAccomplishment->getSuitableInitiative() === $this) {
                 $behavioralPlanningAccomplishment->setSuitableInitiative(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalInitiative[]
+     */
+    public function getOperationalInitiatives(): Collection
+    {
+        return $this->operationalInitiatives;
+    }
+
+    public function addOperationalInitiative(OperationalInitiative $operationalInitiative): self
+    {
+        if (!$this->operationalInitiatives->contains($operationalInitiative)) {
+            $this->operationalInitiatives[] = $operationalInitiative;
+            $operationalInitiative->setInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalInitiative(OperationalInitiative $operationalInitiative): self
+    {
+        if ($this->operationalInitiatives->removeElement($operationalInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalInitiative->getInitiative() === $this) {
+                $operationalInitiative->setInitiative(null);
             }
         }
 

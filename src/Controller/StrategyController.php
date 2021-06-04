@@ -26,6 +26,7 @@ class StrategyController extends AbstractController
      */
     public function index(Request $request, StrategyRepository $strategyRepository, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_str');
         $strategy = new Strategy();
         $form = $this->createForm(StrategyType::class, $strategy);
         $form->handleRequest($request);
@@ -72,6 +73,7 @@ class StrategyController extends AbstractController
 
 
         if ($request->request->get('deactive')) {
+            $this->denyAccessUnlessGranted('deact_str');
             $strategy = $strategyRepository->find($request->request->get('deactive'));
             $strategy->setIsActive(false);
             $this->getDoctrine()->getManager()->flush();
@@ -79,6 +81,7 @@ class StrategyController extends AbstractController
             return $this->redirectToRoute('strategy_index');
         }
         if ($request->request->get('active')) {
+            $this->denyAccessUnlessGranted('act_str');
             $strategy = $strategyRepository->find($request->request->get('active'));
             $strategy->setIsActive(true);
             $this->getDoctrine()->getManager()->flush();
@@ -140,6 +143,7 @@ class StrategyController extends AbstractController
      */
     public function show(Strategy $strategy): Response
     {
+        $this->denyAccessUnlessGranted('vw_str_dtl');
         return $this->render('strategy/show.html.twig', [
             'strategy' => $strategy,
         ]);
@@ -150,6 +154,7 @@ class StrategyController extends AbstractController
      */
     public function edit(Request $request, Strategy $strategy): Response
     {
+        $this->denyAccessUnlessGranted('edt_str');
         $form = $this->createForm(StrategyType::class, $strategy);
         $form->handleRequest($request);
 
@@ -171,6 +176,7 @@ class StrategyController extends AbstractController
      */
     public function delete(Request $request, Strategy $strategy): Response
     {
+        $this->denyAccessUnlessGranted('dlt_str');
         if ($this->isCsrfTokenValid('delete' . $strategy->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($strategy);

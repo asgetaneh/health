@@ -22,11 +22,14 @@ class OperationalOfficeController extends AbstractController
      */
     public function index(OperationalOfficeRepository $operationalOfficeRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_opof');
         $operationalOffice = new OperationalOffice();
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+                    $this->denyAccessUnlessGranted('ad_opof');
+
             $entityManager = $this->getDoctrine()->getManager();
             $operationalOffice->setCreatedAt(new DateTime('now'));
             $operationalOffice->setCreatedBy($this->getUser());
@@ -37,6 +40,8 @@ class OperationalOfficeController extends AbstractController
             return $this->redirectToRoute('operational_office_index');
         }
         if($request->request->get('deactive')){
+                    $this->denyAccessUnlessGranted('deact_opof');
+
             $operationalOffice=$operationalOfficeRepository->find($request->request->get('deactive'));
             $operationalOffice->setIsActive(false);
               $this->getDoctrine()->getManager()->flush();
@@ -45,6 +50,8 @@ class OperationalOfficeController extends AbstractController
            
         }
           if($request->request->get('active')){
+                      $this->denyAccessUnlessGranted('act_opof');
+
             $operationalOffice=$operationalOfficeRepository->find($request->request->get('active'));
             $operationalOffice->setIsActive(true);
               $this->getDoctrine()->getManager()->flush();
@@ -71,6 +78,8 @@ class OperationalOfficeController extends AbstractController
      */
     public function new(Request $request): Response
     {
+                $this->denyAccessUnlessGranted('ad_opof');
+
         $operationalOffice = new OperationalOffice();
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
         $form->handleRequest($request);
@@ -94,6 +103,8 @@ class OperationalOfficeController extends AbstractController
      */
     public function show(OperationalOffice $operationalOffice): Response
     {
+                $this->denyAccessUnlessGranted('vw_opof_dtl');
+
         return $this->render('operational_office/show.html.twig', [
             'operational_office' => $operationalOffice,
         ]);
@@ -104,6 +115,8 @@ class OperationalOfficeController extends AbstractController
      */
     public function edit(Request $request, OperationalOffice $operationalOffice): Response
     {
+                $this->denyAccessUnlessGranted('edt_opof');
+
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
         $form->handleRequest($request);
 
@@ -124,6 +137,8 @@ class OperationalOfficeController extends AbstractController
      */
     public function delete(Request $request, OperationalOffice $operationalOffice): Response
     {
+                $this->denyAccessUnlessGranted('dlt_opof');
+
         if ($this->isCsrfTokenValid('delete'.$operationalOffice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($operationalOffice);

@@ -1,3 +1,6 @@
+{% if is_granted('vw_pln_yr') or is_granted('vw_pln_rpt') or is_granted('vw_rpt_qrt') %}
+
+
 <li>
 	<a href="#" class="dropdown-toggle ">
 		<i class=""></i>
@@ -9,25 +12,38 @@
 	</a>
     <b class="arrow"></b>
 	<ul class="submenu">
+    {% if is_granted('vw_pln_yr') %}
+    
+    
 		<li>
 			<a href="{{ path('planning_year_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %} Planning Year{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
+        {% if is_granted('vw_rpt_qrt') %}
+        
+        
         <li>
 			<a href="{{ path('planning_quarter_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %} Reporting Period{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
+        {% if is_granted('vw_pln_rpt') %}
+        
+       
 		<li>
 			<a href="{{ path('planning_phase_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Report Announsement{% endtrans %}
 			</a>
 		</li>
+         {% endif %}
 		
 		
         </ul>
         </li>
+        {% endif %}

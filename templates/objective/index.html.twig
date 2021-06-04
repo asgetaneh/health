@@ -33,21 +33,21 @@
 						<div class="btn-toolbar">
 							<div
 								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+								{% if is_granted('ad_objt') %}
 
 
 								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 									{% trans %}
 									New Objective{% endtrans %}</a>
-								{# {% endif %} #}
-								<form class="form-inline" method="post" style="display:inline;">
+								{% endif %}
+								{# <form class="form-inline" method="post" style="display:inline;">
 									<input type="hidden" name="nonapplicable" value="nonapp"/>
 									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
 										<i class="ace-icon fa fa-times bigger-110 red2"></i>
 										{% trans %}
 										None Applicable Objectives{% endtrans %}</button>
-								</form>
+								</form> #}
 
 
 							</div>
@@ -158,12 +158,19 @@
 
 											<td>{{ objective.description }}</td>
 											<td>
+                                            {% if is_granted('vw_objt_dtl') %}
+                                            
+                                           
 												<a title="view details" href="{{ path('objective_show', {'id': objective.id}) }}" class="btn btn-primary btn-xs">
 													<i class="fa fa-eye"></i>
 												</a>
+                                                 {% endif %}
+                                                   {% if is_granted('edt_objt') %}
 												<a title="edit" href="{{ path('objective_edit', {'id': objective.id}) }}" class="btn btn-warning btn-xs">
 													<i class="fa fa-edit"></i>
 												</a>
+                                                {% endif %}
+                                                  {% if is_granted('deact_objt') or is_granted('act_objt')  %}
 												<form class="" style="display:inline;" action="" method="post">
 
 
@@ -171,6 +178,7 @@
 													<input type="submit" style="display:inline;" class="btn btn-xs {{ objective.isActive?" btn-danger":" btn-success"}}" value="{{objective.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{objective.isActive?" deactivate":" activate"}}')">
 
 												</form>
+                                                {% endif %}
 
 											</td>
 										</tr>

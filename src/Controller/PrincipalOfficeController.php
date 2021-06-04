@@ -23,11 +23,13 @@ class PrincipalOfficeController extends AbstractController
      */
     public function index(PrincipalOfficeRepository $principalOfficeRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_pof');
          $principalOffice = new PrincipalOffice();
         $form = $this->createForm(PrincipalOfficeType::class, $principalOffice);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+             $this->denyAccessUnlessGranted('ad_pof');
             $entityManager = $this->getDoctrine()->getManager();
             $principalOffice->setCreateAt(new DateTime('now'));
             $principalOffice->setCreatedBy($this->getUser());
@@ -38,6 +40,7 @@ class PrincipalOfficeController extends AbstractController
             return $this->redirectToRoute('principal_office_index');
         }
         if ($request->request->get('deactive')) {
+             $this->denyAccessUnlessGranted('deact_pof');
             $principalOffice =  $principalOfficeRepository->find($request->request->get('deactive'));
             $principalOffice->setIsActive(false);
             $this->getDoctrine()->getManager()->flush();
@@ -45,6 +48,7 @@ class PrincipalOfficeController extends AbstractController
            return $this->redirectToRoute('principal_office_index');
         }
         if ($request->request->get('active')) {
+             $this->denyAccessUnlessGranted('act_pof');
             $principalOffice =  $principalOfficeRepository->find($request->request->get('active'));
             $principalOffice->setIsActive(true);
             $this->getDoctrine()->getManager()->flush();
@@ -69,6 +73,7 @@ class PrincipalOfficeController extends AbstractController
      */
     public function new(Request $request): Response
     {
+         $this->denyAccessUnlessGranted('ad_pof');
         $principalOffice = new PrincipalOffice();
         $form = $this->createForm(PrincipalOfficeType::class, $principalOffice);
         $form->handleRequest($request);
@@ -92,6 +97,7 @@ class PrincipalOfficeController extends AbstractController
      */
     public function show(PrincipalOffice $principalOffice): Response
     {
+         $this->denyAccessUnlessGranted('vw_pof_dtl');
         return $this->render('principal_office/show.html.twig', [
             'principal_office' => $principalOffice,
         ]);
@@ -102,6 +108,7 @@ class PrincipalOfficeController extends AbstractController
      */
     public function edit(Request $request, PrincipalOffice $principalOffice): Response
     {
+         $this->denyAccessUnlessGranted('edt_pof');
         $form = $this->createForm(PrincipalOfficeType::class, $principalOffice);
         $form->handleRequest($request);
 
@@ -122,6 +129,7 @@ class PrincipalOfficeController extends AbstractController
      */
     public function delete(Request $request, PrincipalOffice $principalOffice): Response
     {
+         $this->denyAccessUnlessGranted('dlt_pof');
         if ($this->isCsrfTokenValid('delete'.$principalOffice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($principalOffice);

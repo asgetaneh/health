@@ -21,6 +21,7 @@ class PerspectiveController extends AbstractController
      */
     public function index(PerspectiveRepository $perspectiveRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('vw_per');
         $perspective = new Perspective();
         $form = $this->createForm(PerspectiveType::class, $perspective);
         $form->handleRequest($request);
@@ -61,6 +62,7 @@ class PerspectiveController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('vw_per');
         $perspective = new Perspective();
         $form = $this->createForm(PerspectiveType::class, $perspective);
         $form->handleRequest($request);
@@ -84,6 +86,7 @@ class PerspectiveController extends AbstractController
      */
     public function show(Perspective $perspective): Response
     {
+        $this->denyAccessUnlessGranted('vw_per_dtl');
         return $this->render('perspective/show.html.twig', [
             'perspective' => $perspective,
         ]);
@@ -94,6 +97,8 @@ class PerspectiveController extends AbstractController
      */
     public function edit(Request $request, Perspective $perspective): Response
     {
+                $this->denyAccessUnlessGranted('edt_per');
+
         $form = $this->createForm(PerspectiveType::class, $perspective);
         $form->handleRequest($request);
 
@@ -114,6 +119,7 @@ class PerspectiveController extends AbstractController
      */
     public function delete(Request $request, Perspective $perspective): Response
     {
+     $this->denyAccessUnlessGranted('dlt_per');
         if ($this->isCsrfTokenValid('delete'.$perspective->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($perspective);

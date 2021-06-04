@@ -21,15 +21,17 @@ class PlanningYearController extends AbstractController
      */
     public function index(PlanningYearRepository $planningYearRepository,Request $request): Response
     {
+        $this->denyAccessUnlessGranted('vw_pln_yr');
         $planningYear = new PlanningYear();
         $form = $this->createForm(PlanningYearType::class, $planningYear);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+             $this->denyAccessUnlessGranted('ad_pln_yr');
             $entityManager = $this->getDoctrine()->getManager();
             $planningYear->setCreatedAt(new DateTime('now'));
             $planningYear->setCreatedBy($this->getUser());
-            $planningYear->setIsActive(0);
+            // $planningYear->setIsActive(0);
             $entityManager->persist($planningYear);
 
             $entityManager->flush();
@@ -48,6 +50,7 @@ class PlanningYearController extends AbstractController
      */
     public function activatePlanningYear(Request $request,PlanningYear $planningYear): Response
     {
+         $this->denyAccessUnlessGranted('act_pln_yr');
         $entityManager = $this->getDoctrine()->getManager();
         
         if($request->request->get('active')){
@@ -58,6 +61,7 @@ class PlanningYearController extends AbstractController
 
         }
         if($request->request->get('deactive')){
+             $this->denyAccessUnlessGranted('deact_pln_yr');
             $planningYear->setIsActive(0);
             $entityManager->persist($planningYear);
             $this->addFlash('success',"planning year is deactivated successfuly");
@@ -75,6 +79,7 @@ class PlanningYearController extends AbstractController
      */
     public function new(Request $request): Response
     {
+         $this->denyAccessUnlessGranted('ad_pln_yr');
         $planningYear = new PlanningYear();
         $form = $this->createForm(PlanningYearType::class, $planningYear);
         $form->handleRequest($request);
@@ -98,6 +103,7 @@ class PlanningYearController extends AbstractController
      */
     public function show(PlanningYear $planningYear): Response
     {
+         $this->denyAccessUnlessGranted('vw_pln_yr_dtl');
         return $this->render('planning_year/show.html.twig', [
             'planning_year' => $planningYear,
         ]);
@@ -108,6 +114,7 @@ class PlanningYearController extends AbstractController
      */
     public function edit(Request $request, PlanningYear $planningYear): Response
     {
+         $this->denyAccessUnlessGranted('edt_pln_yr');
         $form = $this->createForm(PlanningYearType::class, $planningYear);
         $form->handleRequest($request);
 
@@ -128,6 +135,7 @@ class PlanningYearController extends AbstractController
      */
     public function delete(Request $request, PlanningYear $planningYear): Response
     {
+         $this->denyAccessUnlessGranted('dlt_pln_yr');
         if ($this->isCsrfTokenValid('delete'.$planningYear->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($planningYear);

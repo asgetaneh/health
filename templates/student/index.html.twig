@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="active">{% trans %}EMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('student')}}">{% trans %}Student Information{% endtrans %}</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-primary row ">
+<div class="panel-heading"> <h4><strong>Generate Custom Report For Student Data </strong></h4></div>
+  <div class="panel-body col-lg-12 col-md-12">
+   <div class="search-area well col-md-12 col-lg-12">
+   {{ form_start(form) }}
+   <div class="row">
+   <div class="form-group col-md-3">
+   {{form_label(form.campus)}}
+   {{ form_widget(form.campus,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.college)}}
+   {{ form_widget(form.college,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.programLevel)}}
+   {{ form_widget(form.programLevel,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.programType)}}
+   {{ form_widget(form.programType,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+     <div class="form-group col-md-3">
+   {{form_label(form.enrollmentType)}}
+   {{ form_widget(form.enrollmentType,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.department)}}
+   {{ form_widget(form.department,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.program)}}
+   {{ form_widget(form.program,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.sex)}}
+   {{ form_widget(form.sex,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   <div class="form-group col-md-3">
+   {{form_label(form.semister)}}
+   {{ form_widget(form.semister,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   <div class="form-group col-md-3">
+   {{form_label(form.year)}}
+   {{ form_widget(form.year,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+    <div class="form-group col-md-3">
+   {{form_label(form.studentStatus)}}
+   {{ form_widget(form.studentStatus,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   <div class="form-group col-md-3">
+   {{form_label(form.sposnsorship)}}
+   {{ form_widget(form.sposnsorship,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   <div class="clearfix "></div>
+   <div class="form-group col-md-3">
+
+   {{form_label(form.disablity)}}
+   {{ form_widget(form.disablity,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+  
+   <div class="form-group col-md-3">
+   {{form_label(form.region)}}
+   {{ form_widget(form.region,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   <div class="form-group col-md-3" >
+   <button type="submit" class="btn btn-primary btn-sm" style="margin-top:30px;">Filter</button>
+   <button type="reset" class="btn btn-warning btn-sm" style="margin-top:30px;">Reset</button>
+   
+   </div>
+    <div class="clearfix"></div>
+
+   </div>
+   
+   {{ form_end(form) }}
+   </div>
+  </div>
+</div>
+{% endblock %}

@@ -22,11 +22,13 @@ class InitiativeAttributeController extends AbstractController
      */
     public function index(InitiativeAttributeRepository $initiativeAttributeRepository,Request $request): Response
     {
+        $this->denyAccessUnlessGranted('vw_intv_atr');
          $initiativeAttribute = new InitiativeAttribute();
         $form = $this->createForm(InitiativeAttributeType::class, $initiativeAttribute);
         $form->handleRequest($request);
          $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('ad_intv_atr');
             $entityManager = $this->getDoctrine()->getManager();
              foreach ($locales as $key => $value) {
                $initiativeAttribute->translate($value)->setName($request->request->get('initiative_attribute')[$value]);
@@ -53,6 +55,7 @@ class InitiativeAttributeController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ad_intv_atr');
         $initiativeAttribute = new InitiativeAttribute();
         $form = $this->createForm(InitiativeAttributeType::class, $initiativeAttribute);
         $form->handleRequest($request);

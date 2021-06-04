@@ -63,12 +63,18 @@ class OperationalOffice
      * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="operationalOffice")
      */
     private $initiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalInitiative::class, mappedBy="office")
+     */
+    private $operationalInitiatives;
     
     public function __construct()
     {
         $this->operationalManagers = new ArrayCollection();
         $this->performers = new ArrayCollection();
         $this->initiatives = new ArrayCollection();
+        $this->operationalInitiatives = new ArrayCollection();
     }
   
     public function getId(): ?int
@@ -234,6 +240,36 @@ class OperationalOffice
     {
         if ($this->initiatives->removeElement($initiative)) {
             $initiative->removeOperationalOffice($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalInitiative[]
+     */
+    public function getOperationalInitiatives(): Collection
+    {
+        return $this->operationalInitiatives;
+    }
+
+    public function addOperationalInitiative(OperationalInitiative $operationalInitiative): self
+    {
+        if (!$this->operationalInitiatives->contains($operationalInitiative)) {
+            $this->operationalInitiatives[] = $operationalInitiative;
+            $operationalInitiative->setOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalInitiative(OperationalInitiative $operationalInitiative): self
+    {
+        if ($this->operationalInitiatives->removeElement($operationalInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalInitiative->getOffice() === $this) {
+                $operationalInitiative->setOffice(null);
+            }
         }
 
         return $this;

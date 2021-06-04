@@ -28,6 +28,7 @@ class KeyPerformanceIndicatorController extends AbstractController
      */
     public function index(Request $request, KeyPerformanceIndicatorRepository $keyPerformanceIndicatorRepository, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_kpi');
         $keyPerformanceIndicator = new KeyPerformanceIndicator();
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
@@ -79,6 +80,7 @@ class KeyPerformanceIndicatorController extends AbstractController
         }
 
         if ($request->request->get('deactive')) {
+            $this->denyAccessUnlessGranted('deact_kpi');
             $keyPerformanceIndicator = $keyPerformanceIndicatorRepository->find($request->request->get('deactive'));
             $keyPerformanceIndicator->setIsActive(false);
             $this->getDoctrine()->getManager()->flush();
@@ -86,6 +88,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             return $this->redirectToRoute('key_performance_indicator_index');
         }
         if ($request->request->get('active')) {
+            $this->denyAccessUnlessGranted('act_kpi');
             $keyPerformanceIndicator = $keyPerformanceIndicatorRepository->find($request->request->get('active'));
             $keyPerformanceIndicator->setIsActive(true);
             $this->getDoctrine()->getManager()->flush();
@@ -123,6 +126,7 @@ class KeyPerformanceIndicatorController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ad_kpi');
         $keyPerformanceIndicator = new KeyPerformanceIndicator();
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
@@ -146,6 +150,7 @@ class KeyPerformanceIndicatorController extends AbstractController
      */
     public function show(KeyPerformanceIndicator $keyPerformanceIndicator): Response
     {
+        $this->denyAccessUnlessGranted('vw_kpi_dtl');
         return $this->render('key_performance_indicator/show.html.twig', [
             'key_performance_indicator' => $keyPerformanceIndicator,
         ]);
@@ -156,6 +161,7 @@ class KeyPerformanceIndicatorController extends AbstractController
      */
     public function edit(Request $request, KeyPerformanceIndicator $keyPerformanceIndicator): Response
     {
+        $this->denyAccessUnlessGranted('edt_kpi');
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
 
@@ -178,6 +184,7 @@ class KeyPerformanceIndicatorController extends AbstractController
      */
     public function delete(Request $request, KeyPerformanceIndicator $keyPerformanceIndicator): Response
     {
+        $this->denyAccessUnlessGranted('dlt_kpi');
         if ($this->isCsrfTokenValid('delete' . $keyPerformanceIndicator->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($keyPerformanceIndicator);

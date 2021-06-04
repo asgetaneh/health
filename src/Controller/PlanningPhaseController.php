@@ -24,6 +24,7 @@ class PlanningPhaseController extends AbstractController
      */
     public function index(PlanningPhaseRepository $planningPhaseRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_pln_rpt');
         $planningPhase = new PlanningPhase();
         $form = $this->createForm(PlanningPhaseType::class, $planningPhase);
         $form->handleRequest($request);
@@ -49,7 +50,7 @@ class PlanningPhaseController extends AbstractController
      * @Route("/new", name="planning_phase_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
-    {
+    {$this->denyAccessUnlessGranted('ad_pln_rpt');
         $planningPhase = new PlanningPhase();
         $form = $this->createForm(PlanningPhaseType::class, $planningPhase);
         $form->handleRequest($request);
@@ -73,6 +74,7 @@ class PlanningPhaseController extends AbstractController
      */
     public function show(PlanningPhase $planningPhase): Response
     {
+        $this->denyAccessUnlessGranted('vw_pln_rpt_dtl');
         return $this->render('planning_phase/show.html.twig', [
             'planning_phase' => $planningPhase,
         ]);
@@ -83,6 +85,7 @@ class PlanningPhaseController extends AbstractController
      */
     public function edit(Request $request, PlanningPhase $planningPhase): Response
     {
+        $this->denyAccessUnlessGranted('edt_pln_rpt');
         $form = $this->createForm(PlanningPhaseType::class, $planningPhase);
         $form->handleRequest($request);
 
@@ -103,6 +106,7 @@ class PlanningPhaseController extends AbstractController
      */
     public function delete(Request $request, PlanningPhase $planningPhase): Response
     {
+        $this->denyAccessUnlessGranted('dlt_pln_rpt');
         if ($this->isCsrfTokenValid('delete'.$planningPhase->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($planningPhase);

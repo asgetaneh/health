@@ -1121,7 +1121,7 @@ class User implements UserInterface
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
-}
+   }
     public function getUserType(): ?int
     {
         return $this->userType;

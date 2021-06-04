@@ -1,3 +1,6 @@
+{% if is_granted('vw_intv_bvr') or is_granted('vw_intv_atr') or is_granted('vw_intv') %}
+
+
 <li>
 	<a href="#" class="dropdown-toggle ">
 		<i class=""></i>
@@ -9,18 +12,27 @@
 	</a>
     <b class="arrow"></b>
 	<ul class="submenu">
+    {% if is_granted('vw_intv') %}
+    
+    
 		<li>
 			<a href="{{ path('initiative_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Initiatives{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
+         {% if is_granted('vw_suit_intv') %}
         <li>
 			<a href="{{ path('suitable_initiative_index') }}">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}suitable Initiative{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
+        {% if is_granted('vw_intv_bvr') %}
+        
+       
 		
 		<li>
 			<a href="{{ path('initiative_behaviour_index') }}">
@@ -29,6 +41,10 @@
 				{% endtrans %}
 			</a>
 		</li>
+         {% endif %}
+        {% if is_granted('vw_intv_atr') %}
+        
+        
 		<li>
 			<a href="{{ path('initiative_attribute_index') }}">
 				<b class="fa fa-caret-right"></b>
@@ -36,5 +52,7 @@
 				{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
         </ul>
         </li>
+        {% endif %}

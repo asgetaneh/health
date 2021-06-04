@@ -32,7 +32,7 @@ class PlanningYear
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive=1;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="planningYears")

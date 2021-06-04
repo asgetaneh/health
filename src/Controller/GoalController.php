@@ -22,6 +22,7 @@ class GoalController extends AbstractController
      */
     public function index(Request $request, GoalRepository $goalRepository, PaginatorInterface $paginator): Response
     {
+         $this->denyAccessUnlessGranted('vw_gol');
         $goal = new Goal();
         $form = $this->createForm(GoalType::class, $goal);
         $form->handleRequest($request);
@@ -103,6 +104,7 @@ class GoalController extends AbstractController
      */
     public function show(Goal $goal): Response
     {
+        $this->denyAccessUnlessGranted('vw_gol_dtl');
         return $this->render('goal/show.html.twig', [
             'goal' => $goal,
         ]);
@@ -113,6 +115,7 @@ class GoalController extends AbstractController
      */
     public function edit(Request $request, Goal $goal): Response
     {
+        $this->denyAccessUnlessGranted('edt_gol');
         $form = $this->createForm(GoalType::class, $goal);
         $form->handleRequest($request);
 
@@ -135,6 +138,7 @@ class GoalController extends AbstractController
      */
     public function delete(Request $request, Goal $goal): Response
     {
+        $this->denyAccessUnlessGranted('dlt_gol');
         if ($this->isCsrfTokenValid('delete' . $goal->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($goal);
