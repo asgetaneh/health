@@ -31,23 +31,22 @@
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
 						<div class="btn-toolbar">
-							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+							<div class="btn-group">
+								{% if is_granted('ad_gol') %}
 
 
-								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-									{% trans %}
-									New Goal{% endtrans %}</a>
-								{# {% endif %} #}
-								<form class="form-inline" method="post" style="display:inline;">
+									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+										{% trans %}
+										New Goal{% endtrans %}</a>
+								{% endif %}
+								{# <form class="form-inline" method="post" style="display:inline;">
 									<input type="hidden" name="nonapplicable" value="nonapp"/>
 									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
 										<i class="ace-icon fa fa-times bigger-110 red2"></i>
 										{% trans %}
 										None Applicable Goals{% endtrans %}</button>
-								</form>
+								</form> #}
 
 
 							</div>
@@ -95,12 +94,19 @@
 
 											<td>{{ goal.description|title }}</td>
 											<td>
-												<a title="view details" style="margin-bottom:5px;" href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
-													<i class="fa fa-eye"></i>
-												</a>
-												<a title="edit" href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
-													<i class="fa fa-edit"></i>
-												</a>
+												{% if is_granted('vw_gol_dtl') %}
+													<a title="view details" style="margin-bottom:5px;" href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">
+														<i class="fa fa-eye"></i>
+													</a>
+												{% endif %}
+
+												{% if is_granted('edt_gol') %}
+
+
+													<a title="edit" href="{{ path('goal_edit', {'id': goal.id}) }}" class="btn btn-warning btn-sm">
+														<i class="fa fa-edit"></i>
+													</a>
+												{% endif %}
 
 											</td>
 
@@ -145,8 +151,8 @@
 							{% endfor %}
 						</div>
 						{# {% if edit %}
-						                <input hidden name="edit" value="{{country.id}}">
-						                {% endif %} #}
+												                <input hidden name="edit" value="{{country.id}}">
+												                {% endif %} #}
 
 
 					</div>

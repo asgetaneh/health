@@ -1113,9 +1113,34 @@ class User implements UserInterface
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
-                return $this;
 
-}
+   }
+    public function getUserType(): ?int
+    {
+        return $this->userType;
+    }
+
+    public function setUserType(?int $userType): self
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    public function getEmailLocalPart(): ?string
+    {
+        return $this->emailLocalPart;
+    }
+
+    public function setEmailLocalPart(?string $emailLocalPart): self
+    {
+        $this->emailLocalPart = $emailLocalPart;
+
+        return $this;
+    }
+
+               
+
   
     
 

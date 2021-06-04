@@ -30,20 +30,21 @@
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
 						<div class="btn-toolbar">
-							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
-								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-									{% trans %}
-									New Initiatives{% endtrans %}</a>
-								<form class="form-inline" method="post" style="display:inline;">
-									<input type="hidden" name="nonapplicable" value="nonapp"/>
-									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-										<i class="ace-icon fa fa-times bigger-110 red2"></i>
+							<div class="btn-group">
+								{% if is_granted('ad_intv') %}
+									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 										{% trans %}
-										None Applicable Initiatives{% endtrans %}</button>
-								</form>
+										New Initiatives{% endtrans %}</a>
+								{% endif %}
+
+								{# <form class="form-inline" method="post" style="display:inline;">
+																										<input type="hidden" name="nonapplicable" value="nonapp"/>
+																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
+																											{% trans %}
+																											None Applicable Initiatives{% endtrans %}</button>
+																									</form> #}
 
 							</div>
 
@@ -174,15 +175,23 @@
 											<td>{{ initiative.description }}</td>
 
 											<td>
-												<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
-												<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
-                                                  <form  class="" style="display:inline;" action="" method="post">
-                                            
-                                                  
-                                                    <input type="hidden" name="{{initiative.isActive ?"deactive":"active"}}" value ="{{ initiative.id}}">
-                                                    <input type="submit" style="display:inline;" class="btn btn-xs {{ initiative.isActive?"btn-danger":"btn-success"}}" value="{{initiative.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{initiative.isActive?"deactivate":"activate"}}')">
-                                                      
-                                            </form>
+												{% if is_granted('vw_intv_dtl') %}
+
+
+													<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
+												{% endif %}
+												{% if is_granted('edt_intv') %}
+													<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
+												{% endif %}
+												{% if is_granted('act_intv') or is_granted('deact_intv')  %}
+													<form class="" style="display:inline;" action="" method="post">
+
+
+														<input type="hidden" name="{{initiative.isActive ?"deactive":"active"}}" value="{{ initiative.id}}">
+														<input type="submit" style="display:inline;" class="btn btn-xs {{ initiative.isActive?" btn-danger":" btn-success"}}" value="{{initiative.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{initiative.isActive?" deactivate":" activate"}}')">
+
+													</form>
+												{% endif %}
 											</td>
 										</tr>
 									{% else %}
@@ -216,17 +225,19 @@
 					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
 					<div class="row">
 
-							{% for f in form  %}
-								{% if f != form._token %}
-									<div class="form-group col-md-4">
-										<label>{{ form_label(f) }}</label>
-										{{ form_widget(f) }}
-									</div>
 
-								{% endif %}
+						{% for f in form  %}
+							{% if f != form._token %}
+								<div class="form-group col-md-4">
+									<label>{{ form_label(f) }}</label>
+									{{ form_widget(f) }}
+								</div>
 
-							{% endfor %}
-						</div>
+
+							{% endif %}
+
+						{% endfor %}
+					</div>
 
 				</div>
 

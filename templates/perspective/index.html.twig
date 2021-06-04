@@ -26,21 +26,21 @@
 						<div class="btn-toolbar">
 							<div
 								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+								{% if is_granted('ad_per') %}
 
 
 								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 									{% trans %}
 									New perspective{% endtrans %}</a>
-								{# {% endif %} #}
-								<form class="form-inline" method="post" style="display:inline;">
+								{% endif %}
+								{# <form class="form-inline" method="post" style="display:inline;">
 									<input type="hidden" name="nonapplicable" value="nonapp"/>
 									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
 										<i class="ace-icon fa fa-times bigger-110 red2"></i>
 										{% trans %}
 										None Applicable perspectives{% endtrans %}</button>
-								</form>
+								</form> #}
 
 
 							</div>
@@ -82,12 +82,18 @@
 											<td>{{ perspective.description }}</td>
 
 											<td>
+                                            {% if is_granted('vw_per_dtl') %}
+                                            
+                                          
 												<a href="{{ path('perspective_show', {'id': perspective.id}) }}" class="btn btn-primary btn-sm">
 													<i class="fa fa-eye"></i>
 												</a>
+                                                  {% endif %}
+                                                   {% if is_granted('edt_per') %}
 												<a href="{{ path('perspective_edit', {'id': perspective.id}) }}" class="btn btn-warning btn-sm">
 													<i class="fa fa-edit"></i>
 												</a>
+                                                {% endif %}
 
 											</td>
 										</tr>

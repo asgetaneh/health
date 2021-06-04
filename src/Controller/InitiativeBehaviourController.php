@@ -22,11 +22,13 @@ class InitiativeBehaviourController extends AbstractController
      */
     public function index(InitiativeBehaviourRepository $initiativeBehaviourRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('vw_intv_bvr');
         $initiativeBehaviour = new InitiativeBehaviour();
         $form = $this->createForm(InitiativeBehaviourType::class, $initiativeBehaviour);
         $form->handleRequest($request);
         $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+             $this->denyAccessUnlessGranted('ad_intv_bvr');
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $initiativeBehaviour->translate($value)->setName($request->request->get('initiative_behaviour')[$value]);

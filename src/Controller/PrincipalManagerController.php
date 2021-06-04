@@ -22,6 +22,7 @@ class PrincipalManagerController extends AbstractController
      */
     public function index(PrincipalManagerRepository $principalManagerRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('vw_pr_mng');
      $principalManager = new PrincipalManager();
         $form = $this->createForm(PrincipalManagerType::class, $principalManager);
         $form->handleRequest($request);
@@ -54,6 +55,8 @@ class PrincipalManagerController extends AbstractController
         }
 
         if($request->request->get('deactive')){
+                    $this->denyAccessUnlessGranted('deact_pr_mng');
+
             $principalManager=$principalManagerRepository->find($request->request->get('deactive'));
             $principalManager->setIsActive(false);
               $this->getDoctrine()->getManager()->flush();
@@ -62,6 +65,8 @@ class PrincipalManagerController extends AbstractController
            
         }
          if($request->request->get('active')){
+                     $this->denyAccessUnlessGranted('act_pr_mng');
+
               $principalManager=$principalManagerRepository->find($request->request->get('active'));
               $isActivePrincipal=$principalManagerRepository->findActive($principalManager->getPrincipalOffice(),null);
                if ($isActivePrincipal) {
@@ -93,6 +98,8 @@ class PrincipalManagerController extends AbstractController
      */
     public function new(Request $request): Response
     {
+                $this->denyAccessUnlessGranted('ad_pr_mng');
+
         $principalManager = new PrincipalManager();
         $form = $this->createForm(PrincipalManagerType::class, $principalManager);
         $form->handleRequest($request);
@@ -116,6 +123,8 @@ class PrincipalManagerController extends AbstractController
      */
     public function show(PrincipalManager $principalManager): Response
     {
+                $this->denyAccessUnlessGranted('vw_pr_mng_dtl');
+
         return $this->render('principal_manager/show.html.twig', [
             'principal_manager' => $principalManager,
         ]);
@@ -126,6 +135,8 @@ class PrincipalManagerController extends AbstractController
      */
     public function edit(Request $request, PrincipalManager $principalManager): Response
     {
+                $this->denyAccessUnlessGranted('edt_pr_mng');
+
         $form = $this->createForm(PrincipalManagerType::class, $principalManager);
         $form->handleRequest($request);
 
@@ -146,6 +157,8 @@ class PrincipalManagerController extends AbstractController
      */
     public function delete(Request $request, PrincipalManager $principalManager): Response
     {
+                $this->denyAccessUnlessGranted('dlt_pr_mng');
+
         if ($this->isCsrfTokenValid('delete'.$principalManager->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($principalManager);

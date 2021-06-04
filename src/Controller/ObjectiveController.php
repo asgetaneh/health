@@ -25,6 +25,7 @@ class ObjectiveController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator, ObjectiveRepository $objectiveRepository): Response
     {
+        $this->denyAccessUnlessGranted('vw_objt');
         $objective = new Objective();
         $form = $this->createForm(ObjectiveType::class, $objective);
         $form->handleRequest($request);
@@ -45,6 +46,7 @@ class ObjectiveController extends AbstractController
         $locales = Helper::locales();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('ad_objt');
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $objective->translate($value)->setName($request->request->get('objective')[$value]);
@@ -63,6 +65,7 @@ class ObjectiveController extends AbstractController
         }
 
         if ($request->request->get('deactive')) {
+             $this->denyAccessUnlessGranted('deact_objt');
             $objective = $objectiveRepository->find($request->request->get('deactive'));
             $objective->setIsActive(false);
             $this->getDoctrine()->getManager()->flush();
@@ -70,6 +73,7 @@ class ObjectiveController extends AbstractController
             return $this->redirectToRoute('objective_index');
         }
         if ($request->request->get('active')) {
+            $this->denyAccessUnlessGranted('act_objt');
             $objective = $objectiveRepository->find($request->request->get('active'));
             $objective->setIsActive(true);
             $this->getDoctrine()->getManager()->flush();
@@ -131,6 +135,7 @@ class ObjectiveController extends AbstractController
      */
     public function show(Objective $objective): Response
     {
+        $this->denyAccessUnlessGranted('vw_objt_dtl');
         return $this->render('objective/show.html.twig', [
             'objective' => $objective,
         ]);
@@ -141,6 +146,7 @@ class ObjectiveController extends AbstractController
      */
     public function edit(Request $request, Objective $objective): Response
     {
+         $this->denyAccessUnlessGranted('edt_objt');
         $form = $this->createForm(ObjectiveType::class, $objective);
         $form->handleRequest($request);
 

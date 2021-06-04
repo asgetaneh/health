@@ -21,12 +21,14 @@ class PerformerController extends AbstractController
      */
     public function index(PerformerRepository $performerRepository,Request $request,PaginatorInterface $paginator): Response
     {
-         
+         $this->denyAccessUnlessGranted('vw_prfm');
         $performer = new Performer();
         $form = $this->createForm(PerformerType::class, $performer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+                     $this->denyAccessUnlessGranted('ad_prfm');
+
             $entityManager = $this->getDoctrine()->getManager();
             $isActivePrincipal=$performerRepository->findActive($performer->getOperationalOffice(),$performer->getPerformer());
                if ($isActivePrincipal) {
@@ -40,6 +42,8 @@ class PerformerController extends AbstractController
             return $this->redirectToRoute('performer_index');
         }
          if($request->request->get('deactive')){
+                      $this->denyAccessUnlessGranted('deact_prfm');
+
              $performer=$performerRepository->find($request->request->get('deactive'));
              $performer->setIsActive(false);
               $this->getDoctrine()->getManager()->flush();
@@ -48,6 +52,8 @@ class PerformerController extends AbstractController
            
         }
           if($request->request->get('active')){
+                       $this->denyAccessUnlessGranted('act_prfm');
+
              $performer=$performerRepository->find($request->request->get('active'));
            
               
@@ -77,6 +83,8 @@ class PerformerController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ad_prfm');
+
         $performer = new Performer();
         $form = $this->createForm(PerformerType::class, $performer);
         $form->handleRequest($request);
@@ -100,6 +108,8 @@ class PerformerController extends AbstractController
      */
     public function show(Performer $performer): Response
     {
+                 $this->denyAccessUnlessGranted('vw_prfm_dtl');
+
         return $this->render('performer/show.html.twig', [
             'performer' => $performer,
         ]);
@@ -110,6 +120,8 @@ class PerformerController extends AbstractController
      */
     public function edit(Request $request, Performer $performer): Response
     {
+                 $this->denyAccessUnlessGranted('edt_prfm');
+
         $form = $this->createForm(PerformerType::class, $performer);
         $form->handleRequest($request);
 
@@ -130,6 +142,8 @@ class PerformerController extends AbstractController
      */
     public function delete(Request $request, Performer $performer): Response
     {
+                 $this->denyAccessUnlessGranted('dlt_prfm');
+
         if ($this->isCsrfTokenValid('delete'.$performer->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($performer);

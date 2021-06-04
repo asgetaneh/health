@@ -29,23 +29,22 @@
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
 						<div class="btn-toolbar">
-							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+							<div class="btn-group">
+								{% if is_granted('ad_str') %}
 
 
-								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-									{% trans %}
-									New Strategy{% endtrans %}</a>
-								{# {% endif %} #}
-								<form class="form-inline" method="post" style="display:inline;">
-									<input type="hidden" name="nonapplicable" value="nonapp"/>
-									<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-										<i class="ace-icon fa fa-times bigger-110 red2"></i>
+									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 										{% trans %}
-										None Applicable Strategys{% endtrans %}</button>
-								</form>
+										New Strategy{% endtrans %}</a>
+								{% endif %}
+								{# <form class="form-inline" method="post" style="display:inline;">
+																	<input type="hidden" name="nonapplicable" value="nonapp"/>
+																	<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+																		<i class="ace-icon fa fa-times bigger-110 red2"></i>
+																		{% trans %}
+																		None Applicable Strategys{% endtrans %}</button>
+																</form> #}
 
 
 							</div>
@@ -154,19 +153,27 @@
 
 											<td>{{ strategy.description }}</td>
 											<td>
-												<a title="view details" href="{{ path('strategy_show', {'id': strategy.id}) }}" class="btn btn-primary btn-sm">
-													<i class="fa fa-eye"></i>
-												</a>
-												<a title="edit" href="{{ path('strategy_edit', {'id': strategy.id}) }}" class="btn btn-warning btn-sm">
-													<i class="fa fa-edit"></i>
-												</a>
-												<form class="" style="display:inline;" action="" method="post">
+												{% if is_granted('vw_str_dtl') %}
 
 
-													<input type="hidden" name="{{strategy.isActive ?"deactive":"active"}}" value="{{ strategy.id}}">
-													<input type="submit" style="display:inline;" class="btn btn-sm {{ strategy.isActive?" btn-danger":" btn-success"}}" value="{{strategy.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{strategy.isActive?" deactivate":" activate"}}')">
+													<a title="view details" href="{{ path('strategy_show', {'id': strategy.id}) }}" class="btn btn-primary btn-sm">
+														<i class="fa fa-eye"></i>
+													</a>
+												{% endif %}
+												{% if is_granted('edt_str') %}
+													<a title="edit" href="{{ path('strategy_edit', {'id': strategy.id}) }}" class="btn btn-warning btn-sm">
+														<i class="fa fa-edit"></i>
+													</a>
+												{% endif %}
+												{% if is_granted('deact_str') or is_granted('act_str') %}
+													<form class="" style="display:inline;" action="" method="post">
 
-												</form>
+
+														<input type="hidden" name="{{strategy.isActive ?"deactive":"active"}}" value="{{ strategy.id}}">
+														<input type="submit" style="display:inline;" class="btn btn-sm {{ strategy.isActive?" btn-danger":" btn-success"}}" value="{{strategy.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{strategy.isActive?" deactivate":" activate"}}')">
+
+													</form>
+												{% endif %}
 
 											</td>
 										</tr>

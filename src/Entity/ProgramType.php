@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\DepartementRepository;
+use App\Repository\ProgramTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DepartementRepository::class)
+ * @ORM\Entity(repositoryClass=ProgramTypeRepository::class)
  */
-class Departement
+class ProgramType
 {
     /**
      * @ORM\Id
@@ -25,17 +25,17 @@ class Departement
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $shortName;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=College::class, inversedBy="departements")
-     */
-    private $college;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Program::class, mappedBy="department")
+     * @ORM\OneToMany(targetEntity=Program::class, mappedBy="programType")
      */
     private $programs;
 
@@ -61,6 +61,18 @@ class Departement
         return $this;
     }
 
+    public function getShortName(): ?string
+    {
+        return $this->shortName;
+    }
+
+    public function setShortName(?string $shortName): self
+    {
+        $this->shortName = $shortName;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -69,18 +81,6 @@ class Departement
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCollege(): ?College
-    {
-        return $this->college;
-    }
-
-    public function setCollege(?College $college): self
-    {
-        $this->college = $college;
 
         return $this;
     }
@@ -97,7 +97,7 @@ class Departement
     {
         if (!$this->programs->contains($program)) {
             $this->programs[] = $program;
-            $program->setDepartment($this);
+            $program->setProgramType($this);
         }
 
         return $this;
@@ -107,8 +107,8 @@ class Departement
     {
         if ($this->programs->removeElement($program)) {
             // set the owning side to null (unless already changed)
-            if ($program->getDepartment() === $this) {
-                $program->setDepartment(null);
+            if ($program->getProgramType() === $this) {
+                $program->setProgramType(null);
             }
         }
 
