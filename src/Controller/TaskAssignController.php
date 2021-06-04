@@ -14,16 +14,70 @@ use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * @Route("/task/assign")
  */
 class TaskAssignController extends AbstractController
 {
+   
+  private $params;
+    private $approverRepository;
+    private $logger;
+    private $mailer;
+    public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
+    {
+        // $this->approverRepository = $approverRepository;
+        $this->logger = $logger;
+        $this->mailer = $mailer;
+        $this->params = $params;
+    }
+    /**
+     * @Route("/mail", name="test_mail")
+     */
+    public function mail(Request $request, $approver, $formData, $message, $url)
+    {
+
+        $data = array();
+        // dd($approver);
+        array_push($data, ['name' => $formData->getName()]);
+        array_push($data, ['weight' => $formData->getWeight()]);
+        // array_push($data, ['domainName' => $formData->getDomainName()]);
+
+        $maillermessage = (new TemplatedEmail())
+            ->from($this->params->get('app.sender_email'))
+            ->to($approver)
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->htmlTemplate(
+                'page/mail.html.twig'
+            )->context([
+                'purpose' => $formData->getName(),
+                'environment' => $formData->getWeight(),
+                // 'domainName' => $formData->getDomainName(),
+                'message' => $message,
+                'url' => $url
+            ]);
+
+        $state = $this->mailer->send($maillermessage);
+
+        // return dd($state);
+
+        $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
+        // $this->addFlash('success', 'Email sent');
+
+        return $this->redirectToRoute('task_assign_new');
+    }
+
+
     /**
      * @Route("/", name="task_assign_index", methods={"GET"})
      */
@@ -105,7 +159,15 @@ class TaskAssignController extends AbstractController
                           $taskUser->setStatus(0);
 
           $entityManager->persist($taskUser);
+            $this->mail(
+                $request,
+                $this->getUser(),
+                $taskId,
+                "your Assigend to performer this Task " . $userId->getUserInfo()->getEmail(),
+                '10.140.10.19'
+            );
               $entityManager->flush();
+              
               
                foreach ($measurementids as  $key => $valuea) {
               $taskAccoplishment=new TaskAccomplishment();
@@ -136,15 +198,25 @@ class TaskAssignController extends AbstractController
                   $planId->setStatus(2);
                   $entityManager->flush();
               }
+                $aproverlist = $this->approverRepository->findAll();
+            // return dd($aproverlist);
+               
+            // foreach ($aproverlist as $list) {
+
+            //     if ($list->getRole() != 'dns') {
+            //         // dump($list);
+
+            //         $this->mail($request, $list->getApprover()->getEmail(), $res, "Task Assined By " . $this->getUser()->getUserInfo()->getFullName(), '10.140.10.19');
+            //     }
+            //     // dump($list);
+
+            //     // $this->mail($request, 'lemi.diriba@ju.edu.et', $res, "Serever Request by " . $this->getUser()->getUserInfo()->getFullName(), 'sms.ju.edu.et');
+            // }
+
               
           
-            // dd(1);
             $this->addFlash('success', 'Task Assind successfully !');
             return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);
-
-
-        
-
 
     }
     /**

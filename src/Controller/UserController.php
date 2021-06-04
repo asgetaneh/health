@@ -39,9 +39,9 @@ class UserController extends AbstractController
         $data = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
-            12
+            10
         );
-        return $this->render('user_group/userlist.html.twig', [
+        return $this->render('user/userlist.html.twig', [
             'users' => $data,
         ]);
     }

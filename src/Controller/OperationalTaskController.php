@@ -32,9 +32,11 @@ use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -42,6 +44,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OperationalTaskController extends AbstractController
 {
+   
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
@@ -116,13 +119,7 @@ $count=0;
              $count=$count+
             $operationals->getWeight();
         }
-        // foreach ($plans as $key ) {
-        //       if($key->getStatus()<1){
-        //           $key->setStatus(1);
-        //           $em->flush();
-        //       }
-              
-        //   }
+      
 
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative),

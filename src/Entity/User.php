@@ -177,15 +177,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $locale;
-      /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $userType;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $emailLocalPart;
+    
 
 
 
@@ -1121,6 +1113,7 @@ class User implements UserInterface
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
+
    }
     public function getUserType(): ?int
     {
@@ -1146,6 +1139,9 @@ class User implements UserInterface
         return $this;
     }
 
+               
+
+  
     
 
 }
