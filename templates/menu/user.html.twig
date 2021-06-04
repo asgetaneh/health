@@ -1,22 +1,23 @@
+{# {% if is_granted("usr_mgt") %} #}
 
 
-		<li>
-			<a href="{{ path('user_list') }}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}User{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{ path('permission_index') }}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Permission{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{ path('user') }}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}UserGroup
-				{% endtrans %}
-			</a>
-		</li>
-		
+	<li>
+		<a href="{{ path('user_list') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}User{% endtrans %}
+		</a>
+	</li>
+	<li>
+		<a href="{{ path('permission_index') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}Permission{% endtrans %}
+		</a>
+	</li>
+	<li>
+		<a href="{{ path('user') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}UserGroup
+			{% endtrans %}
+		</a>
+	</li>
+{# {% endif %} #}

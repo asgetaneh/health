@@ -191,7 +191,7 @@
 		{{ form_start(form,{'attr': {'role':'form'} }) }}
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
-				class="modal-dialog">
+				class="modal-dialog modal-lg">
 
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -204,7 +204,7 @@
 
 							{% for f in form  %}
 								{% if f != form._token %}
-									<div class="form-group col-md-6">
+									<div class="form-group col-md-4">
 										<label>{{ form_label(f) }}</label>
 										{{ form_widget(f) }}
 									</div>

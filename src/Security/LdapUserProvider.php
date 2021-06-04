@@ -127,7 +127,7 @@ class LdapUserProvider implements UserProviderInterface
         $userfind = $userRepository->findOneBy(['username' => $username]);
         if (!$userfind) {
             $user->setUsername($username);
-            $user->setRoles(['admin']);
+            $user->setRoles(['staff']);
             $this->entityManager->persist($user);
             //$this->entityManager->flush();
 
