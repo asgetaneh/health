@@ -37,7 +37,7 @@ class InitiativeType extends AbstractType
                 ->add('maximumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])
-                ->add($value . "description", TextareaType::class, [
+                ->add($value."description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])

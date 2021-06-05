@@ -106,30 +106,7 @@
 						{% block navbar_right %}
 							<div class="navbar-buttons navbar-header pull-right" role="navigation">
 								{% block nav_list %}
-									{# <form class="" id="language" id="language" {% if app.user %} action="#" {% else %} action="{{ path('change_locale')}}" {% endif %}>
-<<<<<<< HEAD
-																							<div class="input-group input-group-sm">
-																								<select name="lang" id="lang" class="form-control ">
-																		
-																									<option value="en" {% if app.request.getLocale() == 'en' %} selected {% endif %}>English</option>
-																									<option value="am" {% if app.request.getLocale() == 'am' %} selected {% endif %}>አማርኛ</option>
-																									<option value="or" {% if app.request.getLocale() == 'or' %} selected {% endif %}>Afaan Oromo</option>
-																								</select>
-																		
-																							</div>
-																						</form> #}
-=======
-																																									<div class="input-group input-group-sm">
-																																										<select name="lang" id="lang" class="form-control ">
-																																				
-																																											<option value="en" {% if app.request.getLocale() == 'en' %} selected {% endif %}>English</option>
-																																											<option value="am" {% if app.request.getLocale() == 'am' %} selected {% endif %}>አማርኛ</option>
-																																											<option value="or" {% if app.request.getLocale() == 'or' %} selected {% endif %}>Afaan Oromo</option>
-																																										</select>
-																																				
-																																									</div>
-																																								</form> #}
->>>>>>> f5c0d29570061843ea0a03d2c84da50c679b8a46
+	
 									<ul class="nav ace-nav">
 										{% if is_granted('IS_PPO_DIRECTOR') %}
 											<li>
@@ -399,12 +376,7 @@ ace.settings.loadState('sidebar')
 
 								<ul
 									class="submenu">
-									{# {% if is_granted('LIST_PERSPECTIVE') %}  
-<<<<<<< HEAD
-																		                                                                           #}
-=======
-																																			                                                                           #}
->>>>>>> f5c0d29570061843ea0a03d2c84da50c679b8a46
+								
 									<li>
 										<a href="{{path('startegic_plan')}}">
 											<b class="fa fa-caret-right"></b>
@@ -413,9 +385,8 @@ ace.settings.loadState('sidebar')
 											{% endtrans %}
 										</a>
 									</li>
-<<<<<<< HEAD
+
 									{% if is_granted('vw_per') %}
-=======
 									<li>
 										<a href="{{path('perspective_index')}}">
 											<b class="fa fa-caret-right"></b>
@@ -424,16 +395,9 @@ ace.settings.loadState('sidebar')
 											{% endtrans %}
 										</a>
 									</li>
->>>>>>> f5c0d29570061843ea0a03d2c84da50c679b8a46
 
-										<li>
-											<a href="{{path('perspective_index')}}">
-												<b class="fa fa-caret-right"></b>
-												{% trans %}
-												Perspective
-												{% endtrans %}
-											</a>
-										</li>
+
+										
 									{% endif %}
 
 									{% if is_granted('vw_gol') %}
@@ -795,15 +759,10 @@ element.classList.remove("navbar-fixed-top");
 }
 				</script>
 
-<<<<<<< HEAD
-							<!--[if IE]>
-																																																											{% block script %} {% endblock %}
-																																																											<![endif]-->
-=======
 				<!--[if IE]>
 																																																																		{% block script %} {% endblock %}
 																																																																		<![endif]-->
->>>>>>> f5c0d29570061843ea0a03d2c84da50c679b8a46
+
 
 				{% block additional_script_file %}{% endblock %}
 				<!-- inline scripts related to this page -->

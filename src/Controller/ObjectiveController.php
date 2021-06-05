@@ -50,9 +50,9 @@ class ObjectiveController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $objective->translate($value)->setName($request->request->get('objective')[$value]);
-                $objective->translate($value)->setOutPut($request->request->get('objective')[$value]);
-                $objective->translate($value)->setOutCome($request->request->get('objective')[$value]);
-                $objective->translate($value)->setDescription($request->request->get('objective')[$value]);
+                $objective->translate($value)->setOutPut($request->request->get('objective')[$value."outPut"]);
+                $objective->translate($value)->setOutCome($request->request->get('objective')[$value."outCome"]);
+                $objective->translate($value)->setDescription($request->request->get('objective')[$value."description"]);
             }
             $objective->setCreatedAt(new \DateTime());
             $objective->setIsActive(1);
@@ -149,8 +149,15 @@ class ObjectiveController extends AbstractController
          $this->denyAccessUnlessGranted('edt_objt');
         $form = $this->createForm(ObjectiveType::class, $objective);
         $form->handleRequest($request);
-
+         $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+             foreach ($locales as $key => $value) {
+                $objective->translate($value)->setName($request->request->get('objective')[$value]);
+                $objective->translate($value)->setOutPut($request->request->get('objective')[$value."outPut"]);
+                $objective->translate($value)->setOutCome($request->request->get('objective')[$value."outCome"]);
+                $objective->translate($value)->setDescription($request->request->get('objective')[$value."description"]);
+            }
+            $objective->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', "objective is edited successfuly");
 

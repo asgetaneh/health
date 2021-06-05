@@ -66,7 +66,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
 
-                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value]);
+                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value."description"]);
             }
             $keyPerformanceIndicator->setCreatedAt(new \DateTime());
             $keyPerformanceIndicator->setIsActive(1);
@@ -164,9 +164,16 @@ class KeyPerformanceIndicatorController extends AbstractController
         $this->denyAccessUnlessGranted('edt_kpi');
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
-
+         $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            
+            foreach ($locales as $key => $value) {
+                $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
+
+                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value."description"]);
+            }
+             $keyPerformanceIndicator->mergeNewTranslations();
+             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', "edited successfuly");
 
 

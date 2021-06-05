@@ -33,7 +33,7 @@ class InitiativeBehaviourController extends AbstractController
             foreach ($locales as $key => $value) {
                 $initiativeBehaviour->translate($value)->setName($request->request->get('initiative_behaviour')[$value]);
 
-                $initiativeBehaviour->translate($value)->setDescription($request->request->get('initiative_behaviour')[$value]);
+                $initiativeBehaviour->translate($value)->setDescription($request->request->get('initiative_behaviour')[$value."description"]);
             }
              $initiativeBehaviour->setCreatedAt(new DateTime('now'));
              $initiativeBehaviour->setCreatedBy($this->getUser());
@@ -91,8 +91,14 @@ class InitiativeBehaviourController extends AbstractController
     {
         $form = $this->createForm(InitiativeBehaviourType::class, $initiativeBehaviour);
         $form->handleRequest($request);
-
+           $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+             foreach ($locales as $key => $value) {
+                $initiativeBehaviour->translate($value)->setName($request->request->get('initiative_behaviour')[$value]);
+
+                $initiativeBehaviour->translate($value)->setDescription($request->request->get('initiative_behaviour')[$value."description"]);
+            }
+             $initiativeBehaviour->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('initiative_behaviour_index');

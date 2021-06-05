@@ -20,20 +20,20 @@ class InitiativeAttributeController extends AbstractController
     /**
      * @Route("/", name="initiative_attribute_index")
      */
-    public function index(InitiativeAttributeRepository $initiativeAttributeRepository,Request $request): Response
+    public function index(InitiativeAttributeRepository $initiativeAttributeRepository, Request $request): Response
     {
         $this->denyAccessUnlessGranted('vw_intv_atr');
-         $initiativeAttribute = new InitiativeAttribute();
+        $initiativeAttribute = new InitiativeAttribute();
         $form = $this->createForm(InitiativeAttributeType::class, $initiativeAttribute);
         $form->handleRequest($request);
-         $locales=Helper::locales();
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('ad_intv_atr');
             $entityManager = $this->getDoctrine()->getManager();
-             foreach ($locales as $key => $value) {
-               $initiativeAttribute->translate($value)->setName($request->request->get('initiative_attribute')[$value]);
+            foreach ($locales as $key => $value) {
+                $initiativeAttribute->translate($value)->setName($request->request->get('initiative_attribute')[$value]);
 
-               $initiativeAttribute->translate($value)->setDescription($request->request->get('initiative_attribute')[$value]);
+                $initiativeAttribute->translate($value)->setDescription($request->request->get('initiative_attribute')[$value . "description"]);
             }
             $initiativeAttribute->setCreatedAt(new DateTime('now'));
             $initiativeAttribute->setCreatedBy($this->getUser());
@@ -46,7 +46,7 @@ class InitiativeAttributeController extends AbstractController
         }
         return $this->render('initiative_attribute/index.html.twig', [
             'initiative_attributes' => $initiativeAttributeRepository->findAll(),
-             'form' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -91,9 +91,15 @@ class InitiativeAttributeController extends AbstractController
     {
         $form = $this->createForm(InitiativeAttributeType::class, $initiativeAttribute);
         $form->handleRequest($request);
-
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($locales as $key => $value) {
+                $initiativeAttribute->translate($value)->setName($request->request->get('initiative_attribute')[$value]);
+                $initiativeAttribute->translate($value)->setDescription($request->request->get('initiative_attribute')[$value . "description"]);
+            }
+            $initiativeAttribute->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "Edited successfuly");
 
             return $this->redirectToRoute('initiative_attribute_index');
         }
@@ -109,7 +115,7 @@ class InitiativeAttributeController extends AbstractController
      */
     public function delete(Request $request, InitiativeAttribute $initiativeAttribute): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$initiativeAttribute->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $initiativeAttribute->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($initiativeAttribute);
             $entityManager->flush();

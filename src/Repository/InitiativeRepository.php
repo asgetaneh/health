@@ -59,6 +59,7 @@ class InitiativeRepository extends ServiceEntityRepository
         $qb
         ->join('i.principalOffice','po')
         ->andWhere('po.id = :office')
+        ->andwhere('i.isActive = 1')
         ->setParameter('office',$office);
         return $qb->getQuery()->getResult();
 

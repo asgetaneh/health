@@ -53,13 +53,13 @@ class StrategyController extends AbstractController
             ->getForm();
         $filterform->handleRequest($request);
 
-       $locales = Helper::locales();
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
-               $strategy->translate($value)->setName($request->request->get('strategy')[$value]);
-              
-               $strategy->translate($value)->setDescription($request->request->get('strategy')[$value]);
+                $strategy->translate($value)->setName($request->request->get('strategy')[$value]);
+
+                $strategy->translate($value)->setDescription($request->request->get('strategy')[$value . "description"]);
             }
             $strategy->setCreatedAt(new \DateTime());
             $strategy->setIsActive(1);
@@ -157,8 +157,13 @@ class StrategyController extends AbstractController
         $this->denyAccessUnlessGranted('edt_str');
         $form = $this->createForm(StrategyType::class, $strategy);
         $form->handleRequest($request);
-
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($locales as $key => $value) {
+                $strategy->translate($value)->setName($request->request->get('strategy')[$value]);
+                $strategy->translate($value)->setDescription($request->request->get('strategy')[$value . "description"]);
+            }
+            $strategy->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', ' edited successfuly');
 

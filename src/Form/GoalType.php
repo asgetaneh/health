@@ -28,7 +28,7 @@ class GoalType extends AbstractType
                 ->add($value."description", TextareaType::class, ['mapped' => false, 'label' => $key . "Translation Description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                 'attr' => ['class' => 'autosize-transition form-control']]);
         }
-        //$value."nationality"
+        
        
     }
 

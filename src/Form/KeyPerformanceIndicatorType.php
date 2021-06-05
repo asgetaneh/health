@@ -38,7 +38,7 @@ class KeyPerformanceIndicatorType extends AbstractType
                 },
                 'attr' => ['class' => 'select2 form-control']
             ])
-            ->add($value . "description", TextareaType::class, [
+            ->add($value ."description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])
