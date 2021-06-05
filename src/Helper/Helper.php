@@ -5,7 +5,7 @@ class Helper
 {
      public static function locales()
     {
-        return ["English"=>'en',"Oromic"=>'or',"Amharic"=>'am'];
+        return ["English"=>'en',"Afaan Oromo"=>'or',"Amharic"=>'am'];
         //"Tigr"=>'tg'
     }
 }

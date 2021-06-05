@@ -30,10 +30,11 @@ class PerspectiveController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+           
              foreach ($locales as $key => $value) {
                $perspective->translate($value)->setName($request->request->get('perspective')[$value]);
               
-               $perspective->translate($value)->setDescription($request->request->get('perspective')[$value]);
+               $perspective->translate($value)->setDescription($request->request->get('perspective')[$value."description"]);
             }
             $perspective->setCreatedAt(new \DateTime());
             $perspective->setUsedToPlan(1);
@@ -101,9 +102,16 @@ class PerspectiveController extends AbstractController
 
         $form = $this->createForm(PerspectiveType::class, $perspective);
         $form->handleRequest($request);
-
+        $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            foreach ($locales as $key => $value) {
+               $perspective->translate($value)->setName($request->request->get('perspective')[$value]);
+              
+               $perspective->translate($value)->setDescription($request->request->get('perspective')[$value."description"]);
+            }
+             $perspective->mergeNewTranslations();
+             $this->getDoctrine()->getManager()->flush();
+              $this->addFlash('success',"successfuly registered");
 
             return $this->redirectToRoute('perspective_index');
         }

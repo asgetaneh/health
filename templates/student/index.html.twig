@@ -65,6 +65,11 @@
    </div>
    <div class="clearfix "></div>
    <div class="form-group col-md-3">
+   {{form_label(form.nationality)}}
+   {{ form_widget(form.nationality,{'attr':{'class':'select2 form-control'}}) }}
+   </div>
+   
+   <div class="form-group col-md-3">
 
    {{form_label(form.disablity)}}
    {{ form_widget(form.disablity,{'attr':{'class':'select2 form-control'}}) }}

@@ -31,9 +31,9 @@ class GoalController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $goal->translate($value)->setName($request->request->get('goal')[$value]);
-                $goal->translate($value)->setOutPut($request->request->get('goal')[$value]);
-                $goal->translate($value)->setOutCome($request->request->get('goal')[$value]);
-                $goal->translate($value)->setDescription($request->request->get('goal')[$value]);
+                $goal->translate($value)->setOutPut($request->request->get('goal')[$value."outPut"]);
+                $goal->translate($value)->setOutCome($request->request->get('goal')[$value."outCome"]);
+                $goal->translate($value)->setDescription($request->request->get('goal')[$value."description"]);
             }
 
             $goal->setCreatedAt(new \DateTime());
@@ -118,10 +118,18 @@ class GoalController extends AbstractController
         $this->denyAccessUnlessGranted('edt_gol');
         $form = $this->createForm(GoalType::class, $goal);
         $form->handleRequest($request);
-
+        $locales=Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-         $this->addFlash('success',"goal is edited successfuly");
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($locales as $key => $value) {
+                $goal->translate($value)->setName($request->request->get('goal')[$value]);
+                $goal->translate($value)->setOutPut($request->request->get('goal')[$value."outPut"]);
+                $goal->translate($value)->setOutCome($request->request->get('goal')[$value."outCome"]);
+                $goal->translate($value)->setDescription($request->request->get('goal')[$value."description"]);
+            }
+            $goal->mergeNewTranslations();
+             $entityManager->flush();
+             $this->addFlash('success',"goal is edited successfuly");
 
 
             return $this->redirectToRoute('goal_index');

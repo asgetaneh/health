@@ -41,7 +41,7 @@ class InitiativeController extends AbstractController
             foreach ($locales as $key => $value) {
                 $initiative->translate($value)->setName($request->request->get('initiative')[$value]);
 
-                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value]);
+                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value."description"]);
             }
             $initiative->setCreatedAt(new DateTime('now'));
             $initiative->setCreatedBy($this->getUser());
@@ -144,7 +144,7 @@ class InitiativeController extends AbstractController
      */
     public function new(Request $request): Response
     {
-                $this->denyAccessUnlessGranted('ad_intv');
+        $this->denyAccessUnlessGranted('ad_intv');
 
         $initiative = new Initiative();
         $form = $this->createForm(InitiativeType::class, $initiative);
@@ -169,7 +169,7 @@ class InitiativeController extends AbstractController
      */
     public function show(Initiative $initiative): Response
     {
-                $this->denyAccessUnlessGranted('vw_intv_dtl');
+        $this->denyAccessUnlessGranted('vw_intv_dtl');
 
         return $this->render('initiative/show.html.twig', [
             'initiative' => $initiative,
@@ -185,9 +185,19 @@ class InitiativeController extends AbstractController
 
         $form = $this->createForm(InitiativeType::class, $initiative);
         $form->handleRequest($request);
+        $locales = Helper::locales();
 
         if ($form->isSubmitted() && $form->isValid()) {
+           
+            foreach ($locales as $key => $value) {
+                $initiative->translate($value)->setName($request->request->get('initiative')[$value]);
+
+                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value."description"]);
+            }
+            $initiative->mergeNewTranslations();
+
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "edited successfuly");
 
             return $this->redirectToRoute('initiative_index');
         }
@@ -203,7 +213,7 @@ class InitiativeController extends AbstractController
      */
     public function delete(Request $request, Initiative $initiative): Response
     {
-         $this->denyAccessUnlessGranted('dlt_intv');
+        $this->denyAccessUnlessGranted('dlt_intv');
 
         if ($this->isCsrfTokenValid('delete' . $initiative->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
