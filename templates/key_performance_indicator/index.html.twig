@@ -38,14 +38,6 @@
 										{% trans %}
 										New KeyPerformanceIndicator{% endtrans %}</a>
 								{% endif %}
-								{# <form class="form-inline" method="post" style="display:inline;">
-																	<input type="hidden" name="nonapplicable" value="nonapp"/>
-																	<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-																		<i class="ace-icon fa fa-times bigger-110 red2"></i>
-																		{% trans %}
-																		None Applicable KeyPerformanceIndicators{% endtrans %}</button>
-																</form> #}
-
 
 							</div>
 
@@ -192,48 +184,39 @@
 		</div>
 
 	</div>
-</div></div>
+	<div id="myModal" class="modal fade" role="dialog">
+		<div
+			class="modal-dialog modal-lg">
 
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">New KeyPerformanceIndicator</h4>
+				</div>
+				<div class="modal-body">
+					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+					<div class="row">
 
-		<div id="myModal" class="modal fade" role="dialog">
-			<div
-				class="modal-dialog modal-lg">
+						{% for f in form  %}
+							{% if f != form._token %}
+								<div class="form-group col-md-6">
+									<label>{{ form_label(f) }}</label>
+									{{ form_widget(f) }}
+								</div>
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">New KeyPerformanceIndicator</h4>
+							{% endif %}
+
+						{% endfor %}
+
 					</div>
-					<div class="modal-body">
-						{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-						<div class="row">
 
-							{% for f in form  %}
-								{% if f != form._token %}
-									<div class="form-group col-md-6">
-										<label>{{ form_label(f) }}</label>
-										{{ form_widget(f) }}
-									</div>
 
-								{% endif %}
-
-							{% endfor %}
-
-						</div>
-
-					{% endif %}
-
-				{% endfor %}
+				</div>
 			</div>
 
+			<div class="modal-footer"><input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/><button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+				{{ form_end(form) }}</div>
 		</div>
-
-
 	</div>
-	<div class="modal-footer">
-		<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-		{{ form_end(form) }}
-	</div>
-</div></div></div>{% endblock %}
+{% endblock %}
