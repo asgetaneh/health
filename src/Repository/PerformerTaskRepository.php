@@ -77,7 +77,29 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->getResult();
     }
     
+//  public function findInitiativeBy($suitableinitiative)
+//     {
 
+//         //dd($productNmae);
+//         return $this->createQueryBuilder('s')
+
+//             ->leftJoin('s.PlanAcomplishment','pl') 
+//             ->leftJoin('s.social','so') 
+//             ->innerJoin('App:InitiativeAttributeTranslation','ib','with','so.id = ib.translatable') 
+//            ->leftJoin('s.quarter','q') 
+
+//             ->Select('distinct(s.id) as pid' )
+//             ->addSelect('q.name as qname')
+//             ->addSelect('s.name')
+//             ->addSelect('s.weight')
+//             ->addSelect('s.weight')
+//             ->addSelect('ib.name as soname')
+//            ->andWhere('pl.suitableInitiative = :initiative')
+//             ->setParameter('initiative', $suitableinitiative)
+//              ->orderBy('s.id', 'ASC')
+//             ->getQuery()
+//             ->getResult();
+//     }
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects
     //  */

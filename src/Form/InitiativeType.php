@@ -70,6 +70,8 @@ class InitiativeType extends AbstractType
                     'class' => InitiativeAttribute::class,
                     'attr' => ['class' => 'select2 form-control'],
                     'multiple'=>true,
+                   'required' => false,
+
                 ]);
         }
     }

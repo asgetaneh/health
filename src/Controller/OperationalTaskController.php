@@ -82,6 +82,16 @@ class OperationalTaskController extends AbstractController
         }
  
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // $gregorian = new DateTime('now');
+// 2);
+//             $et = new Andegna\DateTime();
+
+// $millennium = Andegna\DateTimeFactory::of(2000, 1, 1);
+
+//         $ethipic = new Andegna\DateTime($gregorian);
+
+        //  dd($ethipic);
             if ($social == 1) {
                 // dd($form->getData()->getSocial()->getId()); 
        $plans=$planningAccomplishmentRepository->findplanAccomp($suitableInitiative,$form->getData()->getSocial()->getId()); 
