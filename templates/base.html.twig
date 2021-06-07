@@ -112,7 +112,7 @@
 
 >>>>>>> 51ee7d17e4e69b3786bd7f184183950394849fd7
 									{# <form class="" id="language" id="language" {% if app.user %} action="#" {% else %} action="{{ path('change_locale')}}" {% endif %}>
-<<<<<<< HEAD
+
 																							<div class="input-group input-group-sm">
 																								<select name="lang" id="lang" class="form-control ">
 																		
@@ -214,8 +214,10 @@
 											<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 												<img class="nav-user-photo" src="{{ asset('assets/assets/images/avatars/avatar2.png') }}" alt="Jason's Photo"/>
 												<span class="user-info">
+                                                {% if app.user %}
 													<small>
 														{{ app.user.userInfo.fullName }}</small>
+                                                        {% endif %}
 												</span>
 												<i class="ace-icon fa fa-caret-down"></i>
 											</a>
@@ -424,7 +426,13 @@ ace.settings.loadState('sidebar')
 										</li>
 
 
+
 									{% endif %}
+
+										
+
+									
+
 
 									{% if is_granted('vw_gol') %}
 

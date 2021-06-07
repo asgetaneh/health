@@ -60,6 +60,9 @@ class Strategy implements TranslatableInterface
     }
      public function __call($method, $arguments)
     {
+        if (!method_exists(self::getTranslationEntityClass(),$method)) {
+           $method='get'.ucfirst($method);
+        }
         return $this->proxyCurrentLocaleTranslation($method,$arguments);
     }
 

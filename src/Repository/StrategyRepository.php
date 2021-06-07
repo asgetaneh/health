@@ -1,10 +1,11 @@
 <?php
-
+declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Strategy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @method Strategy|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,8 +15,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class StrategyRepository extends ServiceEntityRepository
 {
+    use TranslatableTrait;
+    
     public function __construct(ManagerRegistry $registry)
     {
+        
         parent::__construct($registry, Strategy::class);
     }
     public function findAlls()
@@ -57,6 +61,7 @@ class StrategyRepository extends ServiceEntityRepository
      public function search($search=[]){
 
         $qb=$this->createQueryBuilder('s')
+       // ->select('s')
         ->join('s.objective','o')
         ;
         if(isset($search['goal']) && sizeof($search['goal'])>0){
@@ -75,8 +80,11 @@ class StrategyRepository extends ServiceEntityRepository
             
         }
         if(isset($search['name']) ){
-           
-            $qb->andWhere("s.name  LIKE '%" . $search['name']. "%' ");
+            
+           $qb
+        
+           ->join('s.translations','t')
+            ->andWhere("t.name  LIKE '%" . $search['name']. "%' ");
         
 
             

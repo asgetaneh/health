@@ -105,7 +105,9 @@ class InitiativeRepository extends ServiceEntityRepository
         }
         if(isset($search['name']) ){
            
-            $qb->andWhere("i.name  LIKE '%" . $search['name']. "%' ");
+            $qb
+            ->join('i.translations','t')
+            ->andWhere("t.name  LIKE '%" . $search['name']. "%' ");
         
 
             
