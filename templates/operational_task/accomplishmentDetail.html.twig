@@ -68,7 +68,7 @@
 										<th>#</th>
 										<th>TaskName</th>
 										{# <th>Assigned To</th>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																<th>Description</th> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				<th>Description</th> #}
 										<th>Weight</th>
 										<th>Quarter</th>
 										<th>Accomplishment</th>
@@ -94,8 +94,8 @@
 											<td>{{ performerTask.weight }}</td>
 											<td>{{ performerTask.quarter }}</td>
 											{# <pre>
-																																																																																																																																																																																																																																																																																																																																																																	                                                {{ dump(performerTask.PlanAcomplishment.socialAttribute) }}
-																																																																																																																																																																																																																																																																																																																																																																	                                            </pre> #}
+																																																																																																																																																																																																																																																																																																																																																																																							                                                {{ dump(performerTask.PlanAcomplishment.socialAttribute) }}
+																																																																																																																																																																																																																																																																																																																																																																																							                                            </pre> #}
 											<td colspan="2">
 
 
@@ -146,7 +146,7 @@
 									</tr>
 									<tr>
 										<td></td>
-										<td>Total
+										<td>Weight Accomplished
 										</td>
 										{% if total_accomplish   %}
 
@@ -154,7 +154,7 @@
 												{% set grand_total = grand_total + total_accomplish * performerTask.weight / total_expected_value  %}
 												{% set total = total_accomplish * performerTask.weight / total_expected_value  %}
 												{% if social == 1 %}
-                                                {{total | number_format }}
+													{{total | number_format }}
 													{{sex}}
 													<div class="badge badge-danger">
 														=>{{planValue}}</div>
@@ -164,8 +164,10 @@
 														{{ ((((total * 100) / performerTask.weight) * planValue) / 100) | number_format }}
 													</div>
 												{% else %}
-													{{total | number_format(2, '.',',')  }}
+													<div class="badge badge-warning">
 
+														{{total | number_format(2, '.',',')  }}
+													</div>
 
 												{% endif %}
 											</td>
@@ -229,68 +231,68 @@
 		</div>
 	</div>
 </div>{% endblock %}{% block javascripts %}{% endblock %}{# 
-													<table class="table table-bordered  table-responsive-xl table-hover">
-																				<thead>
-												
-																					<tr>
-																						<th>
-																							Task Name
-																						</th>
-																						<th>
-																							Performer Name
-																						</th>
-																						<th>
-																							Expected Value</th>
-																						<th>
-																							Accomplish
-																						</th>
-																						<th>
-																							%
-																						</th>
-												
-												
-																					</tr>
-																				</thead>
-																				<tbody>
-																					{% set count = 0 %}
-																					{% set total = 0 %}
-																					{% set perceent = 0 %}
-												
-																					{% set idpt = 0 %}
-																					{% for taskAcomolish in taskAcomolishs %}
+														<table class="table table-bordered  table-responsive-xl table-hover">
+																					<thead>
+													
 																						<tr>
-																							{% set count = count + 1 %}
-																							{% set percent = taskAcomolish.accomplishmentValue * 100 / taskAcomolish.expectedValue %}
-												                              
-																							{% set accomp = (percent / 100) * taskAcomolish.taskUser.taskAssign.performerTask.weight   %}
-																							{% set total = total + accomp  %}
-												
-												
-																							<td>
-																								{% if taskAcomolish.taskUser.taskAssign.performerTask.id != idpt %}
-																									{{taskAcomolish.taskUser.taskAssign.performerTask.name}}
-																									{{taskAcomolish.taskUser.taskAssign.performerTask.weight}}
-												
-																									{% set idpt = taskAcomolish.taskUser.taskAssign.performerTask.id  %}
-																								{% endif %}
-																							</td>
-																							<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
-												
-																							<td>{{taskAcomolish.expectedValue}}</td>
-																							<td>{{taskAcomolish.accomplishmentValue}}</td>
-																							<td style="text-align: right;">
-																								{{ accomp | number_format(2, '.',',')}}
-																							</td>
-												
-												
+																							<th>
+																								Task Name
+																							</th>
+																							<th>
+																								Performer Name
+																							</th>
+																							<th>
+																								Expected Value</th>
+																							<th>
+																								Accomplish
+																							</th>
+																							<th>
+																								%
+																							</th>
+													
+													
 																						</tr>
-																					{% endfor %}
-																					<tr>
-																						<td colspan="4">Total</td>
-																						<td style="text-align: right;">
-																							{{ total / count | number_format(2, '.',',')}}
-																						</td>
-																					</tr>
-												
-																				</tbody>
-																			</table> #}
+																					</thead>
+																					<tbody>
+																						{% set count = 0 %}
+																						{% set total = 0 %}
+																						{% set perceent = 0 %}
+													
+																						{% set idpt = 0 %}
+																						{% for taskAcomolish in taskAcomolishs %}
+																							<tr>
+																								{% set count = count + 1 %}
+																								{% set percent = taskAcomolish.accomplishmentValue * 100 / taskAcomolish.expectedValue %}
+													                              
+																								{% set accomp = (percent / 100) * taskAcomolish.taskUser.taskAssign.performerTask.weight   %}
+																								{% set total = total + accomp  %}
+													
+													
+																								<td>
+																									{% if taskAcomolish.taskUser.taskAssign.performerTask.id != idpt %}
+																										{{taskAcomolish.taskUser.taskAssign.performerTask.name}}
+																										{{taskAcomolish.taskUser.taskAssign.performerTask.weight}}
+													
+																										{% set idpt = taskAcomolish.taskUser.taskAssign.performerTask.id  %}
+																									{% endif %}
+																								</td>
+																								<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
+													
+																								<td>{{taskAcomolish.expectedValue}}</td>
+																								<td>{{taskAcomolish.accomplishmentValue}}</td>
+																								<td style="text-align: right;">
+																									{{ accomp | number_format(2, '.',',')}}
+																								</td>
+													
+													
+																							</tr>
+																						{% endfor %}
+																						<tr>
+																							<td colspan="4">Total</td>
+																							<td style="text-align: right;">
+																								{{ total / count | number_format(2, '.',',')}}
+																							</td>
+																						</tr>
+													
+																					</tbody>
+																				</table> #}

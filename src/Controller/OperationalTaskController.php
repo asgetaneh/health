@@ -83,8 +83,9 @@ class OperationalTaskController extends AbstractController
  
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
-       $plans=$planningAccomplishmentRepository->findplanAccomp($suitableInitiative,$form->getData()->getSocial()->getName()); 
-
+                // dd($form->getData()->getSocial()->getId()); 
+       $plans=$planningAccomplishmentRepository->findplanAccomp($suitableInitiative,$form->getData()->getSocial()->getId()); 
+// dd($plans);
             }
             else{
                  $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
