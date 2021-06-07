@@ -81,8 +81,10 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
             
         }
         if(isset($search['name']) ){
-           
-            $qb->andWhere("k.name  LIKE '%" . $search['name']. "%' ");
+              
+            $qb
+            ->join('k.translations','t')
+            ->andWhere("t.name  LIKE '%" . $search['name']. "%' ");
         
 
             

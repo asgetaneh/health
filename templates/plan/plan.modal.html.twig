@@ -23,22 +23,22 @@
 									{% endif %}
 								{% endfor %}
 
-                                <div class="well well-sm">
-										<strong>Yearly Plan({% for behavior in initiative.initiativeBehaviour %}
-                                        {% if loop.last %}
-                                        {{behavior}}
-                                        {% else %}
-                                             {{behavior}},
-                                        {% endif %}
-                                        {% endfor %}
-                                        
-                                        )
-                                        <div class="yearylplans pull-right">
-                                        </div>
+								<div class="well well-sm">
+									<strong>Yearly Plan(
+										{% for behavior in initiative.initiativeBehaviour %}
+											{% if loop.last %}
+												{{behavior}}
+											{% else %}
+												{{behavior}},
+											{% endif %}
+										{% endfor %}
 
-                                        <span class="text-warning  pull-right" id="yearlyplan"></span>
-											</strong>
-									</div>
+										)
+										<div class="yearylplans pull-right"></div>
+
+										<span class="text-warning  pull-right" id="yearlyplan"></span>
+									</strong>
+								</div>
 
 								<input type="hidden" name="suitableInitiative" value="{{suitableInitiative.id}}">
 
@@ -61,7 +61,7 @@
 															<label class="control-label  col-sm-4" for="{{socialattribute.id}}">{{ socialattribute.name|title}}:
 															</label>
 															<div class="col-sm-8">
-																<input type="text" name="planvalue[]" {{ quarter.slug == 1 ?" ":"readonly" }} data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value">
+																<input type="text" name="planvalue[]" {{ quarter.slug == 1 ?" ":"readonly" }} data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value" required>
 															</div>
 														</div>
 													</div>
@@ -71,7 +71,7 @@
 															<label class="control-label  col-sm-4" for="{{socialattribute.id}}">{{ socialattribute.name|title}}:
 															</label>
 															<div class="col-sm-8">
-																<input type="text" name="planvalue[]" data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value">
+																<input type="text" name="planvalue[]" data-name="{{socialattribute.name}}" data-attr="{{socialattribute.id}}" id="{{socialattribute.id}}" class="form-control" placeholder="enter your plan value" required>
 															</div>
 														</div>
 													</div>
@@ -87,7 +87,7 @@
 													<div class="form-group">
 														<label class="control-label  col-sm-4" for="">Plan Value</label>
 														<div class="col-sm-8">
-															<input type="text" name="planvalue[]" {{quarter.slug == 1? "":"readonly"}} class="form-control" placeholder="enter your plan value">
+															<input type="text" name="planvalue[]" {{quarter.slug == 1? "":"readonly"}} class="form-control" placeholder="enter your plan value" required>
 														</div>
 													</div>
 												</div>
@@ -96,7 +96,7 @@
 													<div class="form-group">
 														<label class="control-label  col-sm-4" for="">Plan Value</label>
 														<div class="col-sm-8">
-															<input type="text" name="planvalue[]" class="form-control" placeholder="enter your plan value">
+															<input type="text" name="planvalue[]" class="form-control" placeholder="enter your plan value" required>
 														</div>
 													</div>
 												</div>
@@ -113,7 +113,7 @@
 										<div class="form-group">
 											<label class="control-label  col-sm-2" for="">Of Total</label>
 											<div class="col-sm-6">
-												<input type="text" name="denominator" class="form-control" placeholder="enter Of Total">
+												<input type="text" name="denominator" class="form-control" placeholder="enter Of Total" required>
 											</div>
 										</div>
 									</div>
@@ -129,7 +129,7 @@
 						<div class="modal-footer">
 
 							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" id="btnsubmit" class="btn btn-primary">Submit</button>
 
 
 						</div>
@@ -141,67 +141,244 @@
 {% endif %}
 
 <script>
-function behavior(value){
- var behav = [];
-     
-    
-    $("input:hidden[name^='behav']").each(function () {
-    behav.push($(this).val());
+	function behavior(value) {
+var behav = [];
 
-    });
-    if (behav.includes(value))
-     return true;
-     else
-     return false;
+
+$("input:hidden[name^='behav']").each(function () {
+behav.push($(this).val());
+
+});
+if (behav.includes(value)) 
+return true;
+ else 
+return false;
+
 }
-$("input:enabled:text[data-attr]").focusout(function(){
-      var yearplans =[];
-      var yearlyplan={name:" ",plan:0};
-      var atr2=$(this);
-      yearlyplan.name=$(this).attr('data-name');
-      yearlyplan.plan=$(this).val();
-      yearplans.push(yearlyplan);
-     
-     
-    
-    if (behavior("0")){
-    $("input[data-attr]:text[readonly]").each(function(){
-           
-            if(typeof $(this).attr('data-attr') !== "undefined" && $(this).attr('data-attr') !== null){
-            if(atr2.attr('data-attr') == $(this).attr('data-attr')){
-                $(this).val(atr2.val());
-            }
-            }
-          
-    });
-      
-             yearplans.forEach(function(value,index, array){
-                 $('div.yearylplans').append($('<span class="text-primary" style="margin-right:10px;">'+value.name+"="+value.plan+'</span>'));
-           
-          
-      })
-           
-    
-    }
-       
- });
- $("input:enabled:text:not([data-attr])").focusout(function(){
-       var inpt=$(this);
-    if(behavior("0")){
-     
-   $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">'+"="+inpt.val()+'</span>'));
-    $("input:text[readonly]:not([data-attr])").each(function(){
-           
-           
-     $(this).val(inpt.val());
-               
-               
-          
-    });
-     }
-     
-       
- });
-	
 
+function incremental(currentInput){
+    var isvalid=true;
+    var relatedInput=$("input:enabled:text[data-attr][data-name="+currentInput.data('name')+"]");
+     if($(relatedInput).index(currentInput)>=0){
+      var currentindex=$(relatedInput).index(currentInput);
+       for(var i=0;i<relatedInput.length;i++){
+           if(i<$(relatedInput).index(currentInput)){
+               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())<= Number(relatedInput.eq(i).val())){
+           $(currentInput).next('span').remove();
+           $(currentInput).closest('div.form-group').removeClass('has-error');
+           $(currentInput).focus();
+           $(currentInput).closest('div.form-group').addClass('has-error');
+            $(currentInput).after($('<span class="text-danger">must be greater than previous quarter</span>'))
+           isvalid= false;
+        }
+       else{
+           $(currentInput).next('span').remove();
+           $(currentInput).closest('div.form-group').removeClass('has-error');
+         
+       }
+
+           }
+           if(i>$(relatedInput).index(currentInput)){
+            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())>= Number(relatedInput.eq(i).val())){
+            $(relatedInput.eq(i)).next('span').remove();
+            $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
+            $(relatedInput.eq(i)).focus();
+            $(relatedInput.eq(i)).closest('div.form-group').addClass('has-error');
+            $(relatedInput.eq(i)).after($('<span class="text-danger">must be greater than previous quarter</span>'))
+            }
+             else{
+           $(relatedInput.eq(i)).next('span').remove();
+           $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
+         
+       }
+
+           }
+       }
+       
+     }
+     return true; 
+       
+}
+
+$("input:enabled:text[data-attr]").on("keyup",function () {
+
+var currentInput=$(this);
+
+if (behavior("1") ) {
+    var prespan = $('div.yearylplans').children('span.'+ $(this).attr('data-name'));
+    var input=$("input:enabled:text[data-attr]");
+    var span = $('<span class="text-primary" style="margin-right:10px;"></span>');
+    var sum=0;
+   
+ if(behavior("2")){
+   if(!incremental(currentInput))
+        return ;
+          }
+    if (prespan.length > 0) 
+    prespan.remove();
+    for(var i=0;i<input.length;i++){
+     if(input.eq(i).val()!== null && (input.eq(i).attr('data-name')== $(this).attr('data-name'))){
+      sum = sum+Number(input.eq(i).val());
+          
+       }
+   }
+
+   span.addClass($(this).attr('data-name'));
+   span.text(currentInput.attr('data-name').toUpperCase()+"="+sum);
+   $('div.yearylplans').append(span);
+
+}
+var yearplans = [];
+var yearlyplan = {
+name: " ",
+plan: 0
+};
+
+var atr2 = $(this);
+yearlyplan.name = $(this).attr('data-name');
+yearlyplan.plan = $(this).val();
+yearplans.push(yearlyplan);
+
+
+if (behavior("0")) {
+$("input[data-attr]:text[readonly]").each(function () {
+if (typeof $(this).attr('data-attr') !== "undefined" && $(this).attr('data-attr') !== null) {
+if (atr2.attr('data-attr') == $(this).attr('data-attr')) {
+$(this).val(atr2.val());
+}
+}
+});
+
+yearplans.forEach(function (value, index, array) {
+var prespan = $('div.yearylplans').children('span.' + value.name);
+if (prespan.length > 0) 
+prespan.remove();
+
+
+var span = $('<span class="text-primary" style="margin-right:10px;">' + value.name + "=" + value.plan + '</span>');
+span.addClass(value.name);
+
+$('div.yearylplans').append(span);
+
+
+})
+
+}
+});
+
+
+function nonSocialIncremental(currentNode){
+    var inputElement=$("input:enabled:text:not([data-attr])");
+    var isvalid=true;
+      if($(inputElement).index(currentNode)>=0){
+         for(var i=0;i<inputElement.length;i++){
+            if(i<$(inputElement).index(currentNode)){
+            
+            if(inputElement.eq(i).val()!== null && (Number(currentNode.val())<=Number(inputElement.eq(i).val()))){
+              isvalid=false;
+           
+            }
+              
+        }
+        if(i>$(inputElement).index(currentNode)){
+           
+        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) <= Number(currentNode.val()))){
+            $(inputElement.eq(i)).next('span').remove();
+            $(currentNode).closest('div.form-group').removeClass('has-error');
+            $(inputElement.eq(i)).focus();
+            $(inputElement.eq(i)).closest('div.form-group').addClass('has-error');
+            $(inputElement.eq(i)).after($('<span class="help-block text-danger">must be greater than previous quarter</span>'))
+         }
+         
+         else{
+            $(inputElement.eq(i)).next('span').remove();
+            $(currentNode).closest('div.form-group').removeClass('has-error');
+         }
+        }
+         }
+    if(!isvalid){
+            $(currentNode).next('span').remove();
+            $(currentNode).focus();
+            $(currentNode).closest('div.form-group').addClass('has-error');
+            $(currentNode).after($('<span class="help-block text-danger">must be greater than previous quarter</span>'))
+    }
+    else{
+        $(currentNode).next('span').remove();
+        $(currentNode).closest('div.form-group').removeClass('has-error');
+
+    }
+    return isvalid;
+       
+      }
+      return isvalid;
+}
+
+
+
+$("input:enabled:text:not([data-attr])").keyup(function () {
+
+var inpt = $(this);
+var inputArray=$("input:enabled:text:not([data-attr])");
+
+if (behavior("0")) {
+$('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">' + "=" + inpt.val() + '</span>'));
+$("input:text[readonly]:not([data-attr])").each(function () {
+$(this).val(inpt.val());
+
+});
+}
+
+
+if(behavior("1")){
+    var sum=0;
+    if(behavior("2")){
+       if (!nonSocialIncremental(inpt))
+        return false;
+    }
+    for(var i=0;i<=$(inputArray).index(inpt);i++){
+        if(inputArray.eq(i).val()!== null){
+            sum=sum+Number(inputArray.eq(i).val());
+        }
+    }
+    $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">' + "=" + sum + '</span>'));
+}
+
+
+
+});
+$(document).ready(function(){
+function validateForm(){
+    var haserror=true;
+$("input:enabled:text").each(function(){
+   if($(this).closest('div.form-group').hasClass('has-error'))
+   {
+      haserror=false;
+    $(this).focus();
+    return false;
+
+   }
+   return haserror;
+  
+});
+
+return haserror;
+}
+
+
+
+$('#planform').submit(function(event){
+
+
+
+ if(!validateForm()){
+     event.preventDefault();
+ return;
+ }
+
+$(this).submit();
+
+
+
+})
+})
 </script>

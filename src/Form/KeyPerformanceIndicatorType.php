@@ -17,7 +17,7 @@ class KeyPerformanceIndicatorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-      $locales = Helper::locales();
+        $locales = Helper::locales();
         $data = $options['data'];
         foreach ($locales as $key => $value) {
             $builder
@@ -25,24 +25,23 @@ class KeyPerformanceIndicatorType extends AbstractType
                     'mapped' => false, 'label' => $key . " Translation KPI Name", 'required' => $value == "en", 'data' => $data->translate($value)->getName(),
                     'attr' => ['class' => 'form-control']
                 ])
-           
-            ->add('weight',NumberType::class,[
-                 'attr' => ['class' => 'form-control']
-            ])
-            ->add('strategy',EntityType::class,[
-                 'class' => Strategy::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('s')
-                        ->where('s.isActive =1')
-                        ->orderBy('s.id', 'ASC');
-                },
-                'attr' => ['class' => 'select2 form-control']
-            ])
-            ->add($value ."description", TextareaType::class, [
+
+                ->add('weight', NumberType::class, [
+                    'attr' => ['class' => 'form-control']
+                ])
+                ->add('strategy', EntityType::class, [
+                    'class' => Strategy::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('s')
+                            ->where('s.isActive =1')
+                            ->orderBy('s.id', 'ASC');
+                    },
+                    'attr' => ['class' => 'select2 form-control']
+                ])
+                ->add($value . "description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
-                ])
-        ;
+                ]);
         }
     }
 

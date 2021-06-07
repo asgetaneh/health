@@ -194,8 +194,10 @@
 											<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 												<img class="nav-user-photo" src="{{ asset('assets/assets/images/avatars/avatar2.png') }}" alt="Jason's Photo"/>
 												<span class="user-info">
+                                                {% if app.user %}
 													<small>
 														{{ app.user.userInfo.fullName }}</small>
+                                                        {% endif %}
 												</span>
 												<i class="ace-icon fa fa-caret-down"></i>
 											</a>
@@ -374,7 +376,6 @@ ace.settings.loadState('sidebar')
 								</a>
 								<b class="arrow"></b>
 
-<<<<<<< HEAD
 								<ul
 									class="submenu">
 								
@@ -400,6 +401,9 @@ ace.settings.loadState('sidebar')
 
 
 										
+
+									
+
 									{% if is_granted('vw_gol') %}
 
 
@@ -759,13 +763,6 @@ element.classList.remove("navbar-fixed-top");
 }
 				</script>
 
-<<<<<<< HEAD
-				<!--[if IE]>
-																																																																		{% block script %} {% endblock %}
-																																																																		<![endif]-->
-
-=======
->>>>>>> 0fdef89b3ef614359a344950921a4aad8d8b2b24
 
 				{% block additional_script_file %}{% endblock %}
 				<!-- inline scripts related to this page -->

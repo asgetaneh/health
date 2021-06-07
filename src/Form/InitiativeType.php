@@ -39,7 +39,8 @@ class InitiativeType extends AbstractType
                 ])
                 ->add($value."description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
-                    'attr' => ['class' => 'autosize-transition form-control']
+                    'attr' => ['class' => 'autosize-transition form-control'],
+                     'required'=>false,
                 ])
                 ->add('initiativeBehaviour', EntityType::class, [
                     'class' => InitiativeBehaviour::class,
@@ -70,6 +71,7 @@ class InitiativeType extends AbstractType
                     'class' => InitiativeAttribute::class,
                     'attr' => ['class' => 'select2 form-control'],
                     'multiple'=>true,
+                    'required'=>false,
                 ]);
         }
     }

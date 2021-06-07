@@ -69,7 +69,9 @@ class ObjectiveRepository extends ServiceEntityRepository
         }
         if(isset($search['name']) ){
            
-            $qb->andWhere("o.name  LIKE '%" . $search['name']. "%' or o.outCome  LIKE '%" . $search['name'] . "%'  or o.outPut  LIKE '%" . $search['name']. "%' ");
+            $qb
+            ->join('o.translations','t')
+            ->andWhere("t.name  LIKE '%" . $search['name']. "%' or t.outCome  LIKE '%" . $search['name'] . "%'  or t.outPut  LIKE '%" . $search['name']. "%' ");
         
 
             
