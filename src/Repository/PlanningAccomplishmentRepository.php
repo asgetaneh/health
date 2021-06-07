@@ -79,7 +79,7 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
       $qb=$this->createQueryBuilder('pa')
       ->leftjoin('pa.socialAttribute','sa')
       ->andwhere('pa.suitableInitiative = :suitin')
-     ->andwhere('sa.name = :name')
+     ->andwhere('sa.id = :name')
       ->setParameter('suitin',$suitable)
      ->setParameter('name',$social);
 
