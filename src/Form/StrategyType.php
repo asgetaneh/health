@@ -23,12 +23,14 @@ class StrategyType extends AbstractType
                
                 ->add($value, null, [
                     'mapped' => false, 'label' => $key . " Translation Objective Name", 'required' => $value == "en", 'data' => $data->translate($value)->getName(),
-                    'attr' => ['class' => 'form-control']
+                    'attr' => ['class' => 'form-control'],
+                    'required'=>true,
                 ])
                 
                 ->add($value . "description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
-                    'attr' => ['class' => 'autosize-transition form-control']
+                    'attr' => ['class' => 'autosize-transition form-control'],
+                    
                 ])
                  ->add('objective', EntityType::class, [
                     'class' => Objective::class,
