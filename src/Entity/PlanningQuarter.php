@@ -74,6 +74,21 @@ class PlanningQuarter
      */
     private $behavioralPlanningAccomplishments;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $endDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="quarter")
+     */
+    private $operationalSuitableInitiatives;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -82,6 +97,7 @@ class PlanningQuarter
         $this->performerTasks = new ArrayCollection();
         $this->planningAccomplishments = new ArrayCollection();
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
+        $this->operationalSuitableInitiatives = new ArrayCollection();
     }
     public function __toString()
     {
@@ -324,6 +340,60 @@ class PlanningQuarter
             // set the owning side to null (unless already changed)
             if ($behavioralPlanningAccomplishment->getQuarter() === $this) {
                 $behavioralPlanningAccomplishment->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTimeInterface
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(?\DateTimeInterface $startDate): self
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): self
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getQuarter() === $this) {
+                $operationalSuitableInitiative->setQuarter(null);
             }
         }
 

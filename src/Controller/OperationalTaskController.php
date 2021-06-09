@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Initiative;
-use App\Entity\Measure;
-use App\Entity\OperationalManager;
+
 use App\Entity\OperationalTask;
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
@@ -31,6 +29,11 @@ use App\Repository\TaskMeasurementRepository;
 use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
 use DateTime;
+use Andegna\DateTime as AD;
+use Andegna\DateTimeFactory;
+use App\Entity\OperationalSuitableInitiative;
+use App\Repository\PlanningQuarterRepository;
+use Proxies\__CG__\App\Entity\PlanningQuarter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,7 +51,7 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request ,SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
+    public function index(Request $request ,SuitableInitiative $suitableInitiative,PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {              $entityManager = $this->getDoctrine()->getManager();
     $social=0;
     //    dump($suitableInitiative);
@@ -68,6 +71,7 @@ class OperationalTaskController extends AbstractController
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
         $count=0;
+                $maxcount=0;
         $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative);
        $taskUsers= $taskUserRepository->findTaskUsers($this->getUser());
        foreach ($taskUsers as $value) {
@@ -79,23 +83,44 @@ class OperationalTaskController extends AbstractController
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
+            $maxcount++;
         }
+        $time = new DateTime('now');
+$quarterId=0;
+$quarterName=0;
+$now = (new DateTime('now'))->format('y-m-d');
+$hamle = DateTimeFactory::of(2013, 11, 1);
+$meskerem = DateTimeFactory::of(2014, 1, 30);
+  
+// dump($now = (new DateTime('now'))->format('y-m-d')
+// );
+
+// dd($hamle);
+
+// dd($meskerem);
+// $hamle=01/11/2013;
+// $meskerem=30/01/2014;
+$f=$this->fromGretoEthstr($time);
+            $quarters=$planningQuarterRepository->findAll();
+
+          foreach($quarters as $quarter){
+        if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate() ) {
+            $quarterId=$quarter->getId();
+            $quarterName=$quarter->getName();
+        }
+        // $f=$this->fromGretoEthstr($time);
+
+   
+
+    }
  
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $gregorian = new DateTime('now');
-// 2);
-//             $et = new Andegna\DateTime();
 
-// $millennium = Andegna\DateTimeFactory::of(2000, 1, 1);
 
-//         $ethipic = new Andegna\DateTime($gregorian);
 
-        //  dd($ethipic);
             if ($social == 1) {
-                // dd($form->getData()->getSocial()->getId()); 
        $plans=$planningAccomplishmentRepository->findplanAccomp($suitableInitiative,$form->getData()->getSocial()->getId()); 
-// dd($plans);
             }
             else{
                  $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
@@ -103,14 +128,19 @@ class OperationalTaskController extends AbstractController
           
             foreach ($plans as  $value) {
 
-                if ( $value->getQuarter() == $form->getData()->getQuarter()) {
+                if ( $value->getQuarter() == $planningQuarterRepository->find($quarterId)) {
                     $performerTask->setPlanAcomplishment($value);                
-                        
+                        $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
                     $performerTask->setCreatedBy($this->getUser());
 
                $weight=$form->getData()->getWeight();
                 if ($count + $weight > 100 ) {
                  $this->addFlash('danger', 'Weight must be less than 100 !');
+
+            return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
+            }
+             if ($maxcount > 6) {
+                 $this->addFlash('danger', 'Task must be less than 7 !');
 
             return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
             }
@@ -135,6 +165,7 @@ $count=0;
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative),
             'count'=>$count,
+            'quarterName'=>$quarterName,
             'taskUsers'=> $taskUsers,
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),
@@ -142,6 +173,24 @@ $count=0;
             'formtask'=>$formtask->createView()
 
         ]);
+    }
+    public function fromGretoEthstr($gregorian)
+    {
+        # code..
+        $ethipic = new AD($gregorian);
+        // dump($gregorian);
+        return $ethipic->format('F j Y');
+    }
+    public function fromGretoEthstrint($gregorian)
+    {
+        # code..
+        $ethipic = new AD($gregorian);
+        return $ethipic->format('F j');
+    }
+      public function fromEthtoGre($ethipic)
+    {
+        # code..
+        return $ethipic->toGregorian();
     }
     /**
      * @Route("/suitableInitiative/list", name="suitable_initiative_list")
@@ -161,46 +210,83 @@ $count=0;
      /**
      * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
      */
-    public function accomplishment(Request $request ,PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
-    {              $entityManager = $this->getDoctrine()->getManager();
-       $social=0;
-    
+    public function accomplishment(Request $request ,PlanningQuarterRepository $planningQuarterRepository, PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
+    {              
+                $social=0;
                 foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
                     if($va->getName()){
                         $social=1;
-                    }
-                
-            }
+                    }   }
         $em=$this->getDoctrine()->getManager();
-        $initiativeName=$suitableInitiative->getInitiative()->getName();
 
-        //  $planAcomplish=$planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitableInitiative]); 
+        $initiativeName=$suitableInitiative->getInitiative()->getName();
+                $initiativeId=$suitableInitiative->getId();
          $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative);
-        //  dd($performerTasks);
         $total1=0;
                 $total2=0;
-
             $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative); 
-               foreach ($taskAcomolishs as $value) {
-                        
-                   $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ;
-                 
+               foreach ($taskAcomolishs as $value) {      
+                   $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ; 
                }
  
-  $taskUser=$this->getUser();
-
-                 $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
-            // dd($taskAcomolishs);
+         $taskUser=$this->getUser();
+         $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
+         $time = new DateTime('now');
+         $endDate=0;
+                  $quarters=$planningQuarterRepository->findAll();
+          foreach($quarters as $quarter){
+        if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate() ) {
+            $endDate=$quarter->getEndDate();
+        }}
+               $diff=$endDate->diff($time);
+                if ($diff->m == 0) {
+                $remainingdays=$diff->d;}
+                else{
+              $remainingdays=$diff->m * 30 + $diff->d;      
+                }
         return $this->render('operational_task/accomplishmentDetail.html.twig', [
             'taskAcomolishs' => $taskAcomolishs,
             'initiativeName'=>$initiativeName,
+            'initiativeId'=>$initiativeId,
             'performerTasks'=>$performerTasks,
             'social'=>$social,
+            'remainingdays'=>$remainingdays,
             'taskUsers'=>$taskUsers
             
         ]);
     }
     
+     /**
+     * @Route("/send/principal", name="send_to_principal")
+     */
+    public function sendToPrincipal(Request $request,PlanningQuarterRepository $planningQuarterRepository, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {     
+        $em=$this->getDoctrine()->getManager();
+        $user=$this->getUser();
+        $suitiniId=$request->request->get('suitableinitiative');
+        $accompValue=$request->request->get('accomp');
+                $quarterId=$request->request->get('quarterId');
+        $quarter=$planningQuarterRepository->find($quarterId);
+        // dd($quarter);
+        $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
+        $opOffice=$operation->getOperationalOffice();
+        $suitableInitiative=$suitableInitiativeRepository->find($suitiniId);
+          $operationalSuitableInitiative=new OperationalSuitableInitiative();
+          $operationalSuitableInitiative->setSuitable($suitableInitiative);
+          $operationalSuitableInitiative->setOperationalOffice($opOffice);
+          $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+          $operationalSuitableInitiative->setQuarter($quarter);
+          $operationalSuitableInitiative->setStatus(1);
+          $em->persist($operationalSuitableInitiative);
+          $em->flush();
+    $this->addFlash('success', 'successfully Send To Principal Office !');
+
+
+          return $this->redirectToRoute('suitable_initiative_list');
+
+
+       
+    }
       /**
      * @Route("/intiative/accomplishment", name="initiative_accomplishment_list")
      */
