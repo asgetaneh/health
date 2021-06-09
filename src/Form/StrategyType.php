@@ -22,7 +22,7 @@ class StrategyType extends AbstractType
             $builder
                
                 ->add($value, null, [
-                    'mapped' => false, 'label' => $key . " Translation Objective Name", 'required' => $value == "en", 'data' => $data->translate($value)->getName(),
+                    'mapped' => false, 'label' => $key . " Translation Strategy Name", 'required' => $value == "en", 'data' => $data->translate($value)->getName(),
                     'attr' => ['class' => 'form-control'],
                     'required'=>true,
                 ])

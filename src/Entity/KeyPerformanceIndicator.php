@@ -53,6 +53,11 @@ class KeyPerformanceIndicator implements TranslatableInterface
      */
     private $initiatives;
    private  $locale="en";
+
+   /**
+    * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="kpi")
+    */
+   private $planAchievements;
     public function __toString()
     {
         return $this->getName();
@@ -66,6 +71,7 @@ class KeyPerformanceIndicator implements TranslatableInterface
     public function __construct()
     {
         $this->initiatives = new ArrayCollection();
+        $this->planAchievements = new ArrayCollection();
     }
 
     
@@ -160,6 +166,36 @@ class KeyPerformanceIndicator implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($initiative->getKeyPerformanceIndicator() === $this) {
                 $initiative->setKeyPerformanceIndicator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanAchievement[]
+     */
+    public function getPlanAchievements(): Collection
+    {
+        return $this->planAchievements;
+    }
+
+    public function addPlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if (!$this->planAchievements->contains($planAchievement)) {
+            $this->planAchievements[] = $planAchievement;
+            $planAchievement->setKpi($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if ($this->planAchievements->removeElement($planAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($planAchievement->getKpi() === $this) {
+                $planAchievement->setKpi(null);
             }
         }
 

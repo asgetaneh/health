@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('plan_achievement_objective')}}">{% trans %}Objective Achievement{% endtrans %}</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+
+	<div class="col-sm-12">
+		<div class="tabbable">
+			<ul class="nav nav-tabs nav-justified " id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="#home" class="lead" aria-expanded="true">
+
+						Tabular
+					</a>
+				</li>
+
+				<li class="">
+					<a data-toggle="tab" href="#messages" aria-expanded="false" class="lead">
+						Visualization
+
+					</a>
+				</li>
+
+
+			</ul>
+
+			<div class="tab-content">
+				<div id="home" class="tab-pane fade active in">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Objective</th>
+								<th>Year</th>
+								<th>Achievement</th>
+								<th>actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for plan_achievement in plan_achievements %}
+								<tr>
+									<td>{{ loop.index }}</td>
+									<td>{{ plan_achievement.accomplishmentValue }}</td>
+									<td>
+										<a href="{{ path('plan_achievement_show', {'id': plan_achievement.id}) }}">show</a>
+										<a href="{{ path('plan_achievement_edit', {'id': plan_achievement.id}) }}">edit</a>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="3">no records found</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div id="messages" class="tab-pane fade"></div>
+
+
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

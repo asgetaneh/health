@@ -131,8 +131,9 @@
 										<th>#</th>
 										<th>Initiative</th>
 
-										<th>MaxValue</th>
+										
 										<th>MinValue</th>
+                                        <th>MaxValue</th>
 										<th>KPI</th>
 										<th>Strategy</th>
 										<th>Objective</th>
@@ -150,20 +151,29 @@
 										{% set count = count + 1 %}
 										<tr>
 											<td>{{ count }}</td>
-											<td>{{ initiative.name }}</td>
-
+											<td>{{ initiative|title }}</td>
+                                            <td>{{ initiative.minimumValue }}</td>
 											<td>{{ initiative.maximumValue }}</td>
-											<td>{{ initiative.minimumValue }}</td>
+										
 
-											<td>{{ initiative.keyPerformanceIndicator }}</td>
+											<td>{{ initiative.keyPerformanceIndicator|title }}</td>
 											<td>{{ initiative.keyPerformanceIndicator.strategy }}</td>
 											<td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td>
 											<td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td>
 											<td>
-												{% for office in initiative.principalOffice %}
-													{{office}}
+                                            <ul class="list-unstyled">
+                                            {% for office in initiative.principalOffice %}
+													
 
-												{% endfor %}
+												
+                                            <li>
+                                             <i class="ace-icon fa fa-check green"></i>
+                                             {{office}}
+                                            </li>
+                                            {% endfor %}
+                                           
+                                            </ul>
+												
 											</td>
 											<td>
 												{% if initiative.isActive %}

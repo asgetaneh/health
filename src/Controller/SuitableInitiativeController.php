@@ -61,6 +61,47 @@ class SuitableInitiativeController extends AbstractController
             'filterform'=>$filterForm->createView()
         ]);
     }
+/**
+     * @Route("/report", name="suitable_initiative_report", methods={"GET","POST"})
+     */
+    public function report(SuitableInitiativeRepository $suitableInitiativeRepository,Request $request): Response
+    {
+       $filterForm=$this->createFormBuilder()
+       ->add("planyear",EntityType::class,[
+           'class'=>PlanningYear::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+        ->add("initiative",EntityType::class,[
+           'class'=>Initiative::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add('principaloffice',EntityType::class,[
+           'class'=>PrincipalOffice::class,
+            'multiple' => true,
+            'required'=>false,
+            
+              'placeholder' => 'Choose an principal office',
+       ])->getForm();
+       $filterForm->handleRequest($request);
+       if($filterForm->isSubmitted()&& $filterForm->isValid()){
+         
+           $suitableInitiatives=$suitableInitiativeRepository->search($filterForm->getData());
+        
+        }
+        else
+         $suitableInitiatives=$suitableInitiativeRepository->findAll();
+       
+        return $this->render('suitable_initiative/index.html.twig', [
+            'suitable_initiatives' => $suitableInitiatives,
+            'filterform'=>$filterForm->createView()
+        ]);
+    }
 
     /**
      * @Route("/new", name="suitable_initiative_new", methods={"GET","POST"})

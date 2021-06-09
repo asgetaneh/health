@@ -36,7 +36,7 @@
 									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
                                     <div class="col-md-3">
 										<div class="form-group">
-											{{ form_label(filterform.initiative,'Planning Year') }}
+											{{ form_label(filterform.initiative,'Initiative') }}
 											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
 										</div>
 									</div>
@@ -80,7 +80,7 @@
 
 
 								<div class="pull-right">
-									<div class="widget-toolbar no-border">
+									{# <div class="widget-toolbar no-border">
 
 
 										<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -104,7 +104,7 @@
 
 
 										</ul>
-									</div>
+									</div> #}
 
 								</div>
 							</div>

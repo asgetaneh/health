@@ -199,6 +199,49 @@ function incremental(currentInput){
      return true; 
        
 }
+function socialDecremental(currentInput){
+    var isvalid=true;
+    var relatedInput=$("input:enabled:text[data-attr][data-name="+currentInput.data('name')+"]");
+     if($(relatedInput).index(currentInput)>=0){
+      var currentindex=$(relatedInput).index(currentInput);
+       for(var i=0;i<relatedInput.length;i++){
+           if(i<$(relatedInput).index(currentInput)){
+               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())>= Number(relatedInput.eq(i).val())){
+           $(currentInput).next('span').remove();
+           $(currentInput).closest('div.form-group').removeClass('has-error');
+           $(currentInput).focus();
+           $(currentInput).closest('div.form-group').addClass('has-error');
+            $(currentInput).after($('<span class="text-danger">Must be less than previous quarter</span>'))
+           isvalid= false;
+        }
+       else{
+           $(currentInput).next('span').remove();
+           $(currentInput).closest('div.form-group').removeClass('has-error');
+         
+       }
+
+           }
+           if(i>$(relatedInput).index(currentInput)){
+            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())<= Number(relatedInput.eq(i).val())){
+            $(relatedInput.eq(i)).next('span').remove();
+            $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
+            $(relatedInput.eq(i)).focus();
+            $(relatedInput.eq(i)).closest('div.form-group').addClass('has-error');
+            $(relatedInput.eq(i)).after($('<span class="text-danger">must be greater than previous quarter</span>'))
+            }
+             else{
+           $(relatedInput.eq(i)).next('span').remove();
+           $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
+         
+       }
+
+           }
+       }
+       
+     }
+     return true; 
+       
+}
 
 $("input:enabled:text[data-attr]").on("keyup",function () {
 
@@ -264,6 +307,13 @@ $('div.yearylplans').append(span);
 })
 
 }
+if (behavior("3")) {
+   
+     if(!socialDecremental(currentInput))
+        return ;
+          }
+ 
+
 });
 
 
@@ -313,6 +363,53 @@ function nonSocialIncremental(currentNode){
       return isvalid;
 }
 
+function decremental(currentNode){
+     var inputElement=$("input:enabled:text:not([data-attr])");
+      var isvalid=true;
+      if($(inputElement).index(currentNode)>=0){
+         for(var i=0;i<inputElement.length;i++){
+            if(i<$(inputElement).index(currentNode)){
+            
+            if(inputElement.eq(i).val()!="" && (Number(currentNode.val())>=Number(inputElement.eq(i).val()))){
+              isvalid=false;
+           
+            }
+              
+        }
+        if(i>$(inputElement).index(currentNode)){
+           
+        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) >= Number(currentNode.val()))){
+            $(inputElement.eq(i)).next('span').remove();
+            $(currentNode).closest('div.form-group').removeClass('has-error');
+            $(inputElement.eq(i)).focus();
+            $(inputElement.eq(i)).closest('div.form-group').addClass('has-error');
+            $(inputElement.eq(i)).after($('<span class="help-block text-danger"> your plan value must be less than than previous quarter</span>'))
+         }
+         
+         else{
+            $(inputElement.eq(i)).next('span').remove();
+            $(currentNode).closest('div.form-group').removeClass('has-error');
+         }
+        }
+         }
+    if(!isvalid){
+            $(currentNode).next('span').remove();
+            $(currentNode).focus();
+            $(currentNode).closest('div.form-group').addClass('has-error');
+            $(currentNode).after($('<span class="help-block text-danger">your plan value must be less than than previous quarter</span>'))
+    }
+    else{
+        $(currentNode).next('span').remove();
+        $(currentNode).closest('div.form-group').removeClass('has-error');
+
+    }
+    return isvalid;
+       
+      }
+      return isvalid;
+
+}
+
 
 
 $("input:enabled:text:not([data-attr])").keyup(function () {
@@ -342,7 +439,11 @@ if(behavior("1")){
     }
     $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">' + "=" + sum + '</span>'));
 }
+if(behavior("3")){
+ if (!decremental(inpt))
+        return false;
 
+}
 
 
 });

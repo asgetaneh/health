@@ -61,10 +61,16 @@ class Objective implements TranslatableInterface
 
     private $locales = "en";
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="Objective")
+     */
+    private $planAchievements;
+
 
     public function __construct()
     {
         $this->strategies = new ArrayCollection();
+        $this->planAchievements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,6 +184,36 @@ class Objective implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($strategy->getObjective() === $this) {
                 $strategy->setObjective(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanAchievement[]
+     */
+    public function getPlanAchievements(): Collection
+    {
+        return $this->planAchievements;
+    }
+
+    public function addPlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if (!$this->planAchievements->contains($planAchievement)) {
+            $this->planAchievements[] = $planAchievement;
+            $planAchievement->setObjective($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if ($this->planAchievements->removeElement($planAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($planAchievement->getObjective() === $this) {
+                $planAchievement->setObjective(null);
             }
         }
 

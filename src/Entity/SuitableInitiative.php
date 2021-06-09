@@ -64,6 +64,16 @@ class SuitableInitiative
      */
     private $operationalInitiatives;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $yearlyAccomplishment;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
@@ -253,6 +263,30 @@ class SuitableInitiative
                 $operationalInitiative->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getYearlyAccomplishment(): ?float
+    {
+        return $this->yearlyAccomplishment;
+    }
+
+    public function setYearlyAccomplishment(?float $yearlyAccomplishment): self
+    {
+        $this->yearlyAccomplishment = $yearlyAccomplishment;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

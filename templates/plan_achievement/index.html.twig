@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanAchievement index{% endblock %}
+
+{% block body %}
+    <h1>PlanAchievement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>AccomplishmentValue</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for plan_achievement in plan_achievements %}
+            <tr>
+                <td>{{ plan_achievement.id }}</td>
+                <td>{{ plan_achievement.accomplishmentValue }}</td>
+                <td>
+                    <a href="{{ path('plan_achievement_show', {'id': plan_achievement.id}) }}">show</a>
+                    <a href="{{ path('plan_achievement_edit', {'id': plan_achievement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('plan_achievement_new') }}">Create new</a>
+{% endblock %}

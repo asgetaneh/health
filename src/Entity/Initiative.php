@@ -83,6 +83,11 @@ class Initiative implements TranslatableInterface
     private $initiativeBehaviour;
     private $locale="en";
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="initiative")
+     */
+    private $planAchievements;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
@@ -90,6 +95,7 @@ class Initiative implements TranslatableInterface
         $this->suitableInitiatives = new ArrayCollection();
         $this->socialAtrribute = new ArrayCollection();
         $this->initiativeBehaviour = new ArrayCollection();
+        $this->planAchievements = new ArrayCollection();
     }
     public function __toString()
     {
@@ -310,6 +316,36 @@ class Initiative implements TranslatableInterface
     public function removeInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
     {
         $this->initiativeBehaviour->removeElement($initiativeBehaviour);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlanAchievement[]
+     */
+    public function getPlanAchievements(): Collection
+    {
+        return $this->planAchievements;
+    }
+
+    public function addPlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if (!$this->planAchievements->contains($planAchievement)) {
+            $this->planAchievements[] = $planAchievement;
+            $planAchievement->setInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanAchievement(PlanAchievement $planAchievement): self
+    {
+        if ($this->planAchievements->removeElement($planAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($planAchievement->getInitiative() === $this) {
+                $planAchievement->setInitiative(null);
+            }
+        }
 
         return $this;
     }
