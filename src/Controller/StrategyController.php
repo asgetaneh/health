@@ -164,6 +164,8 @@ class StrategyController extends AbstractController
                 $strategy->translate($value)->setName($request->request->get('strategy')[$value]);
                 $strategy->translate($value)->setDescription($request->request->get('strategy')[$value . "description"]);
             }
+            
+            $this->getDoctrine()->getManager()->persist($strategy);
             $strategy->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', ' edited successfuly');
