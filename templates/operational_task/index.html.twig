@@ -92,9 +92,10 @@
 						<span class="badge badge-info">
 							{% trans %}Quarter{% endtrans %}
 							:
-						
 
-							 <strong> {{quarterName}}</strong> 
+
+							<strong>
+								{{quarterName}}</strong>
 						</span>
 					</div>
 				</div>
@@ -214,7 +215,7 @@
 													</table>
 
 												</td>
-
+												<input type="hidden" class="user" value="{{app.user.id}}">
 												<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
 												<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
 
@@ -273,6 +274,7 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 		<script>
 			$(document).ready(function () {
 var task = $('.task').val();
+var user = $('.user').val();
 
 var select = $('.crtask')
 
@@ -280,7 +282,8 @@ $.ajax({
 url:"{{ path('task_fetch') }}",
 method: "POST",
 data: {
-task: task
+task: task,
+user: user
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()

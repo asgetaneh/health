@@ -33,7 +33,7 @@ public function findTask($user)
             
             ->getResult();
     }
-    public function findDetailAccomplish($suitableInitiative)
+    public function findDetailAccomplish($suitableInitiative,$user)
     {
 
         //dd($productNmae);
@@ -43,6 +43,8 @@ public function findTask($user)
         ->leftJoin('ta.PerformerTask','ps')
         ->leftJoin('ps.PlanAcomplishment','pa')
         ->andWhere('pa.suitableInitiative = :val')
+         ->andWhere('ps.createdBy = :user')
+            ->setParameter('user', $user)
             ->setParameter('val', $suitableInitiative)
             ->orderBy('ps.name', 'ASC')
           

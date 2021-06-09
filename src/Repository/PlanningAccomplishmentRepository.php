@@ -86,6 +86,38 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
       return $qb->getQuery()->getResult();
       
     }
+    public function findplanAccwithoutSocial($suitable,$principal,$quarter){
+      $qb=$this->createQueryBuilder('pa')
+      ->leftJoin('pa.suitableInitiative','si')
+      ->andwhere('pa.suitableInitiative = :suitin')
+     ->andwhere('si.principalOffice = :principal')
+          ->andwhere('pa.quarter = :quarter')
+      ->setParameter('suitin',$suitable)
+            ->setParameter('quarter',$quarter)
+
+     ->setParameter('principal',$principal);
+
+      return $qb->getQuery()->getResult();
+      
+    }
+    
+    public function findplanAcc($suitable,$social,$principal,$quarter){
+      $qb=$this->createQueryBuilder('pa')
+      ->leftjoin('pa.socialAttribute','sa')
+      ->leftJoin('pa.suitableInitiative','si')
+      ->andwhere('pa.suitableInitiative = :suitin')
+                ->andwhere('pa.quarter = :quarter')
+            ->andwhere('si.principalOffice = :princiapl')
+     ->andwhere('sa.id = :name')
+      ->setParameter('suitin',$suitable)
+                  ->setParameter('quarter',$quarter)
+            ->setParameter('princiapl',$principal)
+     ->setParameter('name',$social);
+
+      return $qb->getQuery()->getResult();
+      
+    }
+    
     
 
 }

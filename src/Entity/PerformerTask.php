@@ -63,6 +63,11 @@ class PerformerTask
      */
     private $social;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     
     
 
@@ -191,6 +196,18 @@ class PerformerTask
     public function setSocial(?InitiativeAttribute $social): self
     {
         $this->social = $social;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

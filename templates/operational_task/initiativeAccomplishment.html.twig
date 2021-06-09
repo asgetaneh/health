@@ -32,7 +32,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Operational Office
+					<h5 class="widget-title bigger lighter">Principal Office
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -41,7 +41,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{suitableInitiatives|length}}</strong>
+							<strong>{{operatioanlSuitables|length}}</strong>
 
 						</span>
 					</div>
@@ -59,27 +59,16 @@
 					<div class="widget-main padding-16">
 
 						<div class="table-responsive">
-							<form class="form-inline" method="post" style="display:inline;">
+							{% set total = 0 %}
+							{% set social = 1 %}
 
-								<div class="input-group">
-									<input type="text" class="form-control" name="search" placeholder="search"/>
-									<div class="input-group-btn">
-										<button type="submit" class="btn btn-default no-border btn-sm">
-											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-										</button>
-									</div>
-								</div>
-							</form>
 
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>TaskName</th>
-										<th>Description</th>
+										<th>Initiative</th>
 										<th>Acoplishment Value</th>
-
-										<th>actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -94,16 +83,61 @@
 											<td>{{ count}}</td>
 											<td>{{ suitableInitiative.initiative.name }}</td>
 
-											<td>{{ suitableInitiative.principalOffice.name  }}</td>
-											<td></td>
+
 											<td>
-											
-												<a href="{{ path('acomplishment_task_detail', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
+												<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+													<thead>
+														<tr>
+															<th>#</th>
+															{% if suitableInitiative.initiative.socialAtrribute %}
+                                                            {% set social = 0 %}
+																<th>Social
+																</th>
+															{% endif %}
+
+															<th>Operational Office</th>
+															<th>Acoplishment Value</th>
 
 
-													<i class="fa fa-eye"></i>
-												</a>
-												
+														</tr>
+													</thead>
+													<tbody>
+														{% set count = 0 %}
+														{% set lengthop = operatioanlSuitables|length %}
+
+
+														{% for operatioanlSuitable in operatioanlSuitables %}
+															{% if suitableInitiative.id == operatioanlSuitable.planningAcomplishment.suitableInitiative.id %}
+
+																<tr>
+																	{% set count = count + 1 %}
+																	<td>{{ count}}</td>
+																	{% if suitableInitiative.initiative.socialAtrribute %}
+																		<td>{{operatioanlSuitable.planningAcomplishment.socialAttribute}}
+																		</td>
+
+																	{% endif %}
+																	<td>{{ operatioanlSuitable.operationalOffice  }}</td>
+
+																	<td>{{ operatioanlSuitable.accomplishedValue  }}</td>
+
+																	{% set total = total + operatioanlSuitable.accomplishedValue %}
+																</tr>
+
+															{% endif %}
+														{% endfor %}
+                                                        {% if social == 0 %}
+                                                        
+														<tr>
+															<td colspan="3">total</td>
+															<td>{{total / count}}</td>
+														</tr>
+                                                        {% endif %}
+
+													</tbody>
+
+
+												</table>
 											</td>
 
 
@@ -115,6 +149,7 @@
 									{% endfor %}
 								</tbody>
 							</table>
+
 						</div>
 					</div>
 				</div>

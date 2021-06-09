@@ -281,6 +281,8 @@ class SuitableInitiative
     public function setYearlyAccomplishment(?float $yearlyAccomplishment): self
     {
         $this->yearlyAccomplishment = $yearlyAccomplishment;
+                return $this;
+
     }
     
 
@@ -293,6 +295,9 @@ class SuitableInitiative
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+                return $this;
+
 }
-    
+
+
 }
