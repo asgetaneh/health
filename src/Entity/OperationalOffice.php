@@ -68,6 +68,11 @@ class OperationalOffice
      * @ORM\OneToMany(targetEntity=OperationalInitiative::class, mappedBy="office")
      */
     private $operationalInitiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="operationalOffice")
+     */
+    private $operationalSuitableInitiatives;
     
     public function __construct()
     {
@@ -75,6 +80,7 @@ class OperationalOffice
         $this->performers = new ArrayCollection();
         $this->initiatives = new ArrayCollection();
         $this->operationalInitiatives = new ArrayCollection();
+        $this->operationalSuitableInitiatives = new ArrayCollection();
     }
   
     public function getId(): ?int
@@ -269,6 +275,36 @@ class OperationalOffice
             // set the owning side to null (unless already changed)
             if ($operationalInitiative->getOffice() === $this) {
                 $operationalInitiative->setOffice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setOperationalOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getOperationalOffice() === $this) {
+                $operationalSuitableInitiative->setOperationalOffice(null);
             }
         }
 

@@ -155,8 +155,8 @@
 																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
-																	{% if taskAccomplishment.accomplishmentValue %}
-																		<td>{{ taskAccomplishment.accomplishmentValue }}</td>
+																	{% if taskAccomplishment.reportedValue %}
+																		<td>{{ taskAccomplishment.reportedValue }}</td>
 
 																	{% else %}
 																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
