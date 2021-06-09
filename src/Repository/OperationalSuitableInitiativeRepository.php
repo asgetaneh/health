@@ -22,19 +22,21 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
     // /**
     //  * @return OperationalSuitableInitiative[] Returns an array of OperationalSuitableInitiative objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    
+    public function findplan($principalOffice)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
+           ->leftJoin('o.operationalOffice','op')
+            ->andWhere('op.principalOffice = :val')
+            ->setParameter('val', $principalOffice)
             ->orderBy('o.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?OperationalSuitableInitiative

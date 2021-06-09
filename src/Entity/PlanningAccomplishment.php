@@ -63,9 +63,15 @@ class PlanningAccomplishment
      */
     private $performerTasks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="PlanningAcomplishment")
+     */
+    private $operationalSuitableInitiatives;
+
     public function __construct()
     {
         $this->performerTasks = new ArrayCollection();
+        $this->operationalSuitableInitiatives = new ArrayCollection();
     }
 
    
@@ -187,6 +193,36 @@ class PlanningAccomplishment
             // set the owning side to null (unless already changed)
             if ($performerTask->getPlanAcomplishment() === $this) {
                 $performerTask->setPlanAcomplishment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setPlanningAcomplishment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getPlanningAcomplishment() === $this) {
+                $operationalSuitableInitiative->setPlanningAcomplishment(null);
             }
         }
 

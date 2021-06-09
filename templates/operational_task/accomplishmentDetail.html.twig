@@ -26,6 +26,7 @@
 	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
+
 	<form action="{{path('send_to_principal')}}" method="post">
 		<input type="hidden" name="suitableinitiative" value="{{initiativeId}}">
 		<div class="row">
@@ -39,16 +40,26 @@
 						<div class="widget-toolbar"></div>
 
 						<div class="widget-toolbar">
+							{% set value = 0 %}
+							{% for performerTask in performerTasks %}
+								{% if performerTask.status == 1 %}
+									{% set value = 1 %}
 
-							{% if remainingdays <= 10 %}
-								Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+								{% endif %}
 
-								<button type="submit" class="btn btn-success">Send To Principal
-								</button>
-							{% else %}
-								Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+
+							{% endfor %}
+							{% if value == 1 %}
+
+								{% if remainingdays <= 10 %}
+									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+
+									<button type="submit" class="btn btn-success">Send To Principal
+									</button>
+								{% else %}
+									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+								{% endif %}
 							{% endif %}
-
 						</div>
 					</div>
 
@@ -65,190 +76,198 @@
 								{% set planValue = 0 %}
 								{% set total = 0 %}
 								{% set sex = 0 %}
+								{% set sexid = 0 %}
 								{% set grand_total = 0 %}
 								{% set percentPLan = 0 %}
+								{% if performerTasks %}
 
 
-								<table class="table table-striped table-hover" style="margin-top:10px; wi height:100px;">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>TaskName</th>
-											<th>Weight</th>
-											<th>Quarter</th>
-											<th>Accomplishment</th>
-
-
-										</tr>
-									</thead>
-									<tbody>
-										{% set count = 0 %}
-										{% for performerTask in performerTasks %}
-											{% set total_expected_value = 0 %}
-											{% set total_accomplish = 0 %}
-
+									<table class="table table-striped table-hover" style="margin-top:10px; wi height:100px;">
+										<thead>
 											<tr>
-
-												{% set count = count + 1 %}
-												<td>{{ count}}</td>
-												<td>{{ performerTask.name }}</td>
-												{% if social == 1 %}
-
-													{% set sex = performerTask.social.name %}
-												{% endif %}
-												<td>{{ performerTask.weight }}</td>
-												<td>{{ performerTask.quarter }}</td>
-												<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
-
-												<td colspan="2">
+												<th>#</th>
+												<th>TaskName</th>
+												<th>Weight</th>
+												<th>Quarter</th>
+												<th>Accomplishment</th>
 
 
-													<table class="table table-bordered  table-responsive-xl table-hover">
-														<tr>
-
-															<th>
-																Performer Name
-															</th>
-															<th>
-																Expected Value</th>
-															<th>
-																Accomplishment
-															</th>
-															<th>
-																Accomplishment
-																																																																																																																																																																																																																																																																																																				 %
-															</th>
-														</tr>
-														{% set count = 0 %}
-														{% set perceent = 0 %}
-
-														{% set idpt = 0 %}
-														{% for taskAcomolish in taskAcomolishs %}
-															<tr>
-
-																{% if performerTask.id == taskAcomolish.taskUser.taskAssign.performerTask.id %}
-																	{% set count = count + 1 %}
-																	{% set percent = taskAcomolish.accomplishmentValue * 100 / taskAcomolish.expectedValue %}
-																	{% set total_expected_value  =  total_expected_value + taskAcomolish.expectedValue  %}
-																	{% set planValue = taskAcomolish.taskUser.taskAssign.performerTask.PlanAcomplishment.planValue %}
-
-																	{% set total_accomplish = total_accomplish + taskAcomolish.accomplishmentValue %}
-
-																	<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
-
-																	<td>{{taskAcomolish.expectedValue}}</td>
-																	<td>{{taskAcomolish.accomplishmentValue}}</td>
-																	<td>{{percent | number_format(2, '.',',')}}%</td>
-
-
-																{% endif %}
-															</tr>
-														{% endfor %}
-
-													</table>
-												</td>
 											</tr>
-											<tr>
-												<td></td>
-												<td>Weight Accomplished
-												</td>
-												{% if total_accomplish   %}
+										</thead>
+										<tbody>
+											{% set count = 0 %}
+											{% for performerTask in performerTasks %}
+												{% set total_expected_value = 0 %}
+												{% set total_accomplish = 0 %}
 
-													<td>
-														{% set grand_total = grand_total + total_accomplish * performerTask.weight / total_expected_value  %}
-														{% set total = total_accomplish * performerTask.weight / total_expected_value  %}
-														{% if social == 1 %}
-															{{total | number_format }}
-															{{sex}}
-															=>{{planValue}}</div>
-														=>
+												<tr>
 
-														{{ ((((total * 100) / performerTask.weight) * planValue) / 100) | number_format }}
-													{% else %}
-														{{total | number_format(2, '.',',')  }}
+													{% set count = count + 1 %}
+													<td>{{ count}}</td>
+													<td>{{ performerTask.name }}</td>
+													{% if social == 1 %}
+
+														{% set sex = performerTask.social.name %}
+														{% set sexid = performerTask.social.id %}
 
 													{% endif %}
-												</td>
+													<td>{{ performerTask.weight }}</td>
+													<td>{{ performerTask.quarter }}</td>
+													<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
+
+													<td colspan="2">
+
+
+														<table class="table table-bordered  table-responsive-xl table-hover">
+															<tr>
+
+																<th>
+																	Performer Name
+																</th>
+																<th>
+																	Expected Value</th>
+																<th>
+																	Accomplishment
+																</th>
+																<th>
+																	Accomplishment
+																																																																																																																																																																																																																																																																																																																																																																																																																																						 %
+																</th>
+															</tr>
+															{% set count = 0 %}
+															{% set perceent = 0 %}
+
+															{% set idpt = 0 %}
+															{% for taskAcomolish in taskAcomolishs %}
+																<tr>
+
+																	{% if performerTask.id == taskAcomolish.taskUser.taskAssign.performerTask.id %}
+																		{% set count = count + 1 %}
+																		{% set percent = taskAcomolish.accomplishmentValue * 100 / taskAcomolish.expectedValue %}
+																		{% set total_expected_value  =  total_expected_value + taskAcomolish.expectedValue  %}
+																		{% set planValue = taskAcomolish.taskUser.taskAssign.performerTask.PlanAcomplishment.planValue %}
+
+																		{% set total_accomplish = total_accomplish + taskAcomolish.accomplishmentValue %}
+
+																		<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
+
+																		<td>{{taskAcomolish.expectedValue}}</td>
+																		<td>{{taskAcomolish.accomplishmentValue}}</td>
+																		<td>{{percent | number_format(2, '.',',')}}%</td>
+
+
+																	{% endif %}
+																</tr>
+															{% endfor %}
+
+														</table>
+													</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>Weight Accomplished
+													</td>
+													{% if total_accomplish   %}
+
+														<td>
+															{% set grand_total = grand_total + total_accomplish * performerTask.weight / total_expected_value  %}
+															{% set total = total_accomplish * performerTask.weight / total_expected_value  %}
+															{% if social == 1 %}
+																{{total | number_format }}
+																{{sex}}
+																=>{{planValue}}</div>
+															=>
+
+															{{ ((((total * 100) / performerTask.weight) * planValue) / 100) | number_format }}
+															<input type="hidden" name="sexid[]" value="{{sexid}}">
+															<input type="hidden" name="social" value="{{social}}">
+															<input type="hidden" name="acompsex[]" value="{{((((total * 100) / performerTask.weight) * planValue) / 100) | number_format}}">
+
+														{% else %}
+															{{total | number_format(2, '.',',')  }}
+
+														{% endif %}
+													</td>
+
+												{% endif %}
+
+												<td></td>
+											</tr>
+
+
+										{% else %}
+											<tr>
+												<td colspan="8">no records found</td>
+											</tr>
+
+										{% endfor %}
+										<tr>
+											<td colspan="2">Grand total</td>
+
+
+											{# {{performerTask.planAccomplishment}}  #}
+											{% if social == 1 %}
+												<td>{{ grand_total | number_format}}</td>
+											{% else %}
+												<td>{{ grand_total | number_format(2, '.',',') }}</td>
 
 											{% endif %}
 
-											<td></td>
+											{# {{ (grand_total * planValue) / 100 }} #}
+
 										</tr>
+										{% if social != 1 %}
+
+											<tr>
+												<td colspan="2">Initiative total</td>
+												<td>
+
+													{{planValue}}
+												</td>
+												<td>
+													{% set percentPLan = (((grand_total * planValue) / 100) * 100 ) / planValue %}
+													{% if percentPLan | number_format (2, '.','.') > 100 %}
+														<div class="badge badge-primary">
+															{% if social == 1 %}
+																{{ ((grand_total * planValue) / 100) | number_format }}
+															{% else %}
+																{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
+															{% endif %}
+														</div>
+													{% elseif percentPLan | number_format (2, '.','.') <= 100 and percentPLan | number_format (2, '.','.') >= 75 %}
+														<div class="badge badge-success">
+															{% if social == 1 %}
+																{{ ((grand_total * planValue) / 100) | number_format }}
+															{% else %}
+																{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
+															{% endif %}
+														</div>
+													{% elseif percentPLan | number_format (2, '.','.') <= 74 and percentPLan | number_format (2, '.','.') >= 50 %}
+														<div class="badge badge-warning">
+															{% if social == 1 %}
+																{{ ((grand_total * planValue) / 100) | number_format }}
+															{% else %}
+																{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
+															{% endif %}
+														</div>
+													{% else %}
+														<div class="badge badge-danger">
+															{% if social == 1 %}
+																{{ ((grand_total * planValue) / 100) | number_format }}
+															{% else %}
+																{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
+															{% endif %}
+														</div>
+													{% endif %}
+													<input type="hidden" name="accomp" value="{{((grand_total * planValue) / 100) | number_format(2, '.',',')}}">
 
 
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-
-									{% endfor %}
-									<tr>
-										<td colspan="2">Grand total</td>
-
-
-										{# {{performerTask.planAccomplishment}}  #}
-										{% if social == 1 %}
-											<td>{{ grand_total | number_format}}</td>
-										{% else %}
-											<td>{{ grand_total | number_format(2, '.',',') }}</td>
-
+												</td>
+											</tr>
 										{% endif %}
-
-										{# {{ (grand_total * planValue) / 100 }} #}
-
-									</tr>
-									{% if social != 1 %}
-
-										<tr>
-											<td colspan="2">Initiative total</td>
-											<td>
-
-												{{planValue}}
-											</td>
-											<td>
-												{% set percentPLan = (((grand_total * planValue) / 100) * 100 ) / planValue %}
-												{% if percentPLan | number_format (2, '.','.') > 100 %}
-													<div class="badge badge-primary">
-														{% if social == 1 %}
-															{{ ((grand_total * planValue) / 100) | number_format }}
-														{% else %}
-															{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
-														{% endif %}
-													</div>
-												{% elseif percentPLan | number_format (2, '.','.') <= 100 and percentPLan | number_format (2, '.','.') >= 75 %}
-													<div class="badge badge-success">
-														{% if social == 1 %}
-															{{ ((grand_total * planValue) / 100) | number_format }}
-														{% else %}
-															{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
-														{% endif %}
-													</div>
-												{% elseif percentPLan | number_format (2, '.','.') <= 74 and percentPLan | number_format (2, '.','.') >= 50 %}
-													<div class="badge badge-warning">
-														{% if social == 1 %}
-															{{ ((grand_total * planValue) / 100) | number_format }}
-														{% else %}
-															{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
-														{% endif %}
-													</div>
-												{% else %}
-													<div class="badge badge-danger">
-														{% if social == 1 %}
-															{{ ((grand_total * planValue) / 100) | number_format }}
-														{% else %}
-															{{ ((grand_total * planValue) / 100) | number_format(2, '.',',')   }}
-														{% endif %}
-													</div>
-												{% endif %}
-												<input type="hidden" name="accomp" value="{{((grand_total * planValue) / 100) | number_format(2, '.',',')}}">
-
-
-											</td>
-										</tr>
-									{% endif %}
-								</tbody>
-							</table>
-
+									</tbody>
+								</table>
+							{% endif %}
 						</div>
 					</div>
 				</div>

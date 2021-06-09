@@ -263,33 +263,5 @@ class SuitableInitiative
         return $this;
     }
 
-    /**
-     * @return Collection|OperationalSuitableInitiative[]
-     */
-    public function getOperationalSuitableInitiatives(): Collection
-    {
-        return $this->operationalSuitableInitiatives;
-    }
-
-    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
-    {
-        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
-            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
-            $operationalSuitableInitiative->setSuitable($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
-    {
-        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
-            // set the owning side to null (unless already changed)
-            if ($operationalSuitableInitiative->getSuitable() === $this) {
-                $operationalSuitableInitiative->setSuitable(null);
-            }
-        }
-
-        return $this;
-    }
+    
 }

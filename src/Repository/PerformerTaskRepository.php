@@ -18,7 +18,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PerformerTask::class);
     }
-     public function filterDeliverBy($plan)
+     public function filterDeliverBy($plan,$user)
     {
 
         //dd($productNmae);
@@ -35,7 +35,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->orderBy('s.id', 'ASC')->
             andWhere('su.id = :plan')
             ->setParameter('plan', $plan)
-
+          ->andWhere('s.createdBy = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             
             ->getResult();
@@ -49,6 +50,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('s.PlanAcomplishment','pl')  
            ->andWhere('pl.suitableInitiative = :initiative')
             ->andWhere('s.createdBy = :user')
+           ->andWhere('s.status = 1')
+
 
 
             ->setParameter('initiative', $initiative)
@@ -59,7 +62,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
-     public function findInitiativeBy($suitableinitiative)
+     public function findInitiativeBy($suitableinitiative,$user)
     {
 
         //dd($productNmae);
@@ -67,8 +70,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->leftJoin('s.PlanAcomplishment','pl')  
            ->andWhere('pl.suitableInitiative = :initiative')
-
-
+           ->andWhere('s.createdBy = :user')
+            ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
 
                         ->orderBy('s.id', 'ASC')
@@ -76,30 +79,24 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+     public function findsendToprincipal($user,$suitableinitiative)
+    {
+
+        // dd($user);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.PlanAcomplishment','pl')  
+           ->andWhere('pl.suitableInitiative = :initiative')
+           ->andWhere('s.createdBy = :user')
+            ->setParameter('user', $user)
+            ->setParameter('initiative', $suitableinitiative)
+                        ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
     
-//  public function findInitiativeBy($suitableinitiative)
-//     {
 
-//         //dd($productNmae);
-//         return $this->createQueryBuilder('s')
-
-//             ->leftJoin('s.PlanAcomplishment','pl') 
-//             ->leftJoin('s.social','so') 
-//             ->innerJoin('App:InitiativeAttributeTranslation','ib','with','so.id = ib.translatable') 
-//            ->leftJoin('s.quarter','q') 
-
-//             ->Select('distinct(s.id) as pid' )
-//             ->addSelect('q.name as qname')
-//             ->addSelect('s.name')
-//             ->addSelect('s.weight')
-//             ->addSelect('s.weight')
-//             ->addSelect('ib.name as soname')
-//            ->andWhere('pl.suitableInitiative = :initiative')
-//             ->setParameter('initiative', $suitableinitiative)
-//              ->orderBy('s.id', 'ASC')
-//             ->getQuery()
-//             ->getResult();
-//     }
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects
     //  */

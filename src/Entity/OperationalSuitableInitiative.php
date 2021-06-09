@@ -17,10 +17,7 @@ class OperationalSuitableInitiative
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="operationalSuitableInitiatives")
-     */
-    private $suitable;
+  
 
     /**
      * @ORM\ManyToOne(targetEntity=OperationalOffice::class, inversedBy="operationalSuitableInitiatives")
@@ -42,22 +39,17 @@ class OperationalSuitableInitiative
      */
     private $quarter;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="operationalSuitableInitiatives")
+     */
+    private $PlanningAcomplishment;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSuitable(): ?SuitableInitiative
-    {
-        return $this->suitable;
-    }
-
-    public function setSuitable(?SuitableInitiative $suitable): self
-    {
-        $this->suitable = $suitable;
-
-        return $this;
-    }
+    
 
     public function getOperationalOffice(): ?OperationalOffice
     {
@@ -103,6 +95,18 @@ class OperationalSuitableInitiative
     public function setQuarter(?PlanningQuarter $quarter): self
     {
         $this->quarter = $quarter;
+
+        return $this;
+    }
+
+    public function getPlanningAcomplishment(): ?PlanningAccomplishment
+    {
+        return $this->PlanningAcomplishment;
+    }
+
+    public function setPlanningAcomplishment(?PlanningAccomplishment $PlanningAcomplishment): self
+    {
+        $this->PlanningAcomplishment = $PlanningAcomplishment;
 
         return $this;
     }
