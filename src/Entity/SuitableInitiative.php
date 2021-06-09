@@ -75,9 +75,7 @@ class SuitableInitiative
      */
     private $status;
 
-     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="suitable")
-     */
-    private $operationalSuitableInitiatives;
+    
 
 
     public function __construct()
@@ -274,7 +272,7 @@ class SuitableInitiative
         return $this;
     }
 
-<<<<<<< HEAD
+
     public function getYearlyAccomplishment(): ?float
     {
         return $this->yearlyAccomplishment;
@@ -283,27 +281,10 @@ class SuitableInitiative
     public function setYearlyAccomplishment(?float $yearlyAccomplishment): self
     {
         $this->yearlyAccomplishment = $yearlyAccomplishment;
-=======
-    /**
-     * @return Collection|OperationalSuitableInitiative[]
-     */
-    public function getOperationalSuitableInitiatives(): Collection
-    {
-        return $this->operationalSuitableInitiatives;
     }
+    
 
-    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
-    {
-        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
-            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
-            $operationalSuitableInitiative->setSuitable($this);
-        }
->>>>>>> 684ab9e2628de13f20bf0778bd82ead42e317e96
 
-        return $this;
-    }
-
-<<<<<<< HEAD
     public function getStatus(): ?int
     {
         return $this->status;
@@ -312,17 +293,6 @@ class SuitableInitiative
     public function setStatus(?int $status): self
     {
         $this->status = $status;
-=======
-    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
-    {
-        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
-            // set the owning side to null (unless already changed)
-            if ($operationalSuitableInitiative->getSuitable() === $this) {
-                $operationalSuitableInitiative->setSuitable(null);
-            }
-        }
->>>>>>> 684ab9e2628de13f20bf0778bd82ead42e317e96
-
-        return $this;
-    }
+}
+    
 }
