@@ -39,12 +39,12 @@
 								{% endif %}
 
 								{# <form class="form-inline" method="post" style="display:inline;">
-																										<input type="hidden" name="nonapplicable" value="nonapp"/>
-																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
-																											{% trans %}
-																											None Applicable Initiatives{% endtrans %}</button>
-																									</form> #}
+																																										<input type="hidden" name="nonapplicable" value="nonapp"/>
+																																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+																																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
+																																											{% trans %}
+																																											None Applicable Initiatives{% endtrans %}</button>
+																																									</form> #}
 
 							</div>
 
@@ -130,50 +130,60 @@
 									<tr>
 										<th>#</th>
 										<th>Initiative</th>
+										<th>Initiative Behaviour</th>
 
-										
+
 										{# <th>MinValue</th> #}
-                                        {# <th>MaxValue</th> #}
+										{# <th>MaxValue</th> #}
 										<th>KPI</th>
 										{# <th>Strategy</th> #}
 										{# <th>Objective</th> #}
-										{# <th>Goal</th> #}
-										<th>principal Office</th>
-										<th>status</th>
+										{# <th>Goal</th> #}<th>
+										principal Office
+										</th><th>
+										status
+										</th>
 
-										{# <th>Description</th> #}
-										<th>actions</th>
-									</tr>
+										{# <th>Description</th> #}<th>
+										actions
+									</th>
+								</tr>
 								</thead>
-								<tbody>
+									<tbody>
 									{% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
-									{% for initiative in initiatives %}
+										{% for initiative in initiatives %}
 										{% set count = count + 1 %}
-										<tr>
-											<td>{{ count }}</td>
-											<td>{{ initiative|title }}</td>
-                                            {# <td>{{ initiative.minimumValue }}</td> #}
-											{# <td>{{ initiative.maximumValue }}</td> #}
-										
+											<tr><td>
+											{{ count }}
+											</td><td>
+											{{ initiative|title }}
+											</td>
+												<td>
+													{% for init in initiative.initiativeBehaviour %}
 
-											<td>{{ initiative.keyPerformanceIndicator|title }}</td>
+												{{ init.name }}
+
+											{% endfor %}
+											</td>
+											{# <td>{{ initiative.initiativeBehaviour.code }}</td> #}
+											{# <td>{{ initiative.maximumValue }}</td> #}<td>
+											{{ initiative.keyPerformanceIndicator|title }}
+											</td>
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
-											<td>
-                                            <ul class="list-unstyled">
-                                            {% for office in initiative.principalOffice %}
-													
+												<td>
+													<ul class="list-unstyled"> {% for office in initiative.principalOffice %}
 
-												
-                                            <li>
-                                             <i class="ace-icon fa fa-check green"></i>
-                                             {{office}}
-                                            </li>
-                                            {% endfor %}
-                                           
-                                            </ul>
-												
+
+														<li>
+															<i class="ace-icon fa fa-check green"></i>
+															{{office}}
+														</li>
+													{% endfor %}
+
+												</ul>
+
 											</td>
 											<td>
 												{% if initiative.isActive %}
