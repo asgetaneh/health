@@ -177,6 +177,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $locale;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
     
 
 
@@ -1135,6 +1140,18 @@ class User implements UserInterface
     public function setEmailLocalPart(?string $emailLocalPart): self
     {
         $this->emailLocalPart = $emailLocalPart;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

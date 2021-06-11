@@ -136,12 +136,12 @@
                                         {# <th>MaxValue</th> #}
 										<th>KPI</th>
 										{# <th>Strategy</th> #}
-										<th>Objective</th>
-										<th>Goal</th>
+										{# <th>Objective</th> #}
+										{# <th>Goal</th> #}
 										<th>principal Office</th>
 										<th>status</th>
 
-										<th>Description</th>
+										{# <th>Description</th> #}
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -158,8 +158,8 @@
 
 											<td>{{ initiative.keyPerformanceIndicator|title }}</td>
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy }}</td> #}
-											<td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td>
-											<td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td>
+											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
+											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
 											<td>
                                             <ul class="list-unstyled">
                                             {% for office in initiative.principalOffice %}
@@ -182,7 +182,7 @@
 													<span class="badge badge-danger">Deactived</span>
 												{% endif %}
 											</td>
-											<td>{{ initiative.description }}</td>
+											{# <td>{{ initiative.description }}</td> #}
 
 											<td>
 												{% if is_granted('vw_intv_dtl') %}

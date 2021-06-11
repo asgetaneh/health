@@ -142,6 +142,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     {
 
         $user = $this->user;
+        // dd($user);
         $permissions = [];
 
         foreach ($user->getRoles() as $role) {
