@@ -22,7 +22,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{initiatives|length}}</strong>
+							<strong>{{initiativestotal|length}}</strong>
 						</span>
 					</div>
 				</div>
@@ -132,10 +132,10 @@
 										<th>Initiative</th>
 
 										
-										<th>MinValue</th>
-                                        <th>MaxValue</th>
+										{# <th>MinValue</th> #}
+                                        {# <th>MaxValue</th> #}
 										<th>KPI</th>
-										<th>Strategy</th>
+										{# <th>Strategy</th> #}
 										<th>Objective</th>
 										<th>Goal</th>
 										<th>principal Office</th>
@@ -152,12 +152,12 @@
 										<tr>
 											<td>{{ count }}</td>
 											<td>{{ initiative|title }}</td>
-                                            <td>{{ initiative.minimumValue }}</td>
-											<td>{{ initiative.maximumValue }}</td>
+                                            {# <td>{{ initiative.minimumValue }}</td> #}
+											{# <td>{{ initiative.maximumValue }}</td> #}
 										
 
 											<td>{{ initiative.keyPerformanceIndicator|title }}</td>
-											<td>{{ initiative.keyPerformanceIndicator.strategy }}</td>
+											{# <td>{{ initiative.keyPerformanceIndicator.strategy }}</td> #}
 											<td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td>
 											<td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td>
 											<td>

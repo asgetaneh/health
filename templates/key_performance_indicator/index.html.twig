@@ -111,13 +111,13 @@
 									<tr>
 										<th>#</th>
 										<th>KPI</th>
-										<th>Strategy</th>
+										{# <th>Strategy</th> #}
 										<th>Objective</th>
 										<th>Goal</th>
-										<th>Prespective</th>
+										{# <th>Prespective</th> #}
 										<th>Weight</th>
 										<th>Status</th>
-										<th>description</th>
+										{# <th>description</th> #}
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -129,10 +129,10 @@
 											{% set count = count + 1 %}
 											<td>{{ count }}</td>
 											<td>{{ key_performance_indicator|title }}</td>
-											<td>{{ key_performance_indicator.strategy }}</td>
+											{# <td>{{ key_performance_indicator.strategy }}</td> #}
 											<td>{{ key_performance_indicator.strategy.objective|title }}</td>
 											<td>{{ key_performance_indicator.strategy.objective.goal|title }}</td>
-											<td>{{ key_performance_indicator.strategy.objective.perspective }}</td>
+											{# <td>{{ key_performance_indicator.strategy.objective.perspective }}</td> #}
 
 											<td>{{ key_performance_indicator.weight }}</td>
 											<td>
@@ -142,7 +142,7 @@
 													<span class="badge badge-danger">Deactived</span>
 												{% endif %}
 											</td>
-											<td>{{ key_performance_indicator.description }}</td>
+											{# <td>{{ key_performance_indicator.description }}</td> #}
 											<td>
 												{% if is_granted('vw_kpi_dtl') %}
 

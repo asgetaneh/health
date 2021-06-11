@@ -126,6 +126,7 @@ class InitiativeController extends AbstractController
             $initiatives = $initiativeRepository->search(['name' => $request->request->get('search')]);
         } else
             $initiatives = $initiativeRepository->findAlls();
+            $initiativestotal = $initiativeRepository->findAll();
 
         $data = $paginator->paginate(
             $initiatives,
@@ -134,6 +135,7 @@ class InitiativeController extends AbstractController
         );
         return $this->render('initiative/index.html.twig', [
             'initiatives' => $data,
+            'initiativestotal'=>$initiativestotal,
             'form' => $form->createView(),
             'filterform' => $filterform->createView(),
         ]);

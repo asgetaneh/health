@@ -59,7 +59,8 @@ class OperationalOfficeController extends AbstractController
               return $this->redirectToRoute('operational_office_index');
            
          }
-        
+        $operational_officestotal=$operationalOfficeRepository->findAll();
+
          $data=$paginator->paginate(
              $operationalOfficeRepository->findAll(),
              $request->query->getInt('page',1),
@@ -69,6 +70,7 @@ class OperationalOfficeController extends AbstractController
 
         return $this->render('operational_office/index.html.twig', [
             'operational_offices' => $data,
+            'operational_officestotal'=>$operational_officestotal,
             'form'=>$form->createView()
         ]);
     }
