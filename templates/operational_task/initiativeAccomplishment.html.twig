@@ -27,126 +27,141 @@
 
 {% endblock %}
 {% block body %}
+	<form action="{{path('send_to_principal')}}" method="post">
 
-	<div class="row">
-		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-			<div class="widget-box widget-color-blue" id="widget-box-8">
-				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Principal Office
-					</h5>
+		<div class="row">
+			<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+				<div class="widget-box widget-color-blue" id="widget-box-8">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">Principal Office
+						</h5>
 
-					<div class="widget-toolbar"></div>
+						<div class="widget-toolbar"></div>
 
-					<div class="widget-toolbar">
-						<span class="badge badge-info">
-							{% trans %}Total{% endtrans %}
-							:
-							<strong>{{operatioanlSuitables|length}}</strong>
+						<div class="widget-toolbar">
+							{# {% set value = 0 %} #}
+							{# {% for performerTask in performerTasks %}
+																													{% if performerTask.status == 1 %}
+																														{% set value = 1 %}
+																					
+																													{% endif %}
+																					
+																					
+																												{% endfor %} #}
+							{# {% if value == 1 %} #}
 
-						</span>
-					</div>
-				</div>
-
-				<div class="widget-body">
-					<div class="widget-toolbox" id="widget-toolbox-1">
-						<div class="btn-toolbar">
-							<div class="btn-group"></div>
-
+							{# {% if remainingdays <= 10 %} #}
+							{# Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div> #}
+								<button type="submit" class="btn btn-success"> Send To Plan Office
+							</button>
+							{# {% else %}
+																														Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+																													{% endif %}
+																												{% endif %} #}
 
 						</div>
 					</div>
 
-					<div class="widget-main padding-16">
-
-						<div class="table-responsive">
-							{% set total = 0 %}
-							{% set social = 1 %}
-
-
-							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Initiative</th>
-										<th>Acoplishment Value</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set count = 0 %}
-									{% set lengthop = suitableInitiatives|length %}
+					<div class="widget-body">
+						<div class="widget-toolbox" id="widget-toolbox-1">
+							<div class="btn-toolbar">
+								<div class="btn-group"></div>
 
 
-									{% for suitableInitiative in suitableInitiatives %}
+							</div>
+						</div>
 
+						<div class="widget-main padding-16">
+
+							<div class="table-responsive">
+								{% set total = 0 %}
+								{% set totalmale = 0 %}
+								{% set totalfemale = 0 %}
+								{% set maleCount = 0 %}
+								{% set femaleCount = 0 %}
+								{% set count = 0 %}
+
+
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
 										<tr>
-											{% set count = count + 1 %}
-											<td>{{ count}}</td>
-											<td>{{ suitableInitiative.initiative.name }}</td>
+											<th>#</th>
+											{% if social == 1 %}
 
-
-											<td>
-												<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-													<thead>
-														<tr>
-															<th>#</th>
-															{% if suitableInitiative.initiative.socialAtrribute %}
-                                                            {% set social = 0 %}
-																<th>Social
-																</th>
-															{% endif %}
-
-															<th>Operational Office</th>
-															<th>Acoplishment Value</th>
-
-
-														</tr>
-													</thead>
-													<tbody>
-														{% set count = 0 %}
-														{% set lengthop = operatioanlSuitables|length %}
-
-
-														{% for operatioanlSuitable in operatioanlSuitables %}
-															{% if suitableInitiative.id == operatioanlSuitable.planningAcomplishment.suitableInitiative.id %}
-
-																<tr>
-																	{% set count = count + 1 %}
-																	<td>{{ count}}</td>
-																	{% if suitableInitiative.initiative.socialAtrribute %}
-																		<td>{{operatioanlSuitable.planningAcomplishment.socialAttribute}}
-																		</td>
-
-																	{% endif %}
-																	<td>{{ operatioanlSuitable.operationalOffice  }}</td>
-
-																	<td>{{ operatioanlSuitable.accomplishedValue  }}</td>
-
-																	{% set total = total + operatioanlSuitable.accomplishedValue %}
-																</tr>
-
-															{% endif %}
-														{% endfor %}
-                                                        {% if social == 0 %}
-                                                        
-														<tr>
-															<td colspan="3">total</td>
-															<td>{{total / count}}</td>
-														</tr>
-                                                        {% endif %}
-
-													</tbody>
-
-
-												</table>
-											</td>
-
-
+												<th>Social</th>
+											{% endif %}
+											<th>Operational Office</th>
+											<th>Acoplishment Value</th>
 										</tr>
-									{% else %}
-										<tr>
+									</thead>
+									<tbody>
+										{% set lengthop = operatioanlSuitables|length %}
+
+
+										{% for operatioanlSuitable in operatioanlSuitables %}
+
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{ count}}</td>
+                                    			<input type="hidden" name="opsuiId" value="{{operatioanlSuitable.id}}">
+												<input type="hidden" name="planId" value="{{operatioanlSuitable.planningAcomplishment.id}}">
+												<input type="hidden" name="quarter" value="{{operatioanlSuitable.quarter}}">
+
+												{% if social == 1 %}
+													{% if operatioanlSuitable.planningAcomplishment.socialAttribute.name == "Male" %}
+														{% set maleCount = maleCount + 1 %}
+
+														{% set totalmale = totalmale + operatioanlSuitable.accomplishedValue %}
+
+													{% else %}
+														{% set femaleCount = femaleCount + 1 %}
+
+														{% set totalfemale = totalfemale + operatioanlSuitable.accomplishedValue %}
+
+													{% endif %}
+
+
+													<td>{{operatioanlSuitable.planningAcomplishment.socialAttribute.name}}</td>
+
+
+												{% endif %}
+												<td>{{ operatioanlSuitable.operationalOffice  }}</td>
+
+												<td>{{ operatioanlSuitable.accomplishedValue  }}</td>
+
+												{% set total = total + operatioanlSuitable.accomplishedValue %}
+											</tr>
+
+
+										{% else %}
+
 											<td colspan="8">no records found</td>
 										</tr>
 									{% endfor %}
+									{% if social == 1 %}
+
+										<tr>
+											<td colspan="3">Average Male</td>
+											<td>
+												{{ totalmale / maleCount }}</td>
+										</tr>
+										<tr>
+											<td colspan="3">Average Female</td>
+											<td>
+												{{ totalfemale / femaleCount }}</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="2">Average</td>
+											<td>
+												<input type="hidden" name="planOffice" value="planOffice">
+
+												<input type="hidden" name="acompAvareage" value="{{total / count}}">
+
+												{{ total / count}}</td>
+										</tr>
+									{% endif %}
+
 								</tbody>
 							</table>
 
@@ -156,4 +171,4 @@
 			</div>
 		</div>
 	</div>
-{% endblock %}
+</form>{% endblock %}

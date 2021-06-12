@@ -146,8 +146,9 @@
 											<td>{{suitable_initiative.planningYear}}</td>
 											<td>
 												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
-												{# <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a> #}
+												<a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a>
 											</td>
+                                            
 										</tr>
 									{% else %}
 										<tr>

@@ -210,7 +210,6 @@ $count=0;
                 $initiativeId=$suitableInitiative->getId();
          $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative,$user);
         $total1=0;
-                // $total2=0;
             $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative,$user); 
                foreach ($taskAcomolishs as $value) {      
                    $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ; 
@@ -246,9 +245,25 @@ $count=0;
      /**
      * @Route("/send/principal", name="send_to_principal")
      */
-    public function sendToPrincipal(Request $request,PlanningQuarterRepository $planningQuarterRepository, OperationalManagerRepository $operationalManagerRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, PerformerTaskRepository $performerTaskRepository)
+    public function sendToPrincipal(Request $request,OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningQuarterRepository $planningQuarterRepository, OperationalManagerRepository $operationalManagerRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, PerformerTaskRepository $performerTaskRepository)
     {     
+
+        
         $em=$this->getDoctrine()->getManager();
+        if($request->request->get("planOffice")){
+            $planAcomplismentId=$request->request->get("planId");
+            $acompAverage=$request->request->get("acompAvareage");
+            $opsuiId=$request->request->get("opsuiId");
+            $operationalSuitables=$operationalSuitableInitiativeRepository->find($opsuiId);
+            $planAcomplishments=$planningAccomplishmentRepository->find($planAcomplismentId);
+                     $operationalSuitables->setStatus(1);
+            $planAcomplishments->setAccompValue($acompAverage);
+                $this->addFlash('success', 'successfully Send To Plan Office !');
+
+            $em->flush();
+
+                      return $this->redirectToRoute('suitable_initiative_principal_list');
+        }
         $user=$this->getUser();
          $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
         $opOffice=$operation->getOperationalOffice();
@@ -265,7 +280,6 @@ $count=0;
         if ($social == 1) {
             foreach ($sexids as  $sexid) {
              $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);
-        // dd($performerTasks);
         foreach ($performerTasks as $value) {
             $value->setStatus(0);
         }
@@ -282,22 +296,15 @@ $count=0;
 
           $em->flush();
     $this->addFlash('success', 'successfully Send To Principal Office !');
-
-// dump($plannings);
-
-
         }}
         else{
 
         $quarter=$planningQuarterRepository->find($quarterId);
         $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);
-        // dd($performerTasks);
         foreach ($performerTasks as $value) {
             $value->setStatus(0);
         }
                $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);
-            //    dd($suitableInitiative);
-        // $suitableInitiative=$planningAccomplishmentRepository->find($suitiniId);
           $operationalSuitableInitiative=new OperationalSuitableInitiative();
           $operationalSuitableInitiative->setPlanningAcomplishment($plannings[0]);
           $operationalSuitableInitiative->setOperationalOffice($opOffice);
@@ -310,24 +317,38 @@ $count=0;
 
         }
           return $this->redirectToRoute('suitable_initiative_list');
-
-
-       
     }
-      /**
-     * @Route("/intiative/accomplishment", name="initiative_accomplishment_list")
+     /**
+     * @Route("/suitableInitiative/principal/list", name="suitable_initiative_principal_list")
      */
-    public function acomplishmentList(Request $request,SuitableInitiativeRepository $suitableInitiativeRepository, PrincipalManagerRepository $principalManagerRepository, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    public function suitableInitiativeprincipal(Request $request,OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository,PrincipalManagerRepository $principalManagerRepository): Response
     {
         $user=$this->getUser();
-        $principal=$principalManagerRepository->findOneBy(['principal'=>$user]);
-      $principalOffice=  $principal->getPrincipalOffice()->getId();
-      $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principalOffice]);
-        $operatioanlSuitables=$operationalSuitableInitiativeRepository->findplan($principalOffice);
-        // dd($operatioanlSuitables);
+        $social=0;
+        $operation=$principalManagerRepository->findOneBy(['principal'=>$user]);
+      $principlaOffice=  $operation->getPrincipalOffice()->getId();
+        $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);   
+        return $this->render('operational_task/suitable_principal.html.twig', [
+            'suitableInitiatives' => $suitableInitiatives,
+        ]);
+    }
+    
+      /**
+     * @Route("/intiative/accomplishment/{id}", name="initiative_accomplishment_list")
+     */
+    public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,SuitableInitiativeRepository $suitableInitiativeRepository, PrincipalManagerRepository $principalManagerRepository, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    {
+         $social=0;
+                foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
+                    if($va->getName()){
+                        $social=1;
+                    }   }
+        $principalOffice=$suitableInitiative->getPrincipalOffice()->getId();
+       $operatioanlSuitables=$operationalSuitableInitiativeRepository->findplan($principalOffice,$suitableInitiative->getId());
+        // dd($social);
         return $this->render('operational_task/initiativeAccomplishment.html.twig', [
             'operatioanlSuitables' => $operatioanlSuitables,
-            'suitableInitiatives'=>$suitableInitiatives,
+            'social'=>$social,
         ]);
     }
  /**
