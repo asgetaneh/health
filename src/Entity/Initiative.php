@@ -88,6 +88,16 @@ class Initiative implements TranslatableInterface
      */
     private $planAchievements;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $initiativeNumber;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weight;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
@@ -346,6 +356,30 @@ class Initiative implements TranslatableInterface
                 $planAchievement->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInitiativeNumber(): ?int
+    {
+        return $this->initiativeNumber;
+    }
+
+    public function setInitiativeNumber(?int $initiativeNumber): self
+    {
+        $this->initiativeNumber = $initiativeNumber;
+
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?float $weight): self
+    {
+        $this->weight = $weight;
 
         return $this;
     }

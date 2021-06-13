@@ -58,6 +58,11 @@ class KeyPerformanceIndicator implements TranslatableInterface
     * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="kpi")
     */
    private $planAchievements;
+
+   /**
+    * @ORM\Column(type="integer", nullable=true)
+    */
+   private $kpiNumber;
     public function __toString()
     {
         return $this->getName();
@@ -198,6 +203,18 @@ class KeyPerformanceIndicator implements TranslatableInterface
                 $planAchievement->setKpi(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getKpiNumber(): ?int
+    {
+        return $this->kpiNumber;
+    }
+
+    public function setKpiNumber(?int $kpiNumber): self
+    {
+        $this->kpiNumber = $kpiNumber;
 
         return $this;
     }

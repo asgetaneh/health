@@ -211,6 +211,7 @@ $count=0;
          $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative,$user);
         $total1=0;
             $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative,$user); 
+               dd($taskAcomolishs);
                foreach ($taskAcomolishs as $value) {      
                    $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ; 
                }

@@ -33,7 +33,7 @@ public function findTask($user)
             
             ->getResult();
     }
-    public function findDetailAccomplish($suitableInitiative,$user)
+    public function findDetailAccomplishh($suitableInitiative,$user)
     {
 
         //dd($productNmae);
@@ -52,6 +52,34 @@ public function findTask($user)
             
             ->getResult();
     }
+    public function findDetailAccomplish($suitableInitiative,$user)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->
+        leftJoin('s.taskUser','ts')
+        ->leftJoin('ts.taskAssign','ta')
+        ->leftJoin('ta.PerformerTask','ps')
+        ->leftJoin('ps.PlanAcomplishment','pa')
+         ->leftJoin('ps.social','so')
+        //  ->leftjoin("App:InitiativeAttributeTranslation", 'n', 'with', 'ps.social = n.translatable')
+        ->Select('s.accomplishmentValue as saccomp')
+        ->addSelect('ta.id as pid')
+        ->addSelect('so.id as qid')
+        ->addSelect('ps.weight as weight')
+        ->addSelect('ps.weight as weight')
+        ->addSelect('pa.quarter as quarter')
+         ->addSelect('s.expectedValue as exValue')
+        ->andWhere('pa.suitableInitiative = :val')
+         ->andWhere('ps.createdBy = :user')
+            ->setParameter('user', $user)
+            ->setParameter('val', $suitableInitiative)
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
+
     
     
     // /**

@@ -127,7 +127,7 @@
 									{% for key_performance_indicator in key_performance_indicators %}
 										<tr>
 											{% set count = count + 1 %}
-											<td>{{ count }}</td>
+											<td>{{ key_performance_indicator.kpiNumber }}</td>
 											<td>{{ key_performance_indicator|title }}</td>
 											{# <td>{{ key_performance_indicator.strategy }}</td> #}
 											<td>{{ key_performance_indicator.strategy.objective|title }}</td>
