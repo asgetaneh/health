@@ -35,6 +35,12 @@ class InitiativeType extends AbstractType
                 ->add('minimumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])
+                ->add('weight', null, [
+                    'attr' => ['class' => 'form-control']
+                ])
+                  ->add('initiativeNumber', null, [
+                    'attr' => ['class' => 'form-control']
+                ])
                 ->add('maximumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])

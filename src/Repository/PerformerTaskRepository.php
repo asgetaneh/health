@@ -79,6 +79,26 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+    public function findInitiativeBySocial($suitableinitiative,$user,$social)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.PlanAcomplishment','pl') 
+           ->andWhere('pl.suitableInitiative = :initiative')
+           ->andWhere('s.createdBy = :user')
+         ->andWhere('s.social = :social')
+            ->setParameter('user', $user)
+            ->setParameter('initiative', $suitableinitiative)
+            ->setParameter('social', $social)
+
+                        ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
+    
      public function findsendToprincipal($user,$suitableinitiative)
     {
 
@@ -88,6 +108,24 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('s.PlanAcomplishment','pl')  
            ->andWhere('pl.suitableInitiative = :initiative')
            ->andWhere('s.createdBy = :user')
+            ->setParameter('user', $user)
+            ->setParameter('initiative', $suitableinitiative)
+                        ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
+    public function findsendToprincipalSocial($user,$suitableinitiative,$social)
+    {
+
+        // dd($user);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.PlanAcomplishment','pl')  
+           ->andWhere('pl.suitableInitiative = :initiative')
+           ->andWhere('s.social = :social')
+           ->andWhere('s.createdBy = :user')
+                       ->setParameter('social', $social)
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
                         ->orderBy('s.id', 'ASC')

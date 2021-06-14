@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block subTitle %}
-<li class="active">{% trans %}SMIS{% endtrans %}</li>
-	<li class="active"> <a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a></li>
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a>
+	</li>
 {% endblock %}
 
 {% block body %}
@@ -12,7 +14,9 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter"> <strong>Suitable Initiative</strong> </h5>
+					<h5 class="widget-title bigger lighter">
+						<strong>Suitable Initiative</strong>
+					</h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -34,7 +38,7 @@
 
 								<div class="row" style="margin-bottom:10px;">
 									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
-                                    <div class="col-md-3">
+									<div class="col-md-3">
 										<div class="form-group">
 											{{ form_label(filterform.initiative,'Initiative') }}
 											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
@@ -54,7 +58,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group" style="margin-top:25px;">
-											<input type="submit"  class="btn btn-primary btn-sm " value="Filter">
+											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
 										</div>
 									</div>
 
@@ -79,32 +83,32 @@
 								</div>
 
 
-								<div class="pull-right">
-									{# <div class="widget-toolbar no-border">
-
-
-										<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-											<b class="text-primary">Action</b>
-											<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-										</button>
-
-										<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-											<li>
-												<a href="#" id="suitablebutton">
-													<i class="ace-icon fa fa-stop green"></i>
-													Select As Suitable</a>
-											</li>
-
-											<li>
-
-												<a href="#">
-													<i class="ace-icon fa fa-stop pink2"></i>
-													Select As Non Suitable</a>
-											</li>
-
-
-										</ul>
-									</div> #}
+								<div
+									class="pull-right">{# <div class="widget-toolbar no-border">
+																																																																																																				
+																																																																																																				
+																																																																																																														<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																																																																																																															<b class="text-primary">Action</b>
+																																																																																																															<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																																																																																																														</button>
+																																																																																																				
+																																																																																																														<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																																																																																																															<li>
+																																																																																																																<a href="#" id="suitablebutton">
+																																																																																																																	<i class="ace-icon fa fa-stop green"></i>
+																																																																																																																	Select As Suitable</a>
+																																																																																																															</li>
+																																																																																																				
+																																																																																																															<li>
+																																																																																																				
+																																																																																																																<a href="#">
+																																																																																																																	<i class="ace-icon fa fa-stop pink2"></i>
+																																																																																																																	Select As Non Suitable</a>
+																																																																																																															</li>
+																																																																																																				
+																																																																																																				
+																																																																																																														</ul>
+																																																																																																													</div> #}
 
 								</div>
 							</div>
@@ -114,17 +118,17 @@
 						<div
 							class="table-responsive">
 							{# <form class="form-inline" method="post" style="display:inline;">
-														
-																						<div class="input-group">
-																							<input type="text" class="form-control" name="search" placeholder="search"/>
-																							<div class="input-group-btn">
-																								<button type="submit" class="btn btn-default no-border btn-sm">
-																									<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																								</button>
-																							</div>
-																						</div>
-																					</form> #}
-
+																																																																																				
+																																																																																												<div class="input-group">
+																																																																																													<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																																													<div class="input-group-btn">
+																																																																																														<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																																															<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																																														</button>
+																																																																																													</div>
+																																																																																												</div>
+																																																																																											</form> #}
+							{% set status = 1 %}
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
 									<tr>
@@ -132,7 +136,13 @@
 										<th>Suitable Initiative</th>
 										<th>Office</th>
 										<th>Planning Year</th>
+<<<<<<< HEAD
 										{# <th>actions</th> #}
+=======
+										<th>actions</th>
+										{# <th>Report to plan Office</th> #}
+
+>>>>>>> 01c8e3f9398f2e20b4bb3c45a28432c580cacb6b
 									</tr>
 								</thead>
 								<tbody>
@@ -144,37 +154,69 @@
 											<td>{{ suitable_initiative.principalOffice}}
 											</td>
 											<td>{{suitable_initiative.planningYear}}</td>
+<<<<<<< HEAD
 											{# <td>
 												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a> 
 											 <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
 											</td> #}
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="3">no records found</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(strategies) }}</div> #}
+=======
+											<td>
+												<div class="row">
+													<div class="col-md-3">
+														<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+														{# <a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a> #}
 
-						</div>
-					</div>
-				</div>
+													</div>
+													{% for item in suitable_initiative.initiative.socialAtrribute  %}
+
+														{% set status = 0 %}
+														<form action="{{path('initiative_accomplishment_social_list')}}" method="post">
+
+															<input type="hidden" name="suitId" value="{{suitable_initiative.id}}">
+															<input type="hidden" name="social" value="{{item.id}}">
+															<div class="col-md-3">
+																<button type="submit" title="show" class="btn btn-primary btn-sm ">
+
+																	{{item.name}}
+
+																</button>
+															</div>
+														</form>
+
+
+													{% endfor %}
+													<div class="col-md-4">
+
+
+														{% if status == 1 %}
+															<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-primary btn-sm d-inline p-2 ">
+																Send
+															</a>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+>>>>>>> 01c8e3f9398f2e20b4bb3c45a28432c580cacb6b
+										</tr>
+									</td>
+								</tbody>
+							</tr>
+							{% set status = 1 %}
+
+						{% else %}
+							<tr>
+								<td colspan="3">no records found</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(strategies) }}</div> #}
+
 			</div>
 		</div>
-
-
 	</div>
+</div></div></div>{% endblock %}{% block javascripts %}<script>$(function () {
+$('.select2').css('width', '100%').select2({allowClear: false})
 
-{% endblock %}
-{% block javascripts %}
 
-<script>
-    $(function () {
-      $('.select2').css('width', '100%').select2({allowClear: false})
-      
-      
-
-    })
-  </script>{% endblock %}
+})</script>{% endblock %}

@@ -52,6 +52,29 @@ public function findTask($user)
             
             ->getResult();
     }
+     public function findDetailAccomplishSocial($suitableInitiative,$user,$social)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->
+        leftJoin('s.taskUser','ts')
+        ->leftJoin('ts.taskAssign','ta')
+        ->leftJoin('ta.PerformerTask','ps')
+        ->leftJoin('ps.PlanAcomplishment','pa')
+        ->andWhere('pa.suitableInitiative = :val')
+         ->andWhere('ps.createdBy = :user')
+                  ->andWhere('ps.social = :social')
+            ->setParameter('user', $user)
+            ->setParameter('val', $suitableInitiative)
+                        ->setParameter('social', $social)
+            ->orderBy('ps.name', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
+   
+
     
     
     // /**

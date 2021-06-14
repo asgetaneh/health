@@ -114,9 +114,9 @@
 
 										<th>Kpi</th>
 										<th>Goal</th>
-										<th>Prespective</th>
+										{# <th>Prespective</th> #}
 										<th>status</th>
-										<th>Description</th>
+										{# <th>Description</th> #}
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -142,7 +142,7 @@
 												</ul>
 											</td>
 											<td>{{ strategy.objective.goal|title }}</td>
-											<td>{{ strategy.objective.perspective|title }}</td>
+											{# <td>{{ strategy.objective.perspective|title }}</td> #}
 											<td>
 												{% if strategy.isActive %}
 													<span class="badge badge-success">Active</span>
@@ -151,7 +151,7 @@
 												{% endif %}
 											</td>
 
-											<td>{{ strategy.description }}</td>
+											{# <td>{{ strategy.description }}</td> #}
 											<td>
 												{% if is_granted('vw_str_dtl') %}
 

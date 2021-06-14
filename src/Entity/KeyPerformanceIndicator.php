@@ -64,6 +64,7 @@ class KeyPerformanceIndicator implements TranslatableInterface
     * @Assert\Unique
     * @Assert\Positive
     * @ORM\Column(type="integer", nullable=true,unique=true)
+    *
     */
    private $kpiNumber;
     public function __toString()

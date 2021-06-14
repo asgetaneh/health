@@ -92,10 +92,7 @@ class Initiative implements TranslatableInterface
      */
     private $planAchievements;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $weight;
+
 
     /**
      * 
@@ -105,6 +102,7 @@ class Initiative implements TranslatableInterface
     private $initiativeNumber;
 
     /**
+
      * @ORM\ManyToOne(targetEntity=Measure::class, inversedBy="initiatives")
      */
     private $measure;
@@ -113,6 +111,11 @@ class Initiative implements TranslatableInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $baseline;
+     /** 
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weight;
+
 
     public function __construct()
     {
@@ -355,6 +358,7 @@ class Initiative implements TranslatableInterface
         return $this;
     }
 
+
     public function getWeight(): ?float
     {
         return $this->weight;
@@ -367,6 +371,8 @@ class Initiative implements TranslatableInterface
         return $this;
     }
 
+
+
     public function getInitiativeNumber(): ?int
     {
         return $this->initiativeNumber;
@@ -378,6 +384,7 @@ class Initiative implements TranslatableInterface
 
         return $this;
     }
+
 
     public function getInitiativeBehaviour(): ?InitiativeBehaviour
     {
@@ -411,7 +418,8 @@ class Initiative implements TranslatableInterface
     public function setBaseline(?int $baseline): self
     {
         $this->baseline = $baseline;
-
-        return $this;
-    }
+         return $this;
+        
+   
+}
 }
