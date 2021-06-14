@@ -179,4 +179,34 @@ class OperationalTask
 
         return $this;
     }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setOperationalTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getOperationalTask() === $this) {
+                $performerTask->setOperationalTask(null);
+            }
+        }
+
+        return $this;
+    }
 }

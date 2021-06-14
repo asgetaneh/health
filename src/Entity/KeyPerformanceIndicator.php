@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=KeyPerformanceIndicatorRepository::class)
@@ -58,6 +59,13 @@ class KeyPerformanceIndicator implements TranslatableInterface
     * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="kpi")
     */
    private $planAchievements;
+
+   /**
+    * @Assert\Unique
+    * @Assert\Positive
+    * @ORM\Column(type="integer", nullable=true,unique=true)
+    */
+   private $kpiNumber;
     public function __toString()
     {
         return $this->getName();
@@ -198,6 +206,18 @@ class KeyPerformanceIndicator implements TranslatableInterface
                 $planAchievement->setKpi(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getKpiNumber(): ?int
+    {
+        return $this->kpiNumber;
+    }
+
+    public function setKpiNumber(?int $kpiNumber): self
+    {
+        $this->kpiNumber = $kpiNumber;
 
         return $this;
     }

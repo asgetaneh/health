@@ -83,6 +83,8 @@
 
 								<th>#</th>
 								<th>Initiative</th>
+								<th>bahavior</th>
+								<th>baseline</th>
 								<th>yearPlan</th>
 								<th>1st Quarter</th>
 								<th>2nd Quarter</th>
@@ -102,41 +104,90 @@
 
 									</td>
 									<td>{{suitableplan.initiative|title }}</td>
+                                    <td>{{suitableplan.initiative.initiativeBehaviour|title }}</td>
+                                    <td>{{suitableplan.initiative.baseline }}</td>
+
 
 									<td>
-										{% for behavior in suitableplan.initiative.initiativeBehaviour %}
+										{# {% for behavior in suitableplan.initiative.initiativeBehaviour %} #}
 
-											{% if behavior.code == 0 %}
-												{% if suitableplan.initiative.socialAtrribute|length > 0 %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+										{% if suitableplan.initiative.initiativeBehaviour.code == 0 %}
+											{% if suitableplan.initiative.socialAtrribute|length > 0 %}
+												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
 
-														<p>{{plan.socialAttribute.name|title}}
-															:
-															{{plan.planValue}}</p>
-
-
-													{% endfor %}
-                                                    {% else %}
-                                                  {% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
-
-														<p>
-															
-															{{plan.planValue}}</p>
+													<p>{{plan.socialAttribute.name|title}}
+														:
+														{{plan.planValue}}</p>
 
 
-													{% endfor %}
+												{% endfor %}
+											{% else %}
+												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
 
-												{% endif %}
-                                                {% elseif behavior.code == 1  %}
-                                                 {{"_"}}
-                                                  {# {% elseif behavior.code == 2  %}
-                                                 {{"_"}}
-                                                  {% elseif behavior.code == 3  %}
-                                                 {{"_"}} #}
-                                               
-                                                   
+													<p>
+
+														{{plan.planValue}}</p>
+
+
+												{% endfor %}
+
 											{% endif %}
-										{% endfor %}
+										{% elseif  suitableplan.initiative.initiativeBehaviour.code == 1  %}
+
+											{% for attribute in suitableplan.initiative.socialAtrribute %}
+												{% set yearplan = suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+
+												{{attribute.name|title}}:{{yearplan ??"___" }}
+											{% else %}
+												{% set yearplan = suitableplan.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+												{{yearplan }}
+											{% endfor %}
+
+
+										{% elseif  suitableplan.initiative.initiativeBehaviour.code == 2  %}
+
+
+											{% for attribute in suitableplan.initiative.socialAtrribute %}
+												{% set maxValue = 0 %}
+												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
+													{% set maxValue = max(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>{{attribute.name|title}}:
+													{{maxValue ??"___" }}</p>
+											{% else %}
+												{% set maxValue = 0 %}
+												{% for plan in suitableplan.planningAccomplishments %}
+													{% set maxValue = max(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>
+													{{maxValue ??"___" }}</p>
+											{% endfor %}
+
+										{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3  %}
+
+											{% for attribute in suitableplan.initiative.socialAtrribute %}
+												{% set maxValue = suitableplan.initiative.maximumValue %}
+												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
+													{% set maxValue = min(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>{{attribute.name|title}}:
+													{{maxValue ??"___" }}</p>
+											{% else %}
+												{% set maxValue = suitableplan.initiative.maximumValue %}
+												{% for plan in suitableplan.planningAccomplishments %}
+													{% set maxValue = min(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>
+													{{maxValue ??"___" }}</p>
+											{% endfor %}
+
+
+										{% endif %}
+
 
 									</td>
 									{% for quarter in quarters %}
@@ -166,12 +217,23 @@
 
 									<td>
 
+										{% if suitableplan.planningAccomplishments|length > 0 %}
+											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
 
-										<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
-											<span class="glyphicon glyphicon-edit"></span>
-											
-										</a>
-										
+												<span class="glyphicon glyphicon-edit"></span>
+
+
+											</a>
+										{% else %}
+											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
+
+
+												<span class="glyphicon glyphicon-plus"></span>
+
+											</a>
+
+										{% endif %}
+
 									</td>
 								</tr>
 							{% else %}

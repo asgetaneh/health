@@ -160,7 +160,14 @@ INSERT IGNORE INTO `permission` (`name`, `code`, `description`) VALUES
 ( 'View  Report Quarter Detail', 'vw_rpt_qrt_dtl', 'View  Report Quarter Detail '),
 ( 'Delete Report Quarter ', 'dlt_rpt_qrt', 'Delete Report Quarter'),
 ( 'Deactivate Report Quarter', 'deact_rpt_qrt', 'Deactivate Report Quarter'),
-( 'Activate Report Quarter', 'act_rpt_qrt', 'Activate Report Quarter');
+( 'Activate Report Quarter', 'act_rpt_qrt', 'Activate Report Quarter')
+
+
+-- plan
+
+( 'View All principal Office Plan', 'vw_all_pln', 'View All principal Office Plan'),
+
+;
 
 
 

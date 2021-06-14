@@ -25,7 +25,7 @@ class StrategyRepository extends ServiceEntityRepository
     public function findAlls()
     {
         return $this->createQueryBuilder('g')
-            
+            ->orderBy('g.strategyNumber','ASC')
             ->getQuery();
         
     }

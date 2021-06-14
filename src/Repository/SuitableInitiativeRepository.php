@@ -97,5 +97,15 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         }
         return $qb->getQuery()->getResult();
     }
+    public function findByPrincipalAndOffice($office){
+        $qb=$this->createQueryBuilder('i');
+        $qb
+        ->join('i.principalOffice','po')
+        ->andWhere('po.id in (:office)')
+        // ->andwhere('i.isActive = 1')
+        ->setParameter('office',$office);
+        return $qb->getQuery()->getResult();
+
+    }
     
 }

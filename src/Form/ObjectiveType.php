@@ -42,6 +42,13 @@ class ObjectiveType extends AbstractType
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])
+                ->add('objectiveNumber', NumberType::class, [
+                   
+                    'attr' => ['class' => 'form-control'],
+                    
+                //    'required' => false,
+
+                ])
 
 
                 ->add('weight',NumberType::class,[

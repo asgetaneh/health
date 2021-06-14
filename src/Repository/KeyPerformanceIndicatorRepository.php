@@ -21,7 +21,7 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
     public function findAlls()
     {
         return $this->createQueryBuilder('g')
-            
+            ->orderBy('g.kpiNumber','ASC')
             ->getQuery();
         
     }

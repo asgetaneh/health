@@ -233,14 +233,18 @@
 
 				<div class="modal-body">
 					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+                     {{ form_errors(form) }}
 					<div class="row">
-
+                 
 
 						{% for f in form  %}
 							{% if f != form._token %}
 								<div class="form-group col-md-4">
+                                 
 									<label>{{ form_label(f) }}</label>
 									{{ form_widget(f) }}
+                                   	<div class=" has-error help-block text-danger">{{form_errors(f)}}</div>
+                                  
 								</div>
 
 

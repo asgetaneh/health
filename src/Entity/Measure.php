@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\MeasureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MeasureRepository::class)
@@ -36,6 +39,22 @@ class Measure
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="measures")
      */
     private $createdBy;
+
+    /**
+     *  @Assert\Unique
+     * @ORM\Column(type="string", length=255,unique=true)
+     */
+    private $code;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="measure")
+     */
+    private $initiatives;
+
+    public function __construct()
+    {
+        $this->initiatives = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +105,48 @@ class Measure
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Initiative[]
+     */
+    public function getInitiatives(): Collection
+    {
+        return $this->initiatives;
+    }
+
+    public function addInitiative(Initiative $initiative): self
+    {
+        if (!$this->initiatives->contains($initiative)) {
+            $this->initiatives[] = $initiative;
+            $initiative->setMeasure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiative(Initiative $initiative): self
+    {
+        if ($this->initiatives->removeElement($initiative)) {
+            // set the owning side to null (unless already changed)
+            if ($initiative->getMeasure() === $this) {
+                $initiative->setMeasure(null);
+            }
+        }
 
         return $this;
     }

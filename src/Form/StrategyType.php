@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class StrategyType extends AbstractType
@@ -27,10 +28,13 @@ class StrategyType extends AbstractType
                     'required'=>true,
                 ])
                 
-                ->add($value . "description", TextareaType::class, [
-                    'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
-                    'attr' => ['class' => 'autosize-transition form-control'],
+               
+                ->add('strategyNumber', NumberType::class, [
+                   
+                    'attr' => ['class' => 'form-control'],
                     
+                  
+
                 ])
                  ->add('objective', EntityType::class, [
                     'class' => Objective::class,
@@ -40,6 +44,11 @@ class StrategyType extends AbstractType
                             ->orderBy('g.id', 'ASC');
                     },
                     'attr' => ['class' => 'select2 form-control']
+                ])
+                 ->add($value . "description", TextareaType::class, [
+                    'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
+                    'attr' => ['class' => 'autosize-transition form-control'],
+                    
                 ])
                ;
         }

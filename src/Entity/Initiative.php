@@ -8,9 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=InitiativeRepository::class)
+ * @UniqueEntity(fields = {"initiativeNumber"},message ="This initiative Number is already in use on that initiatives"),
+ * 
  */
 class Initiative implements TranslatableInterface
 {
@@ -78,7 +82,7 @@ class Initiative implements TranslatableInterface
     private $socialAtrribute;
 
     /**
-     * @ORM\ManyToMany(targetEntity=InitiativeBehaviour::class, inversedBy="initiatives")
+     * @ORM\ManyToOne(targetEntity=InitiativeBehaviour::class, inversedBy="initiatives")
      */
     private $initiativeBehaviour;
     private $locale="en";
@@ -88,13 +92,35 @@ class Initiative implements TranslatableInterface
      */
     private $planAchievements;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weight;
+
+    /**
+     * 
+     * 
+     * @ORM\Column(type="integer", nullable=true,unique=true)
+     */
+    private $initiativeNumber;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Measure::class, inversedBy="initiatives")
+     */
+    private $measure;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $baseline;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->principalOffice = new ArrayCollection();
         $this->suitableInitiatives = new ArrayCollection();
         $this->socialAtrribute = new ArrayCollection();
-        $this->initiativeBehaviour = new ArrayCollection();
+        // $this->initiativeBehaviour = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
     }
     public function __toString()
@@ -296,29 +322,8 @@ class Initiative implements TranslatableInterface
         return $this;
     }
 
-    /**
-     * @return Collection|InitiativeBehaviour[]
-     */
-    public function getInitiativeBehaviour(): Collection
-    {
-        return $this->initiativeBehaviour;
-    }
-
-    public function addInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
-    {
-        if (!$this->initiativeBehaviour->contains($initiativeBehaviour)) {
-            $this->initiativeBehaviour[] = $initiativeBehaviour;
-        }
-
-        return $this;
-    }
-
-    public function removeInitiativeBehaviour(InitiativeBehaviour $initiativeBehaviour): self
-    {
-        $this->initiativeBehaviour->removeElement($initiativeBehaviour);
-
-        return $this;
-    }
+    
+    
 
     /**
      * @return Collection|PlanAchievement[]
@@ -346,6 +351,66 @@ class Initiative implements TranslatableInterface
                 $planAchievement->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?float $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getInitiativeNumber(): ?int
+    {
+        return $this->initiativeNumber;
+    }
+
+    public function setInitiativeNumber(?int $initiativeNumber): self
+    {
+        $this->initiativeNumber = $initiativeNumber;
+
+        return $this;
+    }
+
+    public function getInitiativeBehaviour(): ?InitiativeBehaviour
+    {
+        return $this->initiativeBehaviour;
+    }
+
+    public function setInitiativeBehaviour(?InitiativeBehaviour $initiativeBehaviour): self
+    {
+        $this->initiativeBehaviour = $initiativeBehaviour;
+
+        return $this;
+    }
+
+    public function getMeasure(): ?Measure
+    {
+        return $this->measure;
+    }
+
+    public function setMeasure(?Measure $measure): self
+    {
+        $this->measure = $measure;
+
+        return $this;
+    }
+
+    public function getBaseline(): ?int
+    {
+        return $this->baseline;
+    }
+
+    public function setBaseline(?int $baseline): self
+    {
+        $this->baseline = $baseline;
 
         return $this;
     }

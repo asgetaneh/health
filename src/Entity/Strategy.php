@@ -55,6 +55,11 @@ class Strategy implements TranslatableInterface
      */
     private $planAchievements;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $strategyNumber;
+
     public function __toString()
     {
         return $this->getName();
@@ -185,6 +190,18 @@ class Strategy implements TranslatableInterface
                 $planAchievement->setStrategy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStrategyNumber(): ?int
+    {
+        return $this->strategyNumber;
+    }
+
+    public function setStrategyNumber(?int $strategyNumber): self
+    {
+        $this->strategyNumber = $strategyNumber;
 
         return $this;
     }

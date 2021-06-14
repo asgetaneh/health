@@ -45,7 +45,7 @@ class InitiativeBehaviour implements TranslatableInterface
     private $isActive=1;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="initiativeBehaviour")
+     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="initiativeBehaviour")
      */
     private $initiatives;
 

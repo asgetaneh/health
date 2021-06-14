@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block subTitle %}
 <li class="active">{% trans %}SMIS{% endtrans %}</li>
-	<li class="active"> <a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a></li>
+	<li class="active"> <a href="{{path('plan_principal')}}">{% trans %}Plan Detail{% endtrans %}</a></li>
 {% endblock %}
 
 
@@ -11,12 +11,12 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter"><strong>Suitable Initiative</strong>
+					<h5 class="widget-title bigger lighter"><strong>Plan and Accomplishment</strong>
 					</h5>
 
 					<div class="widget-toolbar">
 						<span class="badge badge-info">
-							<a href="{{ path('suitable_initiative_index') }}" class="btn btn-success">
+							<a href="{{ path('plan_principal') }}" class="btn btn-success">
 								{% trans %}
 								back
 								{% endtrans %}
@@ -41,13 +41,7 @@
             </tr>
              <tr>
                 <th>Initiative Behavior</th>
-                <td> {% for behavior in suitable_initiative.initiative.initiativeBehaviour %}
-                   {% if loop.last %}
-                    {{behavior}}
-                    {% else %}
-                         {{behavior}},
-                    {% endif %}
-                {% endfor %}
+                <td>{{suitable_initiative.initiative.initiativeBehaviour}}
               </td>
             </tr>
              <tr>

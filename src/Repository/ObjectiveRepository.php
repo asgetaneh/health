@@ -22,6 +22,7 @@ class ObjectiveRepository extends ServiceEntityRepository
     public function findAlls()
     {
         return $this->createQueryBuilder('g')
+        ->orderBy('g.objectiveNumber','ASC')
             
             ->getQuery();
         

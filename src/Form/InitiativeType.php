@@ -11,6 +11,7 @@ use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,6 +38,27 @@ class InitiativeType extends AbstractType
                 ->add('maximumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])
+                 ->add('initiativeNumber', NumberType::class, [
+                   
+                    'attr' => ['class' => 'form-control'],
+                    
+                //    'required' => false,
+
+                ])
+                ->add('weight', null, [
+                   
+                    'attr' => ['class' => 'form-control'],
+                    
+                  
+
+                ])
+                ->add('baseline', null, [
+                   
+                    'attr' => ['class' => 'form-control'],
+                    
+                   
+
+                ])
                 ->add($value."description", TextareaType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control'],
@@ -45,7 +67,7 @@ class InitiativeType extends AbstractType
                 ->add('initiativeBehaviour', EntityType::class, [
                     'class' => InitiativeBehaviour::class,
                     'attr' => ['class' => 'select2 form-control'],
-                    'multiple'=>true,
+                    // 'multiple'=>true,
                 ])
                 ->add('keyPerformanceIndicator', EntityType::class, [
                     'class' => KeyPerformanceIndicator::class,
@@ -70,7 +92,7 @@ class InitiativeType extends AbstractType
                 ->add('socialAtrribute', EntityType::class, [
                     'class' => InitiativeAttribute::class,
                     'attr' => ['class' => 'select2 form-control'],
-                    'multiple'=>true,
+                     'multiple'=>true,
                    'required' => false,
 
                 ]);

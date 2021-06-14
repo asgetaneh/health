@@ -62,7 +62,7 @@ class SuitableInitiativeController extends AbstractController
         ]);
     }
 /**
-     * @Route("/report", name="suitable_initiative_report", methods={"GET","POST"})
+ * @Route("/report", name="suitable_initiative_report", methods={"GET","POST"})
      */
     public function report(SuitableInitiativeRepository $suitableInitiativeRepository,Request $request): Response
     {
@@ -97,7 +97,7 @@ class SuitableInitiativeController extends AbstractController
         else
          $suitableInitiatives=$suitableInitiativeRepository->findAll();
        
-        return $this->render('suitable_initiative/index.html.twig', [
+        return $this->render('suitable_initiative/report.html.twig', [
             'suitable_initiatives' => $suitableInitiatives,
             'filterform'=>$filterForm->createView()
         ]);

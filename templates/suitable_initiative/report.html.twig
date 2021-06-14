@@ -2,7 +2,7 @@
 
 {% block subTitle %}
 <li class="active">{% trans %}SMIS{% endtrans %}</li>
-	<li class="active"> <a href="{{path('suitable_initiative_index')}}">{% trans %}Suitable Initiative{% endtrans %}</a></li>
+	<li class="active"> <a href="{{path('suitable_initiative_report')}}">{% trans %}Princinpal Office Report{% endtrans %}</a></li>
 {% endblock %}
 
 {% block body %}
@@ -12,7 +12,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter"> <strong>Suitable Initiative</strong> </h5>
+					<h5 class="widget-title bigger lighter"> <strong>Principal Office Report</strong> </h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -130,9 +130,11 @@
 									<tr>
 										<th>#</th>
 										<th>Suitable Initiative</th>
+                                       
 										<th>Office</th>
 										<th>Planning Year</th>
-										{# <th>actions</th> #}
+                                         <th>Quarter</th>
+										<th>actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -144,10 +146,10 @@
 											<td>{{ suitable_initiative.principalOffice}}
 											</td>
 											<td>{{suitable_initiative.planningYear}}</td>
-											{# <td>
-												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a> 
-											 <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a>
-											</td> #}
+											<td>
+												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+												{# <a href="{{ path('suitable_initiative_edit', {'id': suitable_initiative.id}) }}">edit</a> #}
+											</td>
 										</tr>
 									{% else %}
 										<tr>

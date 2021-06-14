@@ -16,22 +16,16 @@
 								{% set constant = false %}
 								{% set attr = suitableInitiative.initiative %}
 								{% set  atr = attr.socialAtrribute %}
-								{% for behavior in initiative.initiativeBehaviour %}
-									<input type="hidden" name="behav[]" value="{{behavior.code}}">
-									{% if behavior.code == 0 %}
+								{# {% for behavior in initiative.initiativeBehaviour %} #}
+									<input type="hidden" name="behav[]" value="{{initiative.initiativeBehaviour.code}}">
+									{% if initiative.initiativeBehaviour.code == 0 %}
 										{% set constant = true %}
 									{% endif %}
-								{% endfor %}
+								{# {% endfor %} #}
 
 								<div class="well well-sm">
 									<strong>Yearly Plan(
-										{% for behavior in initiative.initiativeBehaviour %}
-											{% if loop.last %}
-												{{behavior}}
-											{% else %}
-												{{behavior}},
-											{% endif %}
-										{% endfor %}
+									{{initiative.initiativeBehaviour}}
 
 										)
 										<div class="yearylplans pull-right"></div>
@@ -107,8 +101,8 @@
 
 								{% endfor %}
 
-
-								{% for behavior in initiative.initiativeBehaviour|filter(initiativeBehaviour => initiativeBehaviour.code == 4 ) %}
+                                   {% if initiative.initiativeBehaviour.code == 4 %}
+								{# {% for behavior in initiative.initiativeBehaviour|filter(initiativeBehaviour => initiativeBehaviour.code == 4 ) %} #}
 									<div class="col-sm-10">
 										<div class="form-group">
 											<label class="control-label  col-sm-2" for="">Of Total</label>
@@ -117,7 +111,8 @@
 											</div>
 										</div>
 									</div>
-								{% endfor %}
+                                    {% endif %}
+								{# {% endfor %} #}
 
 
 							</div>
@@ -163,7 +158,7 @@ function incremental(currentInput){
       var currentindex=$(relatedInput).index(currentInput);
        for(var i=0;i<relatedInput.length;i++){
            if(i<$(relatedInput).index(currentInput)){
-               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())<= Number(relatedInput.eq(i).val())){
+               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())< Number(relatedInput.eq(i).val())){
            $(currentInput).next('span').remove();
            $(currentInput).closest('div.form-group').removeClass('has-error');
            $(currentInput).focus();
@@ -179,7 +174,7 @@ function incremental(currentInput){
 
            }
            if(i>$(relatedInput).index(currentInput)){
-            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())>= Number(relatedInput.eq(i).val())){
+            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())> Number(relatedInput.eq(i).val())){
             $(relatedInput.eq(i)).next('span').remove();
             $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
             $(relatedInput.eq(i)).focus();
@@ -194,6 +189,17 @@ function incremental(currentInput){
 
            }
        }
+       if(relatedInput.length-1 == currentindex && !$(currentInput).closest('div.form-group').hasClass('has-error')){
+            var prespan = $('div.yearylplans').children('span.'+ $(currentInput).attr('data-name'));
+            var span = $('<span class="text-primary" style="margin-right:10px;"></span>');
+            if (prespan.length > 0) 
+            prespan.remove();
+
+            span.addClass($(currentInput).attr('data-name'));
+            span.text(currentInput.attr('data-name').toUpperCase()+"="+$(currentInput).val());
+           $('div.yearylplans').prepend(span);
+
+       }
        
      }
      return true; 
@@ -206,7 +212,7 @@ function socialDecremental(currentInput){
       var currentindex=$(relatedInput).index(currentInput);
        for(var i=0;i<relatedInput.length;i++){
            if(i<$(relatedInput).index(currentInput)){
-               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())>= Number(relatedInput.eq(i).val())){
+               if(relatedInput.eq(i).val()!="" && Number(currentInput.val())> Number(relatedInput.eq(i).val())){
            $(currentInput).next('span').remove();
            $(currentInput).closest('div.form-group').removeClass('has-error');
            $(currentInput).focus();
@@ -222,7 +228,7 @@ function socialDecremental(currentInput){
 
            }
            if(i>$(relatedInput).index(currentInput)){
-            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())<= Number(relatedInput.eq(i).val())){
+            if(relatedInput.eq(i).val()!="" && Number(currentInput.val())< Number(relatedInput.eq(i).val())){
             $(relatedInput.eq(i)).next('span').remove();
             $(relatedInput.eq(i)).closest('div.form-group').removeClass('has-error');
             $(relatedInput.eq(i)).focus();
@@ -246,29 +252,36 @@ function socialDecremental(currentInput){
 $("input:enabled:text[data-attr]").on("keyup",function () {
 
 var currentInput=$(this);
-
-if (behavior("1") ) {
-    var prespan = $('div.yearylplans').children('span.'+ $(this).attr('data-name'));
-    var input=$("input:enabled:text[data-attr]");
-    var span = $('<span class="text-primary" style="margin-right:10px;"></span>');
-    var sum=0;
-   
- if(behavior("2")){
+if(behavior("2")){
    if(!incremental(currentInput))
         return ;
           }
-    if (prespan.length > 0) 
-    prespan.remove();
+if (behavior("1") ) {
+    var prespan = $('div.yearylplans').children('span.'+ $(this).attr('data-name'));
+    var input=$("input:enabled:text[data-attr]");
+   
+    var sum=0;
+   
+ 
+  
     for(var i=0;i<input.length;i++){
-     if(input.eq(i).val()!== null && (input.eq(i).attr('data-name')== $(this).attr('data-name'))){
+     if(input.eq(i).val()!== "" && (input.eq(i).attr('data-name')== $(this).attr('data-name'))){
       sum = sum+Number(input.eq(i).val());
           
        }
    }
-
+     if (prespan.length > 0) {
+         $('div.yearylplans').children('span.'+currentInput.attr('data-name')).html(currentInput.attr('data-name') + "=" + sum );
+     }
+     else{
+   var span = $('<span class="text-primary" style="margin-right:10px;"></span>');
    span.addClass($(this).attr('data-name'));
    span.text(currentInput.attr('data-name').toUpperCase()+"="+sum);
    $('div.yearylplans').append(span);
+     }
+    
+
+  
 
 }
 var yearplans = [];
@@ -294,16 +307,16 @@ $(this).val(atr2.val());
 
 yearplans.forEach(function (value, index, array) {
 var prespan = $('div.yearylplans').children('span.' + value.name);
-if (prespan.length > 0) 
-prespan.remove();
-
+if (prespan.length > 0) {
+$('div.yearylplans').children('span.'+value.name).html(value.name + "=" + value.plan );
+}
+else{
 
 var span = $('<span class="text-primary" style="margin-right:10px;">' + value.name + "=" + value.plan + '</span>');
 span.addClass(value.name);
-
 $('div.yearylplans').append(span);
 
-
+}
 })
 
 }
@@ -324,7 +337,7 @@ function nonSocialIncremental(currentNode){
          for(var i=0;i<inputElement.length;i++){
             if(i<$(inputElement).index(currentNode)){
             
-            if(inputElement.eq(i).val()!== null && (Number(currentNode.val())<=Number(inputElement.eq(i).val()))){
+            if(inputElement.eq(i).val()!== null && (Number(currentNode.val())<Number(inputElement.eq(i).val()))){
               isvalid=false;
            
             }
@@ -332,7 +345,7 @@ function nonSocialIncremental(currentNode){
         }
         if(i>$(inputElement).index(currentNode)){
            
-        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) <= Number(currentNode.val()))){
+        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) < Number(currentNode.val()))){
             $(inputElement.eq(i)).next('span').remove();
             $(currentNode).closest('div.form-group').removeClass('has-error');
             $(inputElement.eq(i)).focus();
@@ -370,15 +383,20 @@ function decremental(currentNode){
          for(var i=0;i<inputElement.length;i++){
             if(i<$(inputElement).index(currentNode)){
             
-            if(inputElement.eq(i).val()!="" && (Number(currentNode.val())>=Number(inputElement.eq(i).val()))){
+            if(inputElement.eq(i).val()!="" && (Number(currentNode.val())>Number(inputElement.eq(i).val()))){
               isvalid=false;
+             $(currentNode).next('span').remove();
+            $(currentNode).focus();
+            $(currentNode).closest('div.form-group').addClass('has-error');
+            $(currentNode).after($('<span class="help-block text-danger">your plan value must be less than than previous quarter</span>'))
+            return;
            
             }
               
         }
         if(i>$(inputElement).index(currentNode)){
            
-        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) >= Number(currentNode.val()))){
+        if((inputElement.eq(i).val()!=="") && (Number(inputElement.eq(i).val()) > Number(currentNode.val()))){
             $(inputElement.eq(i)).next('span').remove();
             $(currentNode).closest('div.form-group').removeClass('has-error');
             $(inputElement.eq(i)).focus();
@@ -428,10 +446,7 @@ $(this).val(inpt.val());
 
 if(behavior("1")){
     var sum=0;
-    if(behavior("2")){
-       if (!nonSocialIncremental(inpt))
-        return false;
-    }
+  
     for(var i=0;i<=$(inputArray).index(inpt);i++){
         if(inputArray.eq(i).val()!== null){
             sum=sum+Number(inputArray.eq(i).val());
@@ -439,6 +454,10 @@ if(behavior("1")){
     }
     $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">' + "=" + sum + '</span>'));
 }
+  if(behavior("2")){
+       if (!nonSocialIncremental(inpt))
+        return false;
+    }
 if(behavior("3")){
  if (!decremental(inpt))
         return false;

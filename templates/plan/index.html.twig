@@ -1,434 +1,480 @@
 {% extends 'base.html.twig' %}
-
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('plan_index')}}">{% trans %}Cascading{% endtrans %}</a>
+	</li>
+{% endblock %}
 {% block body %}
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs nav-justified tab-color-blue  " id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#home" class="lead text-primary" aria-expanded="true">
 
-			<div>
-				<ul class="steps">
-					<li data-step="1" class={% if initiatives is defined or suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " active" {% endif %}>
-						<span class="step">1</span>
-						<span class="title">Select Reporting Year And Office</span>
+						<strong>Cascading</strong>	
+						</a>
 					</li>
 
-					<li data-step="2" class={% if initiatives is defined %} "active" {% elseif suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " " {% endif %}>
+					<li class="">
+						<a data-toggle="tab" href="#messages" aria-expanded="false" class="lead">
+						<strong>Initiative</strong>	
 
-
-						<span class="step">2</span>
-						<span class="title">
-							Select Suitable Initiative with your teammates
-						</span>
+						</a>
 					</li>
 
-					<li data-step="3" class={% if suitableInitiatives is defined and isAllActive == false %} "active" {% elseif isAllActive is defined and isAllActive == true %} "complete" {% elseif suitableplans is defined %} "complete" {% endif %}>
-						<span class="step" class=>3</span>
-						<span class="title">Set PO’s Yearly plan with AC/ teams
-						</span>
-					</li>
 
-					<li data-step="4" class={% if suitableplans is defined or (isAllActive is defined and isAllActive == true) %} "active" {% endif %}>
-						<span class="step">4</span>
-						<span class="title">
-							Accept Operational Managers’ report
-						</span>
-					</li>
-					<li data-step="5">
-						<span class="step">5</span>
-						<span class="title">
-							Send report to JU
-						</span>
-					</li>
 				</ul>
-			</div>
-			<div class="well well-sm">
-				<button type="reset" id="reset-widgets" class="btn btn-info btn-white btn-bold btn-round" data-toggle="modal" data-target="#myModal">
-					<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-					<strong>Select Report Year and Office</strong>
-				</button>
-				<div class="pull-right">
-					{% if pricipaloffice is defined %}
-						<span class="badge badge-info">
-							<b class="text-white">
-								Principal Office:
-								{{pricipaloffice}}
-							</b>
-						</br>
-						<b class="text-white">
-							Reporting Year:
-							{{planyear}}
-						</b>
-					</span>
+				<div class="tab-content">
+					<div id="home" class="tab-pane fade active in">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="jumbotron text-white">
+									<ul class="steps">
+										<li data-step="1" class={% if initiatives is defined or suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " active" {% endif %}>
+											<span class="step">1</span>
+											<span class="title text-primary">Select Reporting Year And Office</span>
+										</li>
 
-				{% endif %}
-			</div>
-		</div>
+										<li data-step="2" class={% if initiatives is defined %} "active" {% elseif suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " " {% endif %}>
 
 
-		<div class="widget-body">
-			<div class="widget-main">
-				{% if isAllActive is defined  and isAllActive %}{% endif %}
+											<span class="step">2</span>
+											<span class="title">
+												Select Suitable Initiative with your teammates
+											</span>
+										</li>
+
+										<li data-step="3" class={% if suitableInitiatives is defined and isAllActive == false %} "active" {% elseif isAllActive is defined and isAllActive == true %} "complete" {% elseif suitableplans is defined %} "complete" {% endif %}>
+											<span class="step" class=>3</span>
+											<span class="title">Set PO’s Yearly plan with AC/ teams
+											</span>
+										</li>
+
+										<li data-step="4" class={% if suitableplans is defined or (isAllActive is defined and isAllActive == true) %} "active" {% endif %}>
+											<span class="step">4</span>
+											<span class="title">
+												Accept Operational Managers’ report
+											</span>
+										</li>
+										<li data-step="5">
+											<span class="step">5</span>
+											<span class="title">
+												Send report to JU
+											</span>
+										</li>
+									</ul>
+								</div>
+								<div class="well well-sm">
+									<button type="reset" id="reset-widgets" class="btn btn-info btn-white btn-bold btn-round" data-toggle="modal" data-target="#myModal">
+										<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+										<strong>Select Report Year and Office</strong>
+									</button>
+									<div class="pull-right">
+										{% if pricipaloffice is defined %}
+											<span class="badge badge-info">
+												<b class="text-white">
+													Principal Office:
+													{{pricipaloffice}}
+												</b>
+											</br>
+											<b class="text-white">
+												Reporting Year:
+												{{planyear}}
+											</b>
+										</span>
+
+									{% endif %}
+								</div>
+							</div>
 
 
-			</div>
+							<div class="widget-body">
+								<div class="widget-main">
+									{% if isAllActive is defined  and isAllActive %}{% endif %}
 
 
-		</div>
-		<!-- /.widget-main -->
-	</div>
-	<!-- /.widget-body -->
-</div>
-{% if suitableplans is defined %}
-
-	{{ include('plan/plan.view.html.twig') }}
-{% endif %}
-{% if suitableInitiatives is defined %}
-	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-		<div class="widget-box widget-color-blue" id="widget-box-8">
-			<div class="widget-header">
-				<h5 class="widget-title bigger lighter">
-					<strong>Suitable Initiative</strong>
-				</h5>
-				<div class="widget-toolbar"></div>
-				<div class="widget-toolbar">
-					<span class="badge badge-info">
-						{% trans %}Total{% endtrans %}
-						:{{suitableInitiatives|length}}
-						<strong></strong>
-					</span>
-				</div>
-			</div>
-			<div class="widget-body">
-				<div class="widget-toolbox" id="widget-toolbox-1">
-					<div class="btn-toolbar">
-						<div class="btn-group"></div>
+								</div>
 
 
-					</div>
-				</div>
-				<div class="widget-main padding-16">
-					<div class="row">
-						{# <div class="search-area well col-xs-12">
-							<div></div>
-							<div class="pull-left">
+							</div>
+							<!-- /.widget-main -->
+
+							<!-- /.widget-body -->
+
+							{% if suitableplans is defined  and operational_office_report is defined and operational_office_report == false  %}
+
+								{{ include('plan/plan.view.html.twig') }}
+							{% endif %}
+							{% if suitableplans is defined  and operational_office_report is defined and operational_office_report == true  %}
+
+								{{ include('plan/operational_office_report.html.twig') }}
+							{% endif %}
+							{% if suitableInitiatives is defined %}
+								<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+									<div class="widget-box widget-color-blue" id="widget-box-8">
+										<div class="widget-header">
+											<h5 class="widget-title bigger lighter">
+												<strong>Suitable Initiative</strong>
+											</h5>
+											<div class="widget-toolbar"></div>
+											<div class="widget-toolbar">
+												<span class="badge badge-info">
+													{% trans %}Total{% endtrans %}
+													:{{suitableInitiatives|length}}
+													<strong></strong>
+												</span>
+											</div>
+										</div>
+										<div class="widget-body">
+											<div class="widget-toolbox" id="widget-toolbox-1">
+												<div class="btn-toolbar">
+													<div class="btn-group"></div>
 
 
-								<form class="form-inline" method="post" style="display:inline;">
+												</div>
+											</div>
+											<div class="widget-main padding-16">
+												<div
+													class="row">{# <div class="search-area well col-xs-12">
+																																									<div></div>
+																																									<div class="pull-left">
+																																		
+																																		
+																																										<form class="form-inline" method="post" style="display:inline;">
+																																		
+																																											<div class="input-group">
+																																												<input type="text" class="form-control" name="search" placeholder="search"/>
+																																												<div class="input-group-btn">
+																																													<button type="submit" class="btn btn-default no-border btn-sm">
+																																														<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																													</button>
+																																												</div>
+																																											</div>
+																																										</form>
+																																		
+																																									</div>
+																																		
+																																		
+																																									<div class="pull-right">
+																																										<div class="widget-toolbar no-border">
+																																		
+																																		
+																																											<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																																												<b class="text-primary">Action</b>
+																																												<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																																											</button>
+																																		
+																																											<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																																												<li>
+																																													<a href="#" id="suitablebutton">
+																																														<i class="ace-icon fa fa-stop green"></i>
+																																														Select As Suitable</a>
+																																												</li>
+																																		
+																																												<li>
+																																		
+																																													<a href="#">
+																																														<i class="ace-icon fa fa-stop pink2"></i>
+																																														Select As Non Suitable</a>
+																																												</li>
+																																		
+																																		
+																																											</ul>
+																																										</div>
+																																		
+																																									</div>
+																																								</div> #}
 
-									<div class="input-group">
-										<input type="text" class="form-control" name="search" placeholder="search"/>
-										<div class="input-group-btn">
-											<button type="submit" class="btn btn-default no-border btn-sm">
-												<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-											</button>
+												</div>
+												<div class="table-responsive">
+
+
+													<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+														<thead>
+															<tr>
+
+																<th>#</th>
+																<th>Name</th>
+																<th>Yearly Plan</th>
+
+																<th>Quarter 1</th>
+																<th>Quarter 2</th>
+																<th>Quarter 3</th>
+																<th>Quarter 4</th>
+																<th>Denominator</th>
+																<th>actions</th>
+															</tr>
+														</thead>
+														<tbody>
+															{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+
+															<input type="hidden" name="planyear" value="{{planyear.id}}">
+															<input type="hidden" name="office" value="{{pricipaloffice.id}}">
+
+															{% for suitableInitiative in suitableInitiatives %}
+																<tr>
+
+
+																	<td>{{ loop.index}}
+
+																	</td>
+																	<td>{{suitableInitiative.initiative.name }}</td>
+
+																	<td>{{ "__" }}</td>
+
+
+																	{% for quarter in quarters %}
+																		<td>
+																			{% if suitableInitiative.planningAccomplishments|length > 0 %}
+																				{% if suitableInitiative.initiative.socialAtrribute|length > 0 %}
+																					{% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+
+																						<p>{{plan.socialAttribute.name|title}}
+																							:
+																							{{plan.planValue}}</p>
+
+
+																					{% endfor %}
+																				{% else %}
+																					{% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+
+
+																						{{plan.planValue }}
+
+
+																					{% endfor %}
+																				{% endif %}
+																			{% else %}
+																				{% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
+																					<p>{{socialattribute.name|title}}
+																						: __</p>
+																				{% else %}
+																					__
+
+																				{% endfor %}
+
+																			{% endif %}
+
+																		</td>
+																	{% endfor %}
+																	<td>
+																		{{suitableInitiative.denominator ? suitableInitiative.denominator: " __"}}
+																	</td>
+																	<td>
+																		{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																		<i class="fa fa-eye"></i>
+																																																																																																	</a> #}
+
+																		<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
+																			<span class="glyphicon glyphicon-plus"></span>
+																			{% if suitableInitiative.planningAccomplishments|length > 0 %}
+																				Edit Plan
+																			{% else %}
+
+																				Add Plan
+																			{% endif %}
+																		</a>
+																		<a href="#" class="btn btn-primary btn-sm">
+																			<span class="glyphicon glyphicon-tasks"></span>
+																		</a>
+																	</td>
+																</tr>
+															{% else %}
+																<tr>
+																	<td colspan="8">no records found</td>
+																</tr>
+															{% endfor %}
+
+														</tbody>
+													</table>
+													{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+
+												</div>
+											</div>
 										</div>
 									</div>
-								</form>
-
-							</div>
-
-
-							<div class="pull-right">
-								<div class="widget-toolbar no-border">
-
-
-									<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<b class="text-primary">Action</b>
-										<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-									</button>
-
-									<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-										<li>
-											<a href="#" id="suitablebutton">
-												<i class="ace-icon fa fa-stop green"></i>
-												Select As Suitable</a>
-										</li>
-
-										<li>
-
-											<a href="#">
-												<i class="ace-icon fa fa-stop pink2"></i>
-												Select As Non Suitable</a>
-										</li>
-
-
-									</ul>
 								</div>
+							{% endif %}
 
-							</div>
-						</div> #}
-
-					</div>
-					<div class="table-responsive">
-
-
-						<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-							<thead>
-								<tr>
-
-									<th>#</th>
-									<th>Name</th>
-									<th>Yearly Plan</th>
-
-									<th>Quarter 1</th>
-									<th>Quarter 2</th>
-									<th>Quarter 3</th>
-									<th>Quarter 4</th>
-									<th>Denominator</th>
-									<th>actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
-
-								<input type="hidden" name="planyear" value="{{planyear.id}}">
-								<input type="hidden" name="office" value="{{pricipaloffice.id}}">
-
-								{% for suitableInitiative in suitableInitiatives %}
-									<tr>
+							{% if initiatives is defined %}
+								<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+									<div class="widget-box widget-color-blue" id="widget-box-8">
+										<div class="widget-header">
+											<h5 class="widget-title bigger lighter">
+												<strong>Recommended Initiatives</strong>
+											</h5>
+											<div class="widget-toolbar"></div>
+											<div class="widget-toolbar">
+												<span class="badge badge-info">
+													{% trans %}Total{% endtrans %}
+													:{{initiatives|length}}
+													<strong></strong>
+												</span>
+											</div>
+										</div>
+										<div class="widget-body">
+											<div class="widget-toolbox" id="widget-toolbox-1">
+												<div class="btn-toolbar">
+													<div class="btn-group"></div>
 
 
-										<td>{{ loop.index}}
+												</div>
+											</div>
+											<div class="widget-main padding-16">
+												<div class="row">
+													<div class="search-area col-md-12">
+														<div>
+															{# <form action="" class="form-inline" method="get">
+																																																																						<div class="form-group">
+																																																																							<input type="text">
+																																																																						</div>
+																																																																						<div class="form-group">
+																																																																							<input type="text">
+																																																																						</div>
+																																																													
+																																																													
+																																																																						<div class="form-group"><input type="button" value="submit"></div>
+																																																													
+																																																																					</form> #}
 
-										</td>
-										<td>{{suitableInitiative.initiative.name }}</td>
+														</div>
+														<div
+															class="pull-left">{# <form class="form-inline" method="post" style="display:inline;">
+																																																																			
+																																																																												<div class="input-group">
+																																																																													<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																													<div class="input-group-btn">
+																																																																														<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																															<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																														</button>
+																																																																													</div>
+																																																																												</div>
+																																																																											</form> #}
 
-										<td>{{ "__" }}</td>
-
-
-										{% for quarter in quarters %}
-											<td>
-												{% if suitableInitiative.planningAccomplishments|length > 0 %}
-													{% if suitableInitiative.initiative.socialAtrribute|length > 0 %}
-														{% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
-
-															<p>{{plan.socialAttribute.name|title}}
-																:
-																{{plan.planValue}}</p>
-
-
-														{% endfor %}
-													{% else %}
-														{% for plan in suitableInitiative.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+														</div>
 
 
-															{{plan.planValue }}
+														<div class="pull-right">
+															<div class="widget-toolbar no-border">
 
 
-														{% endfor %}
-													{% endif %}
-												{% else %}
-													{% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
-														<p>{{socialattribute.name|title}}
-															: __</p>
-													{% else %}
-														__
+																<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
+																	<b class="text-primary">Action</b>
+																	<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																</button>
 
-													{% endfor %}
+																<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
+																	<li>
+																		<a href="#" id="suitablebutton">
+																			<i class="ace-icon fa fa-stop green"></i>
+																			Select As Suitable</a>
+																	</li>
 
-												{% endif %}
+																	<li>
 
-											</td>
-										{% endfor %}
-										<td>
-											{{suitableInitiative.denominator ? suitableInitiative.denominator: " __"}}
-										</td>
-										<td>
-											{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
-																																																				<i class="fa fa-eye"></i>
-																																																			</a> #}
+																		<a href="#">
+																			<i class="ace-icon fa fa-stop pink2"></i>
+																			Select As Non Suitable</a>
+																	</li>
 
-											<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
-												<span class="glyphicon glyphicon-plus"></span>
-												{% if suitableInitiative.planningAccomplishments|length > 0 %}
-													Edit Plan
-												{% else %}
 
-													Add Plan
-												{% endif %}
-											</a>
-											<a href="#" class="btn btn-primary btn-sm">
-												<span class="glyphicon glyphicon-tasks"></span>
-											</a>
-										</td>
-									</tr>
-								{% else %}
-									<tr>
-										<td colspan="8">no records found</td>
-									</tr>
-								{% endfor %}
+																</ul>
+															</div>
 
-							</tbody>
-						</table>
-						{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+														</div>
+													</div>
+													<div class="table-responsive col-md-12">
 
+
+														<table class="table table-striped table-bordered table-hover">
+															<div class="table-header"></div>
+															<thead>
+																<tr>
+																	<th class="text-center">
+																		<label class="inline">
+
+																			<input type="checkbox" name="initiative[]" id="checkall" value="" class="ace">
+																			<span class="lbl"></span>
+																		</label>
+																	</th>
+																	<th>#</th>
+																	<th>Name</th>
+																	<th>Weight</th>
+																	<th>description</th>
+																	<th>actions</th>
+																</tr>
+															</thead>
+															<tbody>
+																{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+																<form action="{{path('plan_index')}}" id="initiative_form" method="post">
+																	<input type="hidden" name="planyear" value="{{planyear.id}}">
+																	<input type="hidden" name="office" value="{{pricipaloffice.id}}">
+
+																	{% for initiative in initiatives %}
+																		<tr>
+
+
+																			<td class="text-center">
+																				<label class="inline">
+																					<input type="checkbox" name="initiative[]" value="{{initiative.id}}" class="ace" required>
+																					<span class="lbl"></span>
+																				</label>
+																			</td>
+																			<td>{{ loop.index}}
+
+																			</td>
+																			<td>{{ initiative.name }}</td>
+																			<td>{{ initiative.minimumValue }}</td>
+
+																			<td>{{ initiative.description }}</td>
+																			<td>
+																				<a href="{{ path('initiative_show', {'id': initiative.id}) }}" class="btn btn-primary btn-sm">
+																					<i class="fa fa-eye"></i>
+																				</a>
+
+
+																			</td>
+																		</tr>
+																	{% else %}
+																		<tr>
+																			<td colspan="8">no records found</td>
+																		</tr>
+																	{% endfor %}
+																</form>
+															</tbody>
+														</table>
+														{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-{% endif %}
-
-{% if initiatives is defined %}
-	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-		<div class="widget-box widget-color-blue" id="widget-box-8">
-			<div class="widget-header">
-				<h5 class="widget-title bigger lighter">
-					<strong>Recommended Initiatives</strong>
-				</h5>
-				<div class="widget-toolbar"></div>
-				<div class="widget-toolbar">
-					<span class="badge badge-info">
-						{% trans %}Total{% endtrans %}
-						:{{initiatives|length}}
-						<strong></strong>
-					</span>
-				</div>
-			</div>
-			<div class="widget-body">
-				<div class="widget-toolbox" id="widget-toolbox-1">
-					<div class="btn-toolbar">
-						<div class="btn-group"></div>
-
-
-					</div>
-				</div>
-				<div class="widget-main padding-16">
+				<div id="messages" class="tab-pane fade">
 					<div class="row">
-						<div class="search-area col-md-12">
-							<div>
-								{# <form action="" class="form-inline" method="get">
-																																	<div class="form-group">
-																																		<input type="text">
-																																	</div>
-																																	<div class="form-group">
-																																		<input type="text">
-																																	</div>
-																								
-																								
-																																	<div class="form-group"><input type="button" value="submit"></div>
-																								
-																																</form> #}
-
-							</div>
-							<div
-								class="pull-left">{# <form class="form-inline" method="post" style="display:inline;">
-																											
-																																				<div class="input-group">
-																																					<input type="text" class="form-control" name="search" placeholder="search"/>
-																																					<div class="input-group-btn">
-																																						<button type="submit" class="btn btn-default no-border btn-sm">
-																																							<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																						</button>
-																																					</div>
-																																				</div>
-																																			</form> #}
-
-							</div>
-
-
-							<div class="pull-right">
-								<div class="widget-toolbar no-border">
-
-
-									<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
-										<b class="text-primary">Action</b>
-										<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-									</button>
-
-									<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
-										<li>
-											<a href="#" id="suitablebutton">
-												<i class="ace-icon fa fa-stop green"></i>
-												Select As Suitable</a>
-										</li>
-
-										<li>
-
-											<a href="#">
-												<i class="ace-icon fa fa-stop pink2"></i>
-												Select As Non Suitable</a>
-										</li>
-
-
-									</ul>
-								</div>
-
-							</div>
-						</div>
-						<div class="table-responsive col-md-12">
-
-
-							<table class="table table-striped table-bordered table-hover">
-								<div class="table-header"></div>
-								<thead>
-									<tr>
-										<th class="text-center">
-											<label class="inline">
-
-												<input type="checkbox" name="initiative[]" id="checkall" value="" class="ace">
-												<span class="lbl"></span>
-											</label>
-										</th>
-										<th>#</th>
-										<th>Name</th>
-										<th>Weight</th>
-										<th>description</th>
-										<th>actions</th>
-									</tr>
-								</thead>
-								<tbody>
-									{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
-									<form action="{{path('plan_index')}}" id="initiative_form" method="post">
-										<input type="hidden" name="planyear" value="{{planyear.id}}">
-										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
-
-										{% for initiative in initiatives %}
-											<tr>
-
-
-												<td class="text-center">
-													<label class="inline">
-														<input type="checkbox" name="initiative[]" value="{{initiative.id}}" class="ace" required>
-														<span class="lbl"></span>
-													</label>
-												</td>
-												<td>{{ loop.index}}
-
-												</td>
-												<td>{{ initiative.name }}</td>
-												<td>{{ initiative.minimumValue }}</td>
-
-												<td>{{ initiative.description }}</td>
-												<td>
-													<a href="{{ path('initiative_show', {'id': initiative.id}) }}" class="btn btn-primary btn-sm">
-														<i class="fa fa-eye"></i>
-													</a>
-
-
-												</td>
-											</tr>
-										{% else %}
-											<tr>
-												<td colspan="8">no records found</td>
-											</tr>
-										{% endfor %}
-									</form>
-								</tbody>
-							</table>
-							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
-
-						</div>
+						<div class="col-md-12"></div>
 					</div>
-
-
 				</div>
 			</div>
 		</div>
 	</div>
-{% endif %}
-<!-- PAGE CONTENT ENDS --></div><!-- /.col --><div class="plandiv" id="plandiv"></div>{{ include('plan/modal.html.twig') }}{% endblock %}{% block javascripts %}<script type="text/javascript">
+	<!-- PAGE CONTENT ENDS -->
+</div>
+<!-- /.col -->
+<div class="plandiv" id="plandiv"></div>
+{{ include('plan/modal.html.twig') }}{% endblock %}{% block javascripts %}
+<script type="text/javascript">
 
-$(function () {
+	$(function () {
 $('.select2').css('width', '90%').select2({allowClear: false})
 
 
@@ -470,4 +516,5 @@ $('.planmodal').modal('toggle');
 })
 
 
-});</script>{% endblock %}
+});
+</script>{% endblock %}

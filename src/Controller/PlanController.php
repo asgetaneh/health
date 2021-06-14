@@ -3,21 +3,27 @@
 namespace App\Controller;
 
 use App\Entity\BehavioralPlanningAccomplishment;
+use App\Entity\Goal;
 use App\Entity\Initiative;
 use App\Entity\InitiativeAttribute;
 use App\Entity\InitiativeBehaviour;
+use App\Entity\KeyPerformanceIndicator;
+use App\Entity\Objective;
 use App\Entity\Plan;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningPhase;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
+use App\Entity\Strategy;
 use App\Entity\SuitableInitiative;
 use App\Form\PlanType;
 use App\Repository\PlanRepository;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,16 +73,18 @@ class PlanController extends AbstractController
                 $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
             }
 
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice, $planningyear);
-
+            $suitableInitiatives = $this->findSuitableInitiative($em, $principaloffice, $planningyear);
+          
             if ($suitableInitiatives) {
+
                 $isallActive = $this->getActivePlan($suitableInitiatives);
-
+                $isOperationalReport = $isallActive ? true : false;
+              
                 return $this->render('plan/index.html.twig', [
-
+                    'operational_office_report' => $isOperationalReport,
                     'planningYears' =>  $activePlanningYear,
                     'offices' => $offices,
-                    'suitableInitiatives' =>  $suitableInitiatives,
+                    'suitableplans' =>  $suitableInitiatives,
                     'pricipaloffice' => $principaloffice,
                     'planyear' => $planningyear,
                     'isAllActive' => $isallActive,
@@ -112,10 +120,19 @@ class PlanController extends AbstractController
             $plans = $suitableInitiative->getPlanningAccomplishments();
             if (sizeof($plans) < 1) {
                 $isAllActive = false;
+                break;
             }
         }
         return  $isAllActive;
     }
+
+    private function findSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear)
+    {
+
+        $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice, $planningyear);
+        return $suitableInitiatives;
+    }
+
 
     /**
      * @Route("/addplan", name="plan_add")
@@ -138,6 +155,97 @@ class PlanController extends AbstractController
             return new Response($res);
         }
         return new Response("done");
+    }
+    /**
+     * @Route("/principalplan", name="plan_principal")
+     */
+    public function principalOfficePlan(Request $request,PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+ 
+         if(!$offices)
+        $offices = $em->getRepository(PrincipalOffice::class)->findPrincipalOffice($this->getUser());
+        
+         $filterForm=$this->createFormBuilder()
+       ->add("planyear",EntityType::class,[
+           'class'=>PlanningYear::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+        ->add("initiative",EntityType::class,[
+           'class'=>Initiative::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add("kpi",EntityType::class,[
+           'class'=>KeyPerformanceIndicator::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add("strategy",EntityType::class,[
+           'class'=>Strategy::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add("objective",EntityType::class,[
+           'class'=>Objective::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add("goal",EntityType::class,[
+           'class'=>Goal::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add('principaloffice',EntityType::class,[
+           'class'=>PrincipalOffice::class,
+            'multiple' => true,
+            'required'=>false,
+            
+            'placeholder' => 'Choose an principal office',
+       ])->getForm();
+       $filterForm->handleRequest($request);
+       if($filterForm->isSubmitted()&& $filterForm->isValid()){
+         
+         //  $suitableInitiatives=$suitableInitiativeRepository->search($filterForm->getData());
+        
+        }
+
+
+        if($this->isGranted('vw_all_pln')){
+         
+         $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findAll();
+        }
+        else
+         $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
+
+       
+       
+
+       
+
+
+
+        return $this->render("plan/plan.html.twig", [
+            "suitableplans" =>  $suitableInitiative, 
+            'quarters' => $quarters,
+            'filterform'=>$filterForm->createView()
+          
+        ]);
     }
 
     /**
@@ -230,13 +338,17 @@ class PlanController extends AbstractController
 
 
 
-            $suitableplan = $em->getRepository(SuitableInitiative::class)->findByoffice($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear());
-
+            $suitableplan = $this->findSuitableInitiative($em,$planInitiative->getPrincipalOffice(),$planInitiative->getPlanningYear());
+            // $em->get Repository(SuitableInitiative::class)->findByoffice($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear());
+             $isallActive = $this->getActivePlan($suitableplan);
+             $isOperationalReport = $isallActive ? true : false;
+            $this->addFlash('success', " successfuly register your plan for  Suitable initiatives of your office! thank you for responding");
 
             return $this->render('plan/index.html.twig', [
                 'suitableplans' => $suitableplan,
                 'planningYears' =>  $activePlanningYear,
                 'offices' => $offices,
+                 'operational_office_report' => $isOperationalReport,
                 'pricipaloffice' => $planInitiative->getPrincipalOffice(),
                 'planyear' => $planInitiative->getPlanningYear(),
                 'quarters' => $planningquarters

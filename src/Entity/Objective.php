@@ -66,6 +66,11 @@ class Objective implements TranslatableInterface
      */
     private $planAchievements;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $objectiveNumber;
+
 
     public function __construct()
     {
@@ -216,6 +221,18 @@ class Objective implements TranslatableInterface
                 $planAchievement->setObjective(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getObjectiveNumber(): ?int
+    {
+        return $this->objectiveNumber;
+    }
+
+    public function setObjectiveNumber(?int $objectiveNumber): self
+    {
+        $this->objectiveNumber = $objectiveNumber;
 
         return $this;
     }

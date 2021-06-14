@@ -76,4 +76,21 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+     public function findPrincipalOffice($user){
+        $qb=$this->createQueryBuilder('po')
+        ->leftJoin('po.principalManagers','pm')
+        ->leftJoin('po.operationalOffices','of')
+        ->leftJoin('of.operationalManagers','om')
+        ->leftJoin('of.performers','pr')
+
+        ->orWhere('pm.principal = :user and pm.isActive = 1')
+       ->orWhere('om.manager = :manager and om.isActive = 1')
+       ->orWhere('pr.id = :performer and pr.isActive = 1')
+        ->setParameter('user',$user)
+         ->setParameter('manager',$user)
+          ->setParameter('performer',$user->getId())
+        ;
+        return $qb->getQuery()->getResult();
+
+    }
 }

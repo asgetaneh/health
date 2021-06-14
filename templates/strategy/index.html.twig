@@ -203,11 +203,11 @@
 						<h4 class="modal-title">New Strategy</h4>
 					</div>
 					<div class="modal-body">
-						<div class="row">
+						<div class="form-group row">
 
 							{% for f in form  %}
 								{% if f != form._token %}
-									<div class="form-group col-md-6">
+									<div class="col-md-6">
 										<label>{{ form_label(f) }}</label>
 										{{ form_widget(f) }}
 									</div>
