@@ -44,6 +44,11 @@ class OperationalSuitableInitiative
      */
     private $PlanningAcomplishment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="operationalSuitableInitiatives")
+     */
+    private $social;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -107,6 +112,18 @@ class OperationalSuitableInitiative
     public function setPlanningAcomplishment(?PlanningAccomplishment $PlanningAcomplishment): self
     {
         $this->PlanningAcomplishment = $PlanningAcomplishment;
+
+        return $this;
+    }
+
+    public function getSocial(): ?InitiativeAttribute
+    {
+        return $this->social;
+    }
+
+    public function setSocial(?InitiativeAttribute $social): self
+    {
+        $this->social = $social;
 
         return $this;
     }

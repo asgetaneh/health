@@ -41,13 +41,13 @@
 						<div class="widget-toolbar">
 							{# {% set value = 0 %} #}
 							{# {% for performerTask in performerTasks %}
-																													{% if performerTask.status == 1 %}
-																														{% set value = 1 %}
-																					
-																													{% endif %}
-																					
-																					
-																												{% endfor %} #}
+																																				{% if performerTask.status == 1 %}
+																																					{% set value = 1 %}
+																												
+																																				{% endif %}
+																												
+																												
+																																			{% endfor %} #}
 							{# {% if value == 1 %} #}
 
 							{# {% if remainingdays <= 10 %} #}
@@ -55,9 +55,9 @@
 								<button type="submit" class="btn btn-success"> Send To Plan Office
 							</button>
 							{# {% else %}
-																														Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
-																													{% endif %}
-																												{% endif %} #}
+																																					Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
+																																				{% endif %}
+																																			{% endif %} #}
 
 						</div>
 					</div>
@@ -103,28 +103,15 @@
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
-                                    			<input type="hidden" name="opsuiId" value="{{operatioanlSuitable.id}}">
+												{% if social == 1 %}
+
+													<td>{{operatioanlSuitable.social}}</td>
+												{% endif %}
+												<input type="hidden" name="opsuiId" value="{{operatioanlSuitable.id}}">
 												<input type="hidden" name="planId" value="{{operatioanlSuitable.planningAcomplishment.id}}">
 												<input type="hidden" name="quarter" value="{{operatioanlSuitable.quarter}}">
 
-												{% if social == 1 %}
-													{% if operatioanlSuitable.planningAcomplishment.socialAttribute.name == "Male" %}
-														{% set maleCount = maleCount + 1 %}
 
-														{% set totalmale = totalmale + operatioanlSuitable.accomplishedValue %}
-
-													{% else %}
-														{% set femaleCount = femaleCount + 1 %}
-
-														{% set totalfemale = totalfemale + operatioanlSuitable.accomplishedValue %}
-
-													{% endif %}
-
-
-													<td>{{operatioanlSuitable.planningAcomplishment.socialAttribute.name}}</td>
-
-
-												{% endif %}
 												<td>{{ operatioanlSuitable.operationalOffice  }}</td>
 
 												<td>{{ operatioanlSuitable.accomplishedValue  }}</td>
@@ -133,42 +120,35 @@
 											</tr>
 
 
-										{% else %}
-
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-									{% if social == 1 %}
+										{% endfor %}
 
 										<tr>
-											<td colspan="3">Average Male</td>
-											<td>
-												{{ totalmale / maleCount }}</td>
-										</tr>
-										<tr>
-											<td colspan="3">Average Female</td>
-											<td>
-												{{ totalfemale / femaleCount }}</td>
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="2">Average</td>
+											{% if social == 1 %}
+
+												<td colspan="3">Average</td>
+											{% else %}
+												<td colspan="2">Average</td>
+
+											{% endif %}
 											<td>
 												<input type="hidden" name="planOffice" value="planOffice">
+												{% if total %}
 
-												<input type="hidden" name="acompAvareage" value="{{total / count}}">
+													<input type="hidden" name="acompAvareage" value="{{total / count}}">
 
-												{{ total / count}}</td>
+													{{ total / count}}
+												{% endif %}
+											</td>
 										</tr>
-									{% endif %}
 
-								</tbody>
-							</table>
+									</tbody>
+								</table>
 
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</form>{% endblock %}
+	</form>
+{% endblock %}

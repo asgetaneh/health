@@ -1,0 +1,158 @@
+Perspective: ዕይታ
+Goal: ግብ
+Objective: ዓላማ
+Strategy: ስልት
+Key Performance Indicator: ቁልፍ አፈፃፀም መለኪያ
+Initiative: አቢይ ተግባር/ ፕሮጄክት
+Initiatives: አቢይ ተግባር/ ፕሮጄክት
+suitable Initiative: ከቡድንዎ ጋር ተስማሚ ፕሮጄክቶችን ይምረጡ 
+Initiative Behavior: የአቢይ ተግባር/ ፕሮጄክት ባህርይ
+Initiative Attribute: የአቢይ ተግባር/ ፕሮጄክት መለያ
+Plan: ዕቅድ
+Planning Year: ዕቅድ ማቅረቢያ ዓመት 
+Reporting Period: ሩብ ዓመት 
+Report Announsement: 
+Operational Office: ትምህርት ክፍል ኃላፊ/ ቡድን መሪ
+Principal Office: ኮሌጅ/ ኢንስቲትዩት/ ዳይሬክቶሬት
+Principal Manager: የኮሌጅ/ ኢንስቲትዩት ዲን/ ዳይሬክተር 
+Operational Manager: ትምህርት ክፍል ኃላፊ/ ቡድን መሪ
+Performer: ሥራ ፈፃሚ
+Plan Achievement: የዕቅድ አፈፃፀም
+Cascade: ማውረድ
+Cascading Achievement: ዕቅድ/ ሪፖርት ማቅረቢያ 
+Principal Office Report: ኮሌጅ/ ኢንስቲትዩት/ ዳይሬክቶሬት ሪፖርት
+Operational Task: ለትምህርት ክፍል ፕሮጄክት መምረጥ
+Operational Task List: ለፈፃሚ የተሰጠ ዝርዝር ስራ 
+Performer Task: ለፈፃሚ የተሰጠ ዝርዝር ስራ 
+SMIS: ስማመስ
+
+Search: መፈለግ
+Approve: አፅድቅ
+Disapproved: አታፅድቅ
+Disapprove By All: አታፅድቅ ሁሉንም
+Approve By All: አፅድቅ ሁሉንም
+Delete All Requests: አጥፋ
+Filter: ፈልግ
+Print All: ፕሪንት
+Print By Meal: ፕሪንት በምግብ
+System Setting: ሲስተም ቅንጅት
+Cafe Setting: ካፌ ቅንጅት
+Meal Attendance: ምግብ ቁጥጥር
+Student: ተማሪ ቅንጅት
+Inventory: ዕቃዎች መቆጣጠር
+Cost Sharing: ወጪ መጋራት
+User Management: ሲስተም አጠቃቀም 
+ID: መለያ መታወቂያ
+Approved Requests: ጥያቄ ማፅደቅ 
+Approve Requests: ጥያቄ ማፅደቅ 
+Go: ሂድ 
+Campus: ካምፓስ
+College: ኮሌጅ
+Department: ትምህርት ክፍል
+Program: ፕሮግራም
+Religion: ሃይማኖት
+Dashboard: ዳሽቦርድ
+Cafe: ካፌ
+Meal Types: ምግብ ዓይነቶች
+Menu: የምግብ ዝርዝር
+Menu Group: ሜኑ ስብስብ
+Attend Meal: ምግብ መቆጣጠር
+View Meal Attendance: ምግብ መቆጣጠር ማየት
+Frauds: ማጭበርበር
+Assign Student: ተማሪ መድብ
+Student Preference: ተማሪ ምርጫ
+Item Type: ዕቃ አይነት
+Inventory List: መቆጣጠሪያ ዝርዝር
+Register New: አዲስ ዕቃ መዝግብ
+Pay Cost: ወጪ ክፈል
+Show Cost History: የተከፈለ ወጪ ለማየት
+New Request: አዲስ ጥያቄ
+Activate Requests: አገልግሎት ማስጀመር
+Deactivate Service: አገልግሎት ማቋረጥ
+Show All: ሁሉንም አሳይ
+Pay Cost sharing: ወጪ መጋራት ክፈል
+Show Payments: ክፍያዎችን አሳይ
+Service Price: የአገልግሎት ዋጋ
+Leave Requests: ጥያቄዎችን ይተዉ
+ID Design: መታወቂያ ንድፍ
+Print ID: መታወቂያ ማተም
+Batch Print: በቡድን ማተም
+Lost ID: የጠፋ መታወቂያ
+Register: አዲስ መዝግብ
+Map: ማያያዝ
+History: የታተሙ መታወቂያ ለማየት
+Total Meal Attendance: አጠቃላይ የምግብ ቁጥጥር
+Registered Cafteria: ካፌ መዝግብ
+Total Registered Frauds: አጠቃላይ የተመዘገቡ ማጭበርበሮቸ
+MealAttendance Chart: የምግብ መቆጣጠሪያ ቻርት
+Fraud Chart: ማጭበርበር ቻርት
+Meal Attendance Dashboard: የምግብ መቆጣጠሪያ ዳሽቦርድ
+Jimma University: ጅማ ዩኒቨርሲቲ
+Student Information System: የተማሪ መረጃ ስርዓት
+Cafes: ካፌ
+Meal Type: ምግብ ዓይነቶች
+Students: ተማሪ
+Assign Department: ትምህርት ክፍል መመደብ
+Regular: መደበኛ
+Summer: የክረምት
+Users: ተጠቃሚዎች
+User Groups: የተጠቃሚ ቡድኖች
+Permissions: ፈቃዶች
+Home page: መነሻ ገጽ
+Home: መነሻ
+Add new: አዲስ መዝግብ
+Campus List: የካምፓስ ዝርዝር
+Name: ስም
+Description: መግለጫ
+Id: መታወቂያ
+actions: ድርጊት
+Reset: አንጻ
+Save: መዝግብ
+college List: ኮሌጅ ዝርዝር
+Depratement List: ትምህርት ክፍል ዝርዝር
+Religion List: ሃይማኖት ዝርዝር
+Program List: ፕሮግራም ዝርዝር
+Cafe List: ካፌ ዝርዝር 
+Meal Type List: ምግብ ዓይነቶች ዝርዝር
+Menu Group List: ሜኑ ስብስብ ዝርዝር
+show: አሳይ
+edit: አስተካክል
+IsAllowed: ተፈቅዷል
+shortName: አጭር ስም
+Code: ኮድ
+Capacity: የመያዝ አቅም
+Located At: የሚገኘው
+Campus Using: ካምፓስ በመጠቀም
+Latitude: ኬክሮስ
+Longitude: ኬንትሮስ
+Program type: ፕሮግራም ዓይነት
+can be applied for: መጠቀም ይቻላል
+Is Default: ነባር
+Student Can Apply: ተማሪ መጠቀም ይችላል
+Registered Cafteria's:  ካፌ መዝግብ
+Active Meal Types: አገልግሎት ላይ የዋለ ምግብ
+Create Meal Attendance: ምግብ ቁጥጥር ጀምር
+Select Cafe Information: ካፌን መረጃ ይምረጡ
+Select Cafe: ካፌን ይምረጡ
+Select Gate: በር ይምረጡ
+Select Meal Information: ምግብ መረጃ ይምረጡ
+Select Meal Type: የምግብ ዓይነት ይምረጡ
+Is Special Day: ልዩ ቀን
+Select Meal: ምግብ ይምረጡ
+Select: ይምረጡ
+Launch: ጀምር
+Attendance Taker: Attendance Taker
+Status: ጀምር
+Report: መዝግብ
+
+Exit: መውጫ
+Assign Tickers: 
+Assign: መድብ
+Full Name: ሙሉ ስም
+Gender: ፆታ
+ID Number: መታወቅያ ቁ.
+Student ID : መታወቅያ ቁ.
+Last 5 Students: የመጨረሻዎቹ 5 ተማርዎች
+Allowed: የተፈቀደላቸው 
+Statistics: መረጃ
+Meal: ምግብ
