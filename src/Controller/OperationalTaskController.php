@@ -31,12 +31,16 @@ use App\Repository\UserInfoRepository;
 use DateTime;
 use Andegna\DateTime as AD;
 use Andegna\DateTimeFactory;
+use App\Entity\Initiative;
 use App\Entity\OperationalSuitableInitiative;
+use App\Entity\PlanningYear;
+use App\Entity\PrincipalOffice;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -235,6 +239,47 @@ $count=0;
             
         ]);
     }
+    /**
+ * @Route("/principal/report", name="principal_office_report", methods={"GET","POST"})
+     */
+    public function report(SuitableInitiativeRepository $suitableInitiativeRepository,Request $request): Response
+    {
+       $filterForm=$this->createFormBuilder()
+       ->add("planyear",EntityType::class,[
+           'class'=>PlanningYear::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+        ->add("initiative",EntityType::class,[
+           'class'=>Initiative::class,
+           'multiple' => true,
+           'placeholder' => 'Choose an planning year',
+           'required'=>false,
+
+       ])
+       ->add('principaloffice',EntityType::class,[
+           'class'=>PrincipalOffice::class,
+            'multiple' => true,
+            'required'=>false,
+            
+              'placeholder' => 'Choose an principal office',
+       ])->getForm();
+       $filterForm->handleRequest($request);
+       if($filterForm->isSubmitted()&& $filterForm->isValid()){
+         
+           $suitableInitiatives=$suitableInitiativeRepository->search($filterForm->getData());
+        
+        }
+        else
+         $suitableInitiatives=$suitableInitiativeRepository->findAll();
+       
+        return $this->render('operational_task/report.html.twig', [
+            'suitable_initiatives' => $suitableInitiatives,
+            'filterform'=>$filterForm->createView()
+        ]);
+    }
     
      /**
      * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
@@ -313,7 +358,7 @@ $count=0;
             $em->flush();
                             $this->addFlash('success', 'successfully Send To Plan Office !');
 
-                      return $this->redirectToRoute('suitable_initiative_index');
+                      return $this->redirectToRoute('principal_office_report');
         }
         $user=$this->getUser();
          $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);

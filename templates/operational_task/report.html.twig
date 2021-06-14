@@ -84,50 +84,13 @@
 
 
 								<div
-									class="pull-right">{# <div class="widget-toolbar no-border">
-																				
-																				
-																														<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-																															<b class="text-primary">Action</b>
-																															<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-																														</button>
-																				
-																														<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																															<li>
-																																<a href="#" id="suitablebutton">
-																																	<i class="ace-icon fa fa-stop green"></i>
-																																	Select As Suitable</a>
-																															</li>
-																				
-																															<li>
-																				
-																																<a href="#">
-																																	<i class="ace-icon fa fa-stop pink2"></i>
-																																	Select As Non Suitable</a>
-																															</li>
-																				
-																				
-																														</ul>
-																													</div> #}
-
-								</div>
+									class="pull-right"></div>
 							</div>
 
 						</div>
 
 						<div
 							class="table-responsive">
-							{# <form class="form-inline" method="post" style="display:inline;">
-																												
-																																				<div class="input-group">
-																																					<input type="text" class="form-control" name="search" placeholder="search"/>
-																																					<div class="input-group-btn">
-																																						<button type="submit" class="btn btn-default no-border btn-sm">
-																																							<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																						</button>
-																																					</div>
-																																				</div>
-																																			</form> #}
 							{% set status = 1 %}
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
@@ -137,7 +100,6 @@
 
 										<th>Office</th>
 										<th>Planning Year</th>
-										<th>Quarter</th>
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -150,15 +112,10 @@
 											<td>{{ suitable_initiative.principalOffice}}
 											</td>
 											<td>{{suitable_initiative.planningYear}}</td>
-											<td>{{suitable_initiative.planningYear}}</td>
 
 											<td>
 												<div class="row">
-													<div class="col-md-3">
-														<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
-														{# <a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a> #}
-
-													</div>
+													
 													{% for item in suitable_initiative.initiative.socialAtrribute  %}
 
 														{% set status = 0 %}
