@@ -53,11 +53,13 @@ class InitiativeController extends AbstractController
             return $this->redirectToRoute('initiative_index');
         }
         $filterform = $this->createFormBuilder()
+           ->setMethod('Get')
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
                 'multiple' => true,
                 'required' => false
             ])
+            
             ->add('objective', EntityType::class, [
                 'class' => Objective::class,
                 'multiple' => true,
@@ -122,8 +124,9 @@ class InitiativeController extends AbstractController
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             $initiatives = $initiativeRepository->search($filterform->getData());
-        } elseif ($request->request->get('search')) {
-            $initiatives = $initiativeRepository->search(['name' => $request->request->get('search')]);
+        } elseif ($request->query->get('search')) {
+           
+            $initiatives = $initiativeRepository->search(['name' =>$request->query->get('search')]);
         } else
             $initiatives = $initiativeRepository->findAlls();
             $initiativestotal = $initiativeRepository->findAll();
@@ -131,7 +134,7 @@ class InitiativeController extends AbstractController
         $data = $paginator->paginate(
             $initiatives,
             $request->query->getInt('page', 1),
-            10
+            5
         );
         return $this->render('initiative/index.html.twig', [
             'initiatives' => $data,

@@ -14,7 +14,7 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
-						<strong>Goal</strong>
+						<strong> {% trans %} Goal{% endtrans %}</strong>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -38,7 +38,7 @@
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 										{% trans %}
-										New Goal{% endtrans %}</a>
+										Add new{% endtrans %}</a>
 								{% endif %}
 								{# <form class="form-inline" method="post" style="display:inline;">
 									<input type="hidden" name="nonapplicable" value="nonapp"/>
@@ -74,11 +74,11 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Name</th>
-										<th>OutPut</th>
-										<th>OutCome</th>
-										<th>Description</th>
-										<th>actions</th>
+										<th>  {% trans %}Name{% endtrans %} </th>
+										<th>{% trans %}OutPut{% endtrans %} </th>
+										<th>{% trans %}OutCome{% endtrans %}   </th>
+										<th>{% trans %}Description{% endtrans %}</th>
+										<th> {% trans %}actions {% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -88,11 +88,11 @@
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{count }}</td>
-											<td>{{ goal.name|title }}</td>
-											<td>{{ goal.outPut|title }}</td>
-											<td>{{ goal.outCome|title }}</td>
+											<td>{{ goal.name }}</td>
+											<td>{{ goal.outPut|raw }}</td>
+											<td>{{ goal.outCome|raw }}</td>
 
-											<td>{{ goal.description|title }}</td>
+											<td>{{ goal.description|raw }}</td>
 											<td>
 												{% if is_granted('vw_gol_dtl') %}
 													<a title="view details" style="margin-bottom:5px;" href="{{ path('goal_show', {'id': goal.id}) }}" class="btn btn-primary btn-sm">

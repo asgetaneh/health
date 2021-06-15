@@ -12,7 +12,7 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
-						<strong>Key Performance Indicator</strong>
+						<strong>{% trans %}Key Performance Indicator{% endtrans %}</strong>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -36,7 +36,7 @@
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 										{% trans %}
-										New KeyPerformanceIndicator{% endtrans %}</a>
+										Add New{% endtrans %}</a>
 								{% endif %}
 
 							</div>
@@ -50,7 +50,7 @@
 							<div class="search-area well col-md-12">
 
 								<div class="row">
-									{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+									{{ form_start(filterform,{'attr': {'role':'form','class':' ' },'method':'GET'}) }}
 									<div class="col-md-4">
 										<div class="form-group form-group-sm">
 											{{ form_label(filterform.goal,'Goal') }}
@@ -81,7 +81,7 @@
 
 									<div class="col-md-3">
 										<div class="form-group" style="margin-top:25px;">
-											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+											<input type="submit" class="btn btn-primary btn-sm " value="{% trans %}Filter{% endtrans %}">
 										</div>
 									</div>
 
@@ -94,7 +94,7 @@
 
 						</div>
 						<div class="table-responsive">
-							<form class="form-inline" method="post" style="display:inline;">
+							<form class="form-inline" method="get" style="display:inline;">
 
 								<div class="input-group">
 									<input type="text" class="form-control" name="search" placeholder="search"/>
@@ -110,15 +110,15 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>KPI</th>
+										<th>{% trans %}KPI{% endtrans %}</th>
 										{# <th>Strategy</th> #}
-										<th>Objective</th>
-										<th>Goal</th>
+										<th>{% trans %}Objective{% endtrans %}</th>
+										<th>{% trans %}Goal{% endtrans %}</th>
 										{# <th>Prespective</th> #}
-										<th>Weight</th>
-										<th>Status</th>
+										<th>{% trans %}Weight{% endtrans %}</th>
+										<th>{% trans %}Status{% endtrans %}</th>
 										{# <th>description</th> #}
-										<th>actions</th>
+										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -130,16 +130,16 @@
 											<td>{{ key_performance_indicator.kpiNumber }}</td>
 											<td>{{ key_performance_indicator|title }}</td>
 											{# <td>{{ key_performance_indicator.strategy }}</td> #}
-											<td>{{ key_performance_indicator.strategy.objective|title }}</td>
-											<td>{{ key_performance_indicator.strategy.objective.goal|title }}</td>
+											<td>{{ key_performance_indicator.strategy.objective }}</td>
+											<td>{{ key_performance_indicator.strategy.objective.goal}}</td>
 											{# <td>{{ key_performance_indicator.strategy.objective.perspective }}</td> #}
 
 											<td>{{ key_performance_indicator.weight }}</td>
 											<td>
 												{% if key_performance_indicator.isActive %}
-													<span class="badge badge-success">Active</span>
+													<span class="badge badge-success">{% trans %}Active{% endtrans %}</span>
 												{% else %}
-													<span class="badge badge-danger">Deactived</span>
+													<span class="badge badge-danger">{% trans %}Deactived{% endtrans %}</span>
 												{% endif %}
 											</td>
 											{# <td>{{ key_performance_indicator.description }}</td> #}

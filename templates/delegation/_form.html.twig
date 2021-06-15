@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+<div class="form-group col-md-4">
+	<label>{{ form_label(form.delegatedUser) }}</label>
+ {{ form_widget(form.delegatedUser,{'attr':{'class':'select2','data-placeholder':'choose user','autocomplete':'false'}}) }}
+</div>
+<div class="form-group col-md-4">
+	<label>{{ form_label(form.startAt) }}</label>
+ {{ form_widget(form.startAt,{'attr':{'class':'form-control'}}) }}
+</div>
+<div class="form-group  col-md-4">
+	<label>{{ form_label(form.endAt) }}</label>
+ {{ form_widget(form.endAt,{'attr':{'class':'form-control'}}) }}
+</div>
+<div class="form-group col-md-12 col-sm-12">
+	<label>{{ form_label(form.reason) }}</label>
+ {{ form_widget(form.reason) }}
+</div>
+
+   
+    <button class="btn btn-sm btn-primary pull-right">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

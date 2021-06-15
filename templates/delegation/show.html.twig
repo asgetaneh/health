@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delegation{% endblock %}
+
+{% block body %}
+    <h1>Delegation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ delegation.id }}</td>
+            </tr>
+            <tr>
+                <th>StartAt</th>
+                <td>{{ delegation.startAt ? delegation.startAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndAt</th>
+                <td>{{ delegation.endAt ? delegation.endAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('delegation_index') }}">back to list</a>
+
+    <a href="{{ path('delegation_edit', {'id': delegation.id}) }}">edit</a>
+
+    {{ include('delegation/_delete_form.html.twig') }}
+{% endblock %}

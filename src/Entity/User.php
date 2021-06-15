@@ -182,6 +182,11 @@ class User implements UserInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="delegatedBy")
+     */
+    private $delegations;
     
 
 
@@ -221,6 +226,7 @@ class User implements UserInterface
         $this->taskUsers = new ArrayCollection();
         $this->operationalTasks = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
+        $this->delegations = new ArrayCollection();
 
     }
     public function __toString()
@@ -1152,6 +1158,36 @@ class User implements UserInterface
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Delegation[]
+     */
+    public function getDelegations(): Collection
+    {
+        return $this->delegations;
+    }
+
+    public function addDelegation(Delegation $delegation): self
+    {
+        if (!$this->delegations->contains($delegation)) {
+            $this->delegations[] = $delegation;
+            $delegation->setDelegatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDelegation(Delegation $delegation): self
+    {
+        if ($this->delegations->removeElement($delegation)) {
+            // set the owning side to null (unless already changed)
+            if ($delegation->getDelegatedBy() === $this) {
+                $delegation->setDelegatedBy(null);
+            }
+        }
 
         return $this;
     }

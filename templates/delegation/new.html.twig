@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+{% block subTitle %}
+	<li class="">
+		<a href="#">{% trans %}Delegation{% endtrans %}</a>
+	</li>
+	<li class="active">
+		<a href="{{ path('delegation_index')}}">{% trans %}New  Delegation{% endtrans %}</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>
+							{% trans %}
+							New Delegation {% endtrans %}</strong>
+					</h5>
+
+					<div class="widget-toolbar"></div>
+
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							 <a class="btn btn-sm btn-success" href="{{ path('delegation_index') }}">{% trans %}back{% endtrans %} </a>
+							<strong></strong>
+						</span>
+					</div>
+				</div>
+				<div class="widget-body">
+					<div class="widget-main padding-16">
+                    <div class="row">{{ include('delegation/_form.html.twig') }}</div>
+						
+                        	<table class="table" style="margin-top:10px;">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>{% trans %}AuthorizedBy{% endtrans %}</th>
+									<th>{% trans %}Delegate{% endtrans %}</th>
+									<th>{% trans %}StartAt{% endtrans %}</th>
+									<th>{% trans %}EndAt{% endtrans %}</th>
+                                    <th>{% trans %}Status{% endtrans %}</th>
+									<th>{% trans %}Reason{% endtrans %}</th>
+								</tr>
+							</thead>
+							<tbody>
+							 {% for delegation in delegations %}
+                                 
+                            
+									<tr>
+										<td>{{ loop.index }}</td>
+										<td>{{ delegation.delegatedBy?  delegation.delegatedBy.userInfo:""}}</td>
+                                        <td>{{delegation.delegatedUser? delegation.delegatedUser.userInfo: ""}}</td>
+										<td>{{ delegation.startAt ? delegation.startAt|date('d-M-Y ') : '' }}</td>
+										<td>{{ delegation.endAt ? delegation.endAt|date('d-M-Y ') : '' }}</td>
+                                        <td>{% if delegation.endAt > date('now') %}
+                                        <span class="badge badge-info">Active</span>
+                                       {% elseif delegation.endAt and delegation.endAt < date('now') %} 
+                                             <span class="badge badge-success">Completed</span>
+                                        {% endif %}
+                                        </td>
+										<td>
+											{{delegation.reason|raw}}
+										</td>
+									</tr>
+                                    {% else %}
+									<tr>
+										<td colspan="4">no records found</td>
+									</tr>
+                                     {% endfor %}
+								
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+    
+
+   
+{% endblock %}

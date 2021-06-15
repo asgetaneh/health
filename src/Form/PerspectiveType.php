@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Perspective;
 use App\Helper\Helper;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,7 +24,7 @@ class PerspectiveType extends AbstractType
                     'attr' => ['class' => 'form-control']
                 ])
                 
-                ->add($value ."description", TextareaType::class, [
+                ->add($value ."description", CKEditorType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])

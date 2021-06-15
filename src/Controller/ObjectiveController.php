@@ -30,6 +30,8 @@ class ObjectiveController extends AbstractController
         $form = $this->createForm(ObjectiveType::class, $objective);
         $form->handleRequest($request);
         $filterform = $this->createFormBuilder()
+        ->setAction($this->generateUrl('objective_index'))
+        ->setMethod('Get')
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
                 'multiple' => true,
@@ -84,8 +86,8 @@ class ObjectiveController extends AbstractController
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             $objectives = $objectiveRepository->search($filterform->getData());
-        } elseif ($request->request->get('search')) {
-            $objectives = $objectiveRepository->search(['name' => $request->request->get('search')]);
+        } elseif ($request->query->get('search')) {
+            $objectives = $objectiveRepository->search(['name' => $request->query->get('search')]);
         } else
             $objectives = $objectiveRepository->findAlls();
 
@@ -95,7 +97,7 @@ class ObjectiveController extends AbstractController
         $data = $paginator->paginate(
             $objectives,
             $request->query->getInt('page', 1),
-            10
+            2
         );
         return $this->render('objective/index.html.twig', [
             'objectives' => $data,

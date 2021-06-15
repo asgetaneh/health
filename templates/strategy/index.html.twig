@@ -12,7 +12,7 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
-						<strong>Strategy</strong>
+						<strong>{% trans %}Strategy{% endtrans %}</strong>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -36,7 +36,7 @@
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 										<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 										{% trans %}
-										New Strategy{% endtrans %}</a>
+										Add New {% endtrans %}</a>
 								{% endif %}
 								{# <form class="form-inline" method="post" style="display:inline;">
 																	<input type="hidden" name="nonapplicable" value="nonapp"/>
@@ -80,7 +80,7 @@
 
 									<div class="col-md-3">
 										<div class="form-group" style="margin-top:25px;">
-											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+											<input type="submit" class="btn btn-primary btn-sm " value="{% trans %}Filter{% endtrans %}">
 										</div>
 									</div>
 
@@ -93,7 +93,7 @@
 
 						</div>
 						<div class="table-responsive">
-							<form class="form-inline" method="post" style="display:inline;">
+							<form class="form-inline" method="get" style="display:inline;">
 
 								<div class="input-group">
 									<input type="text" class="form-control" name="search" placeholder="search"/>
@@ -109,15 +109,15 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Name</th>
-										<th>Objective</th>
+										<th>{% trans %}Strategy{% endtrans %}</th>
+										<th>{% trans %}Objective{% endtrans %}</th>
 
-										<th>Kpi</th>
-										<th>Goal</th>
+										<th>{% trans %}Kpi{% endtrans %}</th>
+										<th>{% trans %}Goal{% endtrans %}</th>
 										{# <th>Prespective</th> #}
-										<th>status</th>
+										<th>{% trans %}Status{% endtrans %}</th>
 										{# <th>Description</th> #}
-										<th>actions</th>
+										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -126,33 +126,33 @@
 										<tr>
 											{% set count = count + 1 %}
 
-											<td>{{ count }}</td>
-											<td>{{ strategy }}</td>
-											<td>{{ strategy.objective|title }}</td>
+											<td style="vertical-align:middle;">{{ count }}</td>
+											<td style="vertical-align:middle;">{{ strategy }}</td>
+											<td style="vertical-align:middle;">{{ strategy.objective|raw }}</td>
 
 											<td>
 												<ul class="list-unstyled spaced">
 													{% for kpi in strategy.keyPerformanceIndicators %}
 														<li>
 															<i class="ace-icon fa fa-check green"></i>
-															{{kpi.name}}
+															{{kpi|raw}}
 														</li>
 
 													{% endfor %}
 												</ul>
 											</td>
-											<td>{{ strategy.objective.goal|title }}</td>
+											<td style="vertical-align:middle;">{{ strategy.objective.goal|title }}</td>
 											{# <td>{{ strategy.objective.perspective|title }}</td> #}
-											<td>
+											<td style="vertical-align:middle;">
 												{% if strategy.isActive %}
-													<span class="badge badge-success">Active</span>
+													<span class="badge badge-success">{% trans %}Active{% endtrans %}</span>
 												{% else %}
-													<span class="badge badge-danger">Deactived</span>
+													<span class="badge badge-danger">{% trans %}Deactive{% endtrans %}</span>
 												{% endif %}
 											</td>
 
 											{# <td>{{ strategy.description }}</td> #}
-											<td>
+											<td style="vertical-align:middle;">
 												{% if is_granted('vw_str_dtl') %}
 
 
@@ -200,7 +200,7 @@
 				<div class="modal-content">
 					<div class="modal-header bg-primary">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">New Strategy</h4>
+						<h4 class="modal-title"> {% trans %}New Strategy{% endtrans %}</h4>
 					</div>
 					<div class="modal-body">
 						<div class="form-group row">

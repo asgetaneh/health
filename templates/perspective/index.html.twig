@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
 {% block subTitle %}
-	<li class="active">{% trans %}Prespective{% endtrans %}</li>
+<li class="">{% trans %} SMIS{% endtrans %}</li>
+	<li class="active">{% trans %} Perspective{% endtrans %}</li>
 {% endblock %}
 {% block body %}
 
@@ -8,7 +9,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Perspective</h5>
+					<h5 class="widget-title bigger lighter">{% trans %} Perspective{% endtrans %}</h5>
 
 					<div class="widget-toolbar"></div>
 
@@ -32,7 +33,7 @@
 								<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 									<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 									{% trans %}
-									New perspective{% endtrans %}</a>
+									Add New {% endtrans %}</a>
 								{% endif %}
 								{# <form class="form-inline" method="post" style="display:inline;">
 									<input type="hidden" name="nonapplicable" value="nonapp"/>
@@ -63,23 +64,24 @@
 									</div>
 								</div>
 							</form>
+                            
 
-							<table class="table">
+							<table class="table table-bordered">
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Name</th>
-										<th>Description</th>
+										<th> {% trans %} Name{% endtrans %}</th>
+										<th>{% trans %}Description{% endtrans %}</th>
 
-										<th>actions</th>
+										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for perspective in perspectives %}
 										<tr>
-											<td>{{ loop.index }}</td>
-											<td>{{ perspective.name }}</td>
-											<td>{{ perspective.description }}</td>
+											<td style="vertical-align:middle;">{{ loop.index }}</td>
+											<td style="vertical-align:middle;">{{ perspective.name }}</td>
+											<td>{{ perspective.description|raw }}</td>
 
 											<td>
                                             {% if is_granted('vw_per_dtl') %}
@@ -112,7 +114,7 @@
 
 		<div id="myModal" class="modal fade" role="dialog">
 			<div
-				class="modal-dialog">
+				class="modal-dialog modal-lg ">
 
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -126,7 +128,7 @@
 
 							{% for f in form  %}
 								{% if f != form._token %}
-									<div class="form-group col-md-6">
+									<div class="form-group col-sm-12">
 										<label>{{ form_label(f) }}</label>
 										{{ form_widget(f) }}
 									</div>

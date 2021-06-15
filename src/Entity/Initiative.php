@@ -97,7 +97,7 @@ class Initiative implements TranslatableInterface
     /**
      * 
      * 
-     * @ORM\Column(type="integer", nullable=true,unique=true)
+     * @ORM\Column(type="integer", nullable=true,unique=false)
      */
     private $initiativeNumber;
 

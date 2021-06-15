@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\BehavioralPlanningAccomplishment;
+use App\Entity\Delegation;
 use App\Entity\Goal;
 use App\Entity\Initiative;
 use App\Entity\InitiativeAttribute;
@@ -18,6 +19,7 @@ use App\Entity\PrincipalOffice;
 use App\Entity\Strategy;
 use App\Entity\SuitableInitiative;
 use App\Form\PlanType;
+use App\Repository\InitiativeRepository;
 use App\Repository\PlanRepository;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -40,7 +42,11 @@ class PlanController extends AbstractController
     public function index(PlanRepository $planRepository, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
+
+        $delegation=$em->getRepository(Delegation::class)->findDelegationUser($this->getUser());
+        $delegationUser= $this->getDelegationUser($delegation);
+
+        $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser(),$delegationUser);
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
         if ($request->request->get('office') && $request->request->get('planyear')) {
 
@@ -112,9 +118,8 @@ class PlanController extends AbstractController
     }
 
 
-    private function getActivePlan($suitableInitiatives)
+ private function getActivePlan($suitableInitiatives)
     {
-
         $isAllActive = true;
         foreach ($suitableInitiatives as $suitableInitiative) {
             $plans = $suitableInitiative->getPlanningAccomplishments();
@@ -126,7 +131,17 @@ class PlanController extends AbstractController
         return  $isAllActive;
     }
 
-    private function findSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear)
+ private function getDelegationUser($delegations){
+        $user=array();
+        foreach($delegations as $delegation){
+         array_push($user,$delegation->getDelegatedBy());
+        }
+        return $user;
+
+    }
+
+
+ private function findSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear)
     {
 
         $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice, $planningyear);
@@ -328,16 +343,6 @@ class PlanController extends AbstractController
             }
 
 
-
-
-
-
-
-
-
-
-
-
             $suitableplan = $this->findSuitableInitiative($em,$planInitiative->getPrincipalOffice(),$planInitiative->getPlanningYear());
             // $em->get Repository(SuitableInitiative::class)->findByoffice($planInitiative->getPrincipalOffice(),  $planInitiative->getPlanningYear());
              $isallActive = $this->getActivePlan($suitableplan);
@@ -366,6 +371,21 @@ class PlanController extends AbstractController
 
         return $this->redirectToRoute('plan_index');
     }
+    /**
+     * @Route("/initiative", name="plan_initiative", methods={"GET","POST"})
+     */
+    public function initiative(InitiativeRepository $initiativeRepository,Request $request){
+      $em=$this->getDoctrine()->getManager();
+      $planyear=$em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
+      $office=$em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
+      $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($office->getId());
+      return $this->render('plan/initiative.html.twig',['initiatives'=>$initiatives,
+       'planyear'=> $planyear,
+        'pricipaloffice' =>   $office,
+      ]);
+
+    }
+    
     /**
      * @Route("/achievement", name="plan_achievement", methods={"GET","POST"})
      */

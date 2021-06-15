@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\PrincipalManager;
 use App\Entity\PrincipalOffice;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,12 @@ class PrincipalManagerType extends AbstractType
     {
         $builder
             
-        ->add('principal')
+        ->add('principal',EntityType::class,[
+                 'class'=>User::class,
+                 'choice_label' => 'userInfo',
+                
+            
+        ])
         ->add('principalOffice',EntityType::class,[
              'class' => PrincipalOffice::class,
                 'query_builder' => function (EntityRepository $er) {

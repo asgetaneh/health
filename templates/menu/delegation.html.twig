@@ -1,0 +1,18 @@
+{# {% if is_granted("usr_mgt") %} #}
+
+
+	
+	<li>
+		<a href="{{ path('delegation_index') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}Delegation List{% endtrans %}
+		</a>
+	</li>
+	<li>
+		<a href="{{ path('delegation_new') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}New Delagation
+			{% endtrans %}
+		</a>
+	</li>
+{# {% endif %} #}

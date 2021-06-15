@@ -22,7 +22,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{initiativestotal|length}}</strong>
+							<strong>{{ initiatives.getTotalItemCount()}}</strong>
 						</span>
 					</div>
 				</div>
@@ -113,7 +113,7 @@
 
 						</div>
 						<div class="table-responsive">
-							<form class="form-inline" method="post" style="display:inline;">
+							<form class="form-inline" method="get" style="display:inline;">
 
 								<div class="input-group">
 									<input type="text" class="form-control" name="search" placeholder="search"/>
@@ -129,8 +129,8 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Initiative</th>
-										<th>Initiative Behaviour</th>
+										<th>{% trans %}Initiative{% endtrans %}</th>
+										<th>{% trans %}Initiative Behaviour{% endtrans %}</th>
 
 
 										{# <th>MinValue</th> #}
@@ -139,14 +139,14 @@
 										{# <th>Objective</th> #}
 										{# <th>Goal</th> #}
 										<th>
-											principal Office
+											{% trans %}Principal Office{% endtrans %}
 										</th>
-										<th>Weight</th>
+										<th>{% trans %}Weight{% endtrans %}</th>
 										<th>
-											status
+											{% trans %}Status{% endtrans %}
 										</th>
 
-										{# <th>Description</th> #}
+										<th>Description</th>
 										<th>
 											actions
 										</th>
@@ -161,14 +161,10 @@
 												{{ initiative.initiativeNUmber }}
 											</td>
 											<td>
-												{{ initiative|title }}
+												{{ initiative }}
 											</td>
 											<td>
-												{% for init in initiative.initiativeBehaviour %}
-
-													{{ init.name }}
-
-												{% endfor %}
+												{{initiative.initiativeBehaviour }}
 											</td>
 											{# <td>{{ initiative.initiativeBehaviour.code }}</td> #}
 											{# <td>{{ initiative.maximumValue }}</td> #}
@@ -199,7 +195,7 @@
 													<span class="badge badge-danger">Deactived</span>
 												{% endif %}
 											</td>
-											{# <td>{{ initiative.description }}</td> #}
+											<td>{{ initiative.description|raw }}</td>
 
 											<td>
 												{% if is_granted('vw_intv_dtl') %}

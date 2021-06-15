@@ -73,14 +73,16 @@ class InitiativeRepository extends ServiceEntityRepository
     public function search($search=[]){
    
         $qb=$this->createQueryBuilder('i')
-        ->innerJoin('i.keyPerformanceIndicator','k')
-        ->innerJoin('k.strategy','s')
-        ->innerJoin('s.objective','o')
-         ->innerJoin('i.principalOffice','p')
+       
+       
     
         ;
         if(isset($search['goal']) && sizeof($search['goal'])>0){
-            $qb->andWhere('o.goal in (:goal)')
+            $qb
+             ->innerJoin('i.keyPerformanceIndicator','k')
+            ->innerJoin('k.strategy','s')
+            ->innerJoin('s.objective','o')
+            ->andWhere('o.goal in (:goal)')
             ->setParameter('goal',$search['goal']);
 
         }
@@ -90,12 +92,19 @@ class InitiativeRepository extends ServiceEntityRepository
             
         }
          if(isset($search['objective']) && sizeof($search['objective'])>0 ){
-            $qb->andWhere('s.objective in (:objective)')
+
+            $qb 
+             ->Join('i.keyPerformanceIndicator','k')
+            ->Join('k.strategy','s')
+            ->andWhere('s.objective in (:objective)')
             ->setParameter('objective',$search['objective']);
             
         }
          if(isset($search['strategy']) && sizeof($search['strategy'])>0 ){
-            $qb->andWhere('k.strategy in (:strategy)')
+
+            $qb 
+            ->Join('i.keyPerformanceIndicator','k')
+            ->andWhere('k.strategy in (:strategy)')
             ->setParameter('strategy',$search['strategy']);
             
         }
@@ -105,15 +114,17 @@ class InitiativeRepository extends ServiceEntityRepository
             
         }
          if(isset($search['principaloffice']) && sizeof($search['principaloffice'])>0 ){
-            $qb->andWhere('p.id in (:principalOffice)')
+            $qb
+              ->leftJoin('i.principalOffice','p')
+            ->andWhere('p.id in (:principalOffice)')
             ->setParameter('principalOffice',$search['principaloffice']);
             
         }
         if(isset($search['name']) ){
            
             $qb
-            ->join('i.translations','t')
-            ->andWhere("t.name  LIKE '%" . $search['name']. "%' ");
+            ->leftJoin('i.translations','t')
+            ->andWhere("t.name  LIKE '%".$search['name']."%' ");
         
 
             

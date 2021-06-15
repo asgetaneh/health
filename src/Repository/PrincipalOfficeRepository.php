@@ -66,13 +66,15 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function findOfficeByUser($user){
+    public function findOfficeByUser($user,$delegationuser=[]){
         $qb=$this->createQueryBuilder('po')
         ->join('po.principalManagers','pm')
-        ->andWhere('pm.principal = :user')
+        ->andWhere('pm.principal = :user or pm.principal in (:delegate)')
         ->andwhere('pm.isActive = 1')
         ->setParameter('user',$user)
+        ->setParameter('delegate',$delegationuser)
         ;
+      
         return $qb->getQuery()->getResult();
 
     }

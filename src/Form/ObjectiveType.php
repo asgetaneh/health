@@ -7,6 +7,7 @@ use App\Entity\Objective;
 use App\Entity\Perspective;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -30,15 +31,15 @@ class ObjectiveType extends AbstractType
                     'mapped' => false, 'label' => $key . " Translation Objective Name", 'required' => $value == "en", 'data' => $data->translate($value)->getName(),
                     'attr' => ['class' => 'form-control']
                 ])
-                ->add($value . "outPut", TextareaType::class, [
+                ->add($value . "outPut", CKEditorType::class, [
                     'mapped' => false, 'label' => $key . " Translation outPut", 'required' => $value == "en", 'data' => $data->translate($value)->getOutPut(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])
-                ->add($value . "outCome", TextareaType::class, [
+                ->add($value . "outCome", CKEditorType::class, [
                     'mapped' => false, 'label' => $key . " Translation oucome", 'required' => $value == "en", 'data' => $data->translate($value)->getOutCome(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])
-                ->add($value . "description", TextareaType::class, [
+                ->add($value . "description", CKEditorType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control']
                 ])

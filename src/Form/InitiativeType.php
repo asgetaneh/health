@@ -9,6 +9,7 @@ use App\Entity\KeyPerformanceIndicator;
 use App\Entity\PrincipalOffice;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -58,14 +59,14 @@ class InitiativeType extends AbstractType
                   
 
                 ])
-                ->add('baseline', null, [
+                // ->add('baseline', null, [
                    
-                    'attr' => ['class' => 'form-control'],
+                //     'attr' => ['class' => 'form-control'],
                     
                    
 
-                ])
-                ->add($value."description", TextareaType::class, [
+                // ])
+                ->add($value."description", CKEditorType::class, [
                     'mapped' => false, 'label' => $key . " Translation description", 'required' => $value == "en", 'data' => $data->translate($value)->getDescription(),
                     'attr' => ['class' => 'autosize-transition form-control'],
                      'required'=>false,

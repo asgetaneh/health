@@ -34,6 +34,7 @@ class StrategyController extends AbstractController
 
 
         $filterform = $this->createFormBuilder()
+            ->setMethod('Get')
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
                 'multiple' => true,
@@ -51,6 +52,7 @@ class StrategyController extends AbstractController
                 'required' => false,
 
             ])
+            
             ->getForm();
         $filterform->handleRequest($request);
 
@@ -95,15 +97,15 @@ class StrategyController extends AbstractController
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             $strategies = $strategyRepository->search($filterform->getData());
-        } elseif ($request->request->get('search')) {
-            $strategies = $strategyRepository->search(['name' => $request->request->get('search')]);
+        } elseif ($request->query->get('search')) {
+            $strategies = $strategyRepository->search(['name' => $request->query->get('search')]);
         } else
 
             $strategies = $strategyRepository->findAlls();
         $data = $paginator->paginate(
             $strategies,
             $request->query->getInt('page', 1),
-            6
+            4
         );
 
         return $this->render('strategy/index.html.twig', [

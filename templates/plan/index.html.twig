@@ -13,13 +13,13 @@
 					<li class="active">
 						<a data-toggle="tab" href="#home" class="lead text-primary" aria-expanded="true">
 
-						<strong>Cascading</strong>	
+							<strong>{% trans %}Cascading{% endtrans %}</strong>
 						</a>
 					</li>
 
 					<li class="">
 						<a data-toggle="tab" href="#messages" aria-expanded="false" class="lead">
-						<strong>Initiative</strong>	
+							<strong>Initiative</strong>
 
 						</a>
 					</li>
@@ -34,7 +34,7 @@
 									<ul class="steps">
 										<li data-step="1" class={% if initiatives is defined or suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " active" {% endif %}>
 											<span class="step">1</span>
-											<span class="title text-primary">Select Reporting Year And Office</span>
+											<span class="title text-primary">{% trans %}Select Reporting Year And Office{% endtrans %}</span>
 										</li>
 
 										<li data-step="2" class={% if initiatives is defined %} "active" {% elseif suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " " {% endif %}>
@@ -42,26 +42,27 @@
 
 											<span class="step">2</span>
 											<span class="title">
-												Select Suitable Initiative with your teammates
+												{% trans %}Select Suitable Initiative with your teammates{% endtrans %}
 											</span>
 										</li>
 
-										<li data-step="3" class={% if suitableInitiatives is defined and isAllActive == false %} "active" {% elseif isAllActive is defined and isAllActive == true %} "complete" {% elseif suitableplans is defined %} "complete" {% endif %}>
+										<li data-step="3" class={% if (isAllActive is defined and isAllActive == false and suitableplans is defined ) or operational_office_report is defined and operational_office_report == false %} "active" {% elseif isAllActive is defined and isAllActive == true or operational_office_report is defined and operational_office_report == true %} "complete" {% endif %}>
 											<span class="step" class=>3</span>
-											<span class="title">Set PO’s Yearly plan with AC/ teams
+											<span class="title">{% trans %}Set PO’s Yearly plan with AC/ teams{% endtrans %}
 											</span>
 										</li>
 
-										<li data-step="4" class={% if suitableplans is defined or (isAllActive is defined and isAllActive == true) %} "active" {% endif %}>
+										<li data-step="4" class={% if (isAllActive is defined and isAllActive == true) %} "active" {% endif %}>
 											<span class="step">4</span>
 											<span class="title">
-												Accept Operational Managers’ report
+												{% trans %}Accept Operational Managers’ report{% endtrans %}
 											</span>
 										</li>
 										<li data-step="5">
 											<span class="step">5</span>
 											<span class="title">
-												Send report to JU
+												{% trans %}
+												Send report to JU{% endtrans %}
 											</span>
 										</li>
 									</ul>
@@ -69,7 +70,7 @@
 								<div class="well well-sm">
 									<button type="reset" id="reset-widgets" class="btn btn-info btn-white btn-bold btn-round" data-toggle="modal" data-target="#myModal">
 										<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-										<strong>Select Report Year and Office</strong>
+										<strong>{% trans %}Select Report Year and Office{% endtrans %}</strong>
 									</button>
 									<div class="pull-right">
 										{% if pricipaloffice is defined %}
@@ -90,17 +91,6 @@
 							</div>
 
 
-							<div class="widget-body">
-								<div class="widget-main">
-									{% if isAllActive is defined  and isAllActive %}{% endif %}
-
-
-								</div>
-
-
-							</div>
-							<!-- /.widget-main -->
-
 							<!-- /.widget-body -->
 
 							{% if suitableplans is defined  and operational_office_report is defined and operational_office_report == false  %}
@@ -116,7 +106,7 @@
 									<div class="widget-box widget-color-blue" id="widget-box-8">
 										<div class="widget-header">
 											<h5 class="widget-title bigger lighter">
-												<strong>Suitable Initiative</strong>
+												<strong>{% trans %}Suitable Initiative{% endtrans %}</strong>
 											</h5>
 											<div class="widget-toolbar"></div>
 											<div class="widget-toolbar">
@@ -138,54 +128,54 @@
 											<div class="widget-main padding-16">
 												<div
 													class="row">{# <div class="search-area well col-xs-12">
-																																									<div></div>
-																																									<div class="pull-left">
-																																		
-																																		
-																																										<form class="form-inline" method="post" style="display:inline;">
-																																		
-																																											<div class="input-group">
-																																												<input type="text" class="form-control" name="search" placeholder="search"/>
-																																												<div class="input-group-btn">
-																																													<button type="submit" class="btn btn-default no-border btn-sm">
-																																														<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																													</button>
-																																												</div>
-																																											</div>
-																																										</form>
-																																		
-																																									</div>
-																																		
-																																		
-																																									<div class="pull-right">
-																																										<div class="widget-toolbar no-border">
-																																		
-																																		
-																																											<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-																																												<b class="text-primary">Action</b>
-																																												<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-																																											</button>
-																																		
-																																											<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																																												<li>
-																																													<a href="#" id="suitablebutton">
-																																														<i class="ace-icon fa fa-stop green"></i>
-																																														Select As Suitable</a>
-																																												</li>
-																																		
-																																												<li>
-																																		
-																																													<a href="#">
-																																														<i class="ace-icon fa fa-stop pink2"></i>
-																																														Select As Non Suitable</a>
-																																												</li>
-																																		
-																																		
-																																											</ul>
-																																										</div>
-																																		
-																																									</div>
-																																								</div> #}
+																																																																					<div></div>
+																																																																					<div class="pull-left">
+																																																														
+																																																														
+																																																																						<form class="form-inline" method="post" style="display:inline;">
+																																																														
+																																																																							<div class="input-group">
+																																																																								<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																								<div class="input-group-btn">
+																																																																									<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																										<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																									</button>
+																																																																								</div>
+																																																																							</div>
+																																																																						</form>
+																																																														
+																																																																					</div>
+																																																														
+																																																														
+																																																																					<div class="pull-right">
+																																																																						<div class="widget-toolbar no-border">
+																																																														
+																																																														
+																																																																							<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																																																																								<b class="text-primary">Action</b>
+																																																																								<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																																																																							</button>
+																																																														
+																																																																							<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																																																																								<li>
+																																																																									<a href="#" id="suitablebutton">
+																																																																										<i class="ace-icon fa fa-stop green"></i>
+																																																																										Select As Suitable</a>
+																																																																								</li>
+																																																														
+																																																																								<li>
+																																																														
+																																																																									<a href="#">
+																																																																										<i class="ace-icon fa fa-stop pink2"></i>
+																																																																										Select As Non Suitable</a>
+																																																																								</li>
+																																																														
+																																																														
+																																																																							</ul>
+																																																																						</div>
+																																																														
+																																																																					</div>
+																																																																				</div> #}
 
 												</div>
 												<div class="table-responsive">
@@ -264,8 +254,8 @@
 																	</td>
 																	<td>
 																		{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																		<i class="fa fa-eye"></i>
-																																																																																																	</a> #}
+																																																																																																																																						<i class="fa fa-eye"></i>
+																																																																																																																																					</a> #}
 
 																		<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
 																			<span class="glyphicon glyphicon-plus"></span>
@@ -299,169 +289,20 @@
 							{% endif %}
 
 							{% if initiatives is defined %}
-								<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-									<div class="widget-box widget-color-blue" id="widget-box-8">
-										<div class="widget-header">
-											<h5 class="widget-title bigger lighter">
-												<strong>Recommended Initiatives</strong>
-											</h5>
-											<div class="widget-toolbar"></div>
-											<div class="widget-toolbar">
-												<span class="badge badge-info">
-													{% trans %}Total{% endtrans %}
-													:{{initiatives|length}}
-													<strong></strong>
-												</span>
-											</div>
-										</div>
-										<div class="widget-body">
-											<div class="widget-toolbox" id="widget-toolbox-1">
-												<div class="btn-toolbar">
-													<div class="btn-group"></div>
-
-
-												</div>
-											</div>
-											<div class="widget-main padding-16">
-												<div class="row">
-													<div class="search-area col-md-12">
-														<div>
-															{# <form action="" class="form-inline" method="get">
-																																																																						<div class="form-group">
-																																																																							<input type="text">
-																																																																						</div>
-																																																																						<div class="form-group">
-																																																																							<input type="text">
-																																																																						</div>
-																																																													
-																																																													
-																																																																						<div class="form-group"><input type="button" value="submit"></div>
-																																																													
-																																																																					</form> #}
-
-														</div>
-														<div
-															class="pull-left">{# <form class="form-inline" method="post" style="display:inline;">
-																																																																			
-																																																																												<div class="input-group">
-																																																																													<input type="text" class="form-control" name="search" placeholder="search"/>
-																																																																													<div class="input-group-btn">
-																																																																														<button type="submit" class="btn btn-default no-border btn-sm">
-																																																																															<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																																																														</button>
-																																																																													</div>
-																																																																												</div>
-																																																																											</form> #}
-
-														</div>
-
-
-														<div class="pull-right">
-															<div class="widget-toolbar no-border">
-
-
-																<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
-																	<b class="text-primary">Action</b>
-																	<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-																</button>
-
-																<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
-																	<li>
-																		<a href="#" id="suitablebutton">
-																			<i class="ace-icon fa fa-stop green"></i>
-																			Select As Suitable</a>
-																	</li>
-
-																	<li>
-
-																		<a href="#">
-																			<i class="ace-icon fa fa-stop pink2"></i>
-																			Select As Non Suitable</a>
-																	</li>
-
-
-																</ul>
-															</div>
-
-														</div>
-													</div>
-													<div class="table-responsive col-md-12">
-
-
-														<table class="table table-striped table-bordered table-hover">
-															<div class="table-header"></div>
-															<thead>
-																<tr>
-																	<th class="text-center">
-																		<label class="inline">
-
-																			<input type="checkbox" name="initiative[]" id="checkall" value="" class="ace">
-																			<span class="lbl"></span>
-																		</label>
-																	</th>
-																	<th>#</th>
-																	<th>Name</th>
-																	<th>Weight</th>
-																	<th>description</th>
-																	<th>actions</th>
-																</tr>
-															</thead>
-															<tbody>
-																{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
-																<form action="{{path('plan_index')}}" id="initiative_form" method="post">
-																	<input type="hidden" name="planyear" value="{{planyear.id}}">
-																	<input type="hidden" name="office" value="{{pricipaloffice.id}}">
-
-																	{% for initiative in initiatives %}
-																		<tr>
-
-
-																			<td class="text-center">
-																				<label class="inline">
-																					<input type="checkbox" name="initiative[]" value="{{initiative.id}}" class="ace" required>
-																					<span class="lbl"></span>
-																				</label>
-																			</td>
-																			<td>{{ loop.index}}
-
-																			</td>
-																			<td>{{ initiative.name }}</td>
-																			<td>{{ initiative.minimumValue }}</td>
-
-																			<td>{{ initiative.description }}</td>
-																			<td>
-																				<a href="{{ path('initiative_show', {'id': initiative.id}) }}" class="btn btn-primary btn-sm">
-																					<i class="fa fa-eye"></i>
-																				</a>
-
-
-																			</td>
-																		</tr>
-																	{% else %}
-																		<tr>
-																			<td colspan="8">no records found</td>
-																		</tr>
-																	{% endfor %}
-																</form>
-															</tbody>
-														</table>
-														{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
-
-													</div>
-												</div>
-
-
-											</div>
-										</div>
-									</div>
-								</div>
+								{{ include('plan/initiative_recommend.html.twig') }}
 							{% endif %}
 						</div>
 					</div>
 				</div>
 				<div id="messages" class="tab-pane fade">
 					<div class="row">
-						<div class="col-md-12"></div>
+						{% if planyear is defined %}
+							{{ render(controller('App\\Controller\\PlanController::initiative',{},{'planyear': planyear.id,'office':pricipaloffice.id })) }}
+
+						{% endif %}
+						{# {{  }} #}
+					{# {{ render({{ controller(controller, {attributes}, {query}) }}, {options}) }} #}
+						{# {{ include('plan/initiative.html.twig') }} #}
 					</div>
 				</div>
 			</div>

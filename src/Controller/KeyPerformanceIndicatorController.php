@@ -35,6 +35,7 @@ class KeyPerformanceIndicatorController extends AbstractController
 
 
         $filterform = $this->createFormBuilder()
+            ->setMethod('Get')
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
                 'multiple' => true,
@@ -66,7 +67,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
 
-                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value."description"]);
+                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value . "description"]);
             }
             $keyPerformanceIndicator->setCreatedAt(new \DateTime());
             $keyPerformanceIndicator->setIsActive(1);
@@ -100,8 +101,8 @@ class KeyPerformanceIndicatorController extends AbstractController
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             $keyPerformanceIndicators = $keyPerformanceIndicatorRepository->search($filterform->getData());
-        } elseif ($request->request->get('search')) {
-            $keyPerformanceIndicators = $keyPerformanceIndicatorRepository->search(['name' => $request->request->get('search')]);
+        } elseif ($request->query->get('search')) {
+            $keyPerformanceIndicators = $keyPerformanceIndicatorRepository->search(['name' => $request->query->get('search')]);
         } else
 
             $keyPerformanceIndicators = $keyPerformanceIndicatorRepository->findAlls();
@@ -109,7 +110,7 @@ class KeyPerformanceIndicatorController extends AbstractController
         $data = $paginator->paginate(
             $keyPerformanceIndicators,
             $request->query->getInt('page', 1),
-            6
+            5
         );
 
         return $this->render('key_performance_indicator/index.html.twig', [
@@ -164,16 +165,16 @@ class KeyPerformanceIndicatorController extends AbstractController
         $this->denyAccessUnlessGranted('edt_kpi');
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
-         $locales=Helper::locales();
+        $locales = Helper::locales();
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
 
-                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value."description"]);
+                $keyPerformanceIndicator->translate($value)->setDescription($request->request->get('key_performance_indicator')[$value . "description"]);
             }
-             $keyPerformanceIndicator->mergeNewTranslations();
-             $this->getDoctrine()->getManager()->flush();
+            $keyPerformanceIndicator->mergeNewTranslations();
+            $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', "edited successfuly");
 
 
