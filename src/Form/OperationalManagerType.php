@@ -13,7 +13,12 @@ class OperationalManagerType extends AbstractType
     {
         $builder
           
-            ->add('manager')
+            ->add('manager',EntityType::class,[
+                 'class'=>User::class,
+                 'choice_label' => 'userInfo',
+                
+            
+        ])
             ->add('operationalOffice')
         ;
     }

@@ -146,7 +146,7 @@
 											{% trans %}Status{% endtrans %}
 										</th>
 
-										<th>Description</th>
+										{# <th>Description</th> #}
 										<th>
 											actions
 										</th>
@@ -175,11 +175,13 @@
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
 												<td>
+                                                {% set count = 0 %}
 													<ul class="list-unstyled"> {% for office in initiative.principalOffice %}
 
 
 														<li>
-															<i class="ace-icon fa fa-check green"></i>
+                                                        {% set count = count + 1 %}
+															{{count}},
 															{{office}}
 														</li>
 													{% endfor %}
@@ -195,16 +197,16 @@
 													<span class="badge badge-danger">Deactived</span>
 												{% endif %}
 											</td>
-											<td>{{ initiative.description|raw }}</td>
+											{# <td>{{ initiative.description|raw }}</td> #}
 
 											<td>
 												{% if is_granted('vw_intv_dtl') %}
 
 
-													<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details">show</a>
+													<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
 												{% endif %}
 												{% if is_granted('edt_intv') %}
-													<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit">edit</a>
+													<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
 												{% endif %}
 												{% if is_granted('act_intv') or is_granted('deact_intv')  %}
 													<form class="" style="display:inline;" action="" method="post">
