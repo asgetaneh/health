@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\OperationalOffice;
 use App\Entity\Performer;
+use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -16,7 +17,12 @@ class PerformerType extends AbstractType
     {
         $builder
            
-            ->add('performer')
+              ->add('performer',EntityType::class,[
+                 'class'=>User::class,
+                 'choice_label' => 'userInfo',
+                
+            
+        ])
             ->add('operationalOffice',EntityType::class,[
                 'class'=>OperationalOffice::class,
                  'query_builder' => function (EntityRepository $er) {

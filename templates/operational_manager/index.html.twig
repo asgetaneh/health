@@ -72,13 +72,13 @@
 								
 								<td>
 									
-                                       {{operational_manager.manager}}  
+                                       {{operational_manager.manager.userInfo}}  
 										
 
 								</td>
                                 <td>{{ operational_manager.operationalOffice}}</td>
                                 <td>{% for principal_manager in operational_manager.operationalOffice.principalOffice.principalManagers|filter(principal => principal.isActive == true) %}
-                                    {{principal_manager.principal}}
+                                    {{principal_manager.principal.userInfo}}
                                 {% endfor %}</td>
                                  <td>{{ operational_manager.operationalOffice.principalOffice}}
                               
