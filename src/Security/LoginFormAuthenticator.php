@@ -165,13 +165,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         } else if (in_array("admin", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('task_index'));
+            return new RedirectResponse($this->urlGenerator->generate('startegic_plan'));
         else if (in_array("Request", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('task_index'));
+            return new RedirectResponse($this->urlGenerator->generate('startegic_plan'));
         else if (in_array("Approve", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('task_index'));
+            return new RedirectResponse($this->urlGenerator->generate('startegic_plan'));
         else
-            return new RedirectResponse($this->urlGenerator->generate('task_index'));
+            return new RedirectResponse($this->urlGenerator->generate('startegic_plan'));
 
         // return new RedirectResponse($this->urlGenerator->generate('cluster_index'));
         throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
