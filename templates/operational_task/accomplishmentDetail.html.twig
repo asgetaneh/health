@@ -54,7 +54,7 @@
 								{% if remainingdays <= 10 %}
 									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
 
-									<button type="submit" class="btn btn-success">Send To Principal
+									<button type="submit" class="btn btn-success">Send  To Principal
 									</button>
 								{% else %}
 									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
@@ -74,6 +74,7 @@
 
 								{% set accomp = 0 %}
 								{% set planValue = 0 %}
+								{% set weight_total = 0 %}
 								{% set total = 0 %}
 								{% set sex = 0 %}
 								{% set sexid = 0 %}
@@ -108,6 +109,8 @@
 													<td>{{ performerTask.weight }}</td>
 													<td>{{ performerTask.quarter }}</td>
 													<td>{{ performerTask.social }}</td>
+													{% set weight_total  =  weight_total + performerTask.weight  %}
+
 
 													<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
 													{% if social %}
@@ -178,6 +181,7 @@
 											<tr>
 												<td colspan="2">Grand total</td>
 												<td>{{ grand_total | number_format(2, '.',',') }}
+													{# {{weight_total}} #}
 												</td>
 											</tr>
 											<tr>
@@ -188,29 +192,29 @@
 												<td>
 													{% if social == 1 %}
 
-														{% set percentPLan = ((((grand_total * planValue) * 2) / 100) * 100 ) / planValue %}
+														{% set percentPLan = ((( grand_total * planValue)  / weight_total) * 100 ) / planValue %}
 														{% if percentPLan | number_format (2, '.','.') > 100 %}
 															<div class="badge badge-primary">
-																{{ (((grand_total * planValue) * 2) / 100) | number_format }}
+																{{ ((grand_total * planValue)  / weight_total) | number_format }}
 
 															</div>
 														{% elseif percentPLan | number_format (2, '.','.') <= 100 and percentPLan | number_format (2, '.','.') >= 75 %}
 															<div class="badge badge-success">
-																{{ (((grand_total * planValue) * 2) / 100) | number_format }}
+																{{ ((grand_total * planValue)  / weight_total) | number_format }}
 
 															</div>
 														{% elseif percentPLan | number_format (2, '.','.') <= 74 and percentPLan | number_format (2, '.','.') >= 50 %}
 															<div class="badge badge-warning">
-																{{ (((grand_total * planValue) * 2) / 100) | number_format }}
+																{{ ((grand_total * planValue)  / weight_total) | number_format }}
 
 															</div>
 														{% else %}
 															<div class="badge badge-danger">
-																{{ (((grand_total * planValue) * 2)  / 100) | number_format }}
+																{{ ((grand_total * planValue)   / weight_total) | number_format }}
 
 															</div>
 														{% endif %}
-														<input type="hidden" name="accomp" value="{{(((grand_total * planValue) * 2) / 100) | number_format(2, '.',',')}}">
+														<input type="hidden" name="accomp" value="{{((grand_total * planValue) / weight_total) | number_format(2, '.',',')}}">
 													{% else %}
 														{% set percentPLan = (((grand_total * planValue)  / 100) * 100 ) / planValue %}
 														{% if percentPLan | number_format (2, '.','.') > 100 %}

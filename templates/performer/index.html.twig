@@ -75,13 +75,13 @@
 								
 								<td>
 									
-                                       {{performer.performer}}  
+                                       {{performer.performer.userInfo}}  
 										
 
 								</td>
                                 <td>{{ performer.operationalOffice}}</td>
                                  <td> {% for manager in performer.operationalOffice.operationalManagers|filter(manager => manager.isActive == true) %}
-                                    {{manager.manager}} 
+                                    {{manager.manager.userInfo}} 
                                     {% else %}
                                         {{"__"}}
                                  {% endfor %}
