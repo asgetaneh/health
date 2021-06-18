@@ -67,6 +67,8 @@ class KeyPerformanceIndicator implements TranslatableInterface
     *
     */
    private $kpiNumber;
+
+   
     public function __toString()
     {
         return $this->getName();
@@ -81,6 +83,7 @@ class KeyPerformanceIndicator implements TranslatableInterface
     {
         $this->initiatives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+       
     }
 
     
@@ -222,4 +225,6 @@ class KeyPerformanceIndicator implements TranslatableInterface
 
         return $this;
     }
+
+   
 }

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EnrollmentType index{% endblock %}
+
+{% block body %}
+    <h1>EnrollmentType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>ShortName</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enrollment_type in enrollment_types %}
+            <tr>
+                <td>{{ enrollment_type.id }}</td>
+                <td>{{ enrollment_type.name }}</td>
+                <td>{{ enrollment_type.shortName }}</td>
+                <td>{{ enrollment_type.description }}</td>
+                <td>
+                    <a href="{{ path('enrollment_type_show', {'id': enrollment_type.id}) }}">show</a>
+                    <a href="{{ path('enrollment_type_edit', {'id': enrollment_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('enrollment_type_new') }}">Create new</a>
+{% endblock %}

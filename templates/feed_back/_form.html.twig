@@ -1,4 +1,6 @@
+<div class="well col-md-8 center" style="margin-top:10px;">
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <button class="btn btn-white btn-info pull-right">{{ button_label|default('submit') }}</button>
 {{ form_end(form) }}
+</div>

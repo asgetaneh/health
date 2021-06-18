@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QuarterAccomplishment index{% endblock %}
+
+{% block body %}
+    <h1>QuarterAccomplishment index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>AchievementValue</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for quarter_accomplishment in quarter_accomplishments %}
+            <tr>
+                <td>{{ quarter_accomplishment.id }}</td>
+                <td>{{ quarter_accomplishment.achievementValue }}</td>
+                <td>
+                    <a href="{{ path('quarter_accomplishment_show', {'id': quarter_accomplishment.id}) }}">show</a>
+                    <a href="{{ path('quarter_accomplishment_edit', {'id': quarter_accomplishment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('quarter_accomplishment_new') }}">Create new</a>
+{% endblock %}

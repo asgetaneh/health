@@ -47,77 +47,87 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
-     public function findDuplication($suitableinitiative,$attrib=null,$quarter){
-      $qb=$this->createQueryBuilder('pa');
-      $qb
-      ->andWhere('pa.suitableInitiative = :plan')
-        ->andWhere('pa.quarter = :quarter')
-        ->setParameter('plan',$suitableinitiative)
-      ->setParameter('quarter',$quarter);
-      if ($attrib) {
-         $qb->andWhere('pa.socialAttribute = :attrib')
-    
-    
-          ->setParameter('attrib',$attrib);
-      }
+    public function findDuplication($suitableinitiative, $attrib = null, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        $qb
+            ->andWhere('pa.suitableInitiative = :plan')
+            ->andWhere('pa.quarter = :quarter')
+            ->setParameter('plan', $suitableinitiative)
+            ->setParameter('quarter', $quarter);
+        if ($attrib) {
+            $qb->andWhere('pa.socialAttribute = :attrib')
 
-      
-      return $qb->getQuery()->getOneOrNullResult();
-      
-    }
-    
-    
-     public function findBySuitable($suitable){
-      $qb=$this->createQueryBuilder('pa');
-      $qb->join('pa.plan','pl')
-      ->andwhere('pl.suitableInitiative in (:suitin)')
-      ->setParameter('suitin',$suitable);
-      return $qb->getQuery()->getResult();
-      
-    }
-     public function findplanAccomp($suitable,$social){
-      $qb=$this->createQueryBuilder('pa')
-      ->leftjoin('pa.socialAttribute','sa')
-      ->andwhere('pa.suitableInitiative = :suitin')
-     ->andwhere('sa.id = :name')
-      ->setParameter('suitin',$suitable)
-     ->setParameter('name',$social);
 
-      return $qb->getQuery()->getResult();
-      
-    }
-    public function findplanAccwithoutSocial($suitable,$principal,$quarter){
-      $qb=$this->createQueryBuilder('pa')
-      ->leftJoin('pa.suitableInitiative','si')
-      ->andwhere('pa.suitableInitiative = :suitin')
-     ->andwhere('si.principalOffice = :principal')
-          ->andwhere('pa.quarter = :quarter')
-      ->setParameter('suitin',$suitable)
-            ->setParameter('quarter',$quarter)
+                ->setParameter('attrib', $attrib);
+        }
 
-     ->setParameter('principal',$principal);
 
-      return $qb->getQuery()->getResult();
-      
+        return $qb->getQuery()->getOneOrNullResult();
     }
-    
-    public function findplanAcc($suitable,$social,$principal,$quarter){
-      $qb=$this->createQueryBuilder('pa')
-      ->leftjoin('pa.socialAttribute','sa')
-      ->leftJoin('pa.suitableInitiative','si')
-      ->andwhere('pa.suitableInitiative = :suitin')
-                ->andwhere('pa.quarter = :quarter')
+
+
+    public function findBySuitable($suitable)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        $qb->join('pa.plan', 'pl')
+            ->andwhere('pl.suitableInitiative in (:suitin)')
+            ->setParameter('suitin', $suitable);
+        return $qb->getQuery()->getResult();
+    }
+    public function findplanAccomp($suitable, $social)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            ->leftjoin('pa.socialAttribute', 'sa')
+            ->andwhere('pa.suitableInitiative = :suitin')
+            ->andwhere('sa.id = :name')
+            ->setParameter('suitin', $suitable)
+            ->setParameter('name', $social);
+
+        return $qb->getQuery()->getResult();
+    }
+    public function findplanAccwithoutSocial($suitable, $principal, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            ->leftJoin('pa.suitableInitiative', 'si')
+            ->andwhere('pa.suitableInitiative = :suitin')
+            ->andwhere('si.principalOffice = :principal')
+            ->andwhere('pa.quarter = :quarter')
+            ->setParameter('suitin', $suitable)
+            ->setParameter('quarter', $quarter)
+
+            ->setParameter('principal', $principal);
+
+        return $qb->getQuery()->getResult();
+    }
+    public function findByQuarter($suitable, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+           
+            ->andwhere('pa.suitableInitiative = :suitin')
+
+            ->andwhere('pa.quarter = :quarter')
+            // ->andWhere('pa.accompValue is not null')
+            ->setParameter('suitin', $suitable)
+            ->setParameter('quarter', $quarter);
+       
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findplanAcc($suitable, $social, $principal, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            ->leftjoin('pa.socialAttribute', 'sa')
+            ->leftJoin('pa.suitableInitiative', 'si')
+            ->andwhere('pa.suitableInitiative = :suitin')
+            ->andwhere('pa.quarter = :quarter')
             ->andwhere('si.principalOffice = :princiapl')
-     ->andwhere('sa.id = :name')
-      ->setParameter('suitin',$suitable)
-                  ->setParameter('quarter',$quarter)
-            ->setParameter('princiapl',$principal)
-     ->setParameter('name',$social);
+            ->andwhere('sa.id = :name')
+            ->setParameter('suitin', $suitable)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('princiapl', $principal)
+            ->setParameter('name', $social);
 
-      return $qb->getQuery()->getResult();
-      
+        return $qb->getQuery()->getResult();
     }
-    
-    
-
 }

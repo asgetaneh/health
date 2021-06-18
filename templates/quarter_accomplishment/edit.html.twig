@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit QuarterAccomplishment{% endblock %}
+
+{% block body %}
+    <h1>Edit QuarterAccomplishment</h1>
+
+    {{ include('quarter_accomplishment/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('quarter_accomplishment_index') }}">back to list</a>
+
+    {{ include('quarter_accomplishment/_delete_form.html.twig') }}
+{% endblock %}

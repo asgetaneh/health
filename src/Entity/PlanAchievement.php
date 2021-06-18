@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlanAchievementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,7 +36,7 @@ class PlanAchievement
     private $Objective;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="decimal", precision=10, scale=2,nullable=true)
      */
     private $accomplishmentValue;
 
@@ -49,9 +51,16 @@ class PlanAchievement
     private $initiative;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Strategy::class, inversedBy="planAchievements")
+     * @ORM\OneToMany(targetEntity=QuarterAccomplishment::class, mappedBy="yearPlan")
      */
-    private $strategy;
+    private $quarterAccomplishments;
+
+    public function __construct()
+    {
+        $this->quarterAccomplishments = new ArrayCollection();
+    }
+
+    
 
     public function getId(): ?int
     {
@@ -130,15 +139,35 @@ class PlanAchievement
         return $this;
     }
 
-    public function getStrategy(): ?Strategy
+    /**
+     * @return Collection|QuarterAccomplishment[]
+     */
+    public function getQuarterAccomplishments(): Collection
     {
-        return $this->strategy;
+        return $this->quarterAccomplishments;
     }
 
-    public function setStrategy(?Strategy $strategy): self
+    public function addQuarterAccomplishment(QuarterAccomplishment $quarterAccomplishment): self
     {
-        $this->strategy = $strategy;
+        if (!$this->quarterAccomplishments->contains($quarterAccomplishment)) {
+            $this->quarterAccomplishments[] = $quarterAccomplishment;
+            $quarterAccomplishment->setYearPlan($this);
+        }
 
         return $this;
     }
+
+    public function removeQuarterAccomplishment(QuarterAccomplishment $quarterAccomplishment): self
+    {
+        if ($this->quarterAccomplishments->removeElement($quarterAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($quarterAccomplishment->getYearPlan() === $this) {
+                $quarterAccomplishment->setYearPlan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 }

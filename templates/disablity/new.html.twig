@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Disablity{% endblock %}
+
+{% block body %}
+    <h1>Create new Disablity</h1>
+
+    {{ include('disablity/_form.html.twig') }}
+
+    <a href="{{ path('disablity_index') }}">back to list</a>
+{% endblock %}

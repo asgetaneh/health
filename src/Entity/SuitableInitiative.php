@@ -75,6 +75,7 @@ class SuitableInitiative
      */
     private $status;
 
+   
     
 
 
@@ -85,6 +86,7 @@ class SuitableInitiative
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
         $this->operationalInitiatives = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
+      
     }
 
     public function getId(): ?int
@@ -299,5 +301,6 @@ class SuitableInitiative
 
 }
 
+    
 
 }

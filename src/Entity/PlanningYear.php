@@ -71,12 +71,18 @@ class PlanningYear
      */
     private $planAchievements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=QuarterAccomplishment::class, mappedBy="year")
+     */
+    private $quarterAccomplishments;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
       
         $this->suitableInitiatives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+        $this->quarterAccomplishments = new ArrayCollection();
     }
     public function __toString()
     {
@@ -265,6 +271,36 @@ class PlanningYear
             // set the owning side to null (unless already changed)
             if ($planAchievement->getYear() === $this) {
                 $planAchievement->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuarterAccomplishment[]
+     */
+    public function getQuarterAccomplishments(): Collection
+    {
+        return $this->quarterAccomplishments;
+    }
+
+    public function addQuarterAccomplishment(QuarterAccomplishment $quarterAccomplishment): self
+    {
+        if (!$this->quarterAccomplishments->contains($quarterAccomplishment)) {
+            $this->quarterAccomplishments[] = $quarterAccomplishment;
+            $quarterAccomplishment->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuarterAccomplishment(QuarterAccomplishment $quarterAccomplishment): self
+    {
+        if ($this->quarterAccomplishments->removeElement($quarterAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($quarterAccomplishment->getYear() === $this) {
+                $quarterAccomplishment->setYear(null);
             }
         }
 

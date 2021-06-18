@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit EnrollmentType{% endblock %}
+
+{% block body %}
+    <h1>Edit EnrollmentType</h1>
+
+    {{ include('enrollment_type/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('enrollment_type_index') }}">back to list</a>
+
+    {{ include('enrollment_type/_delete_form.html.twig') }}
+{% endblock %}

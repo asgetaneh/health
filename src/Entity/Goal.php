@@ -54,6 +54,8 @@ class Goal implements TranslatableInterface
      private $planAchievements;
 
     
+
+    
     public function __toString()
 
     {
@@ -71,6 +73,7 @@ class Goal implements TranslatableInterface
     {
         $this->objectives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+       
        
     }
 
@@ -176,6 +179,8 @@ class Goal implements TranslatableInterface
 
         return $this;
     }
+
+    
 
     
 }

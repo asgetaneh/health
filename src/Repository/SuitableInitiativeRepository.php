@@ -58,6 +58,16 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    public function findByYear($initiative,$planyear){
+        $qb=$this->createQueryBuilder('s');
+        $qb->andwhere('s.initiative = :initiative')
+        ->andwhere('s.planningYear = :planyear')
+        ->setParameter('planyear',$planyear)
+       
+        ->setParameter('initiative',$initiative);
+        return $qb->getQuery()->getResult();
+
+    }
     public function findByoffice($principaloffice,$planyear){
         $qb=$this->createQueryBuilder('s')
         ->andWhere('s.principalOffice = :office')

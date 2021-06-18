@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sposnsorship index{% endblock %}
+
+{% block body %}
+    <h1>Sposnsorship index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sposnsorship in sposnsorships %}
+            <tr>
+                <td>{{ sposnsorship.id }}</td>
+                <td>{{ sposnsorship.name }}</td>
+                <td>{{ sposnsorship.description }}</td>
+                <td>
+                    <a href="{{ path('sposnsorship_show', {'id': sposnsorship.id}) }}">show</a>
+                    <a href="{{ path('sposnsorship_edit', {'id': sposnsorship.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('sposnsorship_new') }}">Create new</a>
+{% endblock %}

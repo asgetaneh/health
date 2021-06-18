@@ -116,6 +116,8 @@ class Initiative implements TranslatableInterface
      */
     private $weight;
 
+   
+
 
     public function __construct()
     {
@@ -125,6 +127,7 @@ class Initiative implements TranslatableInterface
         $this->socialAtrribute = new ArrayCollection();
         // $this->initiativeBehaviour = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+       
     }
     public function __toString()
     {
@@ -422,4 +425,6 @@ class Initiative implements TranslatableInterface
         
    
 }
+
+    
 }

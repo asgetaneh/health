@@ -3,8 +3,11 @@
 {% block title %}New FeedBack{% endblock %}
 
 {% block body %}
+<div class="row center" style="margin: auto;">
+
    
     {{ include('feed_back/_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('feed_back_index') }}">back to list</a>
+   
 {% endblock %}

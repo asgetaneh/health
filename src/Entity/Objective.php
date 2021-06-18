@@ -71,11 +71,13 @@ class Objective implements TranslatableInterface
      */
     private $objectiveNumber;
 
+   
 
     public function __construct()
     {
         $this->strategies = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+      
     }
 
     public function getId(): ?int
@@ -236,4 +238,6 @@ class Objective implements TranslatableInterface
 
         return $this;
     }
+
+    
 }

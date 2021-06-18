@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProgramType index{% endblock %}
+
+{% block body %}
+    <h1>ProgramType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>ShortName</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for program_type in program_types %}
+            <tr>
+                <td>{{ program_type.id }}</td>
+                <td>{{ program_type.name }}</td>
+                <td>{{ program_type.shortName }}</td>
+                <td>{{ program_type.description }}</td>
+                <td>
+                    <a href="{{ path('program_type_show', {'id': program_type.id}) }}">show</a>
+                    <a href="{{ path('program_type_edit', {'id': program_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('program_type_new') }}">Create new</a>
+{% endblock %}

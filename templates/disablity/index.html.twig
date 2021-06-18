@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Disablity index{% endblock %}
+
+{% block body %}
+    <h1>Disablity index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for disablity in disablities %}
+            <tr>
+                <td>{{ disablity.id }}</td>
+                <td>{{ disablity.name }}</td>
+                <td>{{ disablity.description }}</td>
+                <td>
+                    <a href="{{ path('disablity_show', {'id': disablity.id}) }}">show</a>
+                    <a href="{{ path('disablity_edit', {'id': disablity.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('disablity_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Sposnsorship{% endblock %}
+
+{% block body %}
+    <h1>Create new Sposnsorship</h1>
+
+    {{ include('sposnsorship/_form.html.twig') }}
+
+    <a href="{{ path('sposnsorship_index') }}">back to list</a>
+{% endblock %}

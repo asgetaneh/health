@@ -50,10 +50,7 @@ class Strategy implements TranslatableInterface
      */
     private $keyPerformanceIndicators;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PlanAchievement::class, mappedBy="strategy")
-     */
-    private $planAchievements;
+   
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -67,7 +64,7 @@ class Strategy implements TranslatableInterface
     public function __construct()
     {
         $this->keyPerformanceIndicators = new ArrayCollection();
-        $this->planAchievements = new ArrayCollection();
+       
     }
      public function __call($method, $arguments)
     {
@@ -164,36 +161,7 @@ class Strategy implements TranslatableInterface
         return $this;
     }
 
-    /**
-     * @return Collection|PlanAchievement[]
-     */
-    public function getPlanAchievements(): Collection
-    {
-        return $this->planAchievements;
-    }
-
-    public function addPlanAchievement(PlanAchievement $planAchievement): self
-    {
-        if (!$this->planAchievements->contains($planAchievement)) {
-            $this->planAchievements[] = $planAchievement;
-            $planAchievement->setStrategy($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlanAchievement(PlanAchievement $planAchievement): self
-    {
-        if ($this->planAchievements->removeElement($planAchievement)) {
-            // set the owning side to null (unless already changed)
-            if ($planAchievement->getStrategy() === $this) {
-                $planAchievement->setStrategy(null);
-            }
-        }
-
-        return $this;
-    }
-
+  
     public function getStrategyNumber(): ?int
     {
         return $this->strategyNumber;

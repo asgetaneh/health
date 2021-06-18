@@ -47,4 +47,32 @@ class PlanAchievementRepository extends ServiceEntityRepository
         ;
     }
     */
+   public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+        ->orderBy('g.id','ASC')
+            
+            ->getQuery();
+        
+    }
+    public function findByInitiative($initiative, $year)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.initiative =:initiative')
+            ->andWhere('p.year =:year')
+            ->setParameter('initiative', $initiative)
+            ->setParameter('year', $year);
+            return $qb->getQuery()->getOneOrNullResult();
+        
+    }
+     public function findByKpi($kpi, $year)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.kpi =:kpi')
+            ->andWhere('p.year =:year')
+            ->setParameter('kpi', $kpi)
+            ->setParameter('year', $year);
+            return $qb->getQuery()->getOneOrNullResult();
+        
+    }
 }
