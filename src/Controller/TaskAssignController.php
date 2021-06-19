@@ -14,6 +14,8 @@ use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,6 +88,30 @@ class TaskAssignController extends AbstractController
         return $this->render('task_assign/index.html.twig', [
             'task_assigns' => $taskAssignRepository->findAll(),
         ]);
+    }
+     /**
+     * @Route("/evaluation", name="evaluation")
+     */
+    public function evaluation( )
+    {
+         $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($pdfOptions);
+       
+        $res = $this->renderView('task_assign/print.html.twig');
+        //$date = new DateTime('now');
+ 
+
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A5', 'Landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("Evaluation.pdf", [
+            "Attachment" => 1
+        ]);
+        
     }
 
     /**
@@ -228,6 +254,7 @@ class TaskAssignController extends AbstractController
             'task_assign' => $taskAssign,
         ]);
     }
+   
 
     /**
      * @Route("/{id}/edit", name="task_assign_edit", methods={"GET","POST"})
