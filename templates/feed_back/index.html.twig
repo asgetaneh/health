@@ -1,31 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}FeedBack index{% endblock %}
+
 
 {% block body %}
-    <h1>FeedBack index</h1>
-
+    
+<div class="panel panel-primary">
+ <div class="panel-heading">{% trans %}Customer FeedBack{% endtrans %}</div>
+ <div class="panel-body">
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Contact</th>
-                <th>FullName</th>
-                <th>Comment</th>
-                <th>actions</th>
+                <th>#</th>
+                <th>{% trans %}Customer{% endtrans %}</th>
+                <th>{% trans %}Contact{% endtrans %}</th>
+                
+                <th>{% trans %}Comment{% endtrans %}</th>
+               
             </tr>
         </thead>
         <tbody>
         {% for feed_back in feed_back %}
             <tr>
-                <td>{{ feed_back.id }}</td>
+                <td>{{ loop.index}}</td>
+                 <td>{{ feed_back.fullName }}</td>
                 <td>{{ feed_back.contact }}</td>
-                <td>{{ feed_back.fullName }}</td>
+               
                 <td>{{ feed_back.comment }}</td>
-                <td>
-                    <a href="{{ path('feed_back_show', {'id': feed_back.id}) }}">show</a>
-                    <a href="{{ path('feed_back_edit', {'id': feed_back.id}) }}">edit</a>
-                </td>
+               
             </tr>
         {% else %}
             <tr>
@@ -34,6 +35,7 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('feed_back_new') }}">Create new</a>
+    </div>
+</div>
+    {# <a href="{{ path('feed_back_new') }}">Create new</a> #}
 {% endblock %}

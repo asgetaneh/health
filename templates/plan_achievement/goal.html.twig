@@ -149,41 +149,135 @@ $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
+ function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor=[];
+{% for goal in goalname %}
+   bgcolor.push(getRandomColor());
+{% endfor %}
+//var bgcolor=getRandomColor();
+var fillColor=getRandomColor();
+var strokeColor=getRandomColor();
+var highlightFill=getRandomColor();
+
 var ctx = document.getElementById("myChart").getContext('2d');
 
-var data = [22006299,	15834918,	14919501,	14797756,	14433147,	13524139,	11877109,	11862073,	11779606, 10452000]; // Add data values to array
 
-var labels = ["Tokyo",	"Mumbai",	"Mexico City",	"Shanghai",	"Sao Paulo",	"New York",	"Karachi","Buenos Aires",	"Delhi","Moscow"]; // Add labels to array
+
+var data={
+labels: [{{planyear|join(',')}}],
+datasets: [
+{
+label: "{{goalname[0]}}",
+fillColor: "rgba(255, 99, 132, 0.1)",
+strokeColor: "rgba(220,220,220,0.8)",
+highlightFill: "rgba(220,220,220,0.9)",
+highlightStroke: "rgba(220,220,220,1)",
+data: [65, 59],
+backgroundColor: [ 
+				bgcolor[0],
+				bgcolor[0],
+				bgcolor[0],
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)'
+			],
+            borderColor: [ 
+				'rgba(255,99,132,1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+			],
+			borderWidth: 1 
+},
+{
+label: "{{goalname[1]}}" ,
+fillColor: "rgba(151,187,205,0.5)",
+strokeColor: "rgba(151,187,205,0.8)",
+highlightFill: "rgba(151,187,205,0.75)",
+highlightStroke: "rgba(151,187,205,1)",
+data: [28, 48],
+backgroundColor: [ 
+				bgcolor[1],
+				bgcolor[1],
+				bgcolor[1],
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)'
+			],
+            borderColor: [ 
+				'rgba(255,99,132,1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+			],
+			borderWidth: 1 
+},
+{
+label: "{{goalname[2]}}",
+fillColor: "rgba(151,187,205,0.5)",
+strokeColor: "rgba(151,187,205,0.8)",
+highlightFill: "rgba(151,187,205,0.75)",
+highlightStroke: "rgba(151,187,205,1)",
+data: [28, 48],
+backgroundColor: [ 
+				bgcolor[2],
+				bgcolor[2],
+				bgcolor[2],
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 99, 132, 0.2)'
+			],
+            borderColor: [ 
+				'rgba(255,99,132,1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+			],
+			borderWidth: 1 
+},
+{
+label: "{{goalname[3]}}",
+fillColor: "rgba(151,187,205,0.5)",
+strokeColor: "rgba(151,187,205,0.8)",
+highlightFill: "rgba(151,187,205,0.75)",
+highlightStroke: "rgba(151,187,205,1)",
+data: [28, 48],
+borderWidth: 1 
+},
+{
+label: "{{goalname[4]}}",
+fillColor: "rgba(151,187,205,0.5)",
+strokeColor: "rgba(151,187,205,0.8)",
+highlightFill: "rgba(151,187,205,0.75)",
+highlightStroke: "rgba(151,187,205,1)",
+data: [28, 48],
+borderWidth: 1 
+}
+]
+};
 var myChart = new Chart(ctx, {
     type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Population', // Name the series
-            data: data, // Specify the data values array
-            backgroundColor: [ // Specify custom colors
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [ // Add custom color borders
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1 // Specify bar border width
-        }]
-    },
+    data: data,
     options: {
       responsive: true, // Instruct chart js to respond nicely.
-      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+    scaleShowGridLines : true,
     }
 });
+
+//var barchart=new Chart(ctx).Bar(data);
 })
 </script>{% endblock %}

@@ -62,4 +62,42 @@ class QuarterAccomplishmentRepository extends ServiceEntityRepository
      
 
     }
+     public function getSumByObjkpi($objective, $year,$quarter)
+    {
+        $qb = $this->createQueryBuilder('p')
+          ->select('sum(p.achievementValue)')
+           ->join('p.yearPlan','y')
+            ->join('y.kpi','k')
+            ->join('k.strategy','s')
+          
+            
+            ->andWhere('s.objective =:objective')
+            ->andWhere('y.year =:year')
+            ->andWhere('p.quarter =:quarter')
+            ->setParameter('quarter', $quarter)
+            ->setParameter('objective', $objective)
+            ->setParameter('year', $year);
+            return $qb->getQuery()->getSingleScalarResult();
+          
+        
+    }
+     public function getSumOfObjGoal($goal, $year,$quarter)
+    {
+        $qb = $this->createQueryBuilder('p')
+          ->select('sum(p.achievementValue)')
+           ->join('p.yearPlan','y')
+            ->join('y.Objective','o')
+            // ->join('k.strategy','s')
+          
+            
+            ->andWhere('o.goal =:goal')
+            ->andWhere('y.year =:year')
+            ->andWhere('p.quarter =:quarter')
+            ->setParameter('quarter', $quarter)
+            ->setParameter('goal', $goal)
+            ->setParameter('year', $year);
+            return $qb->getQuery()->getSingleScalarResult();
+          
+        
+    }
 }

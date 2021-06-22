@@ -101,20 +101,22 @@ class Initiative implements TranslatableInterface
      */
     private $initiativeNumber;
 
-    /**
 
-     * @ORM\ManyToOne(targetEntity=Measure::class, inversedBy="initiatives")
-     */
-    private $measure;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $baseline;
+    
      /** 
      * @ORM\Column(type="float", nullable=true)
      */
     private $weight;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $measurement;
+     
+     const NUMERICAL=0;
+     const RATIO=1;
+     const PERCENT=2;
+     
 
    
 
@@ -401,30 +403,20 @@ class Initiative implements TranslatableInterface
         return $this;
     }
 
-    public function getMeasure(): ?Measure
+    public function getMeasurement(): ?int
     {
-        return $this->measure;
+        return $this->measurement;
     }
 
-    public function setMeasure(?Measure $measure): self
+    public function setMeasurement(?int $measurement): self
     {
-        $this->measure = $measure;
+        $this->measurement = $measurement;
 
         return $this;
     }
 
-    public function getBaseline(): ?int
-    {
-        return $this->baseline;
-    }
-
-    public function setBaseline(?int $baseline): self
-    {
-        $this->baseline = $baseline;
-         return $this;
-        
    
-}
+    
 
     
 }

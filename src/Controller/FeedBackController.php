@@ -39,7 +39,7 @@ class FeedBackController extends AbstractController
             $entityManager->persist($feedBack);
             $entityManager->flush();
 
-            return $this->redirectToRoute('feed_back_index');
+            return $this->redirectToRoute('feed_back_new');
         }
 
         return $this->render('feed_back/new.html.twig', [

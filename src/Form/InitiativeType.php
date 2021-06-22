@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -73,7 +74,9 @@ class InitiativeType extends AbstractType
                 ])
                 ->add('initiativeBehaviour', EntityType::class, [
                     'class' => InitiativeBehaviour::class,
+                   
                     'attr' => ['class' => 'select2 form-control'],
+                    'placeholder'=>'choose initiative behaviour',
                     // 'multiple'=>true,
                 ])
                 ->add('keyPerformanceIndicator', EntityType::class, [
@@ -83,7 +86,8 @@ class InitiativeType extends AbstractType
                             ->andWhere('g.isActive = 1')
                             ->orderBy('g.id', 'ASC');
                     },
-                    'attr' => ['class' => 'select2 form-control']
+                    'attr' => ['class' => 'select2 form-control'],
+                     'placeholder'=>'choose keyPerformanceIndicator',
 
                 ])
                 ->add('principalOffice', EntityType::class, [
@@ -94,15 +98,30 @@ class InitiativeType extends AbstractType
                             ->orderBy('p.id', 'ASC');
                     },
                     'multiple' => true,
-                    'attr' => ['class' => 'select2 form-control']
+                    'attr' => ['class' => 'select2 form-control'],
+                     'placeholder'=>'select Principal Office',
                 ])
                 ->add('socialAtrribute', EntityType::class, [
                     'class' => InitiativeAttribute::class,
                     'attr' => ['class' => 'select2 form-control'],
                      'multiple'=>true,
                    'required' => false,
+                    'placeholder'=>'select Social Attribute',
+                   
 
-                ]);
+                ])
+                ->add('measurement',ChoiceType::class,[
+                    'choices'=>[
+                        'Numerical'=>Initiative::NUMERICAL,
+                        'Ratio'=>Initiative::RATIO,
+                        'Percent'=>Initiative::PERCENT
+                    ],
+                     'attr' => ['class' => 'select2 form-control'],
+                     'required' => false,
+                      'placeholder'=>'choose measurement',
+
+                ])
+                ;
         }
     }
 

@@ -101,7 +101,7 @@
 
 								{% endfor %}
 
-                                   {% if initiative.initiativeBehaviour.code == 4 %}
+                                   {% if initiative.measurement == constant('RATIO',initiative) %}
 								{# {% for behavior in initiative.initiativeBehaviour|filter(initiativeBehaviour => initiativeBehaviour.code == 4 ) %} #}
 									<div class="col-sm-10">
 										<div class="form-group">
@@ -249,7 +249,7 @@ function socialDecremental(currentInput){
        
 }
 
-$("input:enabled:text[data-attr]").on("keyup",function () {
+$("input:enabled:text[data-attr][name!='denominator']").on("keyup",function () {
 
 var currentInput=$(this);
 if(behavior("2")){
@@ -430,10 +430,10 @@ function decremental(currentNode){
 
 
 
-$("input:enabled:text:not([data-attr])").keyup(function () {
+$("input:enabled:text:not([data-attr])[name!='denominator']").keyup(function () {
 
 var inpt = $(this);
-var inputArray=$("input:enabled:text:not([data-attr])");
+var inputArray=$("input:enabled:text:not([data-attr])[name!='denominator']");
 
 if (behavior("0")) {
 $('div.yearylplans').html($('<span class="text-primary" style="margin-right:10px;">' + "=" + inpt.val() + '</span>'));

@@ -512,6 +512,22 @@ ace.settings.loadState('sidebar')
 
 								</ul>
 							</li>
+                            <li>
+								<a href="#" class="dropdown-toggle ">
+									<i class=""></i>
+									<span class="menu-text">
+
+										{% trans %}FeedBack{% endtrans %}
+									</span>
+									<b class="arrow fa fa-angle-down"></b>
+								</a>
+								<ul class="submenu">
+
+
+									{{ include('menu/feedback.html.twig') }}
+
+								</ul>
+							</li>
 							{# {% endif %} #}
 
 

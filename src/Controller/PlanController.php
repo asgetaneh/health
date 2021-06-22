@@ -60,6 +60,14 @@ class PlanController extends AbstractController
 
 
             if ($request->request->get('initiative')) {
+                if($request->request->get('nonsuitable')){
+                    $removableId = $request->request->get('initiative');
+                    
+                     $this->removeSuitableInitiative($em, $principaloffice, $planningyear,  $removableId);
+                       $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
+                     return $this->redirectToRoute('plan_index');
+                }
+              
                 $selectedInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $request->request->get('initiative')]);
                 $countinitiative = count($selectedInitiatives);
 
@@ -146,6 +154,32 @@ class PlanController extends AbstractController
 
         $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice, $planningyear);
         return $suitableInitiatives;
+    }
+    private function removeSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear,$removableId)
+    {
+      $removableInitiatives=$em->getRepository(Initiative::class)->findBy(['id'=>$removableId]);
+    
+      foreach ($removableInitiatives as $removableInitiative) {
+           $removableSuitable = $em->getRepository(SuitableInitiative::class)->getRemovable($principaloffice, $removableInitiative, $planningyear);
+        
+           if($removableSuitable){
+             $isacomplish=false;
+             $planAcomplishments=$removableSuitable->getPlanningAccomplishments();
+             if(count($planAcomplishments)<=0){
+                 $em->remove($removableSuitable);
+                 $em->flush();
+                 
+             }
+            
+           }
+         
+
+          
+          
+      }
+      
+      return true;
+      
     }
 
 

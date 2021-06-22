@@ -46,14 +46,11 @@ class Measure
      */
     private $code;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="measure")
-     */
-    private $initiatives;
+    
 
     public function __construct()
     {
-        $this->initiatives = new ArrayCollection();
+      
     }
 
     public function getId(): ?int
@@ -121,33 +118,5 @@ class Measure
         return $this;
     }
 
-    /**
-     * @return Collection|Initiative[]
-     */
-    public function getInitiatives(): Collection
-    {
-        return $this->initiatives;
-    }
-
-    public function addInitiative(Initiative $initiative): self
-    {
-        if (!$this->initiatives->contains($initiative)) {
-            $this->initiatives[] = $initiative;
-            $initiative->setMeasure($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInitiative(Initiative $initiative): self
-    {
-        if ($this->initiatives->removeElement($initiative)) {
-            // set the owning side to null (unless already changed)
-            if ($initiative->getMeasure() === $this) {
-                $initiative->setMeasure(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }

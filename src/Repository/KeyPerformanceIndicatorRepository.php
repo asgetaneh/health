@@ -56,6 +56,32 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findByObjective($objective): ?KeyPerformanceIndicator
+    {
+               return $this->createQueryBuilder('k')
+        ->join('k.strategy','s')
+        ->join('s.objective','o')
+        ->andWhere('s.objective =:objective')
+        ->setParameter('objective',$objective)
+        ->getQuery()
+        ->getResult();
+        
+        ;
+    }
+    public function getWieghtSum($objective)
+    {
+               return $this->createQueryBuilder('k')
+               ->select('SUM(k.weight)')
+
+        ->join('k.strategy','s')
+        ->join('s.objective','o')
+        ->andWhere('s.objective =:objective')
+        ->setParameter('objective',$objective)
+        ->getQuery()
+        ->getResult();
+        
+        ;
+    }
     public function search($search=[]){
 
         $qb=$this->createQueryBuilder('k')

@@ -67,9 +67,14 @@
 
 									<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
 										<li>
-											<a href="#" id="suitablebutton">
+											<a href="#" id="suitablebutton2">
 												<i class="ace-icon fa fa-stop green"></i>
 												Select As Suitable</a>
+										</li>
+                                        <li>
+											<a href="#" id="nonsuitablebutton">
+												<i class="ace-icon fa fa-stop red"></i>
+												Select As Non Suitable</a>
 										</li>
 
 
@@ -88,7 +93,7 @@
 										<th class="text-center">
 											<label class="inline">
 
-												<input type="checkbox" name="initiative[]" id="checkall" value="" class="ace">
+												<input type="checkbox" name="initiative[]" id="checkall2" value="" class="ace">
 												<span class="lbl"></span>
 											</label>
 										</th>
@@ -104,6 +109,7 @@
 									<form action="{{path('plan_index')}}" id="initiative_form" method="post">
 										<input type="hidden" name="planyear" value="{{planyear.id}}">
 										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
+                                        <input type="hidden" name="nonsuitable" id="nonsuit" value="">
 
 										{% for initiative in initiatives %}
 											<tr>
@@ -119,7 +125,7 @@
 
 												</td>
 												<td>{{ initiative.name }}</td>
-												<td>{{ initiative.minimumValue }}</td>
+												<td>{{ initiative.weight }}</td>
 
 												<td>{{ initiative.description|raw}}</td>
 												<td>
@@ -149,9 +155,20 @@
 		</div>
 	</div>
 	<script>
-		$('#suitablebutton').click(function () {
 
+
+$('#checkall2').click(function () {
+var $chk = $(':checkbox');
+$chk.prop('checked', $(this).is(':checked'));
+
+})
+$('#suitablebutton2').click(function () {
 $('#initiative_form').submit();
 })
+$('#nonsuitablebutton').click(function () {
+    $('#nonsuit').val(true);
+$('#initiative_form').submit();
+})
+
 	</script>
 {% endif %}

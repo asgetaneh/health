@@ -58,6 +58,21 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+     public function getRemovable($principaloffice,$initiative,$planyear){
+        $qb=$this->createQueryBuilder('s');
+        $qb
+        //->leftJoin('s.planningAccomplishments','p')
+        ->andwhere('s.principalOffice = :office')
+        ->andwhere('s.initiative = :initiative')
+        ->andwhere('s.planningYear = :planyear')
+       // ->andWhere('s.planningAccomplishments is null')
+        ->setParameter('planyear',$planyear)
+        ->setParameter('office',$principaloffice)
+        ->setParameter('initiative',$initiative);
+       // dd($qb->getQuery());
+        return $qb->getQuery() ->getOneOrNullResult();
+
+    }
     public function findByYear($initiative,$planyear){
         $qb=$this->createQueryBuilder('s');
         $qb->andwhere('s.initiative = :initiative')

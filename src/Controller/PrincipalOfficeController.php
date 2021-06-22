@@ -56,12 +56,12 @@ class PrincipalOfficeController extends AbstractController
            return $this->redirectToRoute('principal_office_index');
         } 
 
-$principal_officestotal=$principalOfficeRepository->findAll();
+        $principal_officestotal=$principalOfficeRepository->findAll();
 
         $data=$paginator->paginate(
              $principalOfficeRepository->findAll(),
              $request->query->getInt('page',1),
-             10
+             5
 
         );
         return $this->render('principal_office/index.html.twig', [
