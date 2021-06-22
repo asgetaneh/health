@@ -39,12 +39,12 @@
 								{% endif %}
 
 								{# <form class="form-inline" method="post" style="display:inline;">
-																																																		<input type="hidden" name="nonapplicable" value="nonapp"/>
-																																																		<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-																																																			<i class="ace-icon fa fa-times bigger-110 red2"></i>
-																																																			{% trans %}
-																																																			None Applicable Initiatives{% endtrans %}</button>
-																																																	</form> #}
+																																																										<input type="hidden" name="nonapplicable" value="nonapp"/>
+																																																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+																																																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
+																																																											{% trans %}
+																																																											None Applicable Initiatives{% endtrans %}</button>
+																																																									</form> #}
 
 							</div>
 
@@ -137,7 +137,7 @@
 										{# <th>MaxValue</th> #}
 										<th>KPI</th>
 										{# <th>Objective</th> #}
-										{# <th>Goal</th> #}
+										<th>{% trans %}Social{% endtrans %}</th>
 										<th>
 											{% trans %}Principal Office{% endtrans %}
 										</th>
@@ -171,16 +171,22 @@
 											<td>
 												{{ initiative.keyPerformanceIndicator|title }}
 											</td>
-											{# <td>{{ initiative.keyPerformanceIndicator.strategy }}</td> #}
+
+											<td>
+												{% for item in initiative.socialAtrribute  %}
+													{{ item }}
+												{% endfor %}
+											</td>
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
-												<td>
-                                                {% set count = 0 %}
-													<ul class="list-unstyled"> {% for office in initiative.principalOffice %}
+											<td>
+												{% set count = 0 %}
+												<ul class="list-unstyled">
+													{% for office in initiative.principalOffice %}
 
 
 														<li>
-                                                        {% set count = count + 1 %}
+															{% set count = count + 1 %}
 															{{count}},
 															{{office}}
 														</li>
@@ -203,10 +209,14 @@
 												{% if is_granted('vw_intv_dtl') %}
 
 
-													<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
+													<a style="margin-bottom:5px;" href="{{ path('initiative_show', {'id': initiative.id}) }}" title="view details" class="btn btn-sm btn-info">
+														<i class="fa fa-eye"></i>
+													</a>
 												{% endif %}
 												{% if is_granted('edt_intv') %}
-													<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+													<a style="margin-bottom:5px;" href="{{ path('initiative_edit', {'id': initiative.id}) }}" title="edit" class="btn btn-sm btn-warning">
+														<i class="fa fa-edit"></i>
+													</a>
 												{% endif %}
 												{% if is_granted('act_intv') or is_granted('deact_intv')  %}
 													<form class="" style="display:inline;" action="" method="post">
@@ -248,18 +258,18 @@
 
 				<div class="modal-body">
 					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-                     {{ form_errors(form) }}
+					{{ form_errors(form) }}
 					<div class="row">
-                 
+
 
 						{% for f in form  %}
 							{% if f != form._token %}
 								<div class="form-group col-md-4">
-                                 
+
 									<label>{{ form_label(f) }}</label>
 									{{ form_widget(f) }}
-                                   	<div class=" has-error help-block text-danger">{{form_errors(f)}}</div>
-                                  
+									<div class=" has-error help-block text-danger">{{form_errors(f)}}</div>
+
 								</div>
 
 

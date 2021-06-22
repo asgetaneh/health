@@ -7,60 +7,101 @@
 
 				border-collapse: collapse;
 				width: 100%;
+				height: 5 %%;
+
 			}
 
 			td,
 			tr,
 			th {
-				border: 1px solid #000;
+				border: 1 solid #000;
 				text-align: left;
 				padding-left: 15px;
 				font-size: 11px;
 
 			}
-			{# body {
-				border-style: line;
-			} #}
 		</style>
 
 	</head>
 
 
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-			<center><img class="img-responsive" height="80" width="100" src="{{ absolute_url(asset('assets/favicon.png')) }}"/></center>
+	<body borde="0">
+		<center><img class="img-responsive" height="80" width="100" src="{{ absolute_url(asset('assets/favicon.png')) }}"/></center>
 
 
 		<center>
 			<h2>Performance Appraisal Certificate
 			</h2>
 		</center>
-        <p>College/Institute/Directorate</p>
-     <h5>Evaluation Period     Year <u>2013</u> Period From <u>01/01/2013 </u> To <u> 03/30/2013 </u> months</h5>
-        <h5>Evaluater Name</h5>
-        <h5>Evaluatee Id</h5>
+		<table border="0px">
+			<tr>
+				<td>
+					<h4>College/Institute/Directorate</h4>
+					<h>Evaluation Period     Year
+						<u>2013</u>
+						Period From
+						<u>01/01/2013
+						</u>
+						To
+						<u>
+							03/30/2013
+						</u>
+						months</h5>
+					<h5>Evaluater Name:
+						<u>{{fullName}}</u>
+					</h5>
+					<h5>Evaluatee Id</h5>
+
+				</td>
+			</tr>
+
+			
+		</table><br>
 
 
-		<table>
-			<tr>
-				<th>Column 1</th>
-				<th>Column 2</th>
-				<th>Column 3</th>
-			</tr>
-			<tr>
-				<td rowspan="2">Row 1 Cell 1</td>
-				<td>Row 1 Cell 2</td>
-				<td>Row 1 Cell 3</td>
-			</tr>
-			<tr>
-				<td>Row 2 Cell 2</td>
-				<td>Row 2 Cell 3</td>
-			</tr>
-			<tr>
-				<td colspan="3">Row 3 Cell 1</td>
-			</tr>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>{% trans %}Number Of Task{% endtrans %}</th>
+					<th>{% trans %}Quantity{% endtrans %}</th>
+					<th>{% trans %}Time{% endtrans %}</th>
+					<th>{% trans %}Quality{% endtrans %}</th>
+					<th>{% trans %}Behavior{% endtrans %}</th>
+					<th>{% trans %}Self Evaluation{% endtrans %}</th>
+					<th>{% trans %}Peer Evaluation{% endtrans %}</th>
+					<th>{% trans %}Customer Evaluation{% endtrans %}</th>
+					<th>{% trans %}Average{% endtrans %}</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for evaluation in evaluations %}
+					<tr>
+						<td>{{ evaluation.countTask}}</td>
+						<td>{{ evaluation.totalQuanity}}</td>
+						<td>{{ evaluation.totalTime }}</td>
+						<td>{{ evaluation.totalQuality }}</td>
+						<td>{{ evaluation.totalBehavior }}</td>
+						<td>{{ evaluation.totalSelfEvaluation }}</td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
 		</table>
-
-
+		<h5>Name Evaluator
+			<u>Abebe</u>
+		</h5>
+		<h5>Date Evaluation
+			<u>{{date}}</u>
+		</h5>
 	</body>
 </html>

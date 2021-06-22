@@ -31,10 +31,13 @@ use App\Repository\UserInfoRepository;
 use DateTime;
 use Andegna\DateTime as AD;
 use Andegna\DateTimeFactory;
+use App\Entity\Delegation;
+use App\Entity\Evaluation;
 use App\Entity\Initiative;
 use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
+use App\Entity\User;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
@@ -59,17 +62,22 @@ class OperationalTaskController extends AbstractController
      * @Route("/index/{id}", name="operational_task_index")
      */
     public function index(Request $request ,SuitableInitiative $suitableInitiative,PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
-    {              $entityManager = $this->getDoctrine()->getManager();
-    $social=0;
-    //    dump($suitableInitiative);
-            // foreach ($suitableInitiative as $value) {
+    {             
+        
+         $em = $this->getDoctrine()->getManager();
+         $user= $this->getUser();
+     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+        // dd($delegatedUser->getDelegatedUser());
+     }
+             $social=0;
                 foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
                     if($va->getName()){
-                        $social=1;
-                    }            
+                        $social=1;   }            
             }
-            // dd($social);
-        $em=$this->getDoctrine()->getManager();
+            // dd($user);
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -77,14 +85,13 @@ class OperationalTaskController extends AbstractController
         $formtask = $this->createForm(TaskMeasurementType::class, $taskMeasurement);
         $formtask->handleRequest($request);
         $count=0;
-                $maxcount=0;
-        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative);
-       $taskUsers= $taskUserRepository->findTaskUsers($this->getUser());
+        $maxcount=0;
+        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user ,$suitableInitiative);
+       $taskUsers= $taskUserRepository->findTaskUsers($user);
        foreach ($taskUsers as $value) {
                   $value->setType(1);
-                  $entityManager->flush();
+                  $em->flush();
        }
-    //    $plans=0;
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
@@ -105,16 +112,14 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
 // dd($meskerem);
 // $hamle=01/11/2013;
 // $meskerem=30/01/2014;
-$f=$this->fromGretoEthstr($time);
+       $f=$this->fromGretoEthstr($time);
             $quarters=$planningQuarterRepository->findAll();
-
           foreach($quarters as $quarter){
         if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate() ) {
             $quarterId=$quarter->getId();
             $quarterName=$quarter->getName();
         }
         // $f=$this->fromGretoEthstr($time);
-
     }
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
@@ -123,15 +128,15 @@ $f=$this->fromGretoEthstr($time);
             else{
                  $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
             }
-          
             foreach ($plans as  $value) {
-
                 if ( $value->getQuarter() == $planningQuarterRepository->find($quarterId)) {
                     $performerTask->setPlanAcomplishment($value);    
-                      $performerTask->setStatus(1);                            
-                        $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
-                    $performerTask->setCreatedBy($this->getUser());
-
+                    $performerTask->setStatus(1); 
+                         if ($delegatedUser) { 
+                                $delegatedBy=$delegatedUser->getDelegatedUser();
+                    $performerTask->setDeligateBy($delegatedBy);    }                      
+                    $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
+                    $performerTask->setCreatedBy($user);
                $weight=$form->getData()->getWeight();
                 if ($count + $weight > 100 ) {
                  $this->addFlash('danger', 'Weight must be less than 100 !');
@@ -141,20 +146,19 @@ $f=$this->fromGretoEthstr($time);
                  $this->addFlash('danger', 'Task must be less than 7 !');
             return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
             }
-            $entityManager->persist($performerTask);
-            $entityManager->flush();
+            $em->persist($performerTask);
+            $em->flush();
 
             return $this->redirectToRoute('operational_task_index',['id'=>$suitableInitiative->getId()]);
                 }   }  }
-$count=0;
-        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative);
-
+           $count=0;
+        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user,$suitableInitiative);
         foreach($operationalTasks as $operationals){
              $count=$count+
             $operationals->getWeight();
         }
         return $this->render('operational_task/index.html.twig', [
-            'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($this->getUser(),$suitableInitiative),
+            'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user,$suitableInitiative),
             'count'=>$count,
             'quarterName'=>$quarterName,
             'taskUsers'=> $taskUsers,
@@ -167,7 +171,6 @@ $count=0;
     }
     public function fromGretoEthstr($gregorian)
     {
-        # code..
         $ethipic = new AD($gregorian);
         // dump($gregorian);
         return $ethipic->format('F j Y');
@@ -188,7 +191,13 @@ $count=0;
      */
     public function suitableInitiative(Request $request,OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
+        $em=$this->getDoctrine()->getManager();
         $user=$this->getUser();
+     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+     }
         $social=0;
         $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
       $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
@@ -204,11 +213,17 @@ $count=0;
     public function accomplishmentSocial(Request $request,TaskAccomplishmentRepository $taskAccomplishmentRepository )
     {       
         $em=$this->getDoctrine()->getManager();
+         $user= $this->getUser();
+     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+        $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+        // dd($delegatedUser->getDelegatedUser());
+     } 
         $social=1;    
                  $socialAtr=$request->request->get("social");
                 $suitableId=$request->request->get("suitId");
   $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitableId);
-        $user=$this->getUser();
         $initiativeName=$suitableInitiative->getInitiative()->getName();
                 $initiativeId=$suitableInitiative->getId();
          $performerTasks=$em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative,$user,$socialAtr);
@@ -285,9 +300,15 @@ $count=0;
      * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
      */
     public function accomplishment(Request $request ,PlanningQuarterRepository $planningQuarterRepository, PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
-    {               
-        $user=$this->getUser();
-                $social=0;
+    {  
+        $em=$this->getDoctrine()->getManager();             
+ $user= $this->getUser();
+        $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+        // dd($delegatedUser->getDelegatedUser());
+     }                $social=0;
                 foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
                     if($va->getName()){
                         $social=1;
@@ -299,18 +320,18 @@ $count=0;
          $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative,$user);
         $total1=0;
             $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative,$user); 
-            if ($social == 1) {
+            // if ($social == 1) {
                 
-            $taskAcomolishsSocial=$taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative,$user); 
-                        //    dd($taskAcomolishsSocial);
+            // $taskAcomolishsSocial=$taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative,$user); 
+            //             //    dd($taskAcomolishsSocial);
 
-            }
+            // }
             //    foreach ($taskAcomolishs as $value) {      
             //        $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ; 
             //    }
  
-         $taskUser=$this->getUser();
-         $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
+        //  $taskUser=$this->getUser();
+         $taskUsers=$taskUserRepository->findTaskUsers($user);
          $time = new DateTime('now');
          $endDate=0;
                   $quarters=$planningQuarterRepository->findAll();
@@ -472,8 +493,17 @@ $count=0;
      */
     public function taskFetch(Request $request, PerformerTaskRepository $performerTaskRepository)
     {
-        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'),$request->request->get('user'));
-    // dump($request->request->get('user'));
+        $em=$this->getDoctrine()->getManager();
+         $userId= $request->request->get("user");
+       $users=$em->getRepository(User::class)->find($userId);
+       $user=$users->getId();
+     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy()->getId();
+        $user=$delegatedBy;
+        
+     }
+        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'),$user);
     // dd($units);
 
         return new JsonResponse($units);
@@ -503,9 +533,14 @@ $count=0;
      */
     public function show(Request $request,TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskUserRepository $taskUserRepository)
     {   $em=$this->getDoctrine()->getManager();
-       
-        $taskUser=$this->getUser();
-          $taskUsers=$taskUserRepository->findTaskUsers($taskUser);
+           $user= $this->getUser();
+        $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+        // dd($delegatedUser->getDelegatedUser());
+     }
+          $taskUsers=$taskUserRepository->findTaskUsers($user);
         return $this->render('operational_task/show.html.twig', [
              'taskUsers' => $taskUsers,
         ]);
@@ -517,15 +552,25 @@ $count=0;
     {   $em=$this->getDoctrine()->getManager();
        
        
-        if ($report= $request->request->get('reportValue')) {
+        if ($request->request->get('reportValue')) {
+            $percent=0;
             $reportValue= $request->request->get('reportValue');
+            $quality=$request->request->get('quality');
           $ids= $request->request->get('taskAccomplishmentId');
-          foreach ($ids as $key => $value) {
-            $taskAccomplishment=$taskAccomplishmentRepository->find($value);
-            $taskAccomplishment->setAccomplishmentValue($reportValue[$key]);
+        //   foreach ($ids as $key => $value) {
+              $evaluation=new Evaluation();
+            $taskAccomplishment=$taskAccomplishmentRepository->find($ids);
+             $percent=(($reportValue * 100) / $taskAccomplishment->getExpectedValue());
+            $evaluateUser=$taskAccomplishment->getTaskUser()->getAssignedTo();
+            $taskAccomplishment->setAccomplishmentValue($reportValue); 
+            $evaluation->setEvaluateUser($evaluateUser);
+           $evaluation->setTaskAccomplishment($taskAccomplishment);
+            $evaluation->setQuantity($percent);
+            $evaluation->setQuality($quality);
             $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
             $taskUser->setType(3);
-          }
+              $em->persist($evaluation);
+        //   }
           $em->flush();
                       $this->addFlash('success', 'successfully Operational Manager set Acomplisment value  !');
                       return $this->redirectToRoute('operational_task_show');

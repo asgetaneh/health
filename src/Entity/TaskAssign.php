@@ -86,6 +86,11 @@ class TaskAssign
      */
     private $timeGap;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="taskAssignsDelegate")
+     */
+    private $delegate;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -305,6 +310,18 @@ class TaskAssign
     public function setTimeGap(int $timeGap): self
     {
         $this->timeGap = $timeGap;
+
+        return $this;
+    }
+
+    public function getDelegate(): ?User
+    {
+        return $this->delegate;
+    }
+
+    public function setDelegate(?User $delegate): self
+    {
+        $this->delegate = $delegate;
 
         return $this;
     }

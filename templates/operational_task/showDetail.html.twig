@@ -142,7 +142,7 @@
 
 												<td>
 
-													<table class=" table table-bordered table-responsive-xg table-hover" >
+													<table class=" table table-bordered table-responsive-xg table-hover">
 														<tr>
 															<th>Measurement
 															</th>
@@ -154,6 +154,7 @@
 															</th>
 															<th>Accomplishment Value
 															</th>
+														
 
 														</tr>
 														{% for taskAccomplishment in taskAccomplishments   %}
@@ -161,7 +162,7 @@
 																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
-																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
+																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
 																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.reportedValue }}</td>
@@ -170,12 +171,17 @@
 
 
 																	{% else %}
-																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
+																		<td><input type="text" name="reportValue" class="form-conrol" required></td>
+
 																	{% endif %}
 																{% endif %}
 															</tr>
 														{% endfor %}
-
+														<tr>
+															<td colspan="4">
+																Quality(%)</td>
+															<td><input type="text" name="quality" class="form-conrol" required></td>
+														</tr>
 
 													</table>
 
@@ -235,7 +241,7 @@
 
 								<table class="table-bordered table-hover" style="margin-top:10px;">
 									<tr>
-                                      <th>#
+										<th>#
 										</th>
 										<th>Name
 										</th>
@@ -245,18 +251,16 @@
 										</th>
 										<th>Values
 										</th>
-                                      
 
 
 									</tr>
-                                    {% set count = 0 %}
+									{% set count = 0 %}
 									{% for staffCriteria in staffCriterias   %}
 										<tr>
-                                           {% set count = count + 1 %}
-                                           <td>{{count}}</td>
+											{% set count = count + 1 %}
+											<td>{{count}}</td>
 											<td>{{ staffCriteria.name }}</td>
 											<td>{{ staffCriteria.behavioralVariables }}</td>
-											<td>{{ staffCriteria.total }}</td>
 											<td>
 												<input type="text" name="evaluattonValues" class=" form-control"></td>
 
@@ -309,5 +313,4 @@ location.reload(true);
 
 })
 		</script>
-
 	{% endblock %}

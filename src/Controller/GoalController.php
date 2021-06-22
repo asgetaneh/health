@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Goal;
+use App\Entity\OperationalOffice;
+use App\Entity\Performer;
 use App\Form\GoalType;
 use App\Repository\GoalRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -11,6 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helper\Helper;
+use App\Repository\UserRepository;
+use Proxies\__CG__\App\Entity\PrincipalOffice;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * @Route("/goal")
@@ -85,17 +90,33 @@ class GoalController extends AbstractController
     /**
      * @Route("/startegicPlan", name="startegic_plan", methods={"GET","POST"})
      */
-    public function startegicPlan(Request $request, GoalRepository $goalRepository, PaginatorInterface $paginator): Response
+    public function startegicPlan(Request $request,UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
-        $goals = $goalRepository->findAlls();
-        $data = $paginator->paginate(
-            $goals,
-            $request->query->getInt('page', 1),
-            3
-        );
+           $em=$this->getDoctrine()->getManager();
+         $filterform = $this->createFormBuilder()
+            ->add('operationalOffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+                // 'multiple' => true,
+                'required' => true
+            ])          
+             ->getForm();
+              $filterform->handleRequest($request);
 
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $operationalOffice= $filterform->getData([]);
+            $this->getUser();
+            $operationalOffices=$operationalOffice['operationalOffice'];
+            $performer=new Performer();
+            $performer->setOperationalOffice($operationalOffices);
+            $performer->setPerformer($this->getUser());
+           $users= $userRepository->find($this->getUser()->getId());
+           $users->setStatus(1);
+            $em->persist($performer);
+            $em->flush();
+          return $this->redirectToRoute('startegic_plan');
+        }
         return $this->render('goal/strategicplan.html.twig', [
-            'goals' => $data
+                'filterform' => $filterform->createView(),
         ]);
     }
 

@@ -29,6 +29,7 @@ class UserController extends AbstractController
             'user_groups' => $user_groups
         ]);
     }
+   
     /**
      * @Route("/user/list", name="user_list")
      */

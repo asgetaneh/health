@@ -40,8 +40,10 @@
 									<th>{% trans %}Delegate{% endtrans %}</th>
 									<th>{% trans %}StartAt{% endtrans %}</th>
 									<th>{% trans %}EndAt{% endtrans %}</th>
-                                    <th>{% trans %}Status{% endtrans %}</th>
+									<th>{% trans %}Status{% endtrans %}</th>
 									<th>{% trans %}Reason{% endtrans %}</th>
+									<th>{% trans %}Action{% endtrans %}</th>
+
 								</tr>
 							</thead>
 							<tbody>
@@ -49,17 +51,30 @@
 									<tr>
 										<td>{{ loop.index }}</td>
 										<td>{{ delegation.delegatedBy.userInfo}}</td>
-                                        <td>{{ delegation.delegatedUser.userInfo}}</td>
+										<td>{{ delegation.delegatedUser.userInfo}}</td>
 										<td>{{ delegation.startAt ? delegation.startAt|date('d-M-Y ') : '' }}</td>
 										<td>{{ delegation.endAt ? delegation.endAt|date('d-M-Y ') : '' }}</td>
-                                        <td>{% if delegation.endAt > date('now') %}
-                                        <span class="badge badge-info">Active</span>
-                                        {% else %}
-                                             <span class="badge badge-success">Completed</span>
-                                        {% endif %}</td>
+										<td>
+											{% if delegation.endAt > date('now') or delegation.status == 1 %}
+												<span class="badge badge-info">Active</span>
+											{% else %}
+												<span class="badge badge-success">Completed</span>
+											{% endif %}
+										</td>
 										<td>
 											{{delegation.reason|raw}}
 										</td>
+										{% if delegation.status == 1 %}
+
+											<td>
+
+												<form action="{{path('delegation_return')}}" method="post">
+													<button type="submit" class="btn btn-danger return btn-sm return">
+														Return</button>
+													<input type="hidden" name="delegation_id" value="{{delegation.id}}">
+												</form>
+											</td>
+										{% endif %}
 									</tr>
 								{% else %}
 									<tr>
@@ -68,7 +83,7 @@
 								{% endfor %}
 							</tbody>
 						</table>
-                        	<div class="pull-right pagination" id="custompaginator">{{ knp_pagination_render(delegations) }}</div>
+						<div class="pull-right pagination" id="custompaginator">{{ knp_pagination_render(delegations) }}</div>
 					</div>
 				</div>
 
@@ -78,4 +93,13 @@
 	</div>
 
 
+{% endblock %}
+{% block javascripts %}
+	<script>
+		$('.return').click(function () {
+alert("are you Shure");
+
+
+})
+	</script>
 {% endblock %}

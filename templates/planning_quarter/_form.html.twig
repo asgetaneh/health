@@ -1,4 +1,49 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form,{'attr': {'role':'form'} }) }}
+
+
+<div class="row">
+
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">Name</label>
+			{{ form_widget(form.name,{'attr':{'class':'form-control ','required' : 'true','autocomplete':'off'}}) }}
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">Slug</label>
+			{{ form_widget(form.slug,{'attr':{'class':'form-control select2','required' : 'true','autocomplete':'off'}}) }}
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">Start Date</label>
+
+			<input type="text" name="startDate" class="popupDatepicker form-control" autocomplete="off">
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">End Date</label>
+
+			<input type="text" name="endDate" class="form-control popupDatepicker"  autocomplete="off">
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div class="form-group fill">
+			<label class="floating-label">Description</label>
+			{{ form_widget(form.description,{'attr':{'class':'form-control ','autocomplete':'off'}}) }}
+
+		</div>
+	</div>
+
+
+	<div class="col-md-12">
+		<button class="btn btn-primary pull-right form-controll">{{ button_label|default('Save') }}</button>
+
+
+	</div>
+
+</div>
 {{ form_end(form) }}

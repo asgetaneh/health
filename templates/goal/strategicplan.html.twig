@@ -14,15 +14,33 @@
 {% endblock %}
 
 {% block body %}
+	{% if app.user.status == 0 %}
 
-	<div class="row">
+		<div class="row">
+			{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+			<div class="col-md-4">
+				<div class="form-group form-group-sm">
+					{{ form_label(filterform.operationalOffice,'operationalOffice') }}
+					{{ form_widget(filterform.operationalOffice,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="form-group" style="margin-top:25px;">
+					<input type="submit" class="btn btn-primary btn-sm " value="Choose">
+				</div>
+			</div>
+			{{form_end(filterform)}}
+		</div>
+	{% else %}
 		<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 			<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 			{% trans %}
-			View Strategic Map {% endtrans %}</a>
-		{% set locale = app.request.locale %}
+			View Strategic Map
+			{% endtrans %}</a>
 
-	</div>
+	{% endif %}
+	{% set locale = app.request.locale %}
+
 	<div id="myModal" class="modal fade" role="dialog">
 		<div
 			class="modal-dialog " style="width:1300px;">
@@ -43,119 +61,8 @@
 
 
 			</div>
-			{# <div class="modal-footer">
-							<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-			
-						</div> #}
 		</div>
 
 	</div>
-{% endblock %}
-{# {% for goal in goals %}
-		
-		
-					<div class="col-xs-12">
-						<div class="media search-media">
-		
-		
-							<div class="media-body">
-								<div>
-									<h4 class="media-heading">
-										<a href="#" class="blue">Goal {{loop.index}}: {{goal|title}}</a>
-									</h4>
-								</div>
-								{% for objective in goal.objectives %}
-									<caption> <strong>Objective :{{objective|title}}</strong> </caption>
-									<div class="table-responsive">
-										<table class="table  table-bordered table-hover" style="margin-top:10px;">
-											<thead>
-												<tr>
-													<th>Strategies</th>
-													<th>Key Performance Indicators
-													</th>
-													<th>Initiatives/ Projects
-													</th>
-													<th>Responsible office (exhaustive list)
-													</th>
-												</tr>
-											</thead>
-											<tbody>
-												   {% for strategy in objective.strategies %}
-													     <tr>
-		                                                 {% set row = strategy.keyPerformanceIndicators|length +1 %}
-														  <td rowspan = "{{row}}">{{strategy}}</td>
-		
-															</tr>
-		                                                   
-		                                                   
-		                                                      {% for kpi in strategy.keyPerformanceIndicators %}
-		                                                      {% set inrow = kpi.initiatives|length +1 %}
-		                                                       <tr>
-		                                                      <td >
-																{{kpi}}
-		                                                         </td>
-		                                                        
-		                                                         
-		                                                          <td>
-		                                                          {% for initiative in kpi.initiatives %}
-		                                                       
-																	{{initiative}}
-		                                                           
-																{% endfor %}
-		                                                          </td>
-		                                                          <td>
-		                                                           {% for initiative in kpi.initiatives %}
-		                                                       {% for office in initiative.principalOffice %}
-															{{office}}
-		
-														{% endfor %}
-																	
-		                                                           
-																{% endfor %}
-		
-		                                                          </td>
-		                                                          </tr>
-		                                                          
-		                                                        {% endfor %}
-		                                                       
-		                                                       
-		                                                   
-		
-															
-		                                                       
-		
-															
-		
-														
-		
-		
-														
-															{# {% for kpi in strategy.keyPerformanceIndicators %}
-		                                                     <td rowspan="">
-																{% for initiative in kpi.initiatives %}
-		                                                       
-																	{{initiative}}
-		                                                           
-																{% endfor %}
-		                                                         </td>
-															{% endfor %}
-														
-													
-													</tr> #}
-{# {% endfor %}
-	
-										</tbody>
-									</table>
-								</div>
-	
-	
-							{% endfor %}
-						</div>
-					</div>
-	
-	
-				</div>
-	
-			{% endfor %}
-			<div class="pull-right pagination" id="custompaginator">{{ knp_pagination_render(goals) }}</div> #}
+
+</div>{% endblock %}

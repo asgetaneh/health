@@ -54,6 +54,8 @@ class TaskUser
      */
     private $staffEvaluationBehaviorCriterias;
 
+    
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -184,4 +186,6 @@ class TaskUser
 
         return $this;
     }
+
+   
 }

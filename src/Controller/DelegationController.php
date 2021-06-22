@@ -31,7 +31,20 @@ class DelegationController extends AbstractController
             'delegations' =>$data,
         ]);
     }
+    /**
+     * @Route("/return", name="delegation_return")
+     */
+    public function return(Request $request)
+    {
+       $em=$this->getDoctrine()->getManager();
+       $delegation=$em->getRepository(Delegation::class)->find($request->request->get("delegation_id"));
+       $delegation->setStatus(0);
+       $em->flush();
+        // dd($delegation);
+                  return $this->redirectToRoute('delegation_index');
 
+    }
+    
     /**
      * @Route("/new", name="delegation_new", methods={"GET","POST"})
      */
@@ -50,9 +63,8 @@ class DelegationController extends AbstractController
 
                 return $this->redirectToRoute('delegation_new');
             }
-
-
             $delegation->setDelegatedBy($this->getUser());
+       $delegation->setStatus(1);
             $entityManager->persist($delegation);
             $entityManager->flush();
             $this->addFlash('success', "you delegate successfuly");

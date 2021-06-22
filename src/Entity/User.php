@@ -187,13 +187,21 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="delegatedBy")
      */
     private $delegations;
-    
 
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="deligateBy")
+     */
+    private $performerTaskDelegate;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="delegate")
+     */
+    private $taskAssignsDelegate;
 
- 
-
-
+    /**
+     * @ORM\OneToMany(targetEntity=Evaluation::class, mappedBy="evaluateUser")
+     */
+    private $evaluations;
     public function __construct()
     {
       
@@ -227,6 +235,9 @@ class User implements UserInterface
         $this->operationalTasks = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
         $this->delegations = new ArrayCollection();
+        $this->performerTaskDelegate = new ArrayCollection();
+        $this->taskAssignsDelegate = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
 
     }
     public function __toString()
@@ -1191,6 +1202,98 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTaskDelegate(): Collection
+    {
+        return $this->performerTaskDelegate;
+    }
+
+    public function addPerformerTaskDelegate(PerformerTask $performerTaskDelegate): self
+    {
+        if (!$this->performerTaskDelegate->contains($performerTaskDelegate)) {
+            $this->performerTaskDelegate[] = $performerTaskDelegate;
+            $performerTaskDelegate->setDeligateBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTaskDelegate(PerformerTask $performerTaskDelegate): self
+    {
+        if ($this->performerTaskDelegate->removeElement($performerTaskDelegate)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTaskDelegate->getDeligateBy() === $this) {
+                $performerTaskDelegate->setDeligateBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskAssign[]
+     */
+    public function getTaskAssignsDelegate(): Collection
+    {
+        return $this->taskAssignsDelegate;
+    }
+
+    public function addTaskAssignsDelegate(TaskAssign $taskAssignsDelegate): self
+    {
+        if (!$this->taskAssignsDelegate->contains($taskAssignsDelegate)) {
+            $this->taskAssignsDelegate[] = $taskAssignsDelegate;
+            $taskAssignsDelegate->setDelegate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskAssignsDelegate(TaskAssign $taskAssignsDelegate): self
+    {
+        if ($this->taskAssignsDelegate->removeElement($taskAssignsDelegate)) {
+            // set the owning side to null (unless already changed)
+            if ($taskAssignsDelegate->getDelegate() === $this) {
+                $taskAssignsDelegate->setDelegate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Evaluation[]
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations[] = $evaluation;
+            $evaluation->setEvaluateUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getEvaluateUser() === $this) {
+                $evaluation->setEvaluateUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 
                
 
