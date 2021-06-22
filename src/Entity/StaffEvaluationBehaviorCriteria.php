@@ -27,10 +27,7 @@ class StaffEvaluationBehaviorCriteria
      */
     private $behavioralVariables;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $total;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=TaskUser::class, inversedBy="staffEvaluationBehaviorCriterias")
@@ -66,17 +63,7 @@ class StaffEvaluationBehaviorCriteria
         return $this;
     }
 
-    public function getTotal(): ?int
-    {
-        return $this->total;
-    }
-
-    public function setTotal(int $total): self
-    {
-        $this->total = $total;
-
-        return $this;
-    }
+   
 
     public function getTaskUser(): ?TaskUser
     {

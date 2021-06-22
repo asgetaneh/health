@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskAccomplishmentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +57,16 @@ class TaskAccomplishment
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $reportedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Evaluation::class, mappedBy="taskAccomplishment")
+     */
+    private $evaluations;
+
+    public function __construct()
+    {
+        $this->evaluations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -145,6 +157,36 @@ class TaskAccomplishment
     public function setReportedAt(?string $reportedAt): self
     {
         $this->reportedAt = $reportedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Evaluation[]
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations[] = $evaluation;
+            $evaluation->setTaskAccomplishment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getTaskAccomplishment() === $this) {
+                $evaluation->setTaskAccomplishment(null);
+            }
+        }
 
         return $this;
     }

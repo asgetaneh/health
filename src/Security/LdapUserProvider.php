@@ -76,22 +76,15 @@ class LdapUserProvider implements UserProviderInterface
         //  dd(sprintf($this->ldapSearchDnString, $username));
 
         try {
-            //     // code...
-            //    dump($username);
-            //    dump($this->ldapSearchDnString);
-            //    dd($password);
+           
 
             $this->ldap->bind(sprintf($this->ldapSearchDnString, $username), $password);
         } catch (ExceptionConnectionException $th) {
-            //  $th;
-            // dd($th);
-
+           
             return null;
             throw new CustomUserMessageAuthenticationException('Cant connect to server,try again');
         } catch (\Throwable $th) {
-            //  $th;
-            //   dd($th);
-
+          
             return null;
         }
         // dd("bind");
@@ -119,20 +112,25 @@ class LdapUserProvider implements UserProviderInterface
         $email = $ldapEntry->getAttributes()['mail'][0];
         $username = $ldapEntry->getAttributes()['uid'][0];
         $email = $ldapEntry->getAttributes()['mail'][0];
-        //   dd($ldapEntry);
+        $mobile = $ldapEntry->getAttributes()['mobile'][0];
+        //   dd($mobile,$email);
         $userinfo = new UserInfo();
 
         $user = new User();
         $userRepository = $this->entityManager->getRepository('App\Entity\User');
         $userfind = $userRepository->findOneBy(['username' => $username]);
+
         if (!$userfind) {
+
             $user->setUsername($username);
             $user->setRoles(['staff']);
+                        $user->setStatus(0);
             $this->entityManager->persist($user);
             //$this->entityManager->flush();
 
             $userinfo->setUser($user);
-        $userinfo->setEmail($email);
+        $userinfo->setMobile($email);
+       $userinfo->setEmail($mobile);
         // $useradd->setUsername($username);
         $userinfo->setFullName($fullName);
         $this->entityManager->persist($userinfo);

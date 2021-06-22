@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Permission;
 use App\Form\PermissionType;
 use App\Repository\PermissionRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,17 @@ class PermissionController extends AbstractController
     /**
      * @Route("/", name="permission_index", methods={"GET"})
      */
-    public function index(PermissionRepository $permissionRepository): Response
+    public function index(Request $request, PermissionRepository $permissionRepository,PaginatorInterface $paginator): Response
     {
+    $permissions = $permissionRepository->findAll();
+        $data = $paginator->paginate(
+            $permissions,
+            $request->query->getInt('page', 1),
+            10
+        );
+       
         return $this->render('permission/index.html.twig', [
-            'permissions' => $permissionRepository->findAll(),
+            'permissions' => $data,
         ]);
     }
 

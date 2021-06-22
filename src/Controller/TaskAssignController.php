@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Delegation;
+use App\Entity\Evaluation;
+use App\Entity\PlanningQuarter;
+use App\Entity\PlanningYear;
+use App\Entity\StaffEvaluationBehaviorCriteria;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
+use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
@@ -14,14 +20,19 @@ use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @Route("/task/assign")
@@ -87,6 +98,113 @@ class TaskAssignController extends AbstractController
             'task_assigns' => $taskAssignRepository->findAll(),
         ]);
     }
+     /**
+     * @Route("/evaluation", name="evaluation")
+     */
+    public function evaluation(Request $request )
+    {   $em=$this->getDoctrine()->getManager();
+                $staffCriterias=$em->getRepository(StaffEvaluationBehaviorCriteria::class)->findAll();
+     $form = $this->createFormBuilder()
+           ->add('name', EntityType::class,
+               ['class' => UserInfo::class,
+                'required' => true])
+            ->add('quarter', EntityType::class, [
+                'class' => PlanningQuarter::class,
+                'required' => true
+
+            ]) ->add('year', EntityType::class, [
+                'class' => PlanningYear::class,
+                'required' => true
+
+            ])
+            ->getForm();
+            $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userId=$form->getData()['name']->getUser()->getId();
+           $quarter=$form->getData()['quarter']->getId();
+           $year=$form->getData()['year']->getId();
+            $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
+                //   dd($taskAssigns);
+           return $this->render('task_assign/evaluation.html.twig',[
+            'form'=>$form->createView(),
+            'evaluations'=>$evaluations,
+            'staffCriterias'=>$staffCriterias,
+            'visible'=>1,
+            'userId'=>$userId,
+            'year'=>$year,
+            'quarter'=>$quarter, ]);
+        }
+       if ($request->request->get("evaluattonValues")) {
+           $sum=0;
+           $count=0;
+           $average=0;
+            $userId=$request->request->get("userId");
+            $quarter=$request->request->get("quarter");
+            $year=$request->request->get("year");
+            $evaluattonValues=$request->request->get("evaluattonValues");
+            $values=$request->request->get("values");
+               foreach ($evaluattonValues as $key => $value) {
+                   $count++;
+                   $sum=$sum+$values[$key];
+               }        
+    $evaluations=$em->getRepository(Evaluation::class)->findEvaluatinCriteia($userId,$quarter,$year);
+    foreach ($evaluations as $value) {
+        $value->setBehavior($sum);
+    }
+       $em->flush();
+        $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
+                //   dd($taskAssigns);
+           return $this->render('task_assign/evaluation.html.twig',[
+            'form'=>$form->createView(),
+            'evaluations'=>$evaluations,
+            'staffCriterias'=>$staffCriterias,
+            'visible'=>1,
+            'userId'=>$userId,
+            'year'=>$year,
+            'quarter'=>$quarter, ]);
+
+
+                }
+        if ($request->request->get("quarter")) {
+             $userId=$request->request->get("userId");
+        $fullName=$em->getRepository(UserInfo::class)->findOneBy(['user'=>$userId]);
+        $fullName=$fullName->getFullName();
+             $quarter=$request->request->get("quarter");
+            $year=$request->request->get("year");
+          $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
+             $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($pdfOptions);
+        $res = $this->renderView('task_assign/print.html.twig',[
+          'evaluations'=>$evaluations,
+          'date'=>  (new \DateTime())->format('y-m-d'),
+          'fullName'=>$fullName
+
+        ]); 
+
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A5', 'Landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("Evaluation.pdf", [
+            "Attachment" => false
+        ]);
+            //  dd($evaluations);
+        }
+
+    return $this->render('task_assign/evaluation.html.twig',[
+        'form'=>$form->createView(),
+        'visible'=>0,
+         'staffCriterias'=>$staffCriterias,
+
+    ]
+            
+        );
+      
+    }
 
     /**
      * @Route("/new", name="task_assign_new", methods={"GET","POST"})
@@ -115,8 +233,16 @@ class TaskAssignController extends AbstractController
      */
     public function performerFetch(Request $request,PlanningAccomplishmentRepository $planningAccomplishmentRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
     TaskMeasurementRepository $taskMeasurementRepository)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
+    {        $em = $this->getDoctrine()->getManager();
+
+          $user= $this->getUser();
+         
+     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
+     if ($delegatedUser) {
+   $delegatedBy=$delegatedUser->getDelegatedBy();
+        $user=$delegatedBy;
+
+     }
         $status=0;
           $initibativeId=0;
             $users=$request->request->get('user');
@@ -141,15 +267,17 @@ class TaskAssignController extends AbstractController
              $taskAssign->setPerformerTask($taskId);
            
              $taskAssign->setAssignedAt(new \DateTime());
-             $taskAssign->setAssignedBy($this->getUser());
+             $taskAssign->setAssignedBy($user);
+                  if ($delegatedUser) {
+              $taskAssign->setDelegate($delegatedUser->getDelegatedUser());}
              $taskAssign->setType(1);
            $taskAssign->setStartDate($startDate);
             $taskAssign->setEndDate($endDate);
            $taskAssign->setTimeGap($timeGap);
 
              $taskAssign->setStatus(1);
-             $entityManager->persist($taskAssign);
-              $entityManager->flush();
+             $em->persist($taskAssign);
+              $em->flush();
            foreach ($users as $key => $valuet) { 
               $taskUser=new TaskUser();
                            $userId=$userRepository->find($valuet);
@@ -158,7 +286,7 @@ class TaskAssignController extends AbstractController
              $taskUser->setTaskAssign($taskAssign);
                           $taskUser->setStatus(0);
 
-          $entityManager->persist($taskUser);
+          $em->persist($taskUser);
             // $this->mail(
             //     $request,
             //     $this->getUser(),
@@ -166,7 +294,7 @@ class TaskAssignController extends AbstractController
             //     "your Assigend to performer this Task " . $userId->getUserInfo()->getEmail(),
             //     '10.140.10.19'
             // );
-              $entityManager->flush();
+              $em->flush();
               
               
                foreach ($measurementids as  $key => $valuea) {
@@ -179,24 +307,24 @@ class TaskAssignController extends AbstractController
             $taskAccoplishment->setMeasurement($taskmeasurementId);
             $taskAccoplishment->setExpectedValue($expectedValue);
           $taskAccoplishment->setMeasureDescription($measurementDescription);
-             $entityManager->persist($taskAccoplishment);
-              $entityManager->flush();
+             $em->persist($taskAccoplishment);
+              $em->flush();
 
             }
 
-           $entityManager->persist($taskAssign);
-              $entityManager->flush();
+           $em->persist($taskAssign);
+              $em->flush();
 
               }
-              $entityManager->persist($taskAssign);
+              $em->persist($taskAssign);
 
-              $entityManager->flush();
+              $em->flush();
         }
-                      $entityManager->flush();
+                      $em->flush();
                       $planId=$planningAccomplishmentRepository->find($planId);
               if($planId->getStatus()<2){
                   $planId->setStatus(2);
-                  $entityManager->flush();
+                  $em->flush();
               }
                 // $aproverlist = $this->approverRepository->findAll();
             // return dd($aproverlist);
@@ -228,6 +356,7 @@ class TaskAssignController extends AbstractController
             'task_assign' => $taskAssign,
         ]);
     }
+   
 
     /**
      * @Route("/{id}/edit", name="task_assign_edit", methods={"GET","POST"})

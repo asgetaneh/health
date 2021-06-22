@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use Andegna\DateTimeFactory;
 use App\Entity\PlanningQuarter;
 use App\Form\PlanningQuarterType;
+use App\Helper\AmharicHelper;
 use App\Repository\PlanningQuarterRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,6 +39,17 @@ class PlanningQuarterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+           $data= $form->getData();
+           $startDate=$request->request->get("startDate");
+           $endDate=$request->request->get("endDate");
+           $startDate=explode('/',$startDate);
+            $endDate=explode('/',$endDate);
+           $startDate1=DateTimeFactory::of($startDate[2], $startDate[1], $startDate[0]);
+           $endDate1=DateTimeFactory::of($endDate[2], $endDate[1], $endDate[0]);
+            $gergorianStart = AmharicHelper::fromEthtoGre($startDate1);
+            $gergorianEnd = AmharicHelper::fromEthtoGre($endDate1);
+            $planningQuarter->setStartDate($gergorianStart);
+            $planningQuarter->setEndDate($gergorianEnd);
             $planningQuarter->setCreatedAt(new DateTime('now'));
             $planningQuarter->setCreatedBy($this->getUser());
             $entityManager->persist($planningQuarter);

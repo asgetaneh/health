@@ -68,6 +68,11 @@ class PerformerTask
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="performerTaskDelegate")
+     */
+    private $deligateBy;
+
     
     
 
@@ -208,6 +213,18 @@ class PerformerTask
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDeligateBy(): ?User
+    {
+        return $this->deligateBy;
+    }
+
+    public function setDeligateBy(?User $deligateBy): self
+    {
+        $this->deligateBy = $deligateBy;
 
         return $this;
     }

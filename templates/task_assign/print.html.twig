@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)https://www.100forms.com/sources/ready-forms/student-evaluation-form/ -->
+<html lang="en">
+	<head>
+		<style>
+			table {
+
+				border-collapse: collapse;
+				width: 100%;
+				height: 5 %%;
+
+			}
+
+			td,
+			tr,
+			th {
+				border: 1 solid #000;
+				text-align: left;
+				padding-left: 15px;
+				font-size: 11px;
+
+			}
+		</style>
+
+	</head>
+
+
+	<body borde="0">
+		<center><img class="img-responsive" height="80" width="100" src="{{ absolute_url(asset('assets/favicon.png')) }}"/></center>
+
+
+		<center>
+			<h2>Performance Appraisal Certificate
+			</h2>
+		</center>
+		<table border="0px">
+			<tr>
+				<td>
+					<h4>College/Institute/Directorate</h4>
+					<h>Evaluation Period     Year
+						<u>2013</u>
+						Period From
+						<u>01/01/2013
+						</u>
+						To
+						<u>
+							03/30/2013
+						</u>
+						months</h5>
+					<h5>Evaluater Name:
+						<u>{{fullName}}</u>
+					</h5>
+					<h5>Evaluatee Id</h5>
+
+				</td>
+			</tr>
+
+			
+		</table><br>
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>{% trans %}Number Of Task{% endtrans %}</th>
+					<th>{% trans %}Quantity{% endtrans %}</th>
+					<th>{% trans %}Time{% endtrans %}</th>
+					<th>{% trans %}Quality{% endtrans %}</th>
+					<th>{% trans %}Behavior{% endtrans %}</th>
+					<th>{% trans %}Self Evaluation{% endtrans %}</th>
+					<th>{% trans %}Peer Evaluation{% endtrans %}</th>
+					<th>{% trans %}Customer Evaluation{% endtrans %}</th>
+					<th>{% trans %}Average{% endtrans %}</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for evaluation in evaluations %}
+					<tr>
+						<td>{{ evaluation.countTask}}</td>
+						<td>{{ evaluation.totalQuanity}}</td>
+						<td>{{ evaluation.totalTime }}</td>
+						<td>{{ evaluation.totalQuality }}</td>
+						<td>{{ evaluation.totalBehavior }}</td>
+						<td>{{ evaluation.totalSelfEvaluation }}</td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<h5>Name Evaluator
+			<u>Abebe</u>
+		</h5>
+		<h5>Date Evaluation
+			<u>{{date}}</u>
+		</h5>
+	</body>
+</html>

@@ -1,0 +1,228 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="">
+		<a href="#">{% trans %}Evaluation{% endtrans %}</a>
+	</li>
+	<li class="active">
+		<a href="{{ path('evaluation')}}">{% trans %}Evaluation List{% endtrans %}</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>
+							{% trans %}
+							Evaluation{% endtrans %}</strong>
+					</h5>
+
+					<div class="widget-toolbar"></div>
+
+					<div class="widget-toolbar"></div>
+				</div>
+				<div class="widget-body">
+					<div class="widget-main padding-16">
+						<div class="row">
+							<div class="search-area well col-md-12">
+
+								<div class="row">
+									{{ form_start(form,{'attr': {'role':'form','class':' ' }}) }}
+									<div class="col-md-4">
+										<div class="form-group ">
+											{{ form_label(form.name,'Name') }}
+											{{ form_widget(form.name,{'attr':{'class':' select2 form-control ','placeholder':'chose Quarter' }}) }}
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(form.quarter,'Quarter') }}
+											{{ form_widget(form.quarter,{'attr':{'class':'select2 form-control','placeholder':'chose Quarter' }}) }}
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(form.year,'Year') }}
+											{{ form_widget(form.year,{'attr':{'class':'select2 form-control','placeholder':'chose Quarter' }}) }}
+										</div>
+									</div>
+
+
+									<div class="col-md-1">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit" class="btn btn-primary btn-sm " value="Search">
+										</div>
+									</div>
+
+
+									{{ form_end(form) }}
+								</div>
+
+
+							</div>
+
+						</div>
+						{% if visible == 1 %}
+
+													<table class=" table table-bordered table-responsive-xg table-hover">
+								<thead>
+									<tr>
+										<th>{% trans %}Number Of Task{% endtrans %}</th>
+										<th>{% trans %}Quantity{% endtrans %}</th>
+										<th>{% trans %}Time{% endtrans %}</th>
+										<th>{% trans %}Quality{% endtrans %}</th>
+										<th>{% trans %}Behavior{% endtrans %}</th>
+										<th>{% trans %}Self Evaluation{% endtrans %}</th>
+										<th>{% trans %}Peer Evaluation{% endtrans %}</th>
+										<th>{% trans %}Customer Evaluation{% endtrans %}</th>
+										<th>{% trans %}Average{% endtrans %}</th>
+										<th>{% trans %}Action{% endtrans %}</th>
+
+
+									</tr>
+								</thead>
+								<tbody>
+									{% for evaluation in evaluations %}
+										<tr>
+											{% if evaluation.countTask %}
+
+												<td>{{ evaluation.countTask}}</td>
+
+												<td>{{ evaluation.totalQuanity / evaluation.countTask }}</td>
+												<td>{{ evaluation.totalTime }}</td>
+												<td>{{ evaluation.totalQuality }}</td>
+												{% if evaluation.totalBehavior %}
+													<td>{{ evaluation.totalBehavior / evaluation.countTask}}</td>
+												{% else %}
+													<td>
+														<button type="button" title="evaluate" class=" evaluate btn btn-danger btn-sm   ">
+															Behavior
+														</button>
+													</td>
+												{% endif %}
+
+												<td>{{ evaluation.totalSelfEvaluation }}</td>
+												<td></td>
+												<td></td>
+												<td></td>
+
+												<td>
+													<form action="{{path('evaluation')}}" method="post">
+														<button type="submit" title="print" class=" print btn btn-danger btn-sm   ">
+															<i class="fa fa-file-pdf-o "></i>
+														</button>
+														<input type="hidden" name="quarter" value="{{quarter}}">
+														<input type="hidden" name="year" value="{{year}}">
+														<input type="hidden" name="userId" value="{{userId}}">
+
+													</form>
+												</td>
+
+											{% endif %}
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="4">no records found</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						{% endif %}
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade  criteria" id="evaluate">
+		<div
+			class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Staff Evaluation Criteria & scale
+					</h4>
+				</div>
+				<form action="{{path('evaluation')}}" method="post">
+					<div class="modal-body">
+						<input type="hidden" name="taskUserid" class="taskUserid">
+						<div class="form-group">
+
+							<table class="table-bordered table-hover" style="margin-top:10px;">
+								<tr>
+									<th>#
+									</th>
+									<th>Name
+									</th>
+									<th>Behavioural Value
+									</th>
+
+									<th>Values
+									</th>
+
+
+								</tr>
+								{% set count = 0 %}
+								{% for staffCriteria in staffCriterias   %}
+									<tr>
+										{% set count = count + 1 %}
+										<td>{{count}}</td>
+										<td>{{ staffCriteria.name }}</td>
+										<td>{{ staffCriteria.behavioralVariables }}</td>
+										<td>
+											{% if visible == 1 %}
+
+												<input type="hidden" name="year" value="{{year}}">
+												<input type="hidden" name="quarter" value="{{quarter}}">
+												<input type="hidden" name="userId" value="{{userId}}">
+											{% endif %}
+											<input type="hidden" name="evaluattonValues[]" value="{{staffCriteria.behavioralVariables}}" class=" form-control">
+											<input type="text" name="values[]" class=" form-control" required>
+										</td>
+
+
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="8">no records found</td>
+									</tr>
+								{% endfor %}
+
+							</table>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Evaluate{% endtrans %}"/>
+					<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+
+		$('.evaluate').click(function () {
+
+$('#evaluate').modal('show');
+
+
+})
+	</script>{# <script>
+																											$('.return').click(function () {
+																									alert("are you Shure");
+																									
+																									
+																									})
+																										</script> #}{% endblock %}
