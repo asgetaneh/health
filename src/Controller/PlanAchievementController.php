@@ -48,16 +48,60 @@ class PlanAchievementController extends AbstractController
      * @Route("/goal", name="plan_achievement_goal")
      */
     public function goal(PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PaginatorInterface $paginator, Request $request,PlanningYearRepository $planningYearRepository): Response
-    {      
+    {    
+
+       
+      $a= [  'year'=>[2002,200,300],
+
+
+      'goal'=>[
+            [
+                'name'=>'abdo',
+                'achieve'=>[10,30,50]
+            ],
+            [
+                'name'=>'some',
+                'achieve'=>[10,30,50]
+            ],
+            ]
+        ];
+        $datas=[];
+        $goalDatas=[];
+      
            //$goalname=array();
+            $planyears = $planningYearRepository->findAll();
           $goals=$goalRepository->findAll();
-           $planyears = $planningYearRepository->findAll();
+          foreach($goals as $key=> $goal){
+              $goaldata=[];
+                
+            //    dd($goaldata['name']) ;
+                $achieveData=[];
+              $goalAchievements=$planAchievementRepository->getByGoal($goal);
+           
+              foreach($goalAchievements as $key2 => $achievement){
+                //  dd($achievement->getAccomplishmentValue());
+                  $achieveData[$key2]=$achievement->getAccomplishmentValue();
+              }
+              $goaldata['name']=$goal->getName();
+              $goaldata['achieve']=$achieveData;
+              //dd($goaldata['name']);
+             $goalDatas[$key]= $goaldata;
+        
+          }
+          
+         
+          
            $planyear=array_map(function($year){
                 return date_format($year->getYear(),"Y");
             }, $planyears);
+            $datas['year']= $planyear;
+            $datas['goal']=$goalDatas;
+            
+
            $goalname=array_map(function($goal){
                 return $goal->getName();
             },$goals);
+   
          
            $em = $this->getDoctrine()->getManager();
          if ($request->request->get('reload')) {
@@ -75,7 +119,8 @@ class PlanAchievementController extends AbstractController
         return $this->render('plan_achievement/goal.html.twig', [
             'plan_achievements' => $data,
             'goalname'=>$goalname,
-            'planyear'=> $planyear
+            'planyear'=> $planyear,
+            'data'=>$datas
         ]);
     }
     /**

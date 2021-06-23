@@ -63,27 +63,27 @@ class DelegationRepository extends ServiceEntityRepository
      return $qb->orderBy('d.id','DESC')->getQuery()->getResult();
 
     }
-    public function findDuplication($owner,$delegate){
-        $qb=$this->createQueryBuilder('d');
-        $now =new DateTime('now');
-        $qb->andWhere('d.endAt< :now')
-        ->andWhere('d.delegatedBy=:owner')
-        ->orWhere('d.delegatedUser=:delegate')
-        ->setParameter('owner',$owner)
-        ->setParameter('delegate',$delegate)
-        ->setParameter('now',$now);
-     return $qb->getQuery()->getResult();
-
-    }
+   
      public function findByUser($user){
         $qb=$this->createQueryBuilder('d');
         $now =new DateTime('now');
-        $qb->andWhere('d.endAt >:now and (d.status is null or d.status = 0 )')
+        $qb->andWhere('d.endAt >:now and (d.status is null or d.status = 1 )')
         ->andWhere('d.delegatedBy=:owner')
         ->setParameter('owner',$user)
 
         ->setParameter('now',$now);
      return $qb->orderBy('d.id','DESC')->getQuery()->getResult();
+
+    }
+    public function findAllByUser($user){
+        $qb=$this->createQueryBuilder('d');
+        $now =new DateTime('now');
+        $qb
+        ->andWhere('d.delegatedBy=:owner')
+        ->setParameter('owner',$user)
+
+      ;
+     return $qb->orderBy('d.id','DESC')->getQuery();
 
     }
 }

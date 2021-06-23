@@ -55,10 +55,13 @@
 										<td>{{ delegation.startAt ? delegation.startAt|date('d-M-Y ') : '' }}</td>
 										<td>{{ delegation.endAt ? delegation.endAt|date('d-M-Y ') : '' }}</td>
 										<td>
-											{% if delegation.endAt > date('now') or delegation.status == 1 %}
-												<span class="badge badge-info">Active</span>
+											{% if delegation.endAt > date('now') and delegation.status == 1 %}
+												<span class="badge badge-info">{% trans %}Active{% endtrans %}</span>
+                                                {% elseif delegation.endAt > date('now') and delegation.status == 0 %}
+                                                <span class="badge badge-warning">{% trans %}Canceled{% endtrans %}</span>
+
 											{% else %}
-												<span class="badge badge-success">Completed</span>
+												<span class="badge badge-success">{% trans %}Completed{% endtrans %}</span>
 											{% endif %}
 										</td>
 										<td>
@@ -69,8 +72,8 @@
 											<td>
 
 												<form action="{{path('delegation_return')}}" method="post">
-													<button type="submit" class="btn btn-danger return btn-sm return">
-														Return</button>
+													<button type="submit" class="btn btn-danger btn-sm return" onclick="return confirm('Are you sure you want to cancel this delegation?');">
+														{% trans %}Terminate{% endtrans %}</button>
 													<input type="hidden" name="delegation_id" value="{{delegation.id}}">
 												</form>
 											</td>
@@ -96,10 +99,6 @@
 {% endblock %}
 {% block javascripts %}
 	<script>
-		$('.return').click(function () {
-alert("are you Shure");
-
-
-})
+		
 	</script>
 {% endblock %}

@@ -166,7 +166,20 @@ INSERT IGNORE INTO `permission` (`name`, `code`, `description`) VALUES
 -- plan
 
 ( 'View All principal Office Plan', 'vw_all_pln', 'View All principal Office Plan'),
+( 'Add plan and Casceding', 'csc_nd_pln', 'Add plan and Casceding'),
 
+
+-- delegation
+( 'View All Delegation', 'vw_all_dlg', 'View All Delegation'),
+
+
+-- achievement
+( 'View Goal Achievement', 'vw_gol_achv', 'View Goal Achievement'),
+( 'View Objective Achievement', 'vw_objt_achv', 'View Objective Achievement'),
+( 'View KPi Achievement', 'vw_kpi_achv', 'View Kpi Achievement'),
+( 'View Initiative Achievement', 'vw_initv_achv', 'View Initiative Achievement'),
+
+ 
 ;
 
 

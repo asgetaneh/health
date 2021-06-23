@@ -148,7 +148,7 @@
 $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
-})
+});
  function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -158,126 +158,62 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 var bgcolor=[];
+var fillColor=[];
 {% for goal in goalname %}
    bgcolor.push(getRandomColor());
+  fillColor.push(getRandomColor());
 {% endfor %}
-//var bgcolor=getRandomColor();
-var fillColor=getRandomColor();
-var strokeColor=getRandomColor();
-var highlightFill=getRandomColor();
+
 
 var ctx = document.getElementById("myChart").getContext('2d');
 
 
 
-var data={
-labels: [{{planyear|join(',')}}],
+
+var dat = {
+labels: [{{ data.year|join(',') }} ],
 datasets: [
-{
-label: "{{goalname[0]}}",
-fillColor: "rgba(255, 99, 132, 0.1)",
-strokeColor: "rgba(220,220,220,0.8)",
-highlightFill: "rgba(220,220,220,0.9)",
-highlightStroke: "rgba(220,220,220,1)",
-data: [65, 59],
+ {% for goal in data.goal %}
+  {
+   
+label: "{{goal.name }}",
+fillColor: fillColor[{{loop.index}}],
+strokeColor: fillColor[{{loop.index}}],
+highlightFill: fillColor[{{loop.index}}],
+highlightStroke: fillColor[{{loop.index}}],
+data: [{{goal.achieve|join(',')}}],
 backgroundColor: [ 
-				bgcolor[0],
-				bgcolor[0],
-				bgcolor[0],
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)'
+				{% for i in range(1,goal.achieve|length) %}  bgcolor[{{loop.parent.loop.index}}],{% endfor %}
 			],
             borderColor: [ 
-				'rgba(255,99,132,1)',
-				'rgba(54, 162, 235, 1)',
-				'rgba(255, 206, 86, 1)',
-				'rgba(75, 192, 192, 1)',
-				'rgba(153, 102, 255, 1)',
-				'rgba(255, 159, 64, 1)'
+				{% for i in range(1,goal.achieve|length) %}fillColor[{{loop.parent.loop.index}}],{% endfor %}
 			],
 			borderWidth: 1 
-},
-{
-label: "{{goalname[1]}}" ,
-fillColor: "rgba(151,187,205,0.5)",
-strokeColor: "rgba(151,187,205,0.8)",
-highlightFill: "rgba(151,187,205,0.75)",
-highlightStroke: "rgba(151,187,205,1)",
-data: [28, 48],
-backgroundColor: [ 
-				bgcolor[1],
-				bgcolor[1],
-				bgcolor[1],
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)'
-			],
-            borderColor: [ 
-				'rgba(255,99,132,1)',
-				'rgba(54, 162, 235, 1)',
-				'rgba(255, 206, 86, 1)',
-				'rgba(75, 192, 192, 1)',
-				'rgba(153, 102, 255, 1)',
-				'rgba(255, 159, 64, 1)'
-			],
-			borderWidth: 1 
-},
-{
-label: "{{goalname[2]}}",
-fillColor: "rgba(151,187,205,0.5)",
-strokeColor: "rgba(151,187,205,0.8)",
-highlightFill: "rgba(151,187,205,0.75)",
-highlightStroke: "rgba(151,187,205,1)",
-data: [28, 48],
-backgroundColor: [ 
-				bgcolor[2],
-				bgcolor[2],
-				bgcolor[2],
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)',
-				'rgba(255, 99, 132, 0.2)'
-			],
-            borderColor: [ 
-				'rgba(255,99,132,1)',
-				'rgba(54, 162, 235, 1)',
-				'rgba(255, 206, 86, 1)',
-				'rgba(75, 192, 192, 1)',
-				'rgba(153, 102, 255, 1)',
-				'rgba(255, 159, 64, 1)'
-			],
-			borderWidth: 1 
-},
-{
-label: "{{goalname[3]}}",
-fillColor: "rgba(151,187,205,0.5)",
-strokeColor: "rgba(151,187,205,0.8)",
-highlightFill: "rgba(151,187,205,0.75)",
-highlightStroke: "rgba(151,187,205,1)",
-data: [28, 48],
-borderWidth: 1 
-},
-{
-label: "{{goalname[4]}}",
-fillColor: "rgba(151,187,205,0.5)",
-strokeColor: "rgba(151,187,205,0.8)",
-highlightFill: "rgba(151,187,205,0.75)",
-highlightStroke: "rgba(151,187,205,1)",
-data: [28, 48],
-borderWidth: 1 
 }
+{% if loop.last != true %}
+,
+{% endif %}
+ {% endfor %}
 ]
 };
+
+
 var myChart = new Chart(ctx, {
     type: 'bar',
-    data: data,
+    data: dat,
     options: {
       responsive: true, // Instruct chart js to respond nicely.
       maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
-    scaleShowGridLines : true,
+     
+      scaleFontStyle: "bold",
+      scaleLabel: "<%=value%>",
+      scaleFontSize: 16,
+      showTooltips: true,
+      
+      
     }
 });
 
-//var barchart=new Chart(ctx).Bar(data);
-})
+
+});
 </script>{% endblock %}

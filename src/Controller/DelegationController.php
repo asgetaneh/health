@@ -21,7 +21,14 @@ class DelegationController extends AbstractController
      */
     public function index(DelegationRepository $delegationRepository,Request $request,PaginatorInterface $paginator): Response
     {
+        if ($this->isGranted('vw_all_dlg')) {
         $delegations=$delegationRepository->findAlls();
+        }
+        else
+        $delegations=$delegationRepository->findAllByUser($this->getUser());
+        
+
+      
         $data = $paginator->paginate(
            $delegations,
             $request->query->getInt('page', 1),
@@ -57,14 +64,15 @@ class DelegationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $ise = $delegationRepository->findDuplication($this->getUser(), $delegation->getDelegatedUser());
+            $ise = $delegationRepository->findByUser($this->getUser());
+           
             if ($ise) {
                 $this->addFlash('danger', "sorry you have already active delegation");
 
                 return $this->redirectToRoute('delegation_new');
             }
             $delegation->setDelegatedBy($this->getUser());
-       $delegation->setStatus(1);
+           $delegation->setStatus(1);
             $entityManager->persist($delegation);
             $entityManager->flush();
             $this->addFlash('success', "you delegate successfuly");

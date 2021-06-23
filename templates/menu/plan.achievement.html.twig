@@ -1,5 +1,8 @@
 
-<li  >
+{% if is_granted('vw_gol_achv') or is_granted('vw_gol_achv') or is_granted('vw_gol_achv') %}
+
+
+<li>
 	<a href="#" class="dropdown-toggle " >
 		<i class="menu-icon fa fa-caret-right"></i>
 		<span class="menu-text">
@@ -10,6 +13,9 @@
 	</a>
     <b class="arrow"></b>
 	<ul class="submenu nav-show"  >
+    {% if is_granted('vw_gol_achv') %}
+    
+    
 		<li>
 			<a href="{{ path('plan_achievement_goal') }}" >
 				<b class="fa fa-caret-right"></b>
@@ -17,6 +23,8 @@
 			</a>
             <b class="arrow"></b>
 		</li>
+        {% endif %}
+        {% if is_granted('vw_objt_achv') %}
         
         <li>
 			<a href="{{ path('plan_achievement_objective') }}" >
@@ -25,19 +33,23 @@
 			</a>
             <b class="arrow"></b>
 		</li>
-       
+        {% endif %}
+       {% if is_granted('vw_kpi_achv') %}
          <li>
 			<a href="{{ path('plan_achievement_kpi') }}" >
 				<b class="fa fa-caret-right"></b>
 				{% trans %}KPi  Achievement{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
+        {% if is_granted('vw_initv_achv') %}
          <li>
 			<a href="{{ path('plan_achievement_initiative') }}" >
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Initiative  Achievement{% endtrans %}
 			</a>
 		</li>
+        {% endif %}
        
         
        
@@ -47,5 +59,6 @@
 		
         </ul>
         </li>
+        {% endif %}
       
       

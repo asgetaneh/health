@@ -35,8 +35,8 @@
 								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
 
-								<a href="{{ path('permission_new') }}" class="btn btn-success">Create
-								</a>
+								{# <a href="{{ path('permission_new') }}" class="btn btn-success">Create
+								</a> #}
 
 
 							</div>
@@ -55,7 +55,7 @@
 									<tr>
 										<th>Id</th>
 										<th>Name</th>
-										<th>Code</th>
+										{# <th>Code</th> #}
 										<th>Description</th>
 										<th>actions</th>
 									</tr>
@@ -69,7 +69,7 @@
 										<tr>
 											<td>{{ count }}</td>
 											<td>{{ permission.name }}</td>
-											<td>{{ permission.code }}</td>
+											{# <td>{{ permission.code }}</td> #}
 											<td>{{ permission.description }}</td>
 											<td>
 												<a href="{{ path('permission_show', {'id': permission.id}) }}" class="btn btn-primary ">
