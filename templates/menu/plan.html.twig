@@ -1,80 +1,95 @@
-
-<li  >
+<li>
 	<a href="#" class="dropdown-toggle " style="background:#3f87a6; color: #f5f6f8">
 		<i class="menu-icon fa fa-caret-right"></i>
 		<span class="menu-text">
 
-			{% trans %}Cascade {% endtrans %}
+			{% trans %}Cascade
+			{% endtrans %}
 		</span>
 		<b class="arrow fa fa-angle-down"></b>
 	</a>
-    <b class="arrow"></b>
-	<ul class="submenu nav-show" style="background:#3f87a6; color: #f5f6f8" >
+	<b class="arrow"></b>
+	<ul class="submenu nav-show" style="background:#3f87a6; color: #f5f6f8">
 		<li>
 			<a href="{{ path('plan_principal') }}" style="background:#3f87a6; color: #f5f6f8" class="bg-primary">
 				<b class="fa fa-caret-right"></b>
 				{% trans %}Plan{% endtrans %}
 			</a>
-            <b class="arrow"></b>
+			<b class="arrow"></b>
 		</li>
-        
-        <li>
-			<a href="{{ path('plan_index') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Cascading Achievement{% endtrans %}
-			</a>
-            <b class="arrow"></b>
-		</li>
-         {# <li>
-			<a href="{{ path('plan_achievement') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Plan Achievement{% endtrans %}
-			</a>
-		</li> #}
-         <li>
-			<a href="{{ path('suitable_initiative_report') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Principal Office Report plan{% endtrans %}
-			</a>
-		</li>
-        <li>
-			<a href="{{ path('principal_office_report') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Principal Office Report{% endtrans %}
-			</a>
-		</li>
-        <li>
-			<a href="{{ path('suitable_initiative_list') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Operational Task{% endtrans %}
-			</a>
-            <b class="arrow"></b>
-		</li>
-         <li>
-			<a href="{{ path('operational_task_show') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Operational Task List{% endtrans %}
-			</a>
-		</li>
-        
-        <li>
-			<a href="{{ path('performer_task_index') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Performer Task{% endtrans %}
-			</a>
-            <b class="arrow"></b>
-		</li>
-        <li>
-			<a href="{{ path('performer_task_list') }}" style="background:#3f87a6; color: #f5f6f8">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}View Performer Task Reports {% endtrans %}
-			</a>
-		</li>
-        
-		
-		
-		
-        </ul>
-        </li>
-      
-      
+		{% if is_granted('cas_view') %}
+
+			<li>
+				<a href="{{ path('plan_index') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Cascading Achievement{% endtrans %}
+				</a>
+				<b class="arrow"></b>
+			</li>
+		{% endif %}
+		{# <li>
+																	<a href="{{ path('plan_achievement') }}" style="background:#3f87a6; color: #f5f6f8">
+																		<b class="fa fa-caret-right"></b>
+																		{% trans %}Plan Achievement{% endtrans %}
+																	</a>
+																</li> #}
+		{% if is_granted('pri_off_rep') %}
+
+			<li>
+				<a href="{{ path('suitable_initiative_report') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Principal Office Report plan{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+		{% if is_granted('pri_off_rep') %}
+
+			<li>
+				<a href="{{ path('principal_office_report') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Principal Office Report{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+		{% if is_granted('opr_task') %}
+			<li>
+				<a href="{{ path('suitable_initiative_list') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Operational Task{% endtrans %}
+				</a>
+				<b class="arrow"></b>
+			</li>
+		{% endif %}
+		{% if is_granted('opr_task_list') %}
+
+			<li>
+				<a href="{{ path('operational_task_show') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Operational Task List{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+		{% if is_granted('per_task') %}
+
+			<li>
+				<a href="{{ path('performer_task_index') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Performer Task{% endtrans %}
+				</a>
+				<b class="arrow"></b>
+			</li>
+		{% endif %}
+		{% if is_granted('per_task_rep') %}
+
+			<li>
+				<a href="{{ path('performer_task_list') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}View Performer Task Reports
+					{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+
+
+	</ul>
+</li>

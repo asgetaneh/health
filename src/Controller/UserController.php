@@ -20,14 +20,19 @@ class UserController extends AbstractController
     /**
      * @Route("/user", name="user")
      */
-    public function index(UserGroupRepository $userGroupRepository): Response
+    public function index(UserGroupRepository $userGroupRepository,Request $request,PaginatorInterface $paginator): Response
     {
-        // $this->denyAccessUnlessGranted("sm_user");
-        $user_groups = $userGroupRepository->findAll();
-
+       // $this->denyAccessUnlessGranted("sm_user");
+                    $user_groups= $userGroupRepository->findAll();
+       $data = $paginator->paginate(
+            $user_groups,
+            $request->query->getInt('page', 1),
+            5
+        );
         return $this->render('user_group/index.html.twig', [
-            'user_groups' => $user_groups
+            'user_groups' => $data,
         ]);
+    
     }
    
     /**
