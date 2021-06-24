@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\UserGroup;
 use App\Form\UserGroupType;
 use App\Repository\UserGroupRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +19,19 @@ class UserGroupController extends AbstractController
     /**
      * @Route("/", name="user_group_index", methods={"GET"})
      */
-    public function index(UserGroupRepository $userGroupRepository): Response
+    public function index(UserGroupRepository $userGroupRepository,Request $request,PaginatorInterface $paginator): Response
     {
-        // $this->denyAccessUnlessGranted("sm_user");
-
+       // $this->denyAccessUnlessGranted("sm_user");
+          $user_groups= $userGroupRepository->findAll();
+       $data = $paginator->paginate(
+            $user_groups,
+            $request->query->getInt('page', 1),
+            5
+        );
         return $this->render('user_group/index.html.twig', [
-            'user_groups' => $userGroupRepository->findAll(),
+            'user_groups' => $data,
         ]);
+    
     }
 
     /**

@@ -26,12 +26,12 @@
 	<li class="active">{% trans %}Performer Task{% endtrans %}</li>
 {% endblock %}
 {% block body %}
-	
+
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Performer Task 
+					<h5 class="widget-title bigger lighter">Performer Task
 						{# {{operationalTask}} #}
 					</h5>
 
@@ -102,7 +102,8 @@
 															Show
 														</button>
 													{% else %}
-														<button class="btn btn-primary btn-sm">
+														<button class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to Accept this Task?');">
+
 															Accept
 														</button>
 													{% endif %}
@@ -118,8 +119,8 @@
 
 
 											{# <td>
-																																																																																																																										<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																</td> #}
+																																																																																																																																					<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																											</td> #}
 
 										</tr>
 									{% else %}

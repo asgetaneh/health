@@ -119,7 +119,6 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             $quarterId=$quarter->getId();
             $quarterName=$quarter->getName();
         }
-        // $f=$this->fromGretoEthstr($time);
     }
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
@@ -540,7 +539,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         $user=$delegatedBy;
         // dd($delegatedUser->getDelegatedUser());
      }
-          $taskUsers=$taskUserRepository->findTaskUsers($user);
+          $taskUsers=$taskUserRepository->findTaskUsersList($user);
         return $this->render('operational_task/show.html.twig', [
              'taskUsers' => $taskUsers,
         ]);

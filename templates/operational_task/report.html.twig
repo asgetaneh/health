@@ -98,7 +98,10 @@
 
 										<th>Office</th>
 										{# <th>Planning Year</th> #}
-										<th>actions</th>
+										<th>View</th>
+										<th>Send</th>
+
+
 									</tr>
 								</thead>
 								<tbody>
@@ -117,6 +120,8 @@
 													{# <a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a> #}
 
 												</div>
+											</td>
+											<td>
 												<div class="row">
 
 													{% for item in suitable_initiative.initiative.socialAtrribute  %}

@@ -4,12 +4,12 @@ use DateTime;
 use Andegna\DateTime as AD;
 class AmharicHelper 
 {
-    public function fromGretoEthstr($gregorian)
+    public static function fromGretoEthstr($gregorian)
     {
         $ethipic = new AD($gregorian);
         return $ethipic->format('F j Y');
     }
-    public  function fromGretoEthstrint($gregorian)
+    public static function fromGretoEthstrint($gregorian)
     {
         # code..
         $ethipic = new AD($gregorian);
@@ -20,5 +20,12 @@ class AmharicHelper
         # code..
 
         return $ethipic->toGregorian();
+    }
+     public static function getCurrentYear()
+    {
+        $gregorian=new DateTime();
+        $ethipic = new AD($gregorian);
+        // dump($gregorian);
+        return $ethipic->format('Y');
     }
 }

@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\OperationalOffice;
 use App\Entity\Performer;
+use App\Entity\StaffType;
 use App\Form\PerformerType;
 use App\Repository\PerformerRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,7 +81,46 @@ class PerformerController extends AbstractController
 
         ]);
     }
+      /**
+     * @Route("/choose", name="choose_office")
+     */
+    public function choose(Request $request,UserRepository $userRepository)
+    {
+ $em=$this->getDoctrine()->getManager();
+         $filterform = $this->createFormBuilder()
+            ->add('operationalOffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+                // 'multiple' => true,
+                'required' => true
+            ])  
+              ->add('stafType', EntityType::class, [
+                'class' => StaffType::class,
+                // 'multiple' => true,
+                'required' => true
+            ])          
+             ->getForm();
+              $filterform->handleRequest($request);
 
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $operationalOffice= $filterform->getData([]);
+            $data=$filterform->getData();
+            $stafType=$data['stafType'];
+
+            $this->getUser();
+            $operationalOffices=$operationalOffice['operationalOffice'];
+            $performer=new Performer();
+            $performer->setOperationalOffice($operationalOffices);
+            $performer->setPerformer($this->getUser());
+           $users= $userRepository->find($this->getUser()->getId());
+                   $users->setStaffType($stafType);
+           $users->setStatus(1);
+            $em->persist($performer);
+            $em->flush();
+          return $this->redirectToRoute('startegic_plan');
+        }
+          return $this->render('performer/chooseOffice.html.twig', [
+            'filterform' => $filterform->createView(),
+        ]);}
     /**
      * @Route("/new", name="performer_new", methods={"GET","POST"})
      */

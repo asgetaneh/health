@@ -94,6 +94,26 @@ class PlanningQuarter
      */
     private $quarterAccomplishments;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $startDay;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $startMonth;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $endDay;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $endMonth;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -432,6 +452,54 @@ class PlanningQuarter
                 $quarterAccomplishment->setQuarter(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStartDay(): ?int
+    {
+        return $this->startDay;
+    }
+
+    public function setStartDay(?int $startDay): self
+    {
+        $this->startDay = $startDay;
+
+        return $this;
+    }
+
+    public function getStartMonth(): ?int
+    {
+        return $this->startMonth;
+    }
+
+    public function setStartMonth(?int $startMonth): self
+    {
+        $this->startMonth = $startMonth;
+
+        return $this;
+    }
+
+    public function getEndDay(): ?int
+    {
+        return $this->endDay;
+    }
+
+    public function setEndDay(?int $endDay): self
+    {
+        $this->endDay = $endDay;
+
+        return $this;
+    }
+
+    public function getEndMonth(): ?int
+    {
+        return $this->endMonth;
+    }
+
+    public function setEndMonth(?int $endMonth): self
+    {
+        $this->endMonth = $endMonth;
 
         return $this;
     }

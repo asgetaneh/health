@@ -117,6 +117,7 @@ class PerformerTaskController extends AbstractController
               if($key->getStatus()<1){
                   $key->setStatus(1);
                   $em->flush();
+                         $this->addFlash('success', 'Task Accept successfully !');
               }      
           }
      

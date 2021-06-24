@@ -54,7 +54,9 @@
 								{% if remainingdays <= 10 %}
 									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
 
-									<button type="submit" class="btn btn-success">Send  To Principal
+									<button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to Send this Report To Principla Office?');">
+										Send  To Principal
+
 									</button>
 								{% else %}
 									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>

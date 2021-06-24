@@ -92,32 +92,10 @@ class GoalController extends AbstractController
      */
     public function startegicPlan(Request $request,UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
-           $em=$this->getDoctrine()->getManager();
-         $filterform = $this->createFormBuilder()
-            ->add('operationalOffice', EntityType::class, [
-                'class' => OperationalOffice::class,
-                // 'multiple' => true,
-                'required' => true
-            ])          
-             ->getForm();
-              $filterform->handleRequest($request);
-
-        if ($filterform->isSubmitted() && $filterform->isValid()) {
-            $operationalOffice= $filterform->getData([]);
-            $this->getUser();
-            $operationalOffices=$operationalOffice['operationalOffice'];
-            $performer=new Performer();
-            $performer->setOperationalOffice($operationalOffices);
-            $performer->setPerformer($this->getUser());
-           $users= $userRepository->find($this->getUser()->getId());
-           $users->setStatus(1);
-            $em->persist($performer);
-            $em->flush();
-          return $this->redirectToRoute('startegic_plan');
-        }
-        return $this->render('goal/strategicplan.html.twig', [
-                'filterform' => $filterform->createView(),
-        ]);
+          
+        return $this->render('goal/strategicplan.html.twig'
+                
+        );
     }
 
     /**

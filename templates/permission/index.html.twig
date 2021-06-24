@@ -13,7 +13,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">User Group
+					<h5 class="widget-title bigger lighter">User Permission
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -30,13 +30,11 @@
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
 						<div class="btn-toolbar">
-							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+							<div class="btn-group">{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
 
 								{# <a href="{{ path('permission_new') }}" class="btn btn-success">Create
-								</a> #}
+																</a> #}
 
 
 							</div>
@@ -96,4 +94,5 @@
 				</div>
 			</div>
 		</div>
-	{% endblock %}
+	</div>
+{% endblock %}

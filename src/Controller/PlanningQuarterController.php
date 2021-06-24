@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/planning/quarter")
+ * @Route("/planning-quarter")
  */
 class PlanningQuarterController extends AbstractController
 {
@@ -44,8 +44,21 @@ class PlanningQuarterController extends AbstractController
            $endDate=$request->request->get("endDate");
            $startDate=explode('/',$startDate);
             $endDate=explode('/',$endDate);
-           $startDate1=DateTimeFactory::of($startDate[2], $startDate[1], $startDate[0]);
-           $endDate1=DateTimeFactory::of($endDate[2], $endDate[1], $endDate[0]);
+           
+            $planningQuarter->setStartDay(1);
+            $planningQuarter->setEndDay(30);
+            $planningQuarter->setStartMonth(11);
+            $planningQuarter->setEndMonth(1);
+
+           
+            $startYear=AmharicHelper::getCurrentYear();
+            $endYear=AmharicHelper::getCurrentYear();
+
+            if($planningQuarter->getStartMonth() > $planningQuarter->getEndMonth()){
+                $endYear++;
+            }
+            $startDate1=DateTimeFactory::of($startYear,$planningQuarter->getStartMonth() ,$planningQuarter->getStartDay());
+           $endDate1=DateTimeFactory::of($endYear, $planningQuarter->getEndMonth(), $planningQuarter->getEndDay());
             $gergorianStart = AmharicHelper::fromEthtoGre($startDate1);
             $gergorianEnd = AmharicHelper::fromEthtoGre($endDate1);
             $planningQuarter->setStartDate($gergorianStart);
@@ -65,6 +78,41 @@ class PlanningQuarterController extends AbstractController
     }
 
     /**
+     * @Route("/regenerate", name="planning_quarter_regenerate")
+     */
+    public function regenerate(PlanningQuarterRepository $planningQuarterRepository): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+       foreach ($planningQuarterRepository->findAll() as $key => $planningQuarter) {
+           
+           
+            $startYear=AmharicHelper::getCurrentYear()+1;
+            $endYear=AmharicHelper::getCurrentYear()+1;
+           
+            if($planningQuarter->getStartMonth() > $planningQuarter->getEndMonth()){
+                $startYear--;
+            }
+            $startDate1=DateTimeFactory::of($startYear,$planningQuarter->getStartMonth() ,$planningQuarter->getStartDay());
+           $endDate1=DateTimeFactory::of($endYear, $planningQuarter->getEndMonth(), $planningQuarter->getEndDay());
+            $gergorianStart = AmharicHelper::fromEthtoGre($startDate1);
+            $gergorianEnd = AmharicHelper::fromEthtoGre($endDate1);
+            $planningQuarter->setStartDate($gergorianStart);
+            $planningQuarter->setEndDate($gergorianEnd);
+            $entityManager->flush();
+            
+       }
+    //      foreach ($planningQuarterRepository->findAll() as $key => $planningQuarter) {
+           
+           
+    //       dump(AmharicHelper::fromGretoEthstr($planningQuarter->getStartDate()),AmharicHelper::fromGretoEthstr($planningQuarter->getEndDate()));
+            
+    //    }
+    //    dd("sfd");
+       return $this->redirectToRoute('planning_quarter_index');
+    }
+
+
+    /**
      * @Route("/{id}", name="planning_quarter_show", methods={"GET"})
      */
     public function show(PlanningQuarter $planningQuarter): Response
@@ -73,7 +121,7 @@ class PlanningQuarterController extends AbstractController
             'planning_quarter' => $planningQuarter,
         ]);
     }
-
+    
     /**
      * @Route("/{id}/edit", name="planning_quarter_edit", methods={"GET","POST"})
      */

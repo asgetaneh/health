@@ -1,5 +1,4 @@
-{# {% if is_granted("usr_mgt") %} #}
-
+{% if is_granted("vw_usr_lst") %}
 
 	<li>
 		<a href="{{ path('user_list') }}">
@@ -7,12 +6,17 @@
 			{% trans %}Users{% endtrans %}
 		</a>
 	</li>
+{% endif %}
+{% if is_granted("vw_usr_grp") %}
 	<li>
 		<a href="{{ path('permission_index') }}">
 			<b class="fa fa-caret-right"></b>
 			{% trans %}Permissions{% endtrans %}
 		</a>
 	</li>
+{% endif %}
+{# {% if is_granted("vw_usr_grp") %} #}
+
 	<li>
 		<a href="{{ path('user') }}">
 			<b class="fa fa-caret-right"></b>

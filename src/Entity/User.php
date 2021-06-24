@@ -202,6 +202,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Evaluation::class, mappedBy="evaluateUser")
      */
     private $evaluations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=StaffType::class, inversedBy="users")
+     */
+    private $staffType;
     public function __construct()
     {
       
@@ -1289,6 +1294,18 @@ class User implements UserInterface
                 $evaluation->setEvaluateUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStaffType(): ?StaffType
+    {
+        return $this->staffType;
+    }
+
+    public function setStaffType(?StaffType $staffType): self
+    {
+        $this->staffType = $staffType;
 
         return $this;
     }

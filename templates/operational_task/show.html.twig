@@ -101,7 +101,8 @@
 												<form action="{{path('operational_task_show_detail')}}" method="post">
 													<input type="hidden" name="taskUser" value="{{taskUser.id}}">
 													{% if taskUser.type == 1 %}
-														<button class="btn btn-primary btn-sm">
+														<button class="btn btn-primary btn-sm"
+                                                        onclick="return confirm('Are you sure you want to Accept this Report?');">
 															Accept
 														</button>
 													{% else %}

@@ -76,6 +76,7 @@ $('#example').DataTable();
 										<th>Id</th>
 										<th>Name</th>
 										<th>Email</th>
+										<th>Phone Number</th>
 
 
 									</tr>
@@ -84,13 +85,14 @@ $('#example').DataTable();
 									{% set count =  users.getItemNumberPerPage() * (users.getCurrentPageNumber() -1) %}
 
 
-									{% for user in users %}
+									{% for userinfo in users %}
 										<tr>
 											{% set count = count + 1 %}
 
 											<td>{{count}}</td>
-											<td>{{ user.fullName }}</td>
-											<td>{{ user.email }}</td>
+											<td>{{ userinfo.fullName }}</td>
+											<td>{{ userinfo.email }}</td>
+											<td>{{ userinfo.mobile }}</td>
 
 
 										</tr>

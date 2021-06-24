@@ -14,32 +14,13 @@
 {% endblock %}
 
 {% block body %}
-	{% if app.user.status == 0 %}
 
-\
-		<div class="row">
-			{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-			<div class="col-md-4">
-				<div class="form-group form-group-sm">
-					{{ form_label(filterform.operationalOffice,'operationalOffice') }}
-					{{ form_widget(filterform.operationalOffice,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
-				</div>
-			</div>
-			<div class="col-md-1">
-				<div class="form-group" style="margin-top:25px;">
-					<input type="submit" class="btn btn-primary btn-sm " value="Choose">
-				</div>
-			</div>
-			{{form_end(filterform)}}
-		</div>
-	{% else %}
 		<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
 			<i class="ace-icon fa fa-eye bigger-110 blue"></i>
 			{% trans %}
 			View Strategic Map
 			{% endtrans %}</a>
 
-	{% endif %}
 	{% set locale = app.request.locale %}
 
 	<div id="myModal" class="modal fade" role="dialog">

@@ -237,18 +237,19 @@
 				</div>
 			</div>
 		</div>
-		{{ include('operational_task/modal.html.twig') }}
+	</div>
+	{{ include('operational_task/modal.html.twig') }}
 
-	{% endblock %}
-	{% block javascripts %}
-		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
-		<script>
-			$(function () {
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+	<script>
+		$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })
-		</script>
-		<script>
-			$(document).ready(function () {
+	</script>
+	<script>
+		$(document).ready(function () {
 
 var select = $('.userlist')
 var userprincipal = $('.office').val();
@@ -270,9 +271,9 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 }
 });
 })
-		</script>
-		<script>
-			$(document).ready(function () {
+	</script>
+	<script>
+		$(document).ready(function () {
 var task = $('.task').val();
 var user = $('.user').val();
 
@@ -297,30 +298,30 @@ select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 }
 });
 })
-		</script>
-		<script>
-			$('.socialbtn').click(function () {
+	</script>
+	<script>
+		$('.socialbtn').click(function () {
 $('.social').show();
 
 
 })
-		</script>
-		<link
-		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
+	</script>
+	<link
+	rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
 
-		{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
-		<script src="{{ asset('amharic/js/jquery.plugin.js')}}"></script>
+	{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
+	<script src="{{ asset('amharic/js/jquery.plugin.js')}}"></script>
 
-		<script src="{{ asset('amharic/js/jquery.calendars')}}.js"></script>
-		<script src="{{ asset('amharic/js/jquery.calendars')}}.plus.js"></script>
-		<script src="{{ asset('amharic/js/jquery.calendars')}}.picker.js"></script>
+	<script src="{{ asset('amharic/js/jquery.calendars')}}.js"></script>
+	<script src="{{ asset('amharic/js/jquery.calendars')}}.plus.js"></script>
+	<script src="{{ asset('amharic/js/jquery.calendars')}}.picker.js"></script>
 
-		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian.js"></script>
-		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian-am.js"></script>
-		<script type="text/javascript" src="{{ asset('amharic/js/jquery.calendars')}}.picker-am.js"></script>
+	<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian.js"></script>
+	<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian-am.js"></script>
+	<script type="text/javascript" src="{{ asset('amharic/js/jquery.calendars')}}.picker-am.js"></script>
 
-		<script>
-			$(function () {
+	<script>
+		$(function () {
 var calendar = $.calendars.instance('ethiopian', 'am');
 $('#popupDatepicker').calendarsPicker({calendar: calendar});
 $('.popupDatepicker').calendarsPicker({calendar: calendar});
@@ -331,7 +332,7 @@ $('#inlineDatepicker').calendarsPicker({calendar: calendar, onSelect: showDate})
 function showDate(date) {
 alert('The date chosen is ' + date);
 }
-		</script>
+	</script>
 
 
-	{% endblock %}
+{% endblock %}
