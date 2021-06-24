@@ -41,6 +41,11 @@ class UserInfo
      */
     private $mobile;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $employeeNumber;
+
    
 
     public function __construct()
@@ -106,6 +111,18 @@ class UserInfo
     public function setMobile(?string $mobile): self
     {
         $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    public function getEmployeeNumber(): ?string
+    {
+        return $this->employeeNumber;
+    }
+
+    public function setEmployeeNumber(?string $employeeNumber): self
+    {
+        $this->employeeNumber = $employeeNumber;
 
         return $this;
     }

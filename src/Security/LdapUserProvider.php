@@ -113,7 +113,8 @@ class LdapUserProvider implements UserProviderInterface
         $username = $ldapEntry->getAttributes()['uid'][0];
         $email = $ldapEntry->getAttributes()['mail'][0];
         $mobile = $ldapEntry->getAttributes()['mobile'][0];
-        //   dd($mobile,$email);
+        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];
+        //   dd($employeeNumber);
         $userinfo = new UserInfo();
 
         $user = new User();
@@ -131,7 +132,7 @@ class LdapUserProvider implements UserProviderInterface
             $userinfo->setUser($user);
         $userinfo->setMobile($email);
        $userinfo->setEmail($mobile);
-        // $useradd->setUsername($username);
+        $userinfo->setEmployeeNumber($employeeNumber);
         $userinfo->setFullName($fullName);
         $this->entityManager->persist($userinfo);
         $this->entityManager->flush();
