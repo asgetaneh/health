@@ -21,19 +21,26 @@
 
 							<div class="row">
 								{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-									<div class="col-md-4">
+								<div class="col-md-4">
 									<div class="form-group form-group-sm">
 										{{ form_label(filterform.stafType,'Staff Type') }}
 										{{ form_widget(filterform.stafType,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
 									</div>
 								</div>
-                                <div class="col-md-4">
+								<div class="col-md-4">
 									<div class="form-group form-group-sm">
-										{{ form_label(filterform.operationalOffice,'OperationalOffice') }}
-										{{ form_widget(filterform.operationalOffice,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
+										{{ form_label(filterform.principalOffice,'Principal Office ') }}
+										{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
 									</div>
 								</div>
-							
+								<div class="col-md-4">
+									<label class="form-controll">Operational Office</label>
+
+									<select name="oper" class="oper select2">
+									</select>
+
+								</div>
+
 
 								<div class="col-md-1">
 									<div class="form-group" style="margin-top:25px;">
@@ -49,6 +56,32 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		$('.principal').change(function () {
+var principal = $('.principal').val()
+// console.log(principal)
+var select = $('.oper')
+
+$.ajax({
+url:"{{ path('operational_fetch') }}",
+method: "POST",
+data: {
+principal: principal
+},
+dataType: "json",
+success: function (data) {
+$('.oper').children().remove()
+for (let [key, value] of Object.entries(data)) {
 
 
+select.append('<option>' + value.name + '</option>');
+
+
+}
+}
+});
+})
+	</script>
 {% endblock %}

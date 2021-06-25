@@ -165,7 +165,9 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             'form' => $form->createView(),
             'measurements' => $taskMeasurementRepository->findAll(),
               'social'=>$social,
-            'formtask'=>$formtask->createView()
+            'formtask'=>$formtask->createView(),
+            'initiativeName'=> $suitableInitiative->getInitiative()->getName(),
+
 
         ]);
     }

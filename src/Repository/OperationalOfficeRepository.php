@@ -18,7 +18,24 @@ class OperationalOfficeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalOffice::class);
     }
- 
+ public function filterOperationalOffice($principalOffice)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+         
+
+            ->Select('s.name')  
+           
+            ->addSelect('s.id')
+            ->andWhere('s.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return OperationalOffice[] Returns an array of OperationalOffice objects
     //  */

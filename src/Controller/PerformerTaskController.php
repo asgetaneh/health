@@ -175,15 +175,13 @@ class PerformerTaskController extends AbstractController
     public function performerTaskEdit(Request $request,PerformerTaskRepository $performerTaskRepository)
     {
         $em = $this->getDoctrine()->getManager();
-
         $pid = $request->request->get('perTaskId');
-        // dd($pid);
         if ($id=$request->request->get('id')) {
                     $weight = $request->request->get('weight');
               $countWeight = $request->request->get('countWeight');
-            //   dd($countWeight);
-                              $performerTask = $performerTaskRepository->find($id);
-             if ((100-$countWeight)  > 100 ) {
+              $performerTask = $performerTaskRepository->find($id);
+            //   dd(( 100-$countWeight)+$weight);
+             if (((100-$countWeight)+$weight)  > 100 ) {
                  $this->addFlash('danger', 'Weight must be less than 100 !');
             return $this->redirectToRoute('operational_task_index',['id'=>$performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
             }

@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\OperationalOffice;
 use App\Entity\Performer;
+use App\Entity\PrincipalOffice;
 use App\Entity\StaffType;
 use App\Form\PerformerType;
+use App\Repository\OperationalOfficeRepository;
 use App\Repository\PerformerRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -84,12 +87,13 @@ class PerformerController extends AbstractController
       /**
      * @Route("/choose", name="choose_office")
      */
-    public function choose(Request $request,UserRepository $userRepository)
+    public function choose(Request $request,OperationalOfficeRepository $operationalOfficeRepository, UserRepository $userRepository)
     {
  $em=$this->getDoctrine()->getManager();
          $filterform = $this->createFormBuilder()
-            ->add('operationalOffice', EntityType::class, [
-                'class' => OperationalOffice::class,
+         
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
                 // 'multiple' => true,
                 'required' => true
             ])  
@@ -102,12 +106,11 @@ class PerformerController extends AbstractController
               $filterform->handleRequest($request);
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
-            $operationalOffice= $filterform->getData([]);
+            // $operationalOffice= $filterform->getData([]);
             $data=$filterform->getData();
             $stafType=$data['stafType'];
-
-            $this->getUser();
-            $operationalOffices=$operationalOffice['operationalOffice'];
+           $operationalOffices= $operationalOfficeRepository->findOneBy(['name'=>$request->request->get("oper")]);
+            $operationalOffice=$operationalOffices->getId();
             $performer=new Performer();
             $performer->setOperationalOffice($operationalOffices);
             $performer->setPerformer($this->getUser());
@@ -121,6 +124,20 @@ class PerformerController extends AbstractController
           return $this->render('performer/chooseOffice.html.twig', [
             'filterform' => $filterform->createView(),
         ]);}
+        /**
+     * @Route("/operationalfetch", name="operational_fetch")
+     */
+    public function taskFetch(Request $request, OperationalOfficeRepository $operationalOfficeRepository)
+    {
+        $em=$this->getDoctrine()->getManager();
+         $principal= $request->request->get("principal");
+    //  dd($principal);
+        $principals = $operationalOfficeRepository->filterOperationalOffice($principal);
+    // dd($principals);
+
+        return new JsonResponse($principals);
+    }
+        
     /**
      * @Route("/new", name="performer_new", methods={"GET","POST"})
      */

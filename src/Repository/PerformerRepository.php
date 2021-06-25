@@ -38,6 +38,27 @@ public function findAllsUser($user)
             
             ->getResult();
     }
+    public function filterDeliverBy($user)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice','oo')
+          ->leftJoin('oo.principalOffice','po')
+         ->leftJoin('s.performer','u')
+         ->leftJoin('u.userInfo','ui')
+
+            ->Select('ui.fullName')  
+           
+            ->addSelect('u.id')
+            ->andWhere('po.id = :val')
+            ->setParameter('val', $user)
+            ->orderBy('s.id', 'ASC')
+          
+            ->getQuery()
+            
+            ->getResult();
+    }
+    
     // /**
     //  * @return Performer[] Returns an array of Performer objects
     //  */
