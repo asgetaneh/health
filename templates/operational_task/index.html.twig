@@ -83,7 +83,7 @@
 							{% else %}
 
 						{% endif %}
-						Total Remainig Weight=<div class="badge badge-danger">{{ 100 - count}}</div>
+						Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -107,7 +107,7 @@
 								class="btn-group">
 								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
-								{% if count < 100 %}
+								{% if countWeight < 100 %}
 									{% if social == 1 %}
 										<a class="btn btn-primary btn-sm btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
 											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
@@ -121,7 +121,7 @@
 									{% endif %}
 
 								{% endif %}
-								{% if count >= 100 %}
+								{% if countWeight >= 100 %}
 									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
 										<i class="ace-icon fa fa-check bigger-110 blue"></i>
 										{% trans %}
@@ -165,6 +165,7 @@
 											<th>Weight</th>
 											<th>Quarter</th>
 											<th>Assigned To</th>
+											<th>Edit</th>
 
 
 										</tr>
@@ -215,6 +216,15 @@
 													</table>
 
 												</td>
+												<td>
+													{% if countWeight < 100 %}
+
+														<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
+															<i class="fa fa-edit"></i>
+														</button>
+													{% endif %}
+												</td>
+												<input type="hidden" class="countWeight1" value="{{countWeight}}">
 												<input type="hidden" class="user" value="{{app.user.id}}">
 												<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
 												<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
@@ -238,12 +248,81 @@
 			</div>
 		</div>
 	</div>
+	<div id="edit" class="modal fade" role="dialog">
+		<div
+			class="modal-dialog " style="width:800px;">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+					<h4 class="modal-title">Edit Tasks
+
+
+					</h4>
+
+				</div>
+
+
+				<form method="post" action="{{path('performer_task_weight_edit')}}">
+					<div class="modal-body">
+						<input type="hidden" name="countWeight" class="countWeight">
+						<table class="table" id="records_table1">
+							<tr>
+
+								<th>Task Name</th>
+								<th>Weight</th>
+
+								<th>Edit Weight</th>
+							</tr>
+						</table>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
+						<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
+					</div>
+
+				</form>
+
+
+			</div>
+
+		</div>
+	</div>
 	{{ include('operational_task/modal.html.twig') }}
 
 {% endblock %}
 {% block javascripts %}
 	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
 	<script>
+			$('.edit').click(function () {
+$('#edit').modal('show');
+
+var perTaskId = $(this).attr('data-taskId');
+var countWeight= $('.countWeight1').val()
+$('.countWeight').val(countWeight)
+$.ajax({
+url:"{{ path('performer_task_weight_edit') }}",
+method: "POST",
+data: {
+perTaskId: perTaskId
+},
+dataType: "json",
+success: function (data) {
+var trHTML = '';
+$.each(data, function (i, item) {
+
+trHTML += '<tr><td>' + item.name + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group quantityBatch" placeholder="Weight" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
+
+
+});
+$('#records_table1').append(trHTML);
+
+}
+});
+})
+		</script>
+    <script>
 		$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })

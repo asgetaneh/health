@@ -169,6 +169,34 @@ class PerformerTaskController extends AbstractController
             return $this->redirectToRoute('performer_task_index');
       
     }
+     /**
+     * @Route("/weight/edit", name="performer_task_weight_edit")
+     */
+    public function performerTaskEdit(Request $request,PerformerTaskRepository $performerTaskRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pid = $request->request->get('perTaskId');
+        // dd($pid);
+        if ($id=$request->request->get('id')) {
+                    $weight = $request->request->get('weight');
+              $countWeight = $request->request->get('countWeight');
+            //   dd($countWeight);
+                              $performerTask = $performerTaskRepository->find($id);
+             if ((100-$countWeight)  > 100 ) {
+                 $this->addFlash('danger', 'Weight must be less than 100 !');
+            return $this->redirectToRoute('operational_task_index',['id'=>$performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+            }
+            
+                $performerTask->setWeight($weight);
+            $em->flush();
+                                  $this->addFlash('success', 'Weight Updated successfully !');
+           
+            return $this->redirectToRoute('operational_task_index',['id'=>$performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+        }
+        // $id = $request->request->get('consumableGroupId');
+        return new JsonResponse($performerTaskRepository->findPerformerTaskEdit($pid));
+    }
 
 
     /**

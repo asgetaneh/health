@@ -133,6 +133,27 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+     public function findPerformerTaskEdit($id)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+      
+
+
+            ->Select('s.name')  
+           
+            ->addSelect('s.id')
+             ->addSelect('s.weight')
+
+            ->orderBy('s.id', 'ASC')->
+            andWhere('s.id = :id')
+            ->setParameter('id', $id)
+        
+            ->getQuery()
+            
+            ->getResult();
+    }
     
 
     // /**

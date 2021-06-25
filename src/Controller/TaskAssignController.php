@@ -343,7 +343,7 @@ class TaskAssignController extends AbstractController
 
               
           
-            $this->addFlash('success', 'Task Assind successfully !');
+            $this->addFlash('success', 'Task Assignd successfully !');
             return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);
 
     }

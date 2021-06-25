@@ -41,7 +41,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{suitableInitiatives|length}}</strong>
+							<strong>{{count|length}}</strong>
 
 						</span>
 					</div>
@@ -85,8 +85,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% set count = 0 %}
-									{% set lengthop = suitableInitiatives|length %}
+									{% set count =  suitableInitiatives.getItemNumberPerPage() * (suitableInitiatives.getCurrentPageNumber() -1) %}
 
 
 									{% for suitableInitiative in suitableInitiatives %}
@@ -145,6 +144,8 @@
 						{% endfor %}
 					</tbody>
 				</table>
+				<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(suitableInitiatives) }}</div>
+
 			</div>
 		</div>
 	</div>

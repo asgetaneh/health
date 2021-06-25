@@ -41,6 +41,7 @@ use App\Entity\User;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -158,7 +159,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         }
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user,$suitableInitiative),
-            'count'=>$count,
+            'countWeight'=>$count,
             'quarterName'=>$quarterName,
             'taskUsers'=> $taskUsers,
             'form' => $form->createView(),
@@ -188,7 +189,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
     /**
      * @Route("/suitableInitiative/list", name="suitable_initiative_list")
      */
-    public function suitableInitiative(Request $request,OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
+    public function suitableInitiative(Request $request,PaginatorInterface $paginator, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
         $em=$this->getDoctrine()->getManager();
         $user=$this->getUser();
@@ -201,9 +202,15 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         $operation=$operationalManagerRepository->findOneBy(['manager'=>$user]);
       $principlaOffice=  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
         $suitableInitiatives=$suitableInitiativeRepository->findBy(["principalOffice"=>$principlaOffice]);
-           
+             $data=$paginator->paginate(
+             $suitableInitiatives,
+             $request->query->getInt('page',1),
+             5
+
+        );
         return $this->render('operational_task/suitableInitiative.html.twig', [
-            'suitableInitiatives' => $suitableInitiatives,
+            'suitableInitiatives' => $data,
+            'count' => $suitableInitiatives,
         ]);
     }
      /**
