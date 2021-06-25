@@ -166,8 +166,8 @@ class KeyPerformanceIndicatorController extends AbstractController
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
         $locales = Helper::locales();
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        if ($form->isSubmitted() ) {
+                
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
 
@@ -175,7 +175,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             }
             $keyPerformanceIndicator->mergeNewTranslations();
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', "edited successfuly");
+            $this->addFlash('success', "Edited successfuly");
 
 
             return $this->redirectToRoute('key_performance_indicator_index');
