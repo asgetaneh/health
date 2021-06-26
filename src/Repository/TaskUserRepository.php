@@ -69,6 +69,7 @@ class TaskUserRepository extends ServiceEntityRepository
          ->leftJoin('ta.PerformerTask','p')
             ->andWhere('p.createdBy = :val')
         ->andWhere('t.type < 3 ')
+                ->andWhere('t.status > 4 ')
             ->setParameter('val', $value)
             ->orderBy('t.id', 'ASC')
             // ->setMaxResults(10)

@@ -207,6 +207,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
      */
     public function suitableInitiative(Request $request,PaginatorInterface $paginator, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
+                $this->denyAccessUnlessGranted('opr_task');
         $em=$this->getDoctrine()->getManager();
         $user=$this->getUser();
      $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);

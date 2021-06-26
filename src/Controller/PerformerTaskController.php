@@ -94,7 +94,19 @@ class PerformerTaskController extends AbstractController
     public function show(Request $request,TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em=$this->getDoctrine()->getManager();
-       
+        if ($taskAcoompId= $request->request->get('taskAcoompId')) {
+            $editedReportValue= $request->request->get('editedReportValue');
+          $taskAcoompId= $request->request->get('taskAcoompId');
+          
+            $taskAccomplishment=$taskAccomplishmentRepository->find($taskAcoompId);
+            $taskAccomplishment->setReportedValue($editedReportValue);
+            // $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
+            // $taskUser->setStatus(2);
+          
+          $em->flush();
+                      $this->addFlash('success', 'Reported Value Edired Successfully !');
+                      return $this->redirectToRoute('performer_task_index');
+        }
         if ($report= $request->request->get('reportValue')) {
             $reportValue= $request->request->get('reportValue');
           $ids= $request->request->get('taskAccomplishmentId');
