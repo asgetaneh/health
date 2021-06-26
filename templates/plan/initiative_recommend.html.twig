@@ -9,7 +9,7 @@
 				<div class="widget-toolbar">
 					<span class="badge badge-info">
 						{% trans %}Total{% endtrans %}
-						:{{initiatives|length}}
+						:{{initiatives.getTotalItemCount()}}
 						<strong></strong>
 					</span>
 				</div>
@@ -94,19 +94,22 @@
 										</th>
 										<th>#</th>
 										<th>{% trans %}Name{% endtrans %}</th>
+                                       
 										<th>{% trans %}Weight{% endtrans %}</th>
+                                       
 										<th>{% trans %}Description{% endtrans %}</th>
 										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
-									{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
-									<form action="{{path('plan_index')}}" id="initiative_form" method="post">
+									{% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
+									<form action="{{path('plan_index')}}" id="initiative_form" method="get">
 										<input type="hidden" name="planyear" value="{{planyear.id}}">
 										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
 
 										{% for initiative in initiatives %}
 											<tr>
+                                            {% set count = count+1 %}
 
 
 												<td class="text-center">
@@ -115,11 +118,12 @@
 														<span class="lbl"></span>
 													</label>
 												</td>
-												<td>{{ loop.index}}
+												<td>{{count}}
 
 												</td>
 												<td>{{ initiative.name }}</td>
-												<td>{{ initiative.minimumValue }}</td>
+												<td>{{ initiative.weight }}</td>
+                                              
 
 												<td>{{ initiative.description|raw}}</td>
 												<td>
@@ -138,7 +142,7 @@
 									</form>
 								</tbody>
 							</table>
-							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+							<div class="pull-right" id="">{{ knp_pagination_render(initiatives) }}</div>
 
 						</div>
 					</div>
@@ -151,7 +155,29 @@
 	<script>
 		$('#suitablebutton').click(function () {
 
-$('#initiative_form').submit();
+       $('#initiative_form').submit();
 })
+/*$('#custompaginator').click(function(){
+    alert("{{planyear.id}}");
+$.ajax({
+url: "{{ path('plan_index') }}",
+method: "post",
+data: {
+
+planyear: "{{planyear.id}}",
+office: "{{pricipaloffice.id}}"
+
+
+},
+success: function (data) {
+
+
+},
+error: function (data) {
+
+
+}
+});
+})*/
 	</script>
 {% endif %}

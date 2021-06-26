@@ -1,5 +1,4 @@
 {
-    "editor.fontSize": 16,
     "editor.definitionLinkOpensInPeek": true,
     "editor.detectIndentation": false,
     "editor.autoIndent": "advanced",
@@ -14,5 +13,6 @@
     "json.format.enable": false,
     "javascript.format.insertSpaceAfterCommaDelimiter": false,
     "files.autoGuessEncoding": true,
-    "html.autoClosingTags": false
+    "html.autoClosingTags": false,
+    "editor.fontSize": 15
 }

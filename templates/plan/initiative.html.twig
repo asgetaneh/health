@@ -1,4 +1,4 @@
-{% if initiatives is defined %}
+{% if recoverInitiatives is defined %}
 	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 		<div class="widget-box widget-color-blue" id="widget-box-8">
 			<div class="widget-header">
@@ -9,7 +9,7 @@
 				<div class="widget-toolbar">
 					<span class="badge badge-info">
 						{% trans %}Total{% endtrans %}
-						:{{initiatives|length}}
+						:{{recoverInitiatives.getTotalItemCount()}}
 						<strong></strong>
 					</span>
 				</div>
@@ -25,35 +25,7 @@
 				<div class="widget-main padding-16">
 					<div class="row">
 						<div class="search-area col-md-12">
-							<div>
-								{# <form action="" class="form-inline" method="get">
-																																																																																												<div class="form-group">
-																																																																																													<input type="text">
-																																																																																												</div>
-																																																																																												<div class="form-group">
-																																																																																													<input type="text">
-																																																																																												</div>
-																																																																																			
-																																																																																			
-																																																																																												<div class="form-group"><input type="button" value="submit"></div>
-																																																																																			
-																																																																																											</form> #}
-
-							</div>
-							<div
-								class="pull-left">{# <form class="form-inline" method="post" style="display:inline;">
-																																																																																											
-																																																																																																				<div class="input-group">
-																																																																																																					<input type="text" class="form-control" name="search" placeholder="search"/>
-																																																																																																					<div class="input-group-btn">
-																																																																																																						<button type="submit" class="btn btn-default no-border btn-sm">
-																																																																																																							<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																																																																																						</button>
-																																																																																																					</div>
-																																																																																																				</div>
-																																																																																																			</form> #}
-
-							</div>
+							<div></div>
 
 
 							<div class="pull-right">
@@ -71,7 +43,7 @@
 												<i class="ace-icon fa fa-stop green"></i>
 												Select As Suitable</a>
 										</li>
-                                        <li>
+										<li>
 											<a href="#" id="nonsuitablebutton">
 												<i class="ace-icon fa fa-stop red"></i>
 												Select As Non Suitable</a>
@@ -100,18 +72,20 @@
 										<th>#</th>
 										<th>{% trans %}Name{% endtrans %}</th>
 										<th>{% trans %}Weight{% endtrans %}</th>
+										<th>{% trans %}Selected As{% endtrans %}</th>
 										<th>{% trans %}Description{% endtrans %}</th>
 										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
-									{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
-									<form action="{{path('plan_index')}}" id="initiative_form" method="post">
+									{% set count =  recoverInitiatives .getItemNumberPerPage() * (recoverInitiatives .getCurrentPageNumber() -1) %}
+									<form action="{{path('plan_index')}}" id="initiative_form" method="get">
 										<input type="hidden" name="planyear" value="{{planyear.id}}">
 										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
-                                        <input type="hidden" name="nonsuitable" id="nonsuit" value="">
+										<input type="hidden" name="nonsuitable" id="nonsuit" value="">
 
-										{% for initiative in initiatives %}
+										{% for initiative in recoverInitiatives %}
+                                        {% set count = count+1 %}
 											<tr>
 
 
@@ -121,12 +95,20 @@
 														<span class="lbl"></span>
 													</label>
 												</td>
-												<td>{{ loop.index}}
+												<td>{{count}}
 
 												</td>
 												<td>{{ initiative.name }}</td>
 												<td>{{ initiative.weight }}</td>
+												<td>
+													{% set suit = initiative.suitableInitiatives|filter(suit => suit.planningYear.id == planyear.id and suit.principalOffice.id == pricipaloffice.id )  %}
+													{% if suit|length >0 %}
+														<span class="badge badge-primary">suitable</span>
+													{% else %}
+														<span class="badge badge-danger">non suitable</span>
+													{% endif %}
 
+												</td>
 												<td>{{ initiative.description|raw}}</td>
 												<td>
 													<a href="{{ path('initiative_show', {'id': initiative.id}) }}" class="btn btn-primary btn-sm">
@@ -144,7 +126,7 @@
 									</form>
 								</tbody>
 							</table>
-							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+							<div class="pull-right" id="">{{ knp_pagination_render(recoverInitiatives) }}</div>
 
 						</div>
 					</div>
@@ -157,7 +139,7 @@
 	<script>
 
 
-$('#checkall2').click(function () {
+		$('#checkall2').click(function () {
 var $chk = $(':checkbox');
 $chk.prop('checked', $(this).is(':checked'));
 
@@ -166,9 +148,8 @@ $('#suitablebutton2').click(function () {
 $('#initiative_form').submit();
 })
 $('#nonsuitablebutton').click(function () {
-    $('#nonsuit').val(true);
+$('#nonsuit').val(true);
 $('#initiative_form').submit();
 })
-
 	</script>
 {% endif %}

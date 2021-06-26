@@ -111,7 +111,7 @@ class PlanAchievementController extends AbstractController
             return $this->redirectToRoute('plan_achievement_goal');
         }
         $query = $goalRepository->findAlls();
-        $data = $data = $paginator->paginate(
+        $data = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10

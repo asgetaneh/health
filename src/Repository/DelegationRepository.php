@@ -55,8 +55,8 @@ class DelegationRepository extends ServiceEntityRepository
     }
     public function findDelegationUser($user){
          $qb=$this->createQueryBuilder('d');
-         $now =new DateTime('now');
-         $qb->andWhere('d.endAt >:now and (d.status is null or d.status = 0 )')
+         $now =new \DateTime('now');
+         $qb->andWhere('d.endAt >:now and (d.status is null or d.status = 1 )')
          ->andWhere('d.delegatedUser=:owner')
          ->setParameter('owner',$user)
          ->setParameter('now',$now);

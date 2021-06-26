@@ -8,7 +8,7 @@
 					<h4 class="modal-title">select Plan announcements and Office</h4>
 				</div>
 				<div class="modal-body">
-					<form id="sample-form" method="post" action="{{path('plan_index')}}">
+					<form id="sample-form" method="get" action="{{path('plan_index')}}">
 						<div class="form-group">
 							<label class="control-label col-xs-12 col-sm-12 ">
 								Select Planning Year
@@ -30,7 +30,7 @@
 
 							<select class="select2" name="office" id="">
 								{% for office in offices %}
-									<option value="{{office.id}}}">{{office}}</option>
+									<option value="{{office.id}}">{{office}}</option>
 
 								{% endfor %}
 							</select>

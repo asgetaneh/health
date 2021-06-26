@@ -52,7 +52,7 @@
 											</span>
 										</li>
 
-										<li data-step="4" class={% if (isAllActive is defined and isAllActive == true) %} "active" {% endif %}>
+										<li data-step="4" class={% if (operational_office_report is defined and operational_office_report== true) %} "active" {% endif %}>
 											<span class="step">4</span>
 											<span class="title">
 												{% trans %}Accept Operational Managers’ report{% endtrans %}
@@ -279,7 +279,7 @@
 
 														</tbody>
 													</table>
-													{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+													<div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitableInitiatives) }}</div>
 
 												</div>
 											</div>
@@ -296,13 +296,14 @@
 				</div>
 				<div id="messages" class="tab-pane fade">
 					<div class="row">
-						{% if planyear is defined %}
-							{{ render(controller('App\\Controller\\PlanController::initiative',{},{'planyear': planyear.id,'office':pricipaloffice.id })) }}
+                    {% if recoverInitiatives is defined %}
+					
+							
+                           {{ include('plan/initiative.html.twig') }} 
 
 						{% endif %}
-						{# {{  }} #}
-					{# {{ render({{ controller(controller, {attributes}, {query}) }}, {options}) }} #}
-						{# {{ include('plan/initiative.html.twig') }} #}
+					
+					
 					</div>
 				</div>
 			</div>
@@ -355,7 +356,12 @@ $('.planmodal').modal('toggle');
 }
 });
 })
-
+  $('.nav-tabs a').on('show.bs.tab', function(event){
+        var x = $(event.target).text();         // active tab
+        var y = $(event.relatedTarget).text(); 
+        // previous tab
+      
+    });
 
 });
 </script>{% endblock %}
