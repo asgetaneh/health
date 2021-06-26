@@ -38,10 +38,15 @@ class UserController extends AbstractController
     /**
      * @Route("/user/list", name="user_list")
      */
-    public function userList(UserGroupRepository $userGroupRepository,Request $request, PaginatorInterface $paginator, UserInfoRepository $userInfoRepository): Response
+    public function userList( Request $request, PaginatorInterface $paginator, UserInfoRepository $userInfoRepository): Response
     {
         // $this->denyAccessUnlessGranted("sm_user");
-        $users = $userInfoRepository->findAll();
+        if ($request->request->get("name")) {
+      $users = $userInfoRepository->filter($request->request->get("name"));
+    //   dd($users);
+        }
+        else{
+        $users = $userInfoRepository->findAll(); }
         $data = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
