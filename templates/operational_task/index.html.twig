@@ -194,50 +194,70 @@
 															<th>End Date
 															</th>
 															<th>Time Gap</th>
+															<th>Reason</th>
+
 														</tr>
 														{% for taskUser in taskUsers %}
-															<tr>
-
-																{% if taskUser.taskAssign.performerTask.id == performerTask.id  %}
-																	{% set statusaccept = taskUser.status %}
-																	<td>{{taskUser.assignedTo.userInfo}}</td>
-																	<td>
-																		{{taskUser.taskAssign.startDate}}</td>
-																	<td>
-																		{{taskUser.taskAssign.startDate}}
-																	</td>
-																	<td>{{taskUser.taskAssign.timeGap}}</td>
+															{% if taskUser.status == 6 %}
+																<tr class="text-danger">
+																{% else %}
+																	<tr>
+																	{% endif %}
 
 
-																{% endif %}
-															</tr>
-														{% endfor %}
+																	{% if taskUser.taskAssign.performerTask.id == performerTask.id  %}
+																		{% set statusaccept = taskUser.status %}
+																		<td>{{taskUser.assignedTo.userInfo}}</td>
+																		<td>
+																			{{taskUser.taskAssign.startDate}}</td>
+																		<td>
+																			{{taskUser.taskAssign.startDate}}
+																		</td>
+																		<td>{{taskUser.taskAssign.timeGap}}</td>
+																		<td>{{taskUser.rejectReason}}
+																			{% if taskUser.status == 6 %}
+																				<form action="{{path('task_resend')}}" method="post">
+																					<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
 
-													</table>
-
-												</td>
-												<td>
-													{% if countWeight < 100 %}
-
-														<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
-															<i class="fa fa-edit"></i>
-														</button>
-													{% endif %}
-												</td>
-												<input type="hidden" class="countWeight1" value="{{countWeight}}">
-												<input type="hidden" class="user" value="{{app.user.id}}">
-												<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
-												<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
-
-												<input type="hidden" class="userprincipal" value="{{app.user.id}}">
+																					<button class="btn btn-sm btn-info resend " type="submit" onclick="return confirm('Are you sure you want to Resend this Task?');">
+																						Resend
+																					</button>
+																				{% endif %}
+																			</td>
 
 
+																		{% endif %}
+																	</tr>
+
+																{% endfor %}
+
+															</table>
+
+														</td>
+														<td>
+															{% if countWeight < 100 %}
+
+																<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
+																	<i class="fa fa-edit"></i>
+																</button>
+															{% endif %}
+														</td>
+														<input type="hidden" class="countWeight1" value="{{countWeight}}">
+														<input type="hidden" class="user" value="{{app.user.id}}">
+														<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
+														<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
+
+														<input type="hidden" class="userprincipal" value="{{app.user.id}}">
+
+
+													</tr>
+												{% else %}
+													<tr>
+														<td colspan="8">no records found</td>
+													</tr>
+												{% endfor %}
 											</tr>
-										{% else %}
-											<tr>
-												<td colspan="8">no records found</td>
-											</tr>
-										{% endfor %}
+										</tbody>
 									</tbody>
 								</table>
 							{% endif %}
@@ -295,11 +315,11 @@
 {% block javascripts %}
 	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
 	<script>
-			$('.edit').click(function () {
+		$('.edit').click(function () {
 $('#edit').modal('show');
 
 var perTaskId = $(this).attr('data-taskId');
-var countWeight= $('.countWeight1').val()
+var countWeight = $('.countWeight1').val()
 $('.countWeight').val(countWeight)
 $.ajax({
 url:"{{ path('performer_task_weight_edit') }}",
@@ -311,6 +331,7 @@ dataType: "json",
 success: function (data) {
 var trHTML = '';
 $.each(data, function (i, item) {
+error
 
 trHTML += '<tr><td>' + item.name + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group quantityBatch" placeholder="Weight" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
 
@@ -321,8 +342,8 @@ $('#records_table1').append(trHTML);
 }
 });
 })
-		</script>
-    <script>
+	</script>
+	<script>
 		$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })
@@ -381,6 +402,21 @@ select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 	<script>
 		$('.socialbtn').click(function () {
 $('.social').show();
+
+})
+	</script>
+	<script>
+		$('.timeGap').keyup(function () {
+var timeGap = $('.timeGap').val()
+if (timeGap > 6) {
+$('.error').text("maximum time gap is 6")
+$('.assign').prop('disabled',true);
+} else {
+$('.error').text("")
+$('.assign').prop('disabled',false);
+
+
+}
 
 
 })

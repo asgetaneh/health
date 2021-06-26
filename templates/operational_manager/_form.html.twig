@@ -1,4 +1,30 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+
+
+{{ form_start(form,{'attr': {'role':'form'} }) }}
+
+
+<div class="row">
+
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">Manager</label>
+			{{ form_widget(form.manager,{'attr':{'class':'form-control select2 ','required' : 'true'}}) }}
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<label class="floating-label" for="Name">Operational Office</label>
+			{{ form_widget(form.operationalOffice,{'attr':{'class':'form-control select2 ','required' : 'true'}}) }}
+		</div>
+	</div>
+
+
+	<div class="col-md-12">
+		<button class="btn btn-primary float-right form-controll">{{ button_label|default('Save') }}</button>
+
+
+	</div>
+
+</div>
 {{ form_end(form) }}

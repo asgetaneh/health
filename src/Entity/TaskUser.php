@@ -54,6 +54,11 @@ class TaskUser
      */
     private $staffEvaluationBehaviorCriterias;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $rejectReason;
+
     
 
     public function __construct()
@@ -183,6 +188,18 @@ class TaskUser
                 $staffEvaluationBehaviorCriteria->setTaskUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRejectReason(): ?string
+    {
+        return $this->rejectReason;
+    }
+
+    public function setRejectReason(?string $rejectReason): self
+    {
+        $this->rejectReason = $rejectReason;
 
         return $this;
     }

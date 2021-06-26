@@ -30,9 +30,17 @@ class PerformerTaskController extends AbstractController
      */
     public function index(Request $request,TaskUserRepository $taskUserRepository , TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
     {
-
+     $em=$this->getDoctrine()->getManager();
+   if ($request->request->get("taskUserId")) {
+       $taskUserId=$request->request->get("taskUserId");
+         $reason=$request->request->get("reason");
+    $taskUsers=$taskUserRepository->find($taskUserId);
+    $taskUsers->setStatus(6);
+    $taskUsers->setRejectReason($reason);
+    $em->flush();
+            $this->addFlash('success', 'Task Reject successfully !');
+   }
       $taskUsers=$taskUserRepository->findPerformerTaskUsers($this->getUser());
-    //   dd($taskUsers);
        
         return $this->render('performer_task/index.html.twig', [
             'performer_tasks' => $taskUsers,
@@ -40,6 +48,7 @@ class PerformerTaskController extends AbstractController
            
         ]);
         }
+        
          /**
      * @Route("/list", name="performer_task_list")
      */
@@ -188,7 +197,7 @@ class PerformerTaskController extends AbstractController
             
                 $performerTask->setWeight($weight);
             $em->flush();
-                                  $this->addFlash('success', 'Weight Updated successfully !');
+          $this->addFlash('success', 'Weight Updated successfully !');
            
             return $this->redirectToRoute('operational_task_index',['id'=>$performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
         }
