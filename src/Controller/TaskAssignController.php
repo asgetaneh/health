@@ -12,6 +12,7 @@ use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
+use App\Helper\EmailHelper;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
@@ -40,53 +41,53 @@ use Symfony\Component\Validator\Constraints\Date;
 class TaskAssignController extends AbstractController
 {
    
-//   private $params;
-//     private $approverRepository;
-//     private $logger;
-//     private $mailer;
-//     public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
-//     {
-//         // $this->approverRepository = $approverRepository;
-//         $this->logger = $logger;
-//         $this->mailer = $mailer;
-//         $this->params = $params;
-//     }
-//     /**
-//      * @Route("/mail", name="test_mail")
-//      */
-//     public function mail(Request $request, $approver, $formData, $message, $url)
-//     {
+  private $params;
+    // private $approverRepository;
+    private $logger;
+    private $mailer;
+    public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
+    {
+        // $this->approverRepository = $approverRepository;
+        $this->logger = $logger;
+        $this->mailer = $mailer;
+        $this->params = $params;
+    }
+    /**
+     * @Route("/mail", name="test_mail")
+     */
+    public function mail(Request $request, $performer, $formData, $message, $url)
+    {
 
-//         $data = array();
-//         // dd($approver);
-//         array_push($data, ['name' => $formData->getName()]);
-//         array_push($data, ['weight' => $formData->getWeight()]);
-//         // array_push($data, ['domainName' => $formData->getDomainName()]);
+        $data = array();
+        // dd($approver);
+        array_push($data, ['name' => $formData->getName()]);
+        array_push($data, ['weight' => $formData->getWeight()]);
+        // array_push($data, ['domainName' => $formData->getDomainName()]);
+// dd($this->params->get('app.sender_email'));
+        $maillermessage = (new TemplatedEmail())
+            ->from($this->params->get('app.sender_email'))
+            ->to($performer->getUserInfo()->getEmail())
+            ->subject('Time for Mis Mailer!')
+            ->text('Sending emails is fun again!')
+            ->htmlTemplate(
+                'page/mail.html.twig'
+            )->context([
+                'taskName' => $formData->getName(),
+                'taskWeight' => $formData->getWeight(),
+                // 'domainName' => $formData->getDomainName(),
+                'message' => $message,
+                'url' => $url
+            ]);
 
-//         $maillermessage = (new TemplatedEmail())
-//             ->from($this->params->get('app.sender_email'))
-//             ->to($approver)
-//             ->subject('Time for Symfony Mailer!')
-//             ->text('Sending emails is fun again!')
-//             ->htmlTemplate(
-//                 'page/mail.html.twig'
-//             )->context([
-//                 'purpose' => $formData->getName(),
-//                 'environment' => $formData->getWeight(),
-//                 // 'domainName' => $formData->getDomainName(),
-//                 'message' => $message,
-//                 'url' => $url
-//             ]);
+        $state = $this->mailer->send($maillermessage);
 
-//         $state = $this->mailer->send($maillermessage);
+        // return dd($state);
 
-//         // return dd($state);
+        $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
+        // $this->addFlash('success', 'Email sent');
 
-//         $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
-//         // $this->addFlash('success', 'Email sent');
-
-//         return $this->redirectToRoute('task_assign_new');
-//     }
+        return $this->redirectToRoute('task_assign_new');
+    }
 
 
     /**
@@ -287,13 +288,13 @@ class TaskAssignController extends AbstractController
                           $taskUser->setStatus(0);
 
           $em->persist($taskUser);
-            // $this->mail(
-            //     $request,
-            //     $this->getUser(),
-            //     $taskId,
-            //     "your Assigend to performer this Task " . $userId->getUserInfo()->getEmail(),
-            //     '10.140.10.19'
-            // );
+            $this->mail(
+                $request,
+                $userId,
+                $taskId,
+                "your Assigend to performer this Task " . $userId->getUserInfo(),
+                '10.140.10.19'
+            );
               $em->flush();
               
               
