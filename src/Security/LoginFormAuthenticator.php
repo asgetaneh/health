@@ -162,18 +162,18 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             "PERMISSION",
             $permissions
         );
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            return new RedirectResponse($targetPath);
-        } else if (in_array("admin", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('choose_office'));
-        else if (in_array("Request", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('choose_office'));
-        else if (in_array("Approve", $user->getRoles()))
-            return new RedirectResponse($this->urlGenerator->generate('choose_office'));
-        else
-            return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        // if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+        //     return new RedirectResponse($targetPath);
+        // } else if (in_array("admin", $user->getRoles()))
+        //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        // else if (in_array("Request", $user->getRoles()))
+        //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        // else if (in_array("Approve", $user->getRoles()))
+        //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        // else
+        //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
 
-        // return new RedirectResponse($this->urlGenerator->generate('cluster_index'));
+        return new RedirectResponse($this->urlGenerator->generate('choose_office'));
         throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
     protected function getLoginUrl()

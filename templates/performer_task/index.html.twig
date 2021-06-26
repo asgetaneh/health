@@ -95,7 +95,7 @@
 											<td>{{ performer_task.taskAssign.timeGap }}</td>
 											<td>{{ performer_task.taskAssign.performerTask.weight }}</td>
 											<td>
-												<form action="{{path('performer_task_show')}}" method="post">
+												<form action="{{path('performer_task_show')}}" method="post" class="d-inline-block">
 													<input type="hidden" name="taskUser" value="{{performer_task.id}}">
 													{% if performer_task.status  %}
 														<button class="btn btn-primary btn-sm">
@@ -109,18 +109,13 @@
 													{% endif %}
 												</form>
 												{% if performer_task.status == 0 %}
-													<a href="{{ path('operational_task_show', {'id': performer_task.id}) }}" class="btn btn-danger btn-sm">
-														Reject
-													</a>
+													<button type="button" name="reject" data-performerTask="{{performer_task.id}}" class="btn btn-sm btn-danger show ">
+														Reject</button>
+
 												{% endif %}
 
 
 											</td>
-
-
-											{# <td>
-																																																																																																																																					<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																											</td> #}
 
 										</tr>
 									{% else %}
@@ -135,7 +130,49 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="reject" class="modal fade" role="dialog">
+		<div
+			class="modal-dialog " style="width:500px;">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+					<h4 class="modal-title">Reject Tasks Reason
+					</h4>
+
+				</div>
+				<form method="post" action="{{path('performer_task_index')}}">
+					<div class="modal-body">
+						<input type="hidden" name="taskUserId" class="taskUserId">
+						<div class="form-group">
+							<textArea name="reason" class="form-control"></textArea>
+
+						</div>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary go">Reject</button>
+					</div>
+
+				</form>
 
 
-	{% endblock %}
-	{% block javascripts %}{% endblock %}
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+<script>
+		$('.show').click(function () {
+$('#reject').modal('show');
+
+var id = $(this).attr('data-performerTask');
+$('.taskUserId').val(id);
+})
+	</script>
+
+{% endblock %}

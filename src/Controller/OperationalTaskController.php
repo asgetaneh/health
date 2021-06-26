@@ -64,7 +64,6 @@ class OperationalTaskController extends AbstractController
      */
     public function index(Request $request ,SuitableInitiative $suitableInitiative,PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {             
-        
          $em = $this->getDoctrine()->getManager();
          $user= $this->getUser();
      $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
@@ -104,20 +103,13 @@ $quarterName=0;
 $now = (new DateTime('now'))->format('y-m-d');
 $hamle = DateTimeFactory::of(2013, 11, 1);
 $meskerem = DateTimeFactory::of(2014, 1, 30);
-  
-// dump($now = (new DateTime('now'))->format('y-m-d')
-// );
-
-// dd($hamle);
-
-// dd($meskerem);
-// $hamle=01/11/2013;
-// $meskerem=30/01/2014;
        $f=$this->fromGretoEthstr($time);
             $quarters=$planningQuarterRepository->findAll();
           foreach($quarters as $quarter){
+
         if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate() ) {
             $quarterId=$quarter->getId();
+                     dump($quarterId);
             $quarterName=$quarter->getName();
         }
     }
@@ -128,7 +120,9 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             else{
                  $plans=$planningAccomplishmentRepository->findBy(['suitableInitiative'=>$suitableInitiative]); 
             }
+            // dd($plans);
             foreach ($plans as  $value) {
+                // dd($value);
                 if ( $value->getQuarter() == $planningQuarterRepository->find($quarterId)) {
                     $performerTask->setPlanAcomplishment($value);    
                     $performerTask->setStatus(1); 
@@ -188,11 +182,32 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         # code..
         return $ethipic->toGregorian();
     }
+
+ /**
+     * @Route("/resend", name="task_resend")
+     */
+    public function taskResend(Request $request,TaskUserRepository $taskUserRepository, SuitableInitiativeRepository $suitableInitiativeRepository): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $taskUserId=$request->request->get("taskUserId");
+        $taskUsers=$taskUserRepository->find($taskUserId);
+        $id=$taskUsers->getTaskAssign()->getPerformerTask()->getPlanAcomplishment()
+        ->getSuitableInitiative()->getId();
+    $taskUsers->setStatus(0);
+    $taskUsers->setRejectReason(null);
+    $em->flush();
+      $this->addFlash('success', 'Successfully Resend Task To Performer !');
+
+              return $this->redirectToRoute('operational_task_index',['id'=>$id]);
+    }
+
+
     /**
      * @Route("/suitableInitiative/list", name="suitable_initiative_list")
      */
     public function suitableInitiative(Request $request,PaginatorInterface $paginator, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, TaskMeasurementRepository $taskMeasurementRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
     {
+                $this->denyAccessUnlessGranted('opr_task');
         $em=$this->getDoctrine()->getManager();
         $user=$this->getUser();
      $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
@@ -215,6 +230,9 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             'count' => $suitableInitiatives,
         ]);
     }
+
+
+
      /**
      * @Route("/accomplisment/social", name="acomplishment_task_detail_social")
      */
@@ -262,6 +280,8 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             
         ]);
     }
+
+
     /**
  * @Route("/principal/report", name="principal_office_report", methods={"GET","POST"})
      */
@@ -328,17 +348,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
          $performerTasks=$performerTaskRepository->findInitiativeBy($suitableInitiative,$user);
         $total1=0;
             $taskAcomolishs=$taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative,$user); 
-            // if ($social == 1) {
-                
-            // $taskAcomolishsSocial=$taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative,$user); 
-            //             //    dd($taskAcomolishsSocial);
-
-            // }
-            //    foreach ($taskAcomolishs as $value) {      
-            //        $total1=$total1 + ( $value->getAccomplishmentValue() * 100) / $value->getexpectedValue() ; 
-            //    }
- 
-        //  $taskUser=$this->getUser();
+        
          $taskUsers=$taskUserRepository->findTaskUsers($user);
          $time = new DateTime('now');
          $endDate=0;
@@ -385,7 +395,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             $planAcomplishments->setAccompValue($acompAverage);
 
             $em->flush();
-                            $this->addFlash('success', 'successfully Send To Plan Office !');
+                            $this->addFlash('success', 'Successfully Send To Plan Office !');
 
                       return $this->redirectToRoute('principal_office_report');
         }
@@ -396,31 +406,22 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
 
         $suitiniId=$request->request->get('suitableinitiative');
         $accompValue=$request->request->get('accomp');
-        // $accompValueSex=$request->request->get('acompsex');
-        // $sexids=$request->request->get('sexid');
         $social=$request->request->get('social');
-        // dd($social);
           $quarterId=$request->request->get('quarterId');
         $quarter=$planningQuarterRepository->find($quarterId);
                 $socialAttribute=$em->getRepository(InitiativeAttribute::class)->find($social);
          if ($social == 0) {
-         $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);
-
-         }
+         $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);}
          else {
          $performerTasks=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$social);
-
          }
-        // dd($performerTasks);
         foreach ($performerTasks as $value) {
             $value->setStatus(0);
         }        
          if ($social == 0) {
          $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);
            }  else {
-                       $plannings=$planningAccomplishmentRepository->findplanAcc($suitiniId,$social,$principal,$quarter);
-   
-               
+                       $plannings=$planningAccomplishmentRepository->findplanAcc($suitiniId,$social,$principal,$quarter);         
          }
           $operationalSuitableInitiative=new OperationalSuitableInitiative();
           $operationalSuitableInitiative->setPlanningAcomplishment($plannings[0]);
@@ -436,9 +437,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
           $operationalSuitableInitiative->setStatus(1);
           $em->persist($operationalSuitableInitiative);
           $em->flush();
-    $this->addFlash('success', 'successfully Send To Principal Office !');
-
-        
+    $this->addFlash('success', 'Successfully Send To Principal Office !');
           return $this->redirectToRoute('suitable_initiative_list');
     }
      /**
@@ -580,7 +579,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
               $em->persist($evaluation);
         //   }
           $em->flush();
-                      $this->addFlash('success', 'successfully Operational Manager set Acomplisment value  !');
+                      $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
                       return $this->redirectToRoute('operational_task_show');
         }
           $staffCriterias=$staffEvaluationBehaviorCriteriaRepository->findAll();
@@ -623,7 +622,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         $plans->setStatus(3);
 
            $em->flush();
-                $this->addFlash('success', 'Approved successfully !');
+                $this->addFlash('success', 'Approved Successfully !');
  $taskUser= $request->request->get('taskUser');
         //  dd($taskUser);
          $taskUserId=0;

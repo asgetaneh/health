@@ -5,11 +5,11 @@
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header bg-info">
-           
+
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-                 <h4>{{initiativeName}}</h4>
+				<h4>{{initiativeName}}</h4>
 				<h4 class="modal-title">Create Task   for =>
-					{{quarterName}}
+					{{quarterName}} Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
 				</h4>
 				<h4 class="modal-title">Allowed Maximum 6 Tasks
 					{% if social == 1 %}
@@ -51,10 +51,10 @@
 				</div>
 
 				{# <div class="form-group">
-													{{ form_label(form.quarter) }}
-													{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
-								
-												</div> #}
+																	{{ form_label(form.quarter) }}
+																	{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
+												
+																</div> #}
 
 
 			</div>
@@ -77,9 +77,9 @@
 			<div class="modal-content">
 				<div class="modal-header bg-info">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					
-                    <h4 class="modal-title">Assign Task</h4>
-                 <h3>{{initiativeName}}</h3>
+
+					<h4 class="modal-title">Assign Task</h4>
+					<h3>{{initiativeName}} </h3>
 
 				</div>
 				<div class="modal-body">
@@ -142,9 +142,10 @@
 							<lable class=" control-label no-padding-right">
 								<b>
 									Time Gap
+									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
-							<input type="number" name="timeGap" class="form-control " autocomplete="true" required>
+							<input type="number" name="timeGap" class="form-control timeGap " autocomplete="true" required>
 
 
 						</div>
@@ -191,7 +192,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Assign{% endtrans %}"/>
+				<input class="btn btn-primary pull-right assign " type="submit" value="{% trans %}Assign{% endtrans %}"/>
 				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 			</div>
 		</form>

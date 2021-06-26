@@ -110,7 +110,7 @@ class PerformerController extends AbstractController
             $data=$filterform->getData();
             $stafType=$data['stafType'];
            $operationalOffices= $operationalOfficeRepository->findOneBy(['name'=>$request->request->get("oper")]);
-            $operationalOffice=$operationalOffices->getId();
+            // $operationalOffice=$operationalOffices->getId();
             $performer=new Performer();
             $performer->setOperationalOffice($operationalOffices);
             $performer->setPerformer($this->getUser());
