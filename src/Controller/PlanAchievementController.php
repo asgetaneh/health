@@ -13,6 +13,7 @@ use App\Entity\QuarterAccomplishment;
 use App\Entity\Strategy;
 use App\Form\PlanAchievementType;
 use App\Helper\InitiativeHelper;
+use App\Helper\VisualizationHelper;
 use App\Repository\GoalRepository;
 use App\Repository\InitiativeRepository;
 use App\Repository\KeyPerformanceIndicatorRepository;
@@ -38,10 +39,12 @@ class PlanAchievementController extends AbstractController
     /**
      * @Route("/", name="plan_achievement_index")
      */
-    public function index(PlanAchievementRepository $planAchievementRepository): Response
-    {
+    public function index(PlanAchievementRepository $planAchievementRepository,GoalRepository $goalRepository): Response
+    {   $em = $this->getDoctrine()->getManager();
+         $datas=VisualizationHelper::goal($em);
         return $this->render('plan_achievement/index.html.twig', [
-            'plan_achievements' => $planAchievementRepository->findAll(),
+            
+             'data'=>$datas
         ]);
     }
     /**
@@ -49,58 +52,6 @@ class PlanAchievementController extends AbstractController
      */
     public function goal(PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PaginatorInterface $paginator, Request $request,PlanningYearRepository $planningYearRepository): Response
     {    
-
-       
-      $a= [  'year'=>[2002,200,300],
-
-
-      'goal'=>[
-            [
-                'name'=>'abdo',
-                'achieve'=>[10,30,50]
-            ],
-            [
-                'name'=>'some',
-                'achieve'=>[10,30,50]
-            ],
-            ]
-        ];
-        $datas=[];
-        $goalDatas=[];
-      
-           //$goalname=array();
-            $planyears = $planningYearRepository->findAll();
-          $goals=$goalRepository->findAll();
-          foreach($goals as $key=> $goal){
-              $goaldata=[];
-                
-            //    dd($goaldata['name']) ;
-                $achieveData=[];
-              $goalAchievements=$planAchievementRepository->getByGoal($goal);
-           
-              foreach($goalAchievements as $key2 => $achievement){
-                //  dd($achievement->getAccomplishmentValue());
-                  $achieveData[$key2]=$achievement->getAccomplishmentValue();
-              }
-              $goaldata['name']=$goal->getName();
-              $goaldata['achieve']=$achieveData;
-              //dd($goaldata['name']);
-             $goalDatas[$key]= $goaldata;
-        
-          }
-          
-         
-          
-           $planyear=array_map(function($year){
-                return date_format($year->getYear(),"Y");
-            }, $planyears);
-            $datas['year']= $planyear;
-            $datas['goal']=$goalDatas;
-            
-
-           $goalname=array_map(function($goal){
-                return $goal->getName();
-            },$goals);
    
          
            $em = $this->getDoctrine()->getManager();
@@ -110,6 +61,7 @@ class PlanAchievementController extends AbstractController
             $this->addFlash('success', 'load successfuly');
             return $this->redirectToRoute('plan_achievement_goal');
         }
+        $datas=VisualizationHelper::goal($em);
         $query = $goalRepository->findAlls();
         $data = $paginator->paginate(
             $query,
@@ -118,8 +70,7 @@ class PlanAchievementController extends AbstractController
         );
         return $this->render('plan_achievement/goal.html.twig', [
             'plan_achievements' => $data,
-            'goalname'=>$goalname,
-            'planyear'=> $planyear,
+           
             'data'=>$datas
         ]);
     }

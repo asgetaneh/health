@@ -23,7 +23,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{principal_officestotal|length}}</strong>
+							<strong>{{principal_offices.getTotalItemCount()}}</strong>
 
 						</span>
 					</div>
@@ -103,17 +103,19 @@
 									{# <td>{{ principal_office.createAt ? principal_office.createAt|date('d-M-Y') : '' }}</td> #}
 									<td>{{ principal_office.description }}</td>
 									<td>
-										<a class="btn btn-primary btn-xs" href="{{ path('principal_office_show', {'id': principal_office.id}) }}" title="view details">
+										<a class="btn btn-primary btn-sm" href="{{ path('principal_office_show', {'id': principal_office.id}) }}" title="view details">
 											<i class="fa fa-eye"></i>
-											show</a>
-										<a class="btn btn-warning btn-xs" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}" title="edit">
+											</a>
+										<a class="btn btn-warning btn-sm" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
-											edit</a>
+											</a>
 										<form class="" style="display:inline;" action="" method="post">
 
 
 											<input type="hidden" name="{{principal_office.isActive ?"deactive":"active"}}" value="{{ principal_office.id}}">
-											<input type="submit" style="display:inline;" class="btn btn-sm {{ principal_office.isActive?" btn-danger":" btn-success"}}" value="{{principal_office.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{principal_office.isActive?" deactivate":" activate"}}')">
+											<button type="submit" title="{{principal_office.isActive?"deactivate":"activate"}}" style="display:inline;" class="btn btn-sm {{ principal_office.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{principal_office.isActive?" deactivate":" activate"}}')">
+                                            <span class="{{principal_office.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+                                            </button>
 
 										</form>
 									</td>

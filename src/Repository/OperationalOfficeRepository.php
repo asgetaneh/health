@@ -18,22 +18,22 @@ class OperationalOfficeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalOffice::class);
     }
- public function filterOperationalOffice($principalOffice)
+    public function filterOperationalOffice($principalOffice)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
-         
 
-            ->Select('s.name')  
-           
+
+            ->Select('s.name')
+
             ->addSelect('s.id')
             ->andWhere('s.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('s.id', 'ASC')
-          
+
             ->getQuery()
-            
+
             ->getResult();
     }
     // /**
@@ -64,4 +64,15 @@ class OperationalOfficeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function search($search = [])
+    {
+        $qb = $this->createQueryBuilder('o');
+        if (isset($search['name'])) {
+
+            $qb
+
+                ->andWhere("o.name  LIKE '%" . $search['name'] . "%' ");
+        }
+        return $qb->getQuery();
+    }
 }

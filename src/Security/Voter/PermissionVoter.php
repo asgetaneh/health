@@ -14,7 +14,7 @@ class PermissionVoter extends Voter
     }
     protected function supports($attribute, $subject)
     {
-        // return true;
+        return true;
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
         $permission=$this->session->get("PERMISSION");
@@ -27,7 +27,7 @@ class PermissionVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        // return true;
+        return true;
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
@@ -58,6 +58,6 @@ class PermissionVoter extends Voter
         if (!$permission)
             $permission = array();
 
-        return in_array($attribute, $permission) | in_array('rlspad', $permission);
+        return in_array($attribute, $permission) | in_array('rlspad',  $user->getRoles());
     }
 }

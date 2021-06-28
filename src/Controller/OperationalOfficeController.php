@@ -20,7 +20,7 @@ class OperationalOfficeController extends AbstractController
     /**
      * @Route("/", name="operational_office_index", methods={"GET","POST"})
      */
-    public function index(OperationalOfficeRepository $operationalOfficeRepository,Request $request,PaginatorInterface $paginator): Response
+    public function index(OperationalOfficeRepository $operationalOfficeRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $this->denyAccessUnlessGranted('vw_opof');
         $operationalOffice = new OperationalOffice();
@@ -28,50 +28,50 @@ class OperationalOfficeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                    $this->denyAccessUnlessGranted('ad_opof');
+            $this->denyAccessUnlessGranted('ad_opof');
 
             $entityManager = $this->getDoctrine()->getManager();
             $operationalOffice->setCreatedAt(new DateTime('now'));
             $operationalOffice->setCreatedBy($this->getUser());
             $entityManager->persist($operationalOffice);
             $entityManager->flush();
-            $this->addFlash('success',"registered successfuly");
+            $this->addFlash('success', "registered successfuly");
 
             return $this->redirectToRoute('operational_office_index');
         }
-        if($request->request->get('deactive')){
-                    $this->denyAccessUnlessGranted('deact_opof');
+        if ($request->request->get('deactive')) {
+            $this->denyAccessUnlessGranted('deact_opof');
 
-            $operationalOffice=$operationalOfficeRepository->find($request->request->get('deactive'));
+            $operationalOffice = $operationalOfficeRepository->find($request->request->get('deactive'));
             $operationalOffice->setIsActive(false);
-              $this->getDoctrine()->getManager()->flush();
-               $this->addFlash('success',"deactivated successfuly");
-              return $this->redirectToRoute('operational_office_index');
-           
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "deactivated successfuly");
+            return $this->redirectToRoute('operational_office_index');
         }
-          if($request->request->get('active')){
-                      $this->denyAccessUnlessGranted('act_opof');
+        if ($request->request->get('active')) {
+            $this->denyAccessUnlessGranted('act_opof');
 
-            $operationalOffice=$operationalOfficeRepository->find($request->request->get('active'));
+            $operationalOffice = $operationalOfficeRepository->find($request->request->get('active'));
             $operationalOffice->setIsActive(true);
-              $this->getDoctrine()->getManager()->flush();
-               $this->addFlash('success',"activated successfuly");
-              return $this->redirectToRoute('operational_office_index');
-           
-         }
-        $operational_officestotal=$operationalOfficeRepository->findAll();
-
-         $data=$paginator->paginate(
-             $operationalOfficeRepository->findAll(),
-             $request->query->getInt('page',1),
-             10
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "activated successfuly");
+            return $this->redirectToRoute('operational_office_index');
+        }
+        if ($request->query->get('search')) {
+            $query = $operationalOfficeRepository->search(['name' => $request->query->get('search')]);
+        } else
+            $query = $operationalOfficeRepository->findAll();
+        $data = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
 
         );
 
         return $this->render('operational_office/index.html.twig', [
             'operational_offices' => $data,
-            'operational_officestotal'=>$operational_officestotal,
-            'form'=>$form->createView()
+
+            'form' => $form->createView()
         ]);
     }
 
@@ -80,7 +80,7 @@ class OperationalOfficeController extends AbstractController
      */
     public function new(Request $request): Response
     {
-                $this->denyAccessUnlessGranted('ad_opof');
+        $this->denyAccessUnlessGranted('ad_opof');
 
         $operationalOffice = new OperationalOffice();
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
@@ -105,7 +105,7 @@ class OperationalOfficeController extends AbstractController
      */
     public function show(OperationalOffice $operationalOffice): Response
     {
-                $this->denyAccessUnlessGranted('vw_opof_dtl');
+        $this->denyAccessUnlessGranted('vw_opof_dtl');
 
         return $this->render('operational_office/show.html.twig', [
             'operational_office' => $operationalOffice,
@@ -117,7 +117,7 @@ class OperationalOfficeController extends AbstractController
      */
     public function edit(Request $request, OperationalOffice $operationalOffice): Response
     {
-                $this->denyAccessUnlessGranted('edt_opof');
+        $this->denyAccessUnlessGranted('edt_opof');
 
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
         $form->handleRequest($request);
@@ -139,9 +139,9 @@ class OperationalOfficeController extends AbstractController
      */
     public function delete(Request $request, OperationalOffice $operationalOffice): Response
     {
-                $this->denyAccessUnlessGranted('dlt_opof');
+        $this->denyAccessUnlessGranted('dlt_opof');
 
-        if ($this->isCsrfTokenValid('delete'.$operationalOffice->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $operationalOffice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($operationalOffice);
             $entityManager->flush();

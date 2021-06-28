@@ -223,7 +223,9 @@
 
 
 														<input type="hidden" name="{{initiative.isActive ?"deactive":"active"}}" value="{{ initiative.id}}">
-														<input type="submit" style="display:inline;" class="btn btn-xs {{ initiative.isActive?" btn-danger":" btn-success"}}" value="{{initiative.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{initiative.isActive?" deactivate":" activate"}}')">
+														<button type="submit" title="{{ initiative.isActive?" deactivate":" Activate"}}" style="display:inline;" class="btn btn-sm {{ initiative.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{initiative.isActive?" deactivate":" activate"}}')">
+                                                        <span class="{{initiative.isActive?"fa fa-times":"fa fa-check-square-o"}}"></span>
+                                                        </button>
 
 													</form>
 												{% endif %}

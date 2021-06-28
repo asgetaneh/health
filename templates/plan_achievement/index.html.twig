@@ -1,35 +1,152 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}PlanAchievement index{% endblock %}
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('plan_achievement_index')}}">{% trans %}Dashboard{% endtrans %}</a>
+	</li>
+{% endblock %}
 
 {% block body %}
-    <h1>PlanAchievement index</h1>
+<div class="panel panel-default row">
+<div class="panel-body">
+	<div class="row" style="">
+    <div class="col-md-6 col-sm-12 col-lg-6">
+		<div class=" widget-container-col ui-sortable" id="widget-container-col-1" style="margin:auto;">
+			<div class="widget-box ui-sortable-handle" id="widget-box-1">
+				<div class="widget-header">
+					<h5 class="widget-title">
+						<strong>{% trans %}Goal Achievemnet{% endtrans %}</strong>
+					</h5>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>AccomplishmentValue</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for plan_achievement in plan_achievements %}
-            <tr>
-                <td>{{ plan_achievement.id }}</td>
-                <td>{{ plan_achievement.accomplishmentValue }}</td>
-                <td>
-                    <a href="{{ path('plan_achievement_show', {'id': plan_achievement.id}) }}">show</a>
-                    <a href="{{ path('plan_achievement_edit', {'id': plan_achievement.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+					<div class="widget-toolbar">
 
-    <a href="{{ path('plan_achievement_new') }}">Create new</a>
+
+						<a href="#" id="reload" data-action="reload">
+							<i class="ace-icon fa fa-refresh"></i>
+						</a>
+
+
+					</div>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main">
+						 <canvas id="myChart" width="400" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+        </div>
+        <div class="col-md-6 col-sm-12 col-lg-6">
+        <div class=" widget-container-col ui-sortable" id="widget-container-col-1">
+			<div class="widget-box ui-sortable-handle" id="widget-box-1">
+				<div class="widget-header">
+					<h5 class="widget-title">
+						<strong>{% trans %}Objective Achievemnet{% endtrans %}</strong>
+					</h5>
+
+					<div class="widget-toolbar">
+
+
+						<a href="#" id="reload" data-action="reload">
+							<i class="ace-icon fa fa-refresh"></i>
+						</a>
+
+
+					</div>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="table-responsive">
+							<span class="badge badge-info pull-right">
+								{% trans %}Total{% endtrans %}
+								:
+								{# <strong>{{ plan_achievements.getTotalItemCount()}}</strong> #}
+							</span>
+
+
+							{# <div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div> #}
+						</div>
+					</div>
+				</div>
+			</div>
+            </div>
+		</div>
+        </div>
+	</div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+<script>
+$(function () {
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor=[];
+var fillColor=[];
+{% for goal in data.goal %}
+   bgcolor.push(getRandomColor());
+  fillColor.push(getRandomColor());
+{% endfor %}
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+
+
+
+
+var dat = {
+labels: [{{ data.year|join(',') }} ],
+datasets: [
+ {% for goal in data.goal %}
+  {
+   
+label: "{{goal.name }}",
+fillColor: fillColor[{{loop.index}}],
+strokeColor: fillColor[{{loop.index}}],
+highlightFill: fillColor[{{loop.index}}],
+highlightStroke: fillColor[{{loop.index}}],
+data: [{{goal.achieve|join(',')}}],
+backgroundColor: [ 
+				{% for i in range(1,goal.achieve|length) %}  bgcolor[{{loop.parent.loop.index}}],{% endfor %}
+			],
+            borderColor: [ 
+				{% for i in range(1,goal.achieve|length) %}fillColor[{{loop.parent.loop.index}}],{% endfor %}
+			],
+			borderWidth: 1 
+}
+{% if loop.last != true %}
+,
+{% endif %}
+ {% endfor %}
+]
+};
+
+
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: dat,
+    options: {
+      responsive: true, // Instruct chart js to respond nicely.
+      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+     
+      scaleFontStyle: "bold",
+      scaleLabel: "<%=value%>",
+      scaleFontSize: 16,
+      showTooltips: true,
+      
+      
+    }
+});
+})
+</script>
 {% endblock %}

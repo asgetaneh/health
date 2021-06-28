@@ -405,7 +405,14 @@ ace.settings.loadState('sidebar')
 									class="submenu">
 									{# {% if is_granted('LIST_PERSPECTIVE') %} #}
 
-
+                                      <li>
+										<a href="{{path('plan_achievement_index')}}">
+											<b class="fa fa-caret-right"></b>
+											{% trans %}
+											Dashboard
+											{% endtrans %}
+										</a>
+									</li>
 									<li>
 										<a href="{{path('startegic_plan')}}">
 											<b class="fa fa-caret-right"></b>

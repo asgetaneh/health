@@ -105,17 +105,19 @@
 								{# <td>{{ performer.createAt ? performer.createAt|date('d-M-Y') : '' }}</td> #}
 								{# <td>{{ performer.description }}</td> #}
 								<td>
-									<a class="btn btn-primary btn-xs" href="{{ path('performer_show', {'id': performer.id}) }}" title="view details">
+									<a class="btn btn-primary btn-sm" href="{{ path('performer_show', {'id': performer.id}) }}" title="view details">
 										<i class="fa fa-eye"></i>
-										show</a>
-									<a class="btn btn-warning btn-xs" href="{{ path('performer_edit', {'id': performer.id}) }}" title="edit">
+										</a>
+									<a class="btn btn-warning btn-sm" href="{{ path('performer_edit', {'id': performer.id}) }}" title="edit">
 										<i class="fa fa-edit"></i>
-										edit</a>
+										</a>
                                          <form  class="" style="display:inline;" action="" method="post">
                                             
                                                   
                                                     <input type="hidden" name="{{performer.isActive ?"deactive":"active"}}" value ="{{ performer.id}}">
-                                                    <input type="submit" class="btn btn-sm {{performer.isActive?"btn-danger":"btn-success"}}" value="{{performer.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{performer.isActive?"deactivate":"activate"}}')">
+                                                    <button title="{{performer.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{performer.isActive?"btn-danger":"btn-success"}}" value="" onClick="return confirm('are you sure you want to {{performer.isActive?"deactivate":"activate"}}')">
+                                                          <span class="{{performer.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+                                                          </button>
                                                       
                                             </form>
 								</td>

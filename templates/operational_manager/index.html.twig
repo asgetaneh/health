@@ -96,17 +96,19 @@
 								{# <td>{{ operational_manager.createAt ? operational_manager.createAt|date('d-M-Y') : '' }}</td> #}
 								{# <td>{{ operational_manager.description }}</td> #}
 								<td>
-									<a class="btn btn-primary btn-xs" href="{{ path('operational_manager_show', {'id': operational_manager.id}) }}" title="view details">
+									<a class="btn btn-primary btn-sm" href="{{ path('operational_manager_show', {'id': operational_manager.id}) }}" title="view details">
 										<i class="fa fa-eye"></i>
-										show</a>
-									<a class="btn btn-warning btn-xs" href="{{ path('operational_manager_edit', {'id': operational_manager.id}) }}" title="edit">
+									</a>
+									<a class="btn btn-warning btn-sm" href="{{ path('operational_manager_edit', {'id': operational_manager.id}) }}" title="edit">
 										<i class="fa fa-edit"></i>
-										edit</a>
+										</a>
                                          <form  class="" style="display:inline;" action="" method="post">
                                             
                                                   
                                                     <input type="hidden" name="{{operational_manager.isActive ?"deactive":"active"}}" value ="{{ operational_manager.id}}">
-                                                    <input type="submit" class="btn btn-sm {{operational_manager.isActive?"btn-danger":"btn-success"}}" value="{{operational_manager.isActive?"deactivate":"activate"}}" onClick="return confirm('are you sure you want to {{operational_manager.isActive?"deactivate":"activate"}}')">
+                                                    <button type="submit" title="{{operational_manager.isActive ?"deactive":"active"}}" class="btn btn-sm {{operational_manager.isActive?"btn-danger":"btn-success"}}" value="" onClick="return confirm('are you sure you want to {{operational_manager.isActive?"deactivate":"activate"}}')">
+                                                     <span class="{{operational_manager.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+                                                     </button>
                                                       
                                             </form>
 								</td>

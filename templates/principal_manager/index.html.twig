@@ -82,19 +82,20 @@
 									{# <td>{{ principal_manager.createAt ? principal_manager.createAt|date('d-M-Y') : '' }}</td> #}
 									{# <td>{{ principal_manager.description }}</td> #}
 									<td>
-										<a class="btn btn-primary btn-xs" href="{{ path('principal_manager_show', {'id': principal_manager.id}) }}" title="view details">
+										<a title="view" class="btn btn-primary btn-sm" href="{{ path('principal_manager_show', {'id': principal_manager.id}) }}" title="view details">
 											<i class="fa fa-eye"></i>
-											show</a>
-										<a class="btn btn-warning btn-xs" href="{{ path('principal_manager_edit', {'id': principal_manager.id}) }}" title="edit">
+											</a>
+										<a title="{% trans %}Edit{% endtrans %}" class="btn btn-warning btn-sm" href="{{ path('principal_manager_edit', {'id': principal_manager.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
-											edit</a>
+											</a>
                                           
                                             <form  class="" style="display:inline;" action="" method="post">
                                             
                                                   
                                                     <input type="hidden" name="{{principal_manager.isActive ?"deactive":"active"}}" value ="{{ principal_manager.id}}">
-                                                    <input type="submit" class="btn btn-sm {{principal_manager.isActive?"btn-danger":"btn-success"}}" value="{{principal_manager.isActive?"deactivate":"activate"}}">
-                                                      
+                                                    <button title="{{principal_manager.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{principal_manager.isActive?"btn-danger":"btn-success"}}" value="">
+                                                        <span class="{{principal_manager.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+                                                        </button>
                                             </form>
                                             
 									</td>
