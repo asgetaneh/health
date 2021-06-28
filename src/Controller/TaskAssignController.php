@@ -12,6 +12,7 @@ use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
+use App\Helper\EmailHelper;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
@@ -41,7 +42,7 @@ class TaskAssignController extends AbstractController
 {
    
 //   private $params;
-//     private $approverRepository;
+//     // private $approverRepository;
 //     private $logger;
 //     private $mailer;
 //     public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
@@ -54,7 +55,7 @@ class TaskAssignController extends AbstractController
 //     /**
 //      * @Route("/mail", name="test_mail")
 //      */
-//     public function mail(Request $request, $approver, $formData, $message, $url)
+//     public function mail(Request $request, $performer, $formData, $message, $url)
 //     {
 
 //         $data = array();
@@ -62,17 +63,17 @@ class TaskAssignController extends AbstractController
 //         array_push($data, ['name' => $formData->getName()]);
 //         array_push($data, ['weight' => $formData->getWeight()]);
 //         // array_push($data, ['domainName' => $formData->getDomainName()]);
-
+// // dd($this->params->get('app.sender_email'));
 //         $maillermessage = (new TemplatedEmail())
 //             ->from($this->params->get('app.sender_email'))
-//             ->to($approver)
-//             ->subject('Time for Symfony Mailer!')
+//             ->to($performer->getUserInfo()->getEmail())
+//             ->subject('Time for Mis Mailer!')
 //             ->text('Sending emails is fun again!')
 //             ->htmlTemplate(
 //                 'page/mail.html.twig'
 //             )->context([
-//                 'purpose' => $formData->getName(),
-//                 'environment' => $formData->getWeight(),
+//                 'taskName' => $formData->getName(),
+//                 'taskWeight' => $formData->getWeight(),
 //                 // 'domainName' => $formData->getDomainName(),
 //                 'message' => $message,
 //                 'url' => $url
@@ -289,9 +290,9 @@ class TaskAssignController extends AbstractController
           $em->persist($taskUser);
             // $this->mail(
             //     $request,
-            //     $this->getUser(),
+            //     $userId,
             //     $taskId,
-            //     "your Assigend to performer this Task " . $userId->getUserInfo()->getEmail(),
+            //     "your Assigend to performer this Task " . $userId->getUserInfo(),
             //     '10.140.10.19'
             // );
               $em->flush();

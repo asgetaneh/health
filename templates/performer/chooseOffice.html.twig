@@ -21,25 +21,29 @@
 
 							<div class="row">
 								{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-								<div class="col-md-4">
-									<div class="form-group form-group-sm">
-										{{ form_label(filterform.stafType,'Staff Type') }}
-										{{ form_widget(filterform.stafType,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
-									</div>
+							<div class="col-md-4">
+								<div class="form-group form-group-sm">
+									{{ form_label(filterform.phoneNumber,'Phone Number ') }}
+									{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'' }}) }}
 								</div>
-								<div class="col-md-4">
-									<div class="form-group form-group-sm">
-										{{ form_label(filterform.principalOffice,'Principal Office ') }}
-										{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
-									</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group form-group-sm">
+									{{ form_label(filterform.stafType,'Staff Type') }}
+									{{ form_widget(filterform.stafType,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
 								</div>
-								<div class="col-md-4">
-									<label class="form-controll">Operational Office</label>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group form-group-sm">
+									{{ form_label(filterform.principalOffice,'Principal Office ') }}
+									{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
+								</div>
+							</div>
 
-									<select name="oper" class="oper select2">
-									</select>
+							<div class="col-md-4">
+								<label class="form-controll">Operational Office</label>
 
-								</div>
+								<select name="oper" class="oper select2"></select>
 
 
 								<div class="col-md-1">

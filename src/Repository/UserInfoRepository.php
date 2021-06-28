@@ -51,6 +51,14 @@ class UserInfoRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+     public function filter($name)
+    {
+        return $this->createQueryBuilder('s')
+           ->andWhere("s.fullName  LIKE '%".$name."%' ")
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
     // /**
     //  * @return UserInfo[] Returns an array of UserInfo objects
