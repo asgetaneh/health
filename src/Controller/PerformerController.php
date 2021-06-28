@@ -9,10 +9,12 @@ use App\Entity\StaffType;
 use App\Form\PerformerType;
 use App\Repository\OperationalOfficeRepository;
 use App\Repository\PerformerRepository;
+use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,7 +89,7 @@ class PerformerController extends AbstractController
       /**
      * @Route("/choose", name="choose_office")
      */
-    public function choose(Request $request,OperationalOfficeRepository $operationalOfficeRepository, UserRepository $userRepository)
+    public function choose(Request $request,OperationalOfficeRepository $operationalOfficeRepository,UserInfoRepository $userInfoRepository, UserRepository $userRepository)
     {
  $em=$this->getDoctrine()->getManager();
          $filterform = $this->createFormBuilder()
@@ -101,6 +103,10 @@ class PerformerController extends AbstractController
                 'class' => StaffType::class,
                 // 'multiple' => true,
                 'required' => true
+            ])   
+             ->add('phoneNumber', TextType::class, [
+                
+                'required' => true
             ])          
              ->getForm();
               $filterform->handleRequest($request);
@@ -109,13 +115,17 @@ class PerformerController extends AbstractController
             // $operationalOffice= $filterform->getData([]);
             $data=$filterform->getData();
             $stafType=$data['stafType'];
+             $phoneNumber=$data['phoneNumber'];
+
            $operationalOffices= $operationalOfficeRepository->findOneBy(['name'=>$request->request->get("oper")]);
             // $operationalOffice=$operationalOffices->getId();
             $performer=new Performer();
             $performer->setOperationalOffice($operationalOffices);
             $performer->setPerformer($this->getUser());
            $users= $userRepository->find($this->getUser()->getId());
-                   $users->setStaffType($stafType);
+           $userInfo= $userInfoRepository->find($users->getId());
+           $users->setStaffType($stafType);
+           $userInfo->setMobile($phoneNumber);
            $users->setStatus(1);
             $em->persist($performer);
             $em->flush();
