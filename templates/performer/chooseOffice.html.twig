@@ -43,7 +43,7 @@
 							<div class="col-md-4">
 								<label class="form-controll">Operational Office</label>
 
-								<select name="oper" class="oper select2"></select>
+								<select name="oper" class="oper select2" required></select>
 
 
 								<div class="col-md-1">
@@ -63,6 +63,9 @@
 {% endblock %}
 {% block javascripts %}
 	<script>
+    $(()=>{
+        $('.principal').trigger('change')
+    })
 		$('.principal').change(function () {
 var principal = $('.principal').val()
 // console.log(principal)
