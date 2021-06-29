@@ -1,68 +1,70 @@
-<li>
-	<a href="{{path('student')}}">
-		<b class="fa fa-caret-right"></b>
-		{% trans %}Student Information{% endtrans %}
-	</a>
-</li>
+{% if is_granted("vw_usr_lst") or  is_granted("vw_usr_grp")  %}
+	<li>
+		<a href="{{path('student')}}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}Student Information{% endtrans %}
+		</a>
+	</li>
 
-<li>
-	<a href="{{path('human_resource')}}">
-		<b class="fa fa-caret-right"></b>
-		{% trans %}Staff Information{% endtrans %}
-	</a>
-</li>
-<li>
-	<a href="#" class="dropdown-toggle ">
-		<i class=""></i>
-		<span class="menu-text">
+	<li>
+		<a href="{{path('human_resource')}}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}Staff Information{% endtrans %}
+		</a>
+	</li>
+	<li>
+		<a href="#" class="dropdown-toggle ">
+			<i class=""></i>
+			<span class="menu-text">
 
-			{% trans %}Filter Data{% endtrans %}
-		</span>
-		<b class="arrow fa fa-angle-down"></b>
-	</a>
-	<b class="arrow"></b>
-	<ul class="submenu">
-		<li>
-			<a href="{{path('campus_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Campus{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('college_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}College{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('program_level_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Program Level{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('program_type_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Program Type{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('enrollment_type_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Enrollment Type{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('departement_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Departement{% endtrans %}
-			</a>
-		</li>
-		<li>
-			<a href="{{path('program_index')}}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}Program{% endtrans %}
-			</a>
-		</li>
-	</ul>
-</li>
+				{% trans %}Filter Data{% endtrans %}
+			</span>
+			<b class="arrow fa fa-angle-down"></b>
+		</a>
+		<b class="arrow"></b>
+		<ul class="submenu">
+			<li>
+				<a href="{{path('campus_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Campus{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('college_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}College{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('program_level_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Program Level{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('program_type_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Program Type{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('enrollment_type_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Enrollment Type{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('departement_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Departement{% endtrans %}
+				</a>
+			</li>
+			<li>
+				<a href="{{path('program_index')}}">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Program{% endtrans %}
+				</a>
+			</li>
+		</ul>
+	</li>
+{% endif %}

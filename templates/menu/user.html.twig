@@ -7,7 +7,7 @@
 		</a>
 	</li>
 {% endif %}
-{% if is_granted("vw_usr_grp") %}
+{% if is_granted("vw_usr_per") %}
 	<li>
 		<a href="{{ path('permission_index') }}">
 			<b class="fa fa-caret-right"></b>
@@ -15,7 +15,7 @@
 		</a>
 	</li>
 {% endif %}
-{# {% if is_granted("vw_usr_grp") %} #}
+{% if is_granted("vw_usr_grp") %}
 
 	<li>
 		<a href="{{ path('user') }}">
@@ -24,4 +24,4 @@
 			{% endtrans %}
 		</a>
 	</li>
-{# {% endif %} #}
+{% endif %}

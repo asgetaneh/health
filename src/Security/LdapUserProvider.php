@@ -112,9 +112,18 @@ class LdapUserProvider implements UserProviderInterface
         $email = $ldapEntry->getAttributes()['mail'][0];
         $username = $ldapEntry->getAttributes()['uid'][0];
         // $email = $ldapEntry->getAttributes()['mail'][0];
-        $mobile = $ldapEntry->getAttributes()['mobile'][0];
-        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];
-        //   dd($employeeNumber);
+        if ($ldapEntry->getAttributes()['mobile']) {
+            # code...
+                    $mobile = $ldapEntry->getAttributes()['mobile'][0];
+        }
+        else{
+            $mobile="no";
+        }
+         if ($ldapEntry->getAttributes()['employeeNumber']) {
+        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];}
+        else{
+              $employeeNumber="no";
+        }
         $userinfo = new UserInfo();
 
         $user = new User();
