@@ -147,12 +147,12 @@
 												{% if is_granted('vw_kpi_dtl') %}
 
 
-													<a href="{{ path('key_performance_indicator_show', {'id': key_performance_indicator.id}) }}" class="btn btn-primary btn-sm">
+													<a href="{{ path('key_performance_indicator_show', {'id': key_performance_indicator.id}) }}" style="display:inline;" class="btn btn-primary btn-sm">
 														<i class="fa fa-eye"></i>
 													</a>
 												{% endif %}
 												{% if is_granted('edt_kpi') %}
-													<a href="{{ path('key_performance_indicator_edit', {'id': key_performance_indicator.id}) }}" class="btn btn-warning btn-sm">
+													<a href="{{ path('key_performance_indicator_edit', {'id': key_performance_indicator.id}) }}" style="display:inline;" class="btn btn-warning btn-sm">
 														<i class="fa fa-edit"></i>
 													</a>
 												{% endif %}
@@ -161,7 +161,9 @@
 
 
 														<input type="hidden" name="{{key_performance_indicator.isActive ?"deactive":"active"}}" value="{{ key_performance_indicator.id}}">
-														<input type="submit" style="display:inline;" class="btn btn-xs {{ key_performance_indicator.isActive?" btn-danger":" btn-success"}}" value="{{key_performance_indicator.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{key_performance_indicator.isActive?" deactivate":" activate"}}')">
+														<button title="{{key_performance_indicator.isActive?"deactivate":"activate"}}" type="submit" style="display:inline;" class="btn btn-sm {{ key_performance_indicator.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{key_performance_indicator.isActive?" deactivate":" activate"}}')">
+                                                        <i class="{{key_performance_indicator.isActive?"fa fa-times":"fa fa-check"}}"></i>
+                                                        </button>
 
 													</form>
 												{% endif %}

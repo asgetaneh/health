@@ -135,7 +135,7 @@
 													{% for kpi in strategy.keyPerformanceIndicators %}
 														<li>
 															<i class="ace-icon fa fa-check green"></i>
-															{{kpi|raw}}
+															{{kpi}}
 														</li>
 
 													{% endfor %}
@@ -170,7 +170,9 @@
 
 
 														<input type="hidden" name="{{strategy.isActive ?"deactive":"active"}}" value="{{ strategy.id}}">
-														<input type="submit" style="display:inline;" class="btn btn-sm {{ strategy.isActive?" btn-danger":" btn-success"}}" value="{{strategy.isActive?"deactivate":"activate"}}" onclick="return confirm('are you sure you want to {{strategy.isActive?" deactivate":" activate"}}')">
+														<button title="{{strategy.isActive?"deactivate":"activate"}}" type="submit" style="display:inline;" class="btn btn-sm {{ strategy.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{strategy.isActive?" deactivate":" activate"}}')">
+                                                        <i class="{{strategy.isActive?"fa fa-times":"fa fa-check"}}"></i>
+                                                        </button>
 
 													</form>
 												{% endif %}

@@ -116,7 +116,7 @@
 											{% if suitableplan.initiative.socialAtrribute|length > 0 %}
 												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
 
-													<p>{{plan.socialAttribute.name|title}}
+													<p>{{plan.socialAttribute.name|first|title}}
 														:
 														{{plan.planValue}}</p>
 
@@ -154,7 +154,7 @@
 													{% set maxValue = max(plan.planValue,maxValue) %}
 
 												{% endfor %}
-												<p>{{attribute.name|title}}:
+												<p>{{attribute.name|first|title}}:
 													{{maxValue ??"___" }}</p>
 											{% else %}
 												{% set maxValue = 0 %}
@@ -174,7 +174,7 @@
 													{% set maxValue = min(plan.planValue,maxValue) %}
 
 												{% endfor %}
-												<p>{{attribute.name|title}}:
+												<p>{{attribute.name|first|title}}:
 													{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</p>
 											{% else %}
 												{% set maxValue = suitableplan.initiative.maximumValue %}
@@ -196,7 +196,7 @@
 											{% if suitableplan.initiative.socialAtrribute|length > 0 %}
 												{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
 
-													<p>{{plan.socialAttribute.name|title}}
+													<p>{{plan.socialAttribute.name|first|title}}
 														:
 														{{plan.planValue}}</p>
 
