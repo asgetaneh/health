@@ -245,7 +245,7 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         $delegatedBy=$delegatedUser->getDelegatedBy();
         $user=$delegatedBy;
         // dd($delegatedUser->getDelegatedUser());
-     } 
+     }  
         $social=1;    
                  $socialAtr=$request->request->get("social");
                 $suitableId=$request->request->get("suitId");
@@ -329,18 +329,71 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
      */
     public function accomplishment(Request $request ,PlanningQuarterRepository $planningQuarterRepository, PerformerTaskRepository $performerTaskRepository, SuitableInitiative $suitableInitiative,TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository )
     {  
-        $em=$this->getDoctrine()->getManager();             
+        $em=$this->getDoctrine()->getManager();   
+        $socialAttr=0;          
  $user= $this->getUser();
         $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
      if ($delegatedUser) {
    $delegatedBy=$delegatedUser->getDelegatedBy();
         $user=$delegatedBy;
-        // dd($delegatedUser->getDelegatedUser());
-     }                $social=0;
-                foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
-                    if($va->getName()){
-                        $social=1;
-                    }   }
+     }      
+             $socials=$suitableInitiative->getInitiative()->getSocialAtrribute();
+                        //    dd($socials);
+             foreach($socials as $so) {
+                 if ($so->getCode() == 1) {
+                     $socialAttr=1;
+
+              $male=$so->getId();
+                 }
+                   if ($so->getCode() == 2) {
+              $female=$so->getId();
+                 }
+             }
+         if ($socialAttr== 1) {
+                //   dd("social");
+
+        $initiativeName=$suitableInitiative->getInitiative()->getName();
+                $initiativeId=$suitableInitiative->getId();
+         $performerTasksmale=$em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative,$user,$male);
+            $taskAcomolishsmale=$taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative,$user,$male); 
+            $performerTasksfemale=$em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative,$user,$female);
+            $taskAcomolishsfemale=$taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative,$user,$female); 
+           
+        
+         $time = new DateTime('now');
+         $endDate=0;
+                  $quarters=$em->getRepository(PlanningQuarter::class)->findAll();
+          foreach($quarters as $quarter){
+        if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate() ) {
+            $endDate=$quarter->getEndDate();
+        }}
+               $diff=$endDate->diff($time);
+                if ($diff->m == 0) {
+                $remainingdays=$diff->d;}
+                else{
+              $remainingdays=$diff->m * 30 + $diff->d;      
+                }
+        return $this->render('operational_task/accomplishmentDetail.html.twig', [
+            'taskAcomolishs' => $taskAcomolishsmale,
+            'taskAcomolishsfemale' => $taskAcomolishsfemale,
+            'initiativeName'=>$initiativeName,
+            'initiativeId'=>$initiativeId,
+            'performerTasks'=>$performerTasksmale,
+            'performerTasksfemale'=>$performerTasksfemale,
+            'social'=>1,
+            'remainingdays'=>$remainingdays,
+            // 'taskUsers'=>$taskUsers
+            
+        ]);
+         }
+         else{
+
+        //  dd("not");
+                // foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va){
+                //     if($va->getName()){
+                //         dd($va);
+                //         $social=1;
+                //     }   }
         $em=$this->getDoctrine()->getManager();
 
         $initiativeName=$suitableInitiative->getInitiative()->getName();
@@ -368,11 +421,11 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
             'initiativeName'=>$initiativeName,
             'initiativeId'=>$initiativeId,
             'performerTasks'=>$performerTasks,
-            'social'=>$social,
+            'social'=>0,
             'remainingdays'=>$remainingdays,
             'taskUsers'=>$taskUsers
             
-        ]);
+        ]);}
     }
     
     
@@ -404,39 +457,136 @@ $meskerem = DateTimeFactory::of(2014, 1, 30);
         $opOffice=$operation->getOperationalOffice();
         $principal=$opOffice->getPrincipalOffice();
 
-        $suitiniId=$request->request->get('suitableinitiative');
-        $accompValue=$request->request->get('accomp');
-        $social=$request->request->get('social');
+                   $social=$request->request->get('social');
+                   $accomp=$request->request->get('accomp');
+                     $suitiniId=$request->request->get('suitableinitiative');
           $quarterId=$request->request->get('quarterId');
         $quarter=$planningQuarterRepository->find($quarterId);
-                $socialAttribute=$em->getRepository(InitiativeAttribute::class)->find($social);
-         if ($social == 0) {
-         $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);}
-         else {
-         $performerTasks=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$social);
-         }
-        foreach ($performerTasks as $value) {
+
+
+ if ($social) {
+   $socialAttribute=$em->getRepository(InitiativeAttribute::class)->findAll();
+//    $socialAttribute2=$em->getRepository(InitiativeAttribute::class)->find($social[1]);
+     $performerTasks1=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$socialAttribute[0]);
+     $performerTasks2=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$socialAttribute[1]);           
+ foreach ($performerTasks1 as $value) {
             $value->setStatus(0);
-        }        
-         if ($social == 0) {
-         $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);
-           }  else {
-                       $plannings=$planningAccomplishmentRepository->findplanAcc($suitiniId,$social,$principal,$quarter);         
-         }
-          $operationalSuitableInitiative=new OperationalSuitableInitiative();
-          $operationalSuitableInitiative->setPlanningAcomplishment($plannings[0]);
+        } 
+  foreach ($performerTasks2 as $value) {
+            $value->setStatus(0);
+        } 
+         $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);         
+    //  $plannings1=$planningAccomplishmentRepository->findplanAcc($suitiniId,$socialAttribute2,$principal,$quarter); 
+    foreach ($plannings as $key => $value) {
+        # code...
+    
+$operationalSuitableInitiative=new OperationalSuitableInitiative();
+          $operationalSuitableInitiative->setPlanningAcomplishment($value);
           $operationalSuitableInitiative->setOperationalOffice($opOffice);
-          $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+          $operationalSuitableInitiative->setAccomplishedValue($accomp[$key]);
           $operationalSuitableInitiative->setQuarter($quarter);
-          if ($social == 0) {
-           $operationalSuitableInitiative->setSocial(null);
-          }
-          else{
-                $operationalSuitableInitiative->setSocial($socialAttribute);
-          }
+           $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+    
           $operationalSuitableInitiative->setStatus(1);
           $em->persist($operationalSuitableInitiative);
           $em->flush();
+    }
+    
+ }
+ else{
+         $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);
+ foreach ($performerTasks as $value) {
+            $value->setStatus(0);
+        } 
+   $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);
+         $operationalSuitableInitiative=new OperationalSuitableInitiative();
+          $operationalSuitableInitiative->setPlanningAcomplishment($plannings[0]);
+          $operationalSuitableInitiative->setOperationalOffice($opOffice);
+          $operationalSuitableInitiative->setAccomplishedValue($accomp[0]);
+          $operationalSuitableInitiative->setQuarter($quarter);
+           $operationalSuitableInitiative->setSocial(null);
+    
+          $operationalSuitableInitiative->setStatus(1);
+          $em->persist($operationalSuitableInitiative);
+          $em->flush();
+
+ }
+
+
+
+
+
+
+
+
+    //     $suitiniId=$request->request->get('suitableinitiative');
+    //     $accompValue=$request->request->get('accomp');
+    //     $accompfemaleValue=$request->request->get('accompfemale');
+    //         $socialmale=$request->request->get('social');
+
+    //             $socialfemale=$request->request->get('socialfemale');
+
+    //     // dump($accompValue,$accompfemaleValue,$socialmale,$socialfemale);
+    //     // dd(1);
+    //     //   $quarterId=$request->request->get('quarterId');
+    //     // $quarter=$planningQuarterRepository->find($quarterId);
+    //             $socialAttribute=$em->getRepository(InitiativeAttribute::class)->find($socialmale);
+    //             if ($request->request->get('socialfemale')) {
+                
+    //          $socialAttributefemale=$em->getRepository(InitiativeAttribute::class)->find($socialfemale);
+    //             }
+    //      if ($socialfemale == 0) {
+    //      $performerTasks=$performerTaskRepository->findsendToprincipal($user,$suitiniId);}
+    //      else {
+    //      $performerTasks=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$socialmale);
+    //     $performerTaskssocial=$performerTaskRepository->findsendToprincipalSocial($user,$suitiniId,$socialfemale);
+    //      }
+    //     foreach ($performerTasks as $value) {
+    //         $value->setStatus(0);
+    //     } 
+    //             if ($request->request->get('socialfemale')) {
+    //      foreach ($performerTaskssocial as $value) {
+    //         $value->setStatus(0);
+    //     }      }  
+    //      if ($socialfemale == 0) {
+    //      $plannings=$planningAccomplishmentRepository->findplanAccwithoutSocial($suitiniId,$principal,$quarter);
+    //        }  else {
+    //   $plannings=$planningAccomplishmentRepository->findplanAcc($suitiniId,$socialmale,$principal,$quarter);         
+    //  $planningsfemale=$planningAccomplishmentRepository->findplanAcc($suitiniId,$socialfemale,$principal,$quarter);         
+
+    //      }
+    //     //  dd($plannings);
+    //       $operationalSuitableInitiative=new OperationalSuitableInitiative();
+    //       $operationalSuitableInitiative->setPlanningAcomplishment($plannings[0]);
+    //       $operationalSuitableInitiative->setOperationalOffice($opOffice);
+    //       $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+    //       $operationalSuitableInitiative->setQuarter($quarter);
+    //       if ($socialfemale == 0) {
+    //        $operationalSuitableInitiative->setSocial(null);
+    //       }
+    //       else{
+    //             $operationalSuitableInitiative->setSocial($socialAttribute);
+    //       }
+    //       $operationalSuitableInitiative->setStatus(1);
+    //       $em->persist($operationalSuitableInitiative);
+    //       $em->flush();
+
+    //       if ($request->request->get('socialfemale')) {
+          
+    //         $operationalSuitableInitiative=new OperationalSuitableInitiative();
+    //       $operationalSuitableInitiative->setPlanningAcomplishment($planningsfemale[0]);
+    //       $operationalSuitableInitiative->setOperationalOffice($opOffice);
+    //       $operationalSuitableInitiative->setAccomplishedValue($accompfemaleValue);
+    //       $operationalSuitableInitiative->setQuarter($quarter);
+    //       if ($socialfemale == 0) {
+    //        $operationalSuitableInitiative->setSocial(null);
+    //       }
+    //       else{
+    //             $operationalSuitableInitiative->setSocial($socialAttributefemale);
+    //       }
+    //       $operationalSuitableInitiative->setStatus(1);
+    //       $em->persist($operationalSuitableInitiative);
+    //       $em->flush();}
     $this->addFlash('success', 'Successfully Send To Principal Office !');
           return $this->redirectToRoute('suitable_initiative_list');
     }
