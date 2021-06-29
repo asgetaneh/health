@@ -120,13 +120,10 @@ class LdapUserProvider implements UserProviderInterface
             $mobile="no";
         }
          if ($ldapEntry->getAttributes()['employeeNumber'][0]) {
-            # code...
-        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];
+        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];}
+        else{
               $employeeNumber="no";
         }
-
-        // $mobile = $ldapEntry->getAttributes()['mobile'][0];
-        //   dd($employeeNumber);
         $userinfo = new UserInfo();
 
         $user = new User();
