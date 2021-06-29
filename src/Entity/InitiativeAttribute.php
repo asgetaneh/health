@@ -55,6 +55,11 @@ class InitiativeAttribute implements TranslatableInterface
     private $performerTasks;
     private $locale="en";
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $code;
+
     
     
     public function __construct()
@@ -218,6 +223,18 @@ class InitiativeAttribute implements TranslatableInterface
                 $performerTask->setSocial(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(?int $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
