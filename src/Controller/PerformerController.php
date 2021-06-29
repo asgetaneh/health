@@ -123,7 +123,7 @@ class PerformerController extends AbstractController
             $performer->setOperationalOffice($operationalOffices);
             $performer->setPerformer($this->getUser());
            $users= $userRepository->find($this->getUser()->getId());
-           $userInfo= $userInfoRepository->find($users->getId());
+           $userInfo= $userInfoRepository->findOneBy(['user'=>$users->getId()]);
            $users->setStaffType($stafType);
            $userInfo->setMobile($phoneNumber);
            $users->setStatus(1);
