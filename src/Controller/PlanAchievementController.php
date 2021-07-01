@@ -36,6 +36,34 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PlanAchievementController extends AbstractController
 {
+      /**
+     * @Route("/goalHome", name="plan_achievement_goal_home")
+     */
+    public function goalHome(PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PaginatorInterface $paginator, Request $request,PlanningYearRepository $planningYearRepository): Response
+    {    
+   
+         
+           $em = $this->getDoctrine()->getManager();
+         if ($request->request->get('reload')) {
+
+            InitiativeHelper::goalSync($em);
+            $this->addFlash('success', 'load successfuly');
+            return $this->redirectToRoute('plan_achievement_goal');
+        }
+        $datas=VisualizationHelper::goal($em);
+        $query = $goalRepository->findAlls();
+        // $data = $paginator->paginate(
+        //     $query,
+        //     $request->query->getInt('page', 1),
+        //     10
+        // );
+        // dd($datas);
+        return $this->render('plan_achievement/goal.home.html.twig', [
+            // 'plan_achievements' => $data,
+           
+            'data'=>$datas
+        ]);
+    }
     /**
      * @Route("/", name="plan_achievement_index")
      */
@@ -74,34 +102,7 @@ class PlanAchievementController extends AbstractController
             'data'=>$datas
         ]);
     }
-     /**
-     * @Route("/goalHome", name="plan_achievement_goal_home")
-     */
-    public function goalHome(PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PaginatorInterface $paginator, Request $request,PlanningYearRepository $planningYearRepository): Response
-    {    
    
-         
-           $em = $this->getDoctrine()->getManager();
-         if ($request->request->get('reload')) {
-
-            InitiativeHelper::goalSync($em);
-            $this->addFlash('success', 'load successfuly');
-            return $this->redirectToRoute('plan_achievement_goal');
-        }
-        $datas=VisualizationHelper::goal($em);
-        $query = $goalRepository->findAlls();
-        // $data = $paginator->paginate(
-        //     $query,
-        //     $request->query->getInt('page', 1),
-        //     10
-        // );
-        // dd($datas);
-        return $this->render('plan_achievement/goal.home.html.twig', [
-            // 'plan_achievements' => $data,
-           
-            'data'=>$datas
-        ]);
-    }
     /**
      * @Route("/kpivis", name="plan_achievement_kpi_vis")
      */
