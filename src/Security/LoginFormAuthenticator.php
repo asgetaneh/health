@@ -78,7 +78,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         //  dd($credentials['username']);
         // dd($this->entityManager);
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-
+        //  dd($user);
     //   $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
 
         $this->user = $user;
@@ -92,7 +92,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
             $this->is_ldap_user = true;
         }
-
+       
         return $user;
     }
     public function getUserlist($username)
