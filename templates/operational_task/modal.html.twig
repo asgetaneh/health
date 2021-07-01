@@ -9,7 +9,8 @@
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4>{{initiativeName}}</h4>
 				<h4 class="modal-title">Create Task   for =>
-					{{quarterName}} Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
+					{{quarterName}}
+					Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
 				</h4>
 				<h4 class="modal-title">Allowed Maximum 6 Tasks
 					{% if social == 1 %}
@@ -28,7 +29,7 @@
 
 				<div class="form-group social" style="display:none">
 					{{ form_label(form.social) }}
-					{{ form_widget(form.social,{'attr':{ 'class': 'form-control'}}) }}
+					{{ form_widget(form.social,{'attr':{ 'class': 'form-control select2'}}) }}
 
 				</div>
 				{# {% endif %} #}
@@ -51,10 +52,10 @@
 				</div>
 
 				{# <div class="form-group">
-																	{{ form_label(form.quarter) }}
-																	{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
-												
-																</div> #}
+																									{{ form_label(form.quarter) }}
+																									{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
+																				
+																								</div> #}
 
 
 			</div>
@@ -79,7 +80,8 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 
 					<h4 class="modal-title">Assign Task</h4>
-					<h3>{{initiativeName}} </h3>
+					<h3>{{initiativeName}}
+					</h3>
 
 				</div>
 				<div class="modal-body">
@@ -145,7 +147,7 @@
 									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
-							<input type="number" name="timeGap" class="form-control timeGap " autocomplete="true" required>
+							<input type="number" name="timeGap" max="6" class="form-control timeGap " autocomplete="true" required>
 
 
 						</div>
@@ -173,7 +175,7 @@
 									<td>{{ measurement.name }}</td>
 									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
 
-									<td><input type="text" name="expectedValue[]" class="form-control"></td>
+									<td><input type="number" name="expectedValue[]" class="form-control"></td>
 									<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
 
 
@@ -196,5 +198,48 @@
 				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 			</div>
 		</form>
+	</div>
+</div>
+
+<div id="resend" class="modal fade" role="dialog">
+	<div
+		class="modal-dialog " style="width:800px;">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header bg-info">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+				<h4 class="modal-title">Edit Performer Task
+
+
+				</h4>
+
+			</div>
+
+
+			<form method="post" action="{{path('performer_task_value_edit')}}">
+				<div class="modal-body">
+					<input type="hidden" name="performerValue" value="1">
+					<table class="table" id="records_table2">
+						<tr>
+
+							<th>Start Date</th>
+							<th>End Date</th>
+							<th>Time Gap</th>
+							<th>Quantity</th>
+
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
+					<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
+				</div>
+
+			</form>
+
+
+		</div>
+
 	</div>
 </div>

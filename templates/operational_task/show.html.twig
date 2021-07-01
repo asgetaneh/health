@@ -101,29 +101,24 @@
 												<form action="{{path('operational_task_show_detail')}}" method="post">
 													<input type="hidden" name="taskUser" value="{{taskUser.id}}">
 													{% if taskUser.type == 1 %}
-														<button class="btn btn-primary btn-sm"
-                                                        onclick="return confirm('Are you sure you want to Accept this Report?');">
+														<button class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to Accept this Report?');">
 															Accept
 														</button>
+
 													{% else %}
-														<button  class="btn btn-primary btn-sm">
+														<button class="btn btn-success btn-sm">
 															Show
 														</button>
 													{% endif %}
 												</form>
-												{% if taskUser.type == 1 %}
-													<a href="{{ path('operational_task_show', {'id': taskUser.id}) }}" class="btn btn-danger btn-sm">
-														Reject
-													</a>
-												{% endif %}
 
 
 											</td>
 
 
 											{# <td>
-																																																																																																																																																<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																																						</td> #}
+																																																																																																																																																																																	<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																																																																							</td> #}
 
 										</tr>
 									{% else %}

@@ -116,7 +116,7 @@
 
 											<td>
 												<div class="col-md-3">
-													<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">show</a>
+													<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">View Plan</a>
 													{# <a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a> #}
 
 												</div>
@@ -124,36 +124,16 @@
 											<td>
 												<div class="row">
 
-													{% for item in suitable_initiative.initiative.socialAtrribute  %}
-
-														{% set status = 0 %}
-														<form action="{{path('initiative_accomplishment_social_list')}}" method="post">
-
-															<input type="hidden" name="suitId" value="{{suitable_initiative.id}}">
-															<input type="hidden" name="social" value="{{item.id}}">
-															<div class="col-md-3">
-																<button type="submit" title="show" class="btn btn-primary btn-sm ">
-
-																	{{item.name}}
-
-																</button>
-															</div>
-														</form>
-
-
-													{% endfor %}
+												
 													<div class="col-md-4">
 
 
-														{% if status == 1 %}
-															<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-primary btn-sm d-inline p-2 ">
-																Send
+															<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
+																View Report
 															</a>
-														{% endif %}
 													</div>
 												</div>
 											</td>
-											{% set status = 1 %}
 
 
 										</tr>

@@ -28,4 +28,27 @@ class AmharicHelper
         // dump($gregorian);
         return $ethipic->format('Y');
     }
+      public static function getCurrentYearPara($gregorian)
+    {
+        $ethipic = new AD($gregorian);
+        // dump($gregorian);
+        return $ethipic->format('Y');
+    }
+    
+     public static function getCurrentDay()
+    {
+        $gregorian = new DateTime();
+
+        $ethipic = new AD($gregorian);
+        // dump($gregorian);
+        return $ethipic->format('j');
+    }
+     public static function getCurrentMonth()
+    {
+        $gregorian = new DateTime();
+
+        $ethipic = new AD($gregorian);
+        // dump($gregorian);
+        return $ethipic->format(DATE_ATOM);
+    }
 }

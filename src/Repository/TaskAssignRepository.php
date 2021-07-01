@@ -18,6 +18,26 @@ class TaskAssignRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TaskAssign::class);
     }
+       public function findPerformerTaskEdit($id)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+      
+
+
+            ->Select('s.id')  
+                 ->addSelect('s.startDate')
+            ->addSelect('s.endDate')
+               ->addSelect('s.expectedValue')
+            ->orderBy('s.id', 'ASC')->
+            andWhere('s.id = :id')
+            ->setParameter('id', $id)
+        
+            ->getQuery()
+            
+            ->getResult();
+    }
 
     // /**
     //  * @return TaskAssign[] Returns an array of TaskAssign objects

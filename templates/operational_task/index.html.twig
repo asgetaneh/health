@@ -26,6 +26,9 @@
 	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
+<input type="hidden" class="minDate" value="{{minDate}}">
+<input type="hidden" class="maxDate" value="{{maxDate}}">
+<input type="hidden" class="minDateEdit" value="{{minDateEdit}}">
 	<div>
 
 		{% for taskUser in taskUsers %}
@@ -79,6 +82,7 @@
 					{% set office = 0 %}
 					<h5 class="widget-title bigger lighter">Operational Office
 						{% if social == 1 %}
+                        
 							Social Initiative
 							{% else %}
 
@@ -86,17 +90,27 @@
 						Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
 					</h5>
 
-					<div class="widget-toolbar"></div>
-
 					<div class="widget-toolbar">
-						<span class="badge badge-info">
-							{% trans %}Quarter{% endtrans %}
+                    <span class="badge badge-info">
+                        	{% trans %}Quarter{% endtrans %}
 							:
 
 
 							<strong>
 								{{quarterName}}</strong>
 						</span>
+
+							</div>
+
+					<div class="widget-toolbar">
+						<span class="badge badge-warning">
+                        		{% if social == 1 %}
+                        
+							Social Initiative
+							{% else %}
+
+						{% endif %}
+							
 					</div>
 				</div>
 
@@ -127,6 +141,7 @@
 										{% trans %}
 										Assign{% endtrans %}</a>
 								{% endif %}
+                                {{initiativeName}}
 
 
 							</div>
@@ -194,6 +209,7 @@
 															<th>End Date
 															</th>
 															<th>Time Gap</th>
+															<th>Quantity</th>
 															<th>Reason</th>
 
 														</tr>
@@ -211,15 +227,16 @@
 																		<td>
 																			{{taskUser.taskAssign.startDate}}</td>
 																		<td>
-																			{{taskUser.taskAssign.startDate}}
+																			{{taskUser.taskAssign.endDate}}
 																		</td>
 																		<td>{{taskUser.taskAssign.timeGap}}</td>
+																		<td>{{taskUser.taskAssign.expectedValue}}</td>
 																		<td>{{taskUser.rejectReason}}
 																			{% if taskUser.status == 6 %}
 																				<form action="{{path('task_resend')}}" method="post">
 																					<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
 
-																					<button class="btn btn-sm btn-info resend " type="submit" onclick="return confirm('Are you sure you want to Resend this Task?');">
+																					<button class="btn btn-sm btn-info resend " data-performId="{{taskUser.taskAssign.id}}" type="button" data-target="#resend" >
 																						Resend
 																					</button>
 																				{% endif %}
@@ -284,7 +301,7 @@
 				</div>
 
 
-				<form method="post" action="{{path('performer_task_weight_edit')}}">
+				<form method="post" action="{{path('performer_task_value_edit')}}">
 					<div class="modal-body">
 						<input type="hidden" name="countWeight" class="countWeight">
 						<table class="table" id="records_table1">
@@ -322,7 +339,7 @@ var perTaskId = $(this).attr('data-taskId');
 var countWeight = $('.countWeight1').val()
 $('.countWeight').val(countWeight)
 $.ajax({
-url:"{{ path('performer_task_weight_edit') }}",
+url:"{{ path('performer_task_value_edit') }}",
 method: "POST",
 data: {
 perTaskId: perTaskId
@@ -331,14 +348,49 @@ dataType: "json",
 success: function (data) {
 var trHTML = '';
 $.each(data, function (i, item) {
-error
-
 trHTML += '<tr><td>' + item.name + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group quantityBatch" placeholder="Weight" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
 
 
 });
 $('#records_table1').append(trHTML);
 
+}
+});
+})
+	</script>
+    	<script>
+		$('.resend').click(function () {
+$('#resend').modal('show');
+
+var perTaskId = $(this).attr('data-performId');
+var performerId=1;
+console.log(perTaskId)
+$.ajax({
+url:"{{ path('performer_task_value_edit') }}",
+method: "POST",
+data: {
+perTaskId: perTaskId,
+performerId: performerId
+},
+dataType: "json",
+success: function (data) {
+var trHTML = '';
+startDate=data.startDate
+data=data.data;
+
+$.each(data, function (i, item) {
+
+trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap"  placeholder="timeGap" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
+
+
+});
+$('#records_table2').append(trHTML);
+var calendar = $.calendars.instance('ethiopian', 'am');
+var minDate=$('.minDateEdit').val();
+var maxDate=$('.maxDate').val();
+minDate=minDate.split(",")
+maxDate=maxDate.split(",")
+$('.popupDatepicker').calendarsPicker({calendar: calendar,maxDate: calendar.newDate(parseInt(maxDate[0]),parseInt(maxDate[1]),parseInt(maxDate[2])),minDate: calendar.newDate(parseInt(minDate[0]),parseInt(minDate[1]),parseInt(minDate[2]))});
 }
 });
 })
@@ -410,10 +462,10 @@ $('.social').show();
 var timeGap = $('.timeGap').val()
 if (timeGap > 6) {
 $('.error').text("maximum time gap is 6")
-$('.assign').prop('disabled',true);
+$('.assign').prop('disabled', true);
 } else {
 $('.error').text("")
-$('.assign').prop('disabled',false);
+$('.assign').prop('disabled', false);
 
 
 }
@@ -438,8 +490,14 @@ $('.assign').prop('disabled',false);
 	<script>
 		$(function () {
 var calendar = $.calendars.instance('ethiopian', 'am');
+var minDate=$('.minDate').val();
+var maxDate=$('.maxDate').val();
+minDate=minDate.split(",")
+maxDate=maxDate.split(",")
+console.log(minDate,maxDate)
+
+$('.popupDatepicker').calendarsPicker({calendar: calendar,maxDate: calendar.newDate(parseInt(maxDate[0]),parseInt(maxDate[1]),parseInt(maxDate[2])),minDate: calendar.newDate(parseInt(minDate[0]),parseInt(minDate[1]),parseInt(minDate[2]))});
 $('#popupDatepicker').calendarsPicker({calendar: calendar});
-$('.popupDatepicker').calendarsPicker({calendar: calendar});
 
 $('#inlineDatepicker').calendarsPicker({calendar: calendar, onSelect: showDate});
 });
