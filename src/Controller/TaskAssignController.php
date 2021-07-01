@@ -275,7 +275,8 @@ class TaskAssignController extends AbstractController
            $taskAssign->setStartDate($startDate);
             $taskAssign->setEndDate($endDate);
            $taskAssign->setTimeGap($timeGap);
-
+        //    dd($expectedValues[$key]);
+         $taskAssign->setExpectedValue($expectedValues[0]);
              $taskAssign->setStatus(1);
              $em->persist($taskAssign);
               $em->flush();

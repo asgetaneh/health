@@ -91,6 +91,11 @@ class TaskAssign
      */
     private $delegate;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expectedValue;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -322,6 +327,18 @@ class TaskAssign
     public function setDelegate(?User $delegate): self
     {
         $this->delegate = $delegate;
+
+        return $this;
+    }
+
+    public function getExpectedValue(): ?int
+    {
+        return $this->expectedValue;
+    }
+
+    public function setExpectedValue(?int $expectedValue): self
+    {
+        $this->expectedValue = $expectedValue;
 
         return $this;
     }

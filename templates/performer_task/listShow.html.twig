@@ -156,7 +156,19 @@
 																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
 																	{% if taskAccomplishment.reportedValue %}
-																		<td>{{ taskAccomplishment.reportedValue }}</td>
+																		{% set percent = 0 %}
+																		{% set percent =  (taskAccomplishment.reportedValue * 100) /  taskAccomplishment.reportedValue %}
+																		{% if percent > 100  %}
+																			<td class="badge badge-primary">{{ taskAccomplishment.reportedValue }}</td>
+																		{% elseif percent <= 100  and percent >= 75 %}
+																			<td class="badge badge-success">{{ taskAccomplishment.reportedValue }}</td>
+																		{% elseif percent <= 74  and percent >= 50 %}
+
+																			<td class="badge badge-warning">{{ taskAccomplishment.reportedValue }}</td>
+																		{% else %}
+																			<td class="badge badge-danger">{{ taskAccomplishment.reportedValue }}</td>
+																		{% endif %}
+
 
 																	{% else %}
 																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
@@ -168,22 +180,23 @@
 
 													</table>
 												</td>
-												<td>{{ taskUser.note}}</td>
 											</tr>
+										</td>
+										<td>{{ taskUser.note}}</td>
+									</tbody>
+								</tr>
 
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="8">no records found</td>
+							</tr>
+						{% endfor %}
 
-								</tbody>
-							</table>
-							
-					</div>
-				</div>
+					</tbody>
+				</table>
+
 			</div>
 		</div>
 	</div>
-	{% endblock %}
+</div></div>{% endblock %}

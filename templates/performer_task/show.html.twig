@@ -286,7 +286,7 @@ location.reload(true);
 
 var select = $('.crtask')
 var taskId = $(this).attr('data-taskuseridd');
-
+confirm("Are you Sure To Skip");
 $.ajax({
 url:"{{ path('task_narrative_skip') }}",
 method: "POST",

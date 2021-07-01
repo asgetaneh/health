@@ -6,6 +6,7 @@ use App\Entity\OperationalTask;
 use App\Entity\PerformerTask;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskMeasurement;
+use App\Entity\TaskUser;
 use App\Form\PerformerTaskType;
 use App\Form\TaskMeasurementType;
 use App\Repository\PerformerTaskRepository;
@@ -39,11 +40,16 @@ class PerformerTaskController extends AbstractController
     $taskUsers->setRejectReason($reason);
     $em->flush();
             $this->addFlash('success', 'Task Reject successfully !');
+            return $this->render('performer_task/index.html.twig', [
+            'taskUsers' => $taskUserRepository->findPerformerTaskUsers($this->getUser())
+            // 'count'=>$count,
+           
+        ]);
    }
       $taskUsers=$taskUserRepository->findPerformerTaskUsers($this->getUser());
        
         return $this->render('performer_task/index.html.twig', [
-            'performer_tasks' => $taskUsers,
+            'taskUsers' => $taskUsers,
             // 'count'=>$count,
            
         ]);
@@ -104,7 +110,7 @@ class PerformerTaskController extends AbstractController
             // $taskUser->setStatus(2);
           
           $em->flush();
-                      $this->addFlash('success', 'Reported Value Edired Successfully !');
+                      $this->addFlash('success', 'Reported Value Edited Successfully !');
                       return $this->redirectToRoute('performer_task_index');
         }
         if ($report= $request->request->get('reportValue')) {
@@ -191,12 +197,43 @@ class PerformerTaskController extends AbstractController
       
     }
      /**
-     * @Route("/weight/edit", name="performer_task_weight_edit")
+     * @Route("/weight/edit", name="performer_task_value_edit")
      */
-    public function performerTaskEdit(Request $request,PerformerTaskRepository $performerTaskRepository)
+    public function performerTaskEdit(Request $request,TaskAssignRepository $taskAssignRepository, PerformerTaskRepository $performerTaskRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $pid = $request->request->get('perTaskId');
+         if ($id=$request->request->get('performerId')) {
+                              $taskid = $request->request->get('perTaskId');
+                    //   dd($taskid);
+
+        return new JsonResponse([
+          'data'=>  $taskAssignRepository->findPerformerTaskEdit($taskid)]
+            );    }
+   if ($id=$request->request->get('performerValue')) {
+         $startDate = $request->request->get('startDate');
+        $endDate = $request->request->get('endDate');
+         $expectedValue = $request->request->get('expectedValue');
+         $id = $request->request->get('id');
+         $timeGap = $request->request->get('timeGap');
+         $taskAssigns=$taskAssignRepository->find($id);
+         $taskUsers=$em->getRepository(TaskUser::class)->findOneBy(['taskAssign'=>$id]);
+ $taskAccomplishment=$em->getRepository(TaskAccomplishment::class)->findOneBy(['taskUser'=>$taskUsers->getId()]);
+ $taskAssigns->setStartDate($startDate);
+ $taskAssigns->setEndDate($endDate);
+ $taskAssigns->setTimeGap($timeGap);
+ $taskAssigns->setExpectedValue($expectedValue);
+   $taskUsers->setStatus(0);
+    $taskUsers->setRejectReason(null);
+ $taskAccomplishment->setExpectedValue($expectedValue);
+     $em->flush();
+
+   $this->addFlash('success', 'Performer Task Updated and Resendsuccessfully !');
+           
+            return $this->redirectToRoute('operational_task_index',['id'=>$taskAssigns->getPerformerTask()->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+     
+
+                }  
         if ($id=$request->request->get('id')) {
                     $weight = $request->request->get('weight');
               $countWeight = $request->request->get('countWeight');
