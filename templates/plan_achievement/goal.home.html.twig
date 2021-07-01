@@ -1,0 +1,88 @@
+	<link rel="stylesheet" href="{{ asset('assets/bootstrap-4.0/css/bootstrap.min.css') }}"/>
+    <div class="col-md-12">
+    <div class="jumbotron">
+    <div class="card">
+
+  <div class="card-header text-white font-weight-bold" style="background:#34A853;font-family: Times New Roman,Times, serif;">Jimma University Goal Achievement</div>
+
+    <div  class="card-body">
+            <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+            </div>
+            </div>
+            </div>
+           	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+		   <script src="{{ asset('assets/bootstrap-4.0/js/bootstrap.min.js') }}"></script>
+            <script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+            <script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+<script>
+	$(function () {
+  
+ function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor=[];
+var fillColor=[];
+{% for goal in data.goal %}
+   bgcolor.push(getRandomColor());
+  fillColor.push(getRandomColor());
+{% endfor %}
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+
+
+
+
+var dat = {
+labels: [{{ data.year|join(',') }} ],
+datasets: [
+ {% for goal in data.goal %}
+  {
+   
+label: "{{goal.name }}",
+fillColor: fillColor[{{loop.index}}],
+strokeColor: fillColor[{{loop.index}}],
+highlightFill: fillColor[{{loop.index}}],
+highlightStroke: fillColor[{{loop.index}}],
+data: [{{goal.achieve|join(',')}}],
+backgroundColor: [ 
+				{% for i in range(1,goal.achieve|length) %}  bgcolor[{{loop.parent.loop.index}}],{% endfor %}
+			],
+            borderColor: [ 
+				{% for i in range(1,goal.achieve|length) %}fillColor[{{loop.parent.loop.index}}],{% endfor %}
+			],
+			borderWidth: 1 
+}
+{% if loop.last != true %}
+,
+{% endif %}
+ {% endfor %}
+]
+};
+
+
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: dat,
+    options: {
+      responsive: true, // Instruct chart js to respond nicely.
+      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+     
+      scaleFontStyle: "bold",
+      scaleLabel: "<%=value%>",
+      scaleFontSize: 16,
+      showTooltips: true,
+      
+      
+    }
+});
+
+
+});
+</script>

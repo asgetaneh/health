@@ -1,7 +1,6 @@
 {
     "editor.definitionLinkOpensInPeek": true,
     "editor.detectIndentation": false,
-    "editor.autoIndent": "advanced",
     "editor.codeLens": false,
     "editor.multiCursorPaste": "full",
     "editor.renderControlCharacters": true,
@@ -14,5 +13,6 @@
     "javascript.format.insertSpaceAfterCommaDelimiter": false,
     "files.autoGuessEncoding": true,
     "html.autoClosingTags": false,
+    "editor.wordWrap": "on",
     "editor.fontSize": 15
 }

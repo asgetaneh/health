@@ -1,356 +1,87 @@
 <html lang="en">
 	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-		<meta charset="utf-8"/>
-		<title>
-			{% block application_title %}
-				{% trans %}SMIS{% endtrans %}
-			{% endblock %}
-		</title>
+		<title>Mis</title>
+		<meta charset="utf-8">
 
 		<meta name="description" content="Mailbox with some customizations as described in docs"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 		<link rel='shortcut icon' type='image/x-icon' href="{{asset('images/favicon.ico')}}"/>
-		<link
-		rel='shortcut icon' type='image/x-icon' href='{{asset("image/logo.png")}}'/>
+		<link rel='shortcut icon' type='image/x-icon' href='{{asset("image/logo.png")}}'/>
 
-		<!-- bootstrap & fontawesome -->
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
+
+		<link rel="stylesheet" href="{{ asset('assets/bootstrap-4.0/css/bootstrap.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
-		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
-		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
+		<style>
+			.fakeimg {
 
-		{# <link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}" /> #}
-		<link
-		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/> {#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/rollmanage.css') }}"/>
+				background: #aaa;
+			}
+		</style>
 
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
-
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>
-		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
-
-
-		{#        <script src="{{ asset('assets/basic/assets/js/forgraph.js') }}"></script>#}
-		{#        <script src="{{ asset('assets/basic/assets/js/ace-extra.js') }}"></script>#}<script src="{{ asset('assets/basic/assets/js/jquery-2.1.4.min.js') }}"> </script>
-		<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
-
-		<!-- page specific plugin scripts -->
-		<script src="{{ asset('assets/basic/assets/js/bootstrap-tag.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/jquery.hotkeys.index.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/bootstrap-wysiwyg.min.js') }}"></script>
-
-		<!-- ace scripts -->
-		<script src="{{ asset('assets/basic/assets/js/ace-elements.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/ace.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/jquery.gritter.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/notify.js') }}"></script>
-
-
-		<script src="{{ asset('assets/basic/assets/js/ace-extra.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/Sum-Total-Row-Column-Table-jQuery-tableTotal/jquery.tableTotal.js') }}"></script>
-
-		<script src="{{ asset('assets/basic/assets/js/mychart.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/ace-elements.min.js') }}"></script>
-		<script src="{{ asset('assets/basic/assets/js/chosen.jquery.min.js') }}"></script>
-
-		{#<script type="text/javascript" src="{{ asset('assets/chart/loader.js') }}"></script>#}
-		{#        <script type="text/javascript" src="{{ asset('assets/chart/jsapi_compiled_default_module.js') }}"></script>#}
-
-
-		<link rel="stylesheet" href="{{ asset('assets/basic/assets/css/style.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/basic/assets/css/login.css') }}"/>
-		<!--[if lte IE 9]>
-		
-		        <![endif]-->
-
-		<!-- inline styles related to this page -->
-
-		<!-- ace settings handler -->
-		{#<script src="{{ asset('assets/basic/assets/js/ace-extra.min.js') }}"></script>#}
-
-		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-		<!--[if lte IE 8]>
-		        <script src="{{ asset('assets/basic/assets/js/html5shiv.min.js') }}"></script>
-		        <script src="{{ asset('assets/basic/assets/js/respond.min.js') }}"></script>
-		        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-		        <![endif]-->
-
-			<style>
-.scrollbar {
-	/*margin-left: 30px;*/
-	height: 20%;
-	width: 100%;
-	background: #fff;
-	overflow-y: scroll;
-	/*margin-bottom: 25px;*/
-}
-.force-overflow {
-	min-height: 300px;
-}
-
-.scrollbar-primary::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-primary::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #4285F4;
-}
-
-.scrollbar-danger::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-danger::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-danger::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #ff3547;
-}
-
-.scrollbar-warning::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-warning::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-warning::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #FF8800;
-}
-
-.scrollbar-success::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-success::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-success::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #00C851;
-}
-
-.scrollbar-info::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-info::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-info::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #33b5e5;
-}
-
-.scrollbar-default::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-default::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-default::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #2BBBAD;
-}
-
-.scrollbar-secondary::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #F5F5F5;
-	border-radius: 10px;
-}
-
-.scrollbar-secondary::-webkit-scrollbar {
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.scrollbar-secondary::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-	background-color: #aa66cc;
-}
-
-@media(min-width: 768px) {
-	.navbar-nav {
-		margin: 0 auto;
-		display: table;
-		table-layout: auto;
-		float: none;
-		width: 100%;
-		background: #3d75a5;
-	}
-	.navbar-nav > li {
-		display: table-cell;
-		float: none;
-		text-align: center;
-	}
-}
-	</style>
 	</head>
+	<body>
 
-		<body>
-
-			<div class="row"> <nav class="navbar navbar-blue" role="navigation">
-				<div class="align-content-center" style="color: white;">
-					<div class="row">
-						<div class="col-sm-12">
-							<h3 class="center" style="font-family: 'Abyssinica SIL'">
-								Vision 2030
-							</h3>
-							<h3 class="center" style="font-family: 'Abyssinica SIL'">
-								Aspiring to be one of the leading Community-based research universities in Africa and renowned in the world by 2030
-							</h3>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<nav class="navbar navbar-light">
-								<div class="">
-
-									<ul class="nav navbar-nav navbar-right">
-										<li class="active"> <a href="{{path('home')}}"><strong>{% trans %}Home{% endtrans %}</strong></a></li>
-										{# <li class="active"><a href="{{ path('vission_mission_login') }}">Vision/Mission</a></li> #}
-										<li class="">
-											<a class=""  href="#"> <strong>{% trans %}Student Information{% endtrans %}</strong>
-												
-											</a>
-											
-										</li>
-										<li >
-											<a class="" data-toggle="dropdown" href="#"><b>{% trans %}Employee Information{% endtrans %}</b>
-												
-											</a>
-											
-										</li>
-										<li class="dropdown">
-											<a class=""  href="#"><b>{% trans %}Plan{% endtrans %}</b>
-												
-											</a>
-											
-										</li>
-
-										<li class="nav-item">
-											<a class="" href="{{ path('feed_back_new') }}">
-												<b>{% trans %}FeedBack{% endtrans %}</b></a>
-										</li>
-									
-										<li class="dropdown">
-											<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans %}
-												Switch Language{% endtrans %}
-												<span class="caret"></span>
-											</a>
-											<ul class="dropdown-menu ">
-												<li>
-													<a href="{{path('change_locale',{'locale':'am'})}}">{% trans %}Amharic{% endtrans %}</a>
-												</li>
-												<li>
-													<a href="{{path('change_locale',{'locale':'en'})}}">{% trans %}English{% endtrans %}</a>
-												</li>
-												<li>
-													<a href="{{path('change_locale',{'locale':'or'})}}">{% trans %}Afaan Oromo{% endtrans %}</a>
-												</li>
-											</ul>
-										</li>
-                                        	<li class="nav-item">
-											<a class="" href="{{ path('app_login') }}">
-												<span class="glyphicon glyphicon-log-in"></span>
-												Login
-											</a>
-
-										</li>
-
-										{# <li><a href="{{ path('missurveyanswer_new') }}"> Feedback</a></li> #}
-										{# <li><a href="{{ path('fos_user_security_login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> #}
-									</ul>
-								</div>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</nav>
-
+		<div class="jumbotron jumbotron-fluid  text-center text-white" style="margin-bottom:0;background: #3B5998;">
+			<h3 class="" style="font-family: 'Abyssinica SIL'">
+				Aspiring to be one of the leading Community-based research universities in Africa and renowned in the world by 2030
+			</h3>
 		</div>
 
+		<nav class="navbar navbar-expand-sm  navbar-dark" style="background:#0F7DC2;">
+			<a class="navbar-brand" href="#">JU MIS</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav justify-content-end">
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" href="{{path('home')}}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Student {% endtrans %}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Employe {% endtrans %}</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Plan {% endtrans %}</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="{{ path('feed_back_new') }}">{% trans %}FeedBack{% endtrans %}</a>
+					</li>
+                    <li class="nav-item ml-5">
+						<a class="nav-link text-white" style="font-family: Times New Roman,Times, serif;" href="{{ path('app_login') }}">{% trans %}Login{% endtrans %}</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
-		<div class=''>
+		<div class="container" style="margin-top:30px;margin-bottom:30px">
 			<div class="row">
-				<div
-					class="col-xs-12 col-lg-12 col-sm-12 col-md-12">
-					{# <div class="text-left"> #}
-					{% block body %}{% endblock %}
-					{# {% block survey %}
-					
-					                {% endblock %} #}
-					{# </div> #}
+				{% block body %}
+                
+               {{ render( controller('App\\Controller\\PlanAchievementController::goalHome') ) }}
+                {% endblock %}
 
-				</div>
-			</div>
-			<div class="footer">
-				<div class="footer-inner">
-					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">{% trans %}EMIS{% endtrans %}</span>
-							{% trans %}Application{% endtrans %}
-							&copy;
-							{% trans %}Jimma University 2021{% endtrans %}
-						</span>
-
-						&nbsp; &nbsp;
-						<span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
-					</div>
-				</div>
 			</div>
 		</div>
+
+		<div class="jumbotron text-center" style="margin-bottom:0">
+
+			<span class=" lead text-primary">
+				<span class="text-primary">{% trans %}EMIS{% endtrans %}</span>
+				{% trans %}Application{% endtrans %}
+				&copy;
+				{% trans %}Jimma University 2021{% endtrans %}
+			</span>
+		</div>
+		<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+		<script src="{{ asset('assets/bootstrap-4.0/js/bootstrap.min.js') }}"></script>
+        {# <script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script> #}
 
 
 	</body>
+
+
 </html>

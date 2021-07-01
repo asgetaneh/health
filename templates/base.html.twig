@@ -4,6 +4,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta charset="utf-8">
+		<meta name="description" content="overview &amp; stats"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 		<link rel='shortcut icon' type='image/x-icon' href="{{asset('images/favicon.ico')}}"/>
 
 
@@ -16,66 +18,33 @@
 		</title>
 
 		<meta name="description" content="Mailbox with some customizations as described in docs"/>
-		<meta
-		name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 
 
-		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
-		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
-		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap-duallistbox.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap-multiselect.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
 
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/chosen.min.css') }}"/> <link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
 		<link
 		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
-		{#        <link rel="stylesheet" href="{{ asset('assets/assets/css/tablesort.css') }}" />#}
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/rollmanage.css') }}"/>
-
+		<!-- ace styles -->
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style"/>
+
+
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
-
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}"/>
-		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
-
-
-		{#        <script src="{{ asset('assets/assets/js/forgraph.js') }}"></script>#}<script src="{{ asset('assets/assets/js/autosize.min.js') }}"> </script>
-		<script src="{{ asset('assets/assets/js/jquery-2.1.4.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
-
-		<!-- page specific plugin scripts -->
-		<script src="{{ asset('assets/assets/js/bootstrap-tag.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/jquery.hotkeys.index.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/bootstrap-wysiwyg.min.js') }}"></script>
-
-		<!-- ace scripts -->
-		<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/jquery.gritter.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/notify.js') }}"></script>
-
-
 		<script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
 
 
-		<script src="{{ asset('assets/assets/js/mychart.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/chosen.jquery.min.js') }}"></script>
+		{# <script src="{{ asset('assets/assets/js/chosen.jquery.min.js') }}"></script> #}
 
 
-		<script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/lib/moment.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.default-settings.js') }}"></script>
-		<script src="{{ asset('assets/assets/js/wizard.min.js') }}"></script>
-
-
-		<script src="{{asset('bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
-
-		{#<script type="text/javascript" src="{{ asset('bundles/jumis/chart/loader.js') }}"></script>#}
-		{#        <script type="text/javascript" src="{{ asset('bundles/jumis/chart/jsapi_compiled_default_module.js') }}"></script>#}
+	{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/lib/moment.min.js') }}"></script> #}
+		{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.min.js') }}"></script> #}
+		{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.default-settings.js') }}"></script> #}
 
 
 	</head>
@@ -114,30 +83,28 @@
 								{% block nav_list %}
 
 									{# <form class="" id="language" id="language" {% if app.user %} action="#" {% else %} action="{{ path('change_locale')}}" {% endif %}>
-																																																																																																												
-																																																																																																																																			<div class="input-group input-group-sm">
-																																																																																																																																				<select name="lang" id="lang" class="form-control ">
-																																																																																																																														
-																																																																																																																																					<option value="en" {% if app.request.getLocale() == 'en' %} selected {% endif %}>English</option>
-																																																																																																																																					<option value="am" {% if app.request.getLocale() == 'am' %} selected {% endif %}>አማርኛ</option>
-																																																																																																																																					<option value="or" {% if app.request.getLocale() == 'or' %} selected {% endif %}>Afaan Oromo</option>
-																																																																																																																																				</select>
-																																																																																																																														
-																																																																																																																																			</div>
-																																																																																																																																		</form> #}
+																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																																								<div class="input-group input-group-sm">
+																																																																																																																																																																																																																																																									<select name="lang" id="lang" class="form-control ">
+																																																																																																																																																																																																																																																			
+																																																																																																																																																																																																																																																										<option value="en" {% if app.request.getLocale() == 'en' %} selected {% endif %}>English</option>
+																																																																																																																																																																																																																																																										<option value="am" {% if app.request.getLocale() == 'am' %} selected {% endif %}>አማርኛ</option>
+																																																																																																																																																																																																																																																										<option value="or" {% if app.request.getLocale() == 'or' %} selected {% endif %}>Afaan Oromo</option>
+																																																																																																																																																																																																																																																									</select>
+																																																																																																																																																																																																																																																			
+																																																																																																																																																																																																																																																								</div>
+																																																																																																																																																																																																																																																							</form> #}
 
 
 									<ul
 										class="nav ace-nav">
 										{# {% if app.user.status == 0 %}
-																																									<li>
-																																										<h4 class="text-danger">Please Choose your office</h4>
-																																									</li>
-																																								{% endif %} #}
+																																																																																																																																																																											<li>
+																																																																																																																																																																												<h4 class="text-danger">Please Choose your office</h4>
+																																																																																																																																																																											</li>
+																																																																																																																																																																										{% endif %} #}
 										{% if is_granted('IS_PPO_DIRECTOR') %}
-											<li>
-												{# <a class="btn btn-primary btn-sm" href="{{ path('lexik_translation_overview') }}">Translations</a> #}
-											</li>
+											<li></li>
 										{% endif %}
 
 										<li>
@@ -228,7 +195,6 @@
 											</a>
 
 											<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-												
 
 
 												<li>
@@ -318,46 +284,29 @@ ace.settings.loadState('sidebar')
 					</script>
 
 
-					<ul class="nav nav-list">
-						{% block app_menu %}
-							{% block homepageMenu %}{% endblock %}
-						{% endblock %}
+					<ul class="nav nav-list" role="tree">
 
 
 						{% block tobologyMenu %}
-							{# <li>
-																																																																																																		
-																																																																																																																																																																						                                <a href="{{ path('homepage') }} " style="text-align: center" >
-																																																																																																																																																																						                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
-																																																																																																																																																																						                                    <span class="menu-text"></span>
-																																																																																																																																																																						                                    <b class=""></b>
-																																																																																																																																																																						                                </a>
-																																																																																																																																																																						                            </li> #}
-
-							{# <a href="{{ path('homepage') }} " style="text-align: center" > 
-																																																																																																																																																																																			                                    <i class="fa fa-home" style="font-size:25px;color: silver;"></i>
-																																																																																																																																																																																			                                    <span class="menu-text"></span>
-																																																																																																																																																																																			                                    <b class=""></b>
-																																																																																																																																																																																			                                </a>
-																																																																																																																																																																																			                            </li> #}
 
 
-								<li>
-									<a href="#" class="dropdown-toggle "> <i class=""></i>
+							<li class="toplist" role="treeitem">
+								<a href="#" class="dropdown-toggle ">
+									<i class=""></i>
 									<span class="menu-text">
 
 										{% trans %}EMIS{% endtrans %}
 									</span>
 									<b class="arrow fa fa-angle-down"></b>
 								</a>
-								<ul class="submenu">
+								<ul class="submenu" role="treeitem">
 
 
 									{{ include('menu/emis.html.twig') }}
 
 								</ul>
 							</li>
-							<li>
+							<li class="toplist" role="treeitem">
 								<a class="dropdown-toggle" href="#">
 									<i class=""></i>
 									<span class="menu-text">
@@ -369,11 +318,10 @@ ace.settings.loadState('sidebar')
 								<b class="arrow"></b>
 
 
-								<ul
-									class="submenu">
-									{# {% if is_granted('LIST_PERSPECTIVE') %} #}
+								<ul class="submenu" role="treeitem">
 
-									<li>
+
+									<li class="">
 										<a href="{{path('plan_achievement_index')}}">
 											<b class="fa fa-caret-right"></b>
 											{% trans %}
@@ -381,7 +329,7 @@ ace.settings.loadState('sidebar')
 											{% endtrans %}
 										</a>
 									</li>
-									<li>
+									<li role="treeitem">
 										<a href="{{path('startegic_plan')}}">
 											<b class="fa fa-caret-right"></b>
 											{% trans %}
@@ -389,15 +337,15 @@ ace.settings.loadState('sidebar')
 											{% endtrans %}
 										</a>
 									</li>
-									<li>
+									<li class="">
 										<a href="{{ path('choose_office') }}">
 											<b class="fa fa-caret-right"></b>
 											{% trans %}choose Office{% endtrans %}
 										</a>
 									</li>
-									{# {% endif %} #}
+
 									{% if is_granted('vw_per') %}
-										<li>
+										<li role="treeitem">
 											<a href="{{path('perspective_index')}}">
 												<b class="fa fa-caret-right"></b>
 												{% trans %}
@@ -453,13 +401,23 @@ ace.settings.loadState('sidebar')
 											</a>
 										</li>
 									{% endif %}
+									{% if is_granted('vw_intv') %}
+
+
+										<li role="treeitem">
+											<a href="{{ path('initiative_index') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}Initiative{% endtrans %}
+											</a>
+										</li>
+									{% endif %}
 
 
 									{{ include('menu/sidenav.html.twig') }}
 
 
 								</ul>
-								{# {% if is_granted('usr_mgt') %} #}
+
 							</li>
 
 
@@ -467,7 +425,7 @@ ace.settings.loadState('sidebar')
 
 							{% if is_granted("vw_usr_lst") or  is_granted("vw_usr_grp")  %}
 
-								<li>
+								<li class="toplist">
 									<a href="#" class="dropdown-toggle ">
 										<i class=""></i>
 										<span class="menu-text">
@@ -503,7 +461,7 @@ ace.settings.loadState('sidebar')
 								</li>
 							{% endif %}
 							{% if is_granted('perf_op_eval') %}
-								<li>
+								<li class="toplist">
 									<a href="#" class="dropdown-toggle ">
 										<i class=""></i>
 										<span class="menu-text">
@@ -544,8 +502,6 @@ ace.settings.loadState('sidebar')
 
 										{{ include('menu/feedback.html.twig') }}
 
-
-										{# {{ include('menu/delegation.html.twig') }} #}
 
 									</ul>
 								</li>
@@ -594,9 +550,8 @@ ace.settings.loadState('sidebar')
 								</div>
 								<div class="page-header"> {% block header %}{% endblock %}
 									</div>
-									<div
-										class="page-content">
-										{# pass a string argument to get only the messages of that type #}
+									<div class="page-content">
+
 										{% for message in app.flashes('notice') %}
 											<div class="alert alert-info">
 												<button type="button" class="close" data-dismiss="alert">
@@ -729,136 +684,61 @@ ace.settings.loadState('sidebar')
 								<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 									<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 								</a>
+
+
+								<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+								<script type="text/javascript">
+									if ('ontouchstart' in document.documentElement) 
+document.write("<script src='       {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
+								</script>
+								<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/jquery-ui.custom.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/jquery.ui.touch-punch.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/moment.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/jquery.knob.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/autosize.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/bootstrap-tag.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/jquery.hotkeys.index.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/bootstrap-wysiwyg.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/jquery.gritter.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/notify.js') }}"></script>
+								<script src="{{asset('assets/assets/js/jquery.bootstrap-duallistbox.min.js')}}"></script>
+								<script src="{{ asset('assets/assets/js/bootstrap-tag.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+								<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+								<script>
+									$(function () {
+
+$('.select2').css('width', '100%').select2({allowClear: false});
+
+
+})
+
+$(document).ready(function () { 
+  
+
+var path = window.location.href;
+
+$(".submenu a").each(function () {
+
+if (this.href === path) {
+
+$(this).addClass('active');
+$(this).closest('li').addClass('active');
+
+$(this).closest('.toplist').addClass('open');
+
+$(this).closest('.sublist').addClass('open');
+$(this).closest('.sublist').addClass('active');
+
+
+}
+});
+
+});
+								</script>
+								{% block javascripts %}{% endblock %}
 							</body>
 						</body>
 					</html>
-				</body>
-			</html>
-		</body>
-	</html>
-</div>
-<!-- /.main-container -->
-
-<script>
-	$("input[type='submit']").on("click", function () {
-$('.chosen-select').filter('[required]').each(function (i, requiredField) {
-
-if ($(requiredField).val() == '') {
-$(requiredField).next('div').notify("Required", {
-position: "top",
-className: "error"
-});
-}
-});
-
-});
-function loadContent(url) {
-$.ajax({
-url: url,
-success: function (result) {
-$("#ViewContentDiv").html(result);
-}
-});
-}
-</script>
-
-<script>
-	$(function () {
-$('.select2').css('width', '100%').select2({allowClear: false})
-
-
-})
-</script>
-<script>
-
-	jQuery(function ($) {
-autosize($('textarea[class*=autosize]'));
-
-if (!ace.vars['touch']) {
-$('.chosen-select').chosen({allow_single_deselect: true});
-// resize the chosen on window resize
-
-$(window).off('resize.chosen').on('resize.chosen', function () {
-$('.chosen-select').each(function () {
-var $this = $(this);
-$this.next().css({'width': $this.parent().width()});
-})
-}).trigger('resize.chosen');
-// resize chosen on sidebar collapse/expand
-$(document).on('settings.ace.chosen', function (e, event_name, event_val) {
-if (event_name != 'sidebar_collapsed') 
-return;
-
-
-
-$('.chosen-select').each(function () {
-var $this = $(this);
-$this.next().css({'width': $this.parent().width()});
-})
-});
-
-
-$('#chosen-multiple-style .btn').on('click', function (e) {
-var target = $(this).find('input[type=radio]');
-var which = parseInt(target.val());
-if (which == 2) 
-$('#form-field-select-4').addClass('tag-input-style');
- else 
-$('#form-field-select-4').removeClass('tag-input-style');
-
-
-
-});
-}
-});
-$(function () {
-setNavigation();
-});
-
-function setNavigation() {
-var path = window.location.pathname;
-path = path.replace(/\/$/, "");
-path = decodeURIComponent(path);
-if (! path.endsWith("/")) {
-path = path + "/";
-}
-console.log(" Original Path : " + path);
-$(".submenu a").each(function () {
-var href = $(this).attr('href');
-if (! href.endsWith("/")) {
-href = href + "/";
-}
-console.log("Original HREF : " + href);
-if (path.substring(0, href.length) === href) {
-console.log(" <<<<<<<<<<<>>>>>>>>>>>>>> : " + href);
-$(this).closest('li').addClass('active');
-$(this).closest('ul').parent().addClass('active');
-$(this).closest('ul').parent().addClass('open');
-}
-});
-var element = document.getElementById("navbar");
-element.classList.remove("navbar-fixed-top");
-}
-{ // $('#popupDelete').close();
-
-}
-</script>
-
-
-{% block additional_script_file %}{% endblock %}
-<!-- inline scripts related to this page -->
-
-<script>
-	function checkAll(list_batch_checkbox) {
-var boxes = document.getElementsByTagName('input');
-for (var index = 0; index < boxes.length; index++) {
-box = boxes[index];
-if (box.type == 'checkbox' && box.className == list_batch_checkbox) {
-box.checked = document.getElementById(list_batch_checkbox).checked
-}
-}
-return true;
-}
-</script>
-
-{% block javascripts %}{% endblock %}</body></html>
