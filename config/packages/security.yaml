@@ -40,6 +40,7 @@ security:
        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/feed/back/new, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/achievement/goalHome, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/changeLocale, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/*, roles: ROLE_USER }
      
