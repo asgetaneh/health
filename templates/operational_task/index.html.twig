@@ -233,7 +233,7 @@
 																		<td>{{taskUser.taskAssign.expectedValue}}</td>
 																		<td>{{taskUser.rejectReason}}
 																			{% if taskUser.status == 6 %}
-																				<form action="{{path('task_resend')}}" method="post">
+																				{# <form action="{{path('task_resend')}}" method="post"> #}
 																					<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
 
 																					<button class="btn btn-sm btn-info resend " data-performId="{{taskUser.taskAssign.id}}" type="button" data-target="#resend" >

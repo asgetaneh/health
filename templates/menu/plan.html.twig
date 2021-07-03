@@ -37,27 +37,22 @@
 		{% endif %}
 
 
-		{# <li>
-																					<a href="{{ path('plan_achievement') }}" style="background:#3f87a6; color: #f5f6f8">
-																						<b class="fa fa-caret-right"></b>
-																						{% trans %}Plan Achievement{% endtrans %}
-																					</a>
-																				</li> #}
-		{% if is_granted('pri_off_rep') %}
-
-			<li>
-				<a href="{{ path('suitable_initiative_report') }}" style="background:#3f87a6; color: #f5f6f8">
-					<b class="fa fa-caret-right"></b>
-					{% trans %}Principal Office Report plan{% endtrans %}
-				</a>
-			</li>
-		{% endif %}
 		{% if is_granted('pri_off_rep') %}
 
 			<li>
 				<a href="{{ path('principal_office_report') }}" style="background:#3f87a6; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Principal Office Report{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+
+		{% if is_granted('pri_off_rep') %}
+
+			<li>
+				<a href="{{ path('performer_task_report') }}" style="background:#3f87a6; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Performer Detail Report {% endtrans %}
 				</a>
 			</li>
 		{% endif %}

@@ -340,7 +340,17 @@
 															<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
 															<td>{{taskAcomolish.expectedValue}}</td>
 															<td>{{taskAcomolish.accomplishmentValue}}</td>
-															<td>{{percent | number_format(2, '.',',')}}%</td>
+															{% if percent > 100  %}
+																<td class="badge badge-primary">{{ percent | number_format(2, '.',',') }}</td>
+															{% elseif percent <= 100  and percent >= 75 %}
+																<td class="badge badge-success">{{ percent | number_format(2, '.',',') }}</td>
+															{% elseif percent <= 74  and percent >= 50 %}
+
+
+																<td class="badge badge-warning">{{ percent | number_format(2, '.',',') }}</td>
+															{% else %}
+																<td class="badge badge-danger">{{ percent | number_format(2, '.',',') }}</td>
+															{% endif %}
 														{% endif %}
 													</tr>
 												{% endfor %}
