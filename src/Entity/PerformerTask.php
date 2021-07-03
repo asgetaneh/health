@@ -73,7 +73,10 @@ class PerformerTask
      */
     private $deligateBy;
 
-    
+    public function __toString()
+    {
+        return $this->getName();
+    }
     
 
     public function __construct()
