@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Entity\Goal;
+use App\Entity\Objective;
 use App\Entity\PlanAchievement;
 use App\Entity\PlanningYear;
 use App\Repository\GoalRepository;
@@ -49,6 +50,34 @@ class VisualizationHelper
         }
             $datas['year'] = self::getYear($em);
             $datas['goal']=$goalDatas;
+            return $datas;
+    }
+     public static function  objective(EntityManagerInterface $em,$objective=[])
+    {
+        $datas = [];
+        $objectiveDatas = [];
+        if(count($objective)<1)
+        $objectives =$em->getRepository(Objective::class)->findAll();
+        else
+         $objectives=$objective;
+        foreach ($objectives as $key => $objective) {
+            $objectivedata = [];
+
+
+            $achieveData = [];
+            $objectiveAchievements = $em->getRepository(PlanAchievement::class)->getByObj($objective);
+
+            foreach ($objectiveAchievements as $key2 => $achievement) {
+
+                $achieveData[$key2] = $achievement->getAccomplishmentValue();
+            }
+            $objectivedata['name'] = $objective->getName();
+            $objectivedata['achieve'] = $achieveData;
+
+            $objectiveDatas[$key] = $objectivedata;
+        }
+            $datas['year'] = self::getYear($em);
+            $datas['objective']=$objectiveDatas;
             return $datas;
     }
     public static function getYear($em)

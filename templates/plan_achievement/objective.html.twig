@@ -6,6 +6,23 @@
 		<a href="{{path('plan_achievement_objective')}}">{% trans %}Objective Achievement{% endtrans %}</a>
 	</li>
 {% endblock %}
+{% block stylesheet %}
+	<style>
+		.label {
+			margin-left: 15px;
+			font-family: 'Source Sans Pro', sans-serif;
+			color: #666666;
+			font-size: 14px;
+		}
+		.legendValue {
+			float: left;
+			height: 25px;
+		}
+		.clear {
+			clear: both;
+		}
+	</style>
+{% endblock %}
 
 {% block body %}
 	<div class="well well-sm">
@@ -19,8 +36,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																									<i class="ace-icon fa fa-refresh"></i>
-																								</a> #}
+																											<i class="ace-icon fa fa-refresh"></i>
+																										</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -50,20 +67,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																<h5 class="widget-title">
-																	<strong>Initiative Achievement</strong>
-																</h5>
-							
-																<div class="widget-toolbar">
-							
-							
-																	<a href="#" id="reload" data-action="reload">
-																		<i class="ace-icon fa fa-refresh"></i>
-																	</a>
-							
-							
-																</div>
-															</div> #}
+																							<h5 class="widget-title">
+																								<strong>Initiative Achievement</strong>
+																							</h5>
+														
+																							<div class="widget-toolbar">
+														
+														
+																								<a href="#" id="reload" data-action="reload">
+																									<i class="ace-icon fa fa-refresh"></i>
+																								</a>
+														
+														
+																							</div>
+																						</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="table-responsive">
@@ -76,7 +93,7 @@
 											<thead>
 												<tr>
 													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">#</th>
-																													   
+
 													<th rowspan="2" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Objective{% endtrans %}</th>
 
 													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">{% trans %}Wieght{% endtrans %}</th>
@@ -133,9 +150,10 @@
 				</div>
 			</div>
 
-			<div id="messages" class="tab-pane fade">
-            <canvas id="myChart" width="400" height="400"></canvas>
-            </div>
+			<div id="messages">
+				<canvas id="myChart" width="400" height="400"></canvas>
+				<div id="legend"></div>
+			</div>
 
 
 		</div>
@@ -149,41 +167,108 @@ $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor = [];
+var fillColor = [];{% for objective in data.objective %}bgcolor.push(getRandomColor());
+fillColor.push(getRandomColor());{% endfor %}
+
+
 var ctx = document.getElementById("myChart").getContext('2d');
 
-var data = [22006299,	15834918,	14919501,	14797756,	14433147,	13524139,	11877109,	11862073,	11779606, 10452000]; // Add data values to array
 
-var labels = ["Tokyo",	"Mumbai",	"Mexico City",	"Shanghai",	"Sao Paulo",	"New York",	"Karachi","Buenos Aires",	"Delhi","Moscow"]; // Add labels to array
+var dat = {
+labels: [{{ data.year|join(',') }}],
+datasets: [{% for objective in data.objective %}
+{
+
+label: "{{ objective.name }}",
+fillColor: fillColor[{{ loop.index }}],
+strokeColor: fillColor[{{ loop.index }}],
+highlightFill: fillColor[{{ loop.index }}],
+highlightStroke: fillColor[{{ loop.index }}],
+data: [{{ objective.achieve|join(',') }}],
+backgroundColor: [{% for i in range(1,objective.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderColor: [{% for i in range(1,objective.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderWidth: 1
+}
+{% if loop.last != true %},
+{% endif %}
+{% endfor %}]
+};
+
+
 var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Population', // Name the series
-            data: data, // Specify the data values array
-            backgroundColor: [ // Specify custom colors
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [ // Add custom color borders
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1 // Specify bar border width
-        }]
-    },
-    options: {
-      responsive: true, // Instruct chart js to respond nicely.
-      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
-    }
+type: 'bar',
+barShowStroke: false,
+data: dat,
+options: {
+responsive: true, // Instruct chart js to respond nicely.
+maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+legend: {
+display: false,
+position: 'top'
+
+},
+plugins: {
+
+title: {
+display: true,
+text: 'jimma University Objective Accomplishment'
+}
+},
+legendCallback: function (chart) {
+var text = [];
+text.push('<ul class=">' + chart.id + '-legend">');
+for (var i = 0; i < chart.data.datasets.length; i++) {
+text.push('<li><div class="legendValue"><span style="background-color:' + chart.data.datasets[i].backgroundColor + '">&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+if (chart.data.datasets[i].label) {
+text.push('<span class="label">' + chart.data, datasets[i].label + '</span>');
+
+}
+text.push('</div></li><div class="clear"></div>');
+}
+text.push('</ul>');
+return text.join('');
+},
+scales: {
+yAxes: [
+{
+display: true,
+tricks: {
+beginAtZero: true
+},
+gridlines: {
+color: "rgba(0,0,0,0)"
+}
+
+}
+],
+xAxes: [
+{
+display: false,
+gridlines: {
+color: "rgba(0,0,0,0)"
+},
+barPercentage: 0.5,
+categoryPercentage: 0.5
+}
+]
+},
+scaleFontSize: 16,
+showTooltips: false,
+scaleGridLineColor: "rgba(0,0,0,.05)",
+scaleGridLineWidth: 1
+
+
+}
 });
+$('#legend').prepend(myChart.generatelegend());
 })
 </script>{% endblock %}

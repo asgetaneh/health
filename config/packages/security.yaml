@@ -41,6 +41,8 @@ security:
        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/feed/back/new, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/achievement/goalHome, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/achievement/kpivis, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/achievement/planHome, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/changeLocale, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/*, roles: ROLE_USER }
-     
+    

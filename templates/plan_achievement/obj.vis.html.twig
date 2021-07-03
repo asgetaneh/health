@@ -1,0 +1,108 @@
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+$(function(){
+   function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor = [];
+var fillColor = [];{% for objective in data.objective %}bgcolor.push(getRandomColor());
+fillColor.push(getRandomColor());{% endfor %}
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+
+
+var dat = {
+labels: [{{ data.year|join(',') }}],
+datasets: [{% for objective in data.objective %}
+{
+
+label: "{{ objective.name }}",
+fillColor: fillColor[{{ loop.index }}],
+strokeColor: fillColor[{{ loop.index }}],
+highlightFill: fillColor[{{ loop.index }}],
+highlightStroke: fillColor[{{ loop.index }}],
+data: [{{ objective.achieve|join(',') }}],
+backgroundColor: [{% for i in range(1,objective.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderColor: [{% for i in range(1,objective.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderWidth: 1
+}
+{% if loop.last != true %},
+{% endif %}
+{% endfor %}]
+};
+
+
+var myChart = new Chart(ctx, {
+type: 'bar',
+barShowStroke: false,
+data: dat,
+options: {
+responsive: true, // Instruct chart js to respond nicely.
+maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+legend: {
+display: false,
+position: 'top'
+
+},
+plugins: {
+
+title: {
+display: true,
+text: 'jimma University Objective Accomplishment'
+}
+},
+legendCallback: function (chart) {
+var text = [];
+text.push('<ul class=">' + chart.id + '-legend">');
+for (var i = 0; i < chart.data.datasets.length; i++) {
+text.push('<li><div class="legendValue"><span style="background-color:' + chart.data.datasets[i].backgroundColor + '">&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+if (chart.data.datasets[i].label) {
+text.push('<span class="label">' + chart.data, datasets[i].label + '</span>');
+
+}
+text.push('</div></li><div class="clear"></div>');
+}
+text.push('</ul>');
+return text.join('');
+},
+scales: {
+yAxes: [
+{
+display: true,
+tricks: {
+beginAtZero: true
+},
+gridlines: {
+color: "rgba(0,0,0,0)"
+}
+
+}
+],
+xAxes: [
+{
+display: false,
+gridlines: {
+color: "rgba(0,0,0,0)"
+},
+barPercentage: 0.5,
+categoryPercentage: 0.5
+}
+]
+},
+scaleFontSize: 16,
+showTooltips: false,
+scaleGridLineColor: "rgba(0,0,0,.05)",
+scaleGridLineWidth: 1
+
+
+}
+});
+$('#legend').prepend(myChart.generatelegend());
+})
+</script>

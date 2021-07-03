@@ -18,6 +18,7 @@
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap-multiselect.min.css') }}"/>
 		<!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
 		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
 
@@ -32,6 +33,7 @@
 
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery.gritter.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
 		{#        <link href="../css/froala_style.min.css" rel="stylesheet" type="text/css" />#}
 
 
@@ -57,7 +59,7 @@
 		<script src="{{ asset('assets/basic/assets/js/mychart.js') }}"></script>
 		<script src="{{ asset('assets/basic/assets/js/ace-elements.min.js') }}"></script>
 		<script src="{{ asset('assets/basic/assets/js/chosen.jquery.min.js') }}"></script>
-
+        <script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
 		{#<script type="text/javascript" src="{{ asset('assets/chart/loader.js') }}"></script>#}
 		{#        <script type="text/javascript" src="{{ asset('assets/chart/jsapi_compiled_default_module.js') }}"></script>#}
 
@@ -80,6 +82,7 @@
 		        <script src="{{ asset('assets/basic/assets/js/respond.min.js') }}"></script>
 		        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
 		        <![endif]-->
+                {% block stylesheet %}{% endblock %}
 
 			<style>
 .scrollbar {
@@ -223,6 +226,7 @@
 	}
 }
 	</style>
+    
 	</head>
 
 		<body>
@@ -260,7 +264,7 @@
 											
 										</li>
 										<li class="dropdown">
-											<a class=""  href="#"><b>{% trans %}Plan{% endtrans %}</b>
+											<a class=""  href="{{path('plan_achievement_plan_home')}}"><b>{% trans %}Plan{% endtrans %}</b>
 												
 											</a>
 											
@@ -352,7 +356,13 @@
 				</div>
 			</div>
 		</div>
+        <script>
+        $(function(){
+           
+        })
+        </script>
 
-
+ {% block javascripts %}
+ {% endblock %}
 	</body>
 </html>

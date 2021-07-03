@@ -123,10 +123,8 @@ backgroundColor: [
 				{% for i in range(1,goal.achieve|length) %}fillColor[{{loop.parent.loop.index}}],{% endfor %}
 			],
 			borderWidth: 1 
-}
-{% if loop.last != true %}
-,
-{% endif %}
+},
+
  {% endfor %}
 ]
 };

@@ -1,0 +1,159 @@
+{% extends 'general.html.twig' %}
+
+{% block stylesheet %}
+
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap-multiselect.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
+	<script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
+    <link
+		rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/> 
+<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
+{% endblock %}
+{% block body %}
+	<div class="row" style="margin-top:30px; margin-left:30px; margin-right:20px;margin-bottom:50px;">
+		<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+			<div class="panel-group">
+				<div
+					class="panel panel-default">
+					{# <div class="panel-heading">Panel Heading</div> #}
+					<div class="panel-body">
+						<canvas id="goal" width="400" height="400"></canvas>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="well">
+
+							<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+								<div class="form-group form-group-lg">
+
+									<select multiple="" name="objective[]" id="" class="select2" data-placeholder="Click to Choose Objective...">
+
+										{% for objective in objectives %}
+											<option value="{{objective.id}}">{{objective}}</option>
+										{% endfor %}
+									</select>
+
+									<button type="submit" id="visbutton" class="btn btn-primary btn-xs" style="margin-left:0px;">{% trans %}Filter{% endtrans %}</button>
+								</div>
+
+
+							</form>
+
+						</div>
+						<div id="chartdiv"></div>
+						<canvas id="objective" width="400" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
+	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+	<script>
+		$(function () {
+$('.select2').css('min-width', '50%').select2({allowClear: false});
+});
+	</script>
+	<script>
+		$(function () {
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var bgcolor = [];
+var fillColor = [];
+var bgcolor2 = [];
+var fillColor2 = [];{% for goal in data.goal %}bgcolor.push(getRandomColor());
+fillColor.push(getRandomColor());{% endfor %}var ctx = document.getElementById("goal").getContext('2d');
+
+
+var dat = {
+labels: [{{ data.year|join(',') }}],
+datasets: [{% for goal in data.goal %}{
+
+label: "{{ goal.name }}",
+fillColor: fillColor[{{ loop.index }}],
+strokeColor: fillColor[{{ loop.index }}],
+highlightFill: fillColor[{{ loop.index }}],
+highlightStroke: fillColor[{{ loop.index }}],
+data: [{{ goal.achieve|join(',') }}],
+backgroundColor: [{% for i in range(1,goal.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderColor: [{% for i in range(1,goal.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
+borderWidth: 1
+}
+{% if loop.last != true %},{% endif %}{% endfor %}]
+};
+
+
+var myChart = new Chart(ctx, {
+type: 'bar',
+data: dat,
+options: {
+responsive: true, // Instruct chart js to respond nicely.
+maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+
+scaleFontStyle: "bold",
+scaleLabel: "<%=value%>",
+scaleFontSize: 16,
+showTooltips: true,
+legend: {
+display: false,
+position: 'top'
+
+},
+plugins: {
+
+title: {
+display: true,
+text: 'Jimma University Goal Accomplishment'
+}
+}
+
+
+}
+});
+})
+	</script>
+
+
+	<script>
+		$(function () {
+
+$('#visform').submit(function (event) {
+event.preventDefault();
+var $form = $(this);
+$.ajax({
+type: 'GET',
+url: $form.attr('action'),
+data: $form.serialize(),
+success: function(data) {
+$('#chartdiv').html(data);
+},
+error: function (error) {}
+});
+
+})
+})
+	</script>
+{% endblock %}

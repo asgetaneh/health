@@ -1,0 +1,94 @@
+<html lang="en">
+	<head>
+		<title>Mis</title>
+		<meta charset="utf-8">
+
+		<meta name="description" content="Mailbox with some customizations as described in docs"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+		<link rel='shortcut icon' type='image/x-icon' href="{{asset('images/favicon.ico')}}"/>
+		<link rel='shortcut icon' type='image/x-icon' href='{{asset("image/logo.png")}}'/>
+
+
+		<link rel="stylesheet" href="{{ asset('assets/bootstrap-4.0/css/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
+		<style>
+			.fakeimg {
+
+				background: #aaa;
+			}
+		</style>
+
+	</head>
+	<body>
+
+		<div class="jumbotron jumbotron-fluid  text-center text-white" style="margin-bottom:0;background: #3B5998;">
+			<h3 class="" style="font-family: 'Abyssinica SIL'">
+				Aspiring to be one of the leading Community-based research universities in Africa and renowned in the world by 2030
+			</h3>
+		</div>
+
+		<nav class="navbar navbar-expand-sm  navbar-dark" style="background:#0F7DC2;">
+			<a class="navbar-brand font-weight-bold" href="#" style="font-family: Times New Roman,Times, serif;">
+				<img src="{{asset("image/logo.png")}}" alt="Logo" style="width:40px;">
+				<strong>
+					JU Information Management System</strong>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav justify-content-end">
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5 " style="font-family: Times New Roman,Times, serif;font-style: normal;font-size: 16px;font-weight: normal;" href="{{path('home')}}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Student
+							{% endtrans %}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Employe
+							{% endtrans %}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="#">{% trans %}Plan
+							{% endtrans %}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white ml-5" style="font-family: Times New Roman,Times, serif;" href="{{ path('feed_back_new') }}">{% trans %}FeedBack{% endtrans %}</a>
+					</li>
+					<li class="nav-item ml-5">
+						<a class="nav-link text-white" style="font-family: Times New Roman,Times, serif;" href="{{ path('app_login') }}">{% trans %}Login{% endtrans %}</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container" style="margin-top:30px;margin-bottom:30px">
+			<div class="row">
+				{% block body %}
+
+					{{ render( controller('App\\Controller\\PlanAchievementController::goalHome') ) }}
+				{% endblock %}
+
+			</div>
+		</div>
+
+		<div class="jumbotron text-center" style="margin-bottom:0">
+
+			<span class=" lead text-primary">
+				<span class="text-primary">{% trans %}EMIS{% endtrans %}</span>
+				{% trans %}Application{% endtrans %}
+				&copy;
+				{% trans %}Jimma University 2021{% endtrans %}
+			</span>
+		</div>
+		<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+		<script src="{{ asset('assets/bootstrap-4.0/js/bootstrap.min.js') }}"></script>
+		{# <script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script> #}
+
+
+	</body>
+
+
+</html>

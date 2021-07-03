@@ -44,24 +44,36 @@ class PlanAchievementController extends AbstractController
    
          
            $em = $this->getDoctrine()->getManager();
-         if ($request->request->get('reload')) {
-
-            InitiativeHelper::goalSync($em);
-            $this->addFlash('success', 'load successfuly');
-            return $this->redirectToRoute('plan_achievement_goal');
-        }
+       
         $datas=VisualizationHelper::goal($em);
         $query = $goalRepository->findAlls();
-        // $data = $paginator->paginate(
-        //     $query,
-        //     $request->query->getInt('page', 1),
-        //     10
-        // );
-        // dd($datas);
+       
         return $this->render('plan_achievement/goal.home.html.twig', [
-            // 'plan_achievements' => $data,
+          
            
             'data'=>$datas
+        ]);
+    }
+    /**
+     * @Route("/planHome", name="plan_achievement_plan_home")
+     */
+    public function visualizionAchievement(PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PaginatorInterface $paginator, Request $request,PlanningYearRepository $planningYearRepository): Response
+    {    
+   
+         
+           $em = $this->getDoctrine()->getManager();
+          
+
+           
+       
+        $datas=VisualizationHelper::goal($em);
+        
+        $objectives=$em->getRepository(Objective::class)->findAll();
+        return $this->render('plan_achievement/achievement.visualization.html.twig', [
+          
+           
+            'data'=>$datas,
+            'objectives'=> $objectives
         ]);
     }
     /**
@@ -152,6 +164,7 @@ class PlanAchievementController extends AbstractController
             $this->addFlash('success', 'load successfuly');
             return $this->redirectToRoute('plan_achievement_objective');
         }
+          $datas=VisualizationHelper::objective($em);
 
         $query = $objectiveRepository->findAlls();
         $data = $data = $paginator->paginate(
@@ -161,6 +174,7 @@ class PlanAchievementController extends AbstractController
         );
         return $this->render('plan_achievement/objective.html.twig', [
             'plan_achievements' => $data,
+             'data'=>$datas
         ]);
     }
 
@@ -208,7 +222,7 @@ class PlanAchievementController extends AbstractController
         } else
             $query = $keyPerformanceIndicatorRepository->findAlls();
              $kpis = $keyPerformanceIndicatorRepository->findAll();
-        $data = $data = $paginator->paginate(
+         $data = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
@@ -229,7 +243,15 @@ class PlanAchievementController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $planyears = $planningYearRepository->findAll();
 
-
+         if($request->query->get('objective')){
+           $objectives=$em->getRepository(Objective::class)->findBy(['id'=>$request->query->get('objective')]);
+           $datas=VisualizationHelper::objective($em,$objectives);
+            $responce=$this->renderView('plan_achievement/obj.vis.html.twig',[
+                'data'=>$datas,
+                
+            ]);
+             return new Response($responce);
+         }
 
         if ($request->query->get('kpi')) {
             $kpi = $keyPerformanceIndicatorRepository->find($request->query->get('kpi'));

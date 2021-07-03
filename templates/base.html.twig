@@ -39,13 +39,10 @@
 		<script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
 
 
-		{# <script src="{{ asset('assets/assets/js/chosen.jquery.min.js') }}"></script> #}
+	
 
 
-	{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/lib/moment.min.js') }}"></script> #}
-		{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.min.js') }}"></script> #}
-		{# <script type="text/javascript" src="{{ asset('fullCalander/js/fullcalendar/fullcalendar.default-settings.js') }}"></script> #}
-
+  {% block stylesheet %}{% endblock %}
 
 	</head>
 
@@ -401,7 +398,7 @@ ace.settings.loadState('sidebar')
 											</a>
 										</li>
 									{% endif %}
-									{% if is_granted('vw_intv') %}
+									{% if is_granted('vw_intv'	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>) %}
 
 
 										<li role="treeitem">
