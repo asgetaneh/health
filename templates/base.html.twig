@@ -398,7 +398,7 @@ ace.settings.loadState('sidebar')
 											</a>
 										</li>
 									{% endif %}
-									{% if is_granted('vw_intv'	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>) %}
+									{% if is_granted('vw_intv') %}
 
 
 										<li role="treeitem">
@@ -708,6 +708,7 @@ ace.settings.loadState('sidebar')
 									if ('ontouchstart' in document.documentElement) 
 document.write("<script src='         {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
 								</script>
+                                	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 								<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
 								<script src="{{ asset('assets/assets/js/jquery-ui.custom.min.js') }}"></script>
 								<script src="{{ asset('assets/assets/js/jquery.ui.touch-punch.min.js') }}"></script>
