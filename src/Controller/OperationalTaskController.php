@@ -48,6 +48,7 @@ use Proxies\__CG__\App\Entity\PlanningQuarter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,6 +80,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         // dd($user);
+     
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -186,6 +188,7 @@ class OperationalTaskController extends AbstractController
             'social' => $social,
             'formtask' => $formtask->createView(),
             'initiativeName' => $suitableInitiative->getInitiative()->getName(),
+
 
 
         ]);
