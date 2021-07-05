@@ -73,6 +73,11 @@ class OperationalOffice
      * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="operationalOffice")
      */
     private $operationalSuitableInitiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="operationalOffice")
+     */
+    private $performerTasks;
     
     public function __construct()
     {
@@ -81,6 +86,7 @@ class OperationalOffice
         $this->initiatives = new ArrayCollection();
         $this->operationalInitiatives = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
+        $this->performerTasks = new ArrayCollection();
     }
   
     public function getId(): ?int
@@ -305,6 +311,36 @@ class OperationalOffice
             // set the owning side to null (unless already changed)
             if ($operationalSuitableInitiative->getOperationalOffice() === $this) {
                 $operationalSuitableInitiative->setOperationalOffice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTasks(): Collection
+    {
+        return $this->performerTasks;
+    }
+
+    public function addPerformerTask(PerformerTask $performerTask): self
+    {
+        if (!$this->performerTasks->contains($performerTask)) {
+            $this->performerTasks[] = $performerTask;
+            $performerTask->setOperationalOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTask(PerformerTask $performerTask): self
+    {
+        if ($this->performerTasks->removeElement($performerTask)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTask->getOperationalOffice() === $this) {
+                $performerTask->setOperationalOffice(null);
             }
         }
 

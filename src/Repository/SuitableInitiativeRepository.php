@@ -22,19 +22,21 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     // /**
     //  * @return SuitableInitiative[] Returns an array of SuitableInitiative objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findSuitableInitiatve($principalOffice,$currentYear)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+        ->leftJoin('s.planningYear','y')
+                ->andWhere('s.principalOffice = :principalOffice')
+            ->andWhere('y.ethYear = :currentYear')
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('principalOffice', $principalOffice)
             ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?SuitableInitiative

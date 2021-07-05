@@ -26,9 +26,9 @@
 	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
 {% endblock %}
 {% block body %}
-<input type="hidden" class="minDate" value="{{minDate}}">
-<input type="hidden" class="maxDate" value="{{maxDate}}">
-<input type="hidden" class="minDateEdit" value="{{minDateEdit}}">
+	<input type="hidden" class="minDate" value="{{minDate}}">
+	<input type="hidden" class="maxDate" value="{{maxDate}}">
+	<input type="hidden" class="minDateEdit" value="{{minDateEdit}}">
 	<div>
 
 		{% for taskUser in taskUsers %}
@@ -82,7 +82,7 @@
 					{% set office = 0 %}
 					<h5 class="widget-title bigger lighter">Operational Office
 						{% if social == 1 %}
-                        
+
 							Social Initiative
 							{% else %}
 
@@ -91,8 +91,8 @@
 					</h5>
 
 					<div class="widget-toolbar">
-                    <span class="badge badge-info">
-                        	{% trans %}Quarter{% endtrans %}
+						<span class="badge badge-info">
+							{% trans %}Quarter{% endtrans %}
 							:
 
 
@@ -100,125 +100,142 @@
 								{{quarterName}}</strong>
 						</span>
 
-							</div>
+					</div>
 
 					<div class="widget-toolbar">
 						<span class="badge badge-warning">
-                        		{% if social == 1 %}
-                        
-							Social Initiative
-							{% else %}
+							{% if social == 1 %}
 
-						{% endif %}
-							
-					</div>
-				</div>
+								Social Initiative
+								{% else %}
 
-				<div class="widget-body">
-					<div class="widget-toolbox" id="widget-toolbox-1">
-						<div class="btn-toolbar">
-							<div
-								class="btn-group">
-								{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
-
-								{% if countWeight < 100 %}
-									{% if social == 1 %}
-										<a class="btn btn-primary btn-sm btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
-											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-											{% trans %}
-											Create{% endtrans %}</a>
-									{% else  %}
-										<a class="btn btn-primary btn-sm btn-white btn-round social" data-toggle="modal" data-target="#myModal">
-											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-											{% trans %}
-											Create{% endtrans %}</a>
-									{% endif %}
-
-								{% endif %}
-								{% if countWeight >= 100 %}
-									<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
-										<i class="ace-icon fa fa-check bigger-110 blue"></i>
-										{% trans %}
-										Assign{% endtrans %}</a>
-								{% endif %}
-                                {{initiativeName}}
-
-
-							</div>
-
+							{% endif %}
 
 						</div>
 					</div>
 
-					<div class="widget-main padding-16">
+					<div class="widget-body">
+						<div class="widget-toolbox" id="widget-toolbox-1">
+							<div class="btn-toolbar">
+								<div
+									class="btn-group">
+									{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
-						<div class="table-responsive">
-							<form class="form-inline" method="post" style="display:inline;">
+									{% if countWeight < 100 %}
+										{% if social == 1 %}
+											<a class="btn btn-primary btn-sm btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
+												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+												{% trans %}
+												Create{% endtrans %}</a>
+										{% else  %}
+											<a class="btn btn-primary btn-sm btn-white btn-round social" data-toggle="modal" data-target="#myModal">
+												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+												{% trans %}
+												Create{% endtrans %}</a>
+										{% endif %}
 
-								<div class="input-group">
-									<input type="text" class="form-control" name="search" placeholder="search"/>
-									<div class="input-group-btn">
-										<button type="submit" class="btn btn-default no-border btn-sm">
-											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-										</button>
-									</div>
+									{% endif %}
+									{% if countWeight >= 100 %}
+										<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
+											<i class="ace-icon fa fa-check bigger-110 blue"></i>
+											{% trans %}
+											Assign{% endtrans %}</a>
+									{% endif %}
+									{{initiativeName}}
 								</div>
-							</form>
-							{% if performerTasks %}
+								{# <div class="pull-right"> #}
+								{% if countWeight >= 100 %}
+
+									<div class="row ">
+										<form action="{{path('task_assign_pdf')}}" method="post">
+
+											<div class="col-md-2 pull-right">
+
+												<button class="btn btn-sm btn-danger t" type="submit">
+													<i class="fa fa-file-pdf-o "></i>
+
+												</button>
+											</div>
+											<div class="col-md-2 pull-right">
+												<select autocomplete="off" name="user" class="form-control userlist select2  "></select>
+											</div>
+										</form>
+
+									</div>
+								{% endif %}
 
 
-								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>TaskName</th>
-											{% if social == 1 %}
-												<th>Social</th>
-											{% endif %}
-
-											<th>Description</th>
-											<th>Weight</th>
-											<th>Quarter</th>
-											<th>Assigned To</th>
-											<th>Edit</th>
+								{# </div> #}
 
 
-										</tr>
-									</thead>
-									<tbody>
-										{% set count = 0 %}
-										{% for performerTask in performerTasks %}
+							</div>
+						</div>
+
+						<div class="widget-main padding-16">
+
+							<div class="table-responsive">
+								<form class="form-inline" method="post" style="display:inline;">
+
+									<div class="input-group">
+										<input type="text" class="form-control" name="search" placeholder="search"/>
+										<div class="input-group-btn">
+											<button type="submit" class="btn btn-default no-border btn-sm">
+												<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+											</button>
+										</div>
+									</div>
+								</form>
+								{% if performerTasks %}
+
+
+									<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+										<thead>
 											<tr>
-												{% set count = count + 1 %}
-												<td>{{ count}}</td>
-												<td>{{ performerTask.name }}</td>
+												<th>#</th>
+												<th>TaskName</th>
 												{% if social == 1 %}
-
-													<td>{{ performerTask.social }}</td>
+													<th>Social</th>
 												{% endif %}
-												<td>{{ performerTask.description }}</td>
-												<td>{{ performerTask.weight }}</td>
-												<td>{{ performerTask.quarter }}</td>
-												<td>
-													{% set statusaccept = 0 %}
-													<table class="table table-bordered table-responsive-xg table-hover">
-														<tr>
-															<th></th>
-															<th>Start Date
-															</th>
-															<th>End Date
-															</th>
-															<th>Time Gap</th>
-															<th>Quantity</th>
-															<th>Reason</th>
 
-														</tr>
-														{% for taskUser in taskUsers %}
-															{% if taskUser.status == 6 %}
-																<tr class="text-danger">
-																{% else %}
-																	<tr>
-																	{% endif %}
+												<th>Description</th>
+												<th>Weight</th>
+												<th>Quarter</th>
+												<th>Assigned To</th>
+												<th>Edit</th>
+
+
+											</tr>
+										</thead>
+										<tbody>
+											{% set count = 0 %}
+											{% for performerTask in performerTasks %}
+												<tr>
+													{% set count = count + 1 %}
+													<td>{{ count}}</td>
+													<td>{{ performerTask.name }}</td>
+													{% if social == 1 %}
+
+														<td>{{ performerTask.social }}</td>
+													{% endif %}
+													<td>{{ performerTask.description }}</td>
+													<td>{{ performerTask.weight }}</td>
+													<td>{{ performerTask.quarter }}</td>
+													<td>
+														{% set statusaccept = 0 %}
+														<table class="table table-bordered table-responsive-xg table-hover">
+															<tr>
+																<th>Start Date
+																</th>
+																<th>End Date
+																</th>
+																<th>Time Gap</th>
+																<th>Quantity</th>
+																<th>Reason</th>
+
+															</tr>
+															{% for taskUser in taskUsers %}
+																{# {% if taskUser.status == 6 %} #}
+																<tr {% if taskUser.status == 6 %} class="text-danger" {% endif %}>
 
 
 																	{% if taskUser.taskAssign.performerTask.id == performerTask.id  %}
@@ -231,108 +248,106 @@
 																		</td>
 																		<td>{{taskUser.taskAssign.timeGap}}</td>
 																		<td>{{taskUser.taskAssign.expectedValue}}</td>
+
 																		<td>{{taskUser.rejectReason}}
 																			{% if taskUser.status == 6 %}
 																				{# <form action="{{path('task_resend')}}" method="post"> #}
-																					<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
+																				<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
 
-																					<button class="btn btn-sm btn-info resend " data-performId="{{taskUser.taskAssign.id}}" type="button" data-target="#resend" >
-																						Resend
-																					</button>
-																				{% endif %}
-																			</td>
-
-
-																		{% endif %}
-																	</tr>
-
-																{% endfor %}
-
-															</table>
-
-														</td>
-														<td>
-															{% if countWeight < 100 %}
-
-																<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
-																	<i class="fa fa-edit"></i>
-																</button>
-															{% endif %}
-														</td>
-														<input type="hidden" class="countWeight1" value="{{countWeight}}">
-														<input type="hidden" class="user" value="{{app.user.id}}">
-														<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
-														<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
-
-														<input type="hidden" class="userprincipal" value="{{app.user.id}}">
+																				<button class="btn btn-sm btn-info resend " data-performid="{{taskUser.taskAssign.id}}" type="button" data-target="#resend">
+																					Resend
+																				</button>
+																			{% endif %}
+																		</td>
 
 
-													</tr>
-												{% else %}
-													<tr>
-														<td colspan="8">no records found</td>
-													</tr>
-												{% endfor %}
-											</tr>
+																	{% endif %}
+																</tr>
+
+															{% endfor %}
+
+														</table>
+													</td>
+													<td>
+														{% if countWeight < 100 %}
+
+															<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
+																<i class="fa fa-edit"></i>
+															</button>
+														{% endif %}
+													</td>
+													<input type="hidden" class="countWeight1" value="{{countWeight}}">
+													<input type="hidden" class="user" value="{{app.user.id}}">
+													<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
+													<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
+
+													<input type="hidden" class="userprincipal" value="{{app.user.id}}">
+
+
+												</tr>
+											{% else %}
+												<tr>
+													<td colspan="8">no records found</td>
+												</tr>
+											{% endfor %}
+
 										</tbody>
-									</tbody>
-								</table>
-							{% endif %}
+									</table>
+								{% endif %}
 
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="edit" class="modal fade" role="dialog">
-		<div
-			class="modal-dialog " style="width:800px;">
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header bg-info">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<div id="edit" class="modal fade" role="dialog">
+			<div
+				class="modal-dialog " style="width:800px;">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header bg-info">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 
-					<h4 class="modal-title">Edit Tasks
+						<h4 class="modal-title">Edit Tasks
 
 
-					</h4>
+						</h4>
+
+					</div>
+
+
+					<form method="post" action="{{path('performer_task_value_edit')}}">
+						<div class="modal-body">
+							<input type="hidden" name="countWeight" class="countWeight">
+							<table class="table" id="records_table1">
+								<tr>
+
+									<th>Task Name</th>
+									<th>Weight</th>
+
+									<th>Edit Weight</th>
+								</tr>
+							</table>
+						</div>
+						<div class="modal-footer justify-content-between">
+							<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
+							<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
+						</div>
+
+					</form>
+
 
 				</div>
 
-
-				<form method="post" action="{{path('performer_task_value_edit')}}">
-					<div class="modal-body">
-						<input type="hidden" name="countWeight" class="countWeight">
-						<table class="table" id="records_table1">
-							<tr>
-
-								<th>Task Name</th>
-								<th>Weight</th>
-
-								<th>Edit Weight</th>
-							</tr>
-						</table>
-					</div>
-					<div class="modal-footer justify-content-between">
-						<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
-						<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
-					</div>
-
-				</form>
-
-
 			</div>
-
 		</div>
-	</div>
-	{{ include('operational_task/modal.html.twig') }}
-
-{% endblock %}
-{% block javascripts %}
-	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
-	<script>
-		$('.edit').click(function () {
+		{{ include('operational_task/modal.html.twig') }}
+	{% endblock %}
+	{% block javascripts %}
+		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+		<script>
+			$('.edit').click(function () {
 $('#edit').modal('show');
 
 var perTaskId = $(this).attr('data-taskId');
@@ -357,13 +372,13 @@ $('#records_table1').append(trHTML);
 }
 });
 })
-	</script>
-    	<script>
-		$('.resend').click(function () {
+		</script>
+		<script>
+			$('.resend').click(function () {
 $('#resend').modal('show');
 
 var perTaskId = $(this).attr('data-performId');
-var performerId=1;
+var performerId = 1;
 console.log(perTaskId)
 $.ajax({
 url:"{{ path('performer_task_value_edit') }}",
@@ -375,33 +390,37 @@ performerId: performerId
 dataType: "json",
 success: function (data) {
 var trHTML = '';
-startDate=data.startDate
-data=data.data;
+startDate = data.startDate
+data = data.data;
 
 $.each(data, function (i, item) {
 
-trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap"  placeholder="timeGap" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
+trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap" max="6" placeholder="timeGap" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
 
 
 });
 $('#records_table2').append(trHTML);
 var calendar = $.calendars.instance('ethiopian', 'am');
-var minDate=$('.minDateEdit').val();
-var maxDate=$('.maxDate').val();
-minDate=minDate.split(",")
-maxDate=maxDate.split(",")
-$('.popupDatepicker').calendarsPicker({calendar: calendar,maxDate: calendar.newDate(parseInt(maxDate[0]),parseInt(maxDate[1]),parseInt(maxDate[2])),minDate: calendar.newDate(parseInt(minDate[0]),parseInt(minDate[1]),parseInt(minDate[2]))});
+var minDate = $('.minDateEdit').val();
+var maxDate = $('.maxDate').val();
+minDate = minDate.split(",")
+maxDate = maxDate.split(",")
+$('.popupDatepicker').calendarsPicker({
+calendar: calendar,
+maxDate: calendar.newDate(parseInt(maxDate[0]), parseInt(maxDate[1]), parseInt(maxDate[2])),
+minDate: calendar.newDate(parseInt(minDate[0]), parseInt(minDate[1]), parseInt(minDate[2]))
+});
 }
 });
 })
-	</script>
-	<script>
-		$(function () {
+		</script>
+		<script>
+			$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })
-	</script>
-	<script>
-		$(document).ready(function () {
+		</script>
+		<script>
+			$(document).ready(function () {
 
 var select = $('.userlist')
 var userprincipal = $('.office').val();
@@ -423,9 +442,9 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 }
 });
 })
-	</script>
-	<script>
-		$(document).ready(function () {
+		</script>
+		<script>
+			$(document).ready(function () {
 var task = $('.task').val();
 var user = $('.user').val();
 
@@ -450,15 +469,15 @@ select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 }
 });
 })
-	</script>
-	<script>
-		$('.socialbtn').click(function () {
+		</script>
+		<script>
+			$('.socialbtn').click(function () {
 $('.social').show();
 
 })
-	</script>
-	<script>
-		$('.timeGap').keyup(function () {
+		</script>
+		<script>
+			$('.timeGap').keyup(function () {
 var timeGap = $('.timeGap').val()
 if (timeGap > 6) {
 $('.error').text("maximum time gap is 6")
@@ -472,31 +491,35 @@ $('.assign').prop('disabled', false);
 
 
 })
-	</script>
-	<link
-	rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
+		</script>
+		<link
+		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
 
-	{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
-	<script src="{{ asset('amharic/js/jquery.plugin.js')}}"></script>
+		{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> #}
+		<script src="{{ asset('amharic/js/jquery.plugin.js')}}"></script>
 
-	<script src="{{ asset('amharic/js/jquery.calendars')}}.js"></script>
-	<script src="{{ asset('amharic/js/jquery.calendars')}}.plus.js"></script>
-	<script src="{{ asset('amharic/js/jquery.calendars')}}.picker.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.plus.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.picker.js"></script>
 
-	<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian.js"></script>
-	<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian-am.js"></script>
-	<script type="text/javascript" src="{{ asset('amharic/js/jquery.calendars')}}.picker-am.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian.js"></script>
+		<script src="{{ asset('amharic/js/jquery.calendars')}}.ethiopian-am.js"></script>
+		<script type="text/javascript" src="{{ asset('amharic/js/jquery.calendars')}}.picker-am.js"></script>
 
-	<script>
-		$(function () {
+		<script>
+			$(function () {
 var calendar = $.calendars.instance('ethiopian', 'am');
-var minDate=$('.minDate').val();
-var maxDate=$('.maxDate').val();
-minDate=minDate.split(",")
-maxDate=maxDate.split(",")
-console.log(minDate,maxDate)
+var minDate = $('.minDate').val();
+var maxDate = $('.maxDate').val();
+minDate = minDate.split(",")
+maxDate = maxDate.split(",")
+console.log(minDate, maxDate)
 
-$('.popupDatepicker').calendarsPicker({calendar: calendar,maxDate: calendar.newDate(parseInt(maxDate[0]),parseInt(maxDate[1]),parseInt(maxDate[2])),minDate: calendar.newDate(parseInt(minDate[0]),parseInt(minDate[1]),parseInt(minDate[2]))});
+$('.popupDatepicker').calendarsPicker({
+calendar: calendar,
+maxDate: calendar.newDate(parseInt(maxDate[0]), parseInt(maxDate[1]), parseInt(maxDate[2])),
+minDate: calendar.newDate(parseInt(minDate[0]), parseInt(minDate[1]), parseInt(minDate[2]))
+});
 $('#popupDatepicker').calendarsPicker({calendar: calendar});
 
 $('#inlineDatepicker').calendarsPicker({calendar: calendar, onSelect: showDate});
@@ -505,7 +528,5 @@ $('#inlineDatepicker').calendarsPicker({calendar: calendar, onSelect: showDate})
 function showDate(date) {
 alert('The date chosen is ' + date);
 }
-	</script>
-
-
-{% endblock %}
+		</script>
+	{% endblock %}

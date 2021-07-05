@@ -87,40 +87,37 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
                    ->andWhere('ui.id = :performerName')
                 ->setParameter('performerName', $search['performerName']);
         }
-        //   if(isset($search['taskName']) && sizeof($search['taskName'])>0 ){
-        //     $qb->andWhere('o.perspective in (:perspective)')
-        //     ->setParameter('perspective',$search['perspective']);
+          if(isset($search['taskName']) ){
+            $qb->andWhere('p.id = :taskName')
+            ->setParameter('taskName',$search['taskName']);
 
-        // }
-        //  if(isset($search['operationalOffice']) && sizeof($search['operationalOffice'])>0 ){
+        }
+      
+         if(isset($search['initiative']) ){
 
-        //     $qb 
-        //      ->Join('i.keyPerformanceIndicator','k')
-        //     ->Join('k.strategy','s')
-        //     ->andWhere('s.objective in (:objective)')
-        //     ->setParameter('objective',$search['objective']);
+            $qb 
+            ->Join('p.PlanAcomplishment','pl')
+            ->Join('pl.suitableInitiative','si')
+            ->Join('si.initiative','i')
+            // ->Join('i.translations','t')
+            ->andWhere('i.id = :initiative')
+            ->setParameter('initiative',$search['initiative']);
 
-        // }
-        //  if(isset($search['initiative']) && sizeof($search['initiative'])>0 ){
+        }
+          if(isset($search['quarter'])){
+            $qb->Join('p.quarter','q')
+            ->andWhere('q.id = :quarter')
+            ->setParameter('quarter',$search['quarter']);
 
-        //     $qb 
-        //     ->Join('i.keyPerformanceIndicator','k')
-        //     ->andWhere('k.strategy in (:strategy)')
-        //     ->setParameter('strategy',$search['strategy']);
+        }
+         if(isset($search['planningYear']) ){
+            $qb->Join('p.PlanAcomplishment','pl')
+            ->Join('pl.suitableInitiative','si')
+              ->leftJoin('si.planningYear','py')
+            ->andWhere('py.id = :planningYear')
+            ->setParameter('planningYear',$search['planningYear']);
 
-        // }
-        //   if(isset($search['quarter']) && sizeof($search['quarter'])>0 ){
-        //     $qb->andWhere('i.keyPerformanceIndicator in (:kpi)')
-        //     ->setParameter('kpi',$search['kpi']);
-
-        // }
-        //  if(isset($search['planningYear']) && sizeof($search['planningYear'])>0 ){
-        //     $qb
-        //       ->leftJoin('i.principalOffice','p')
-        //     ->andWhere('p.id in (:principalOffice)')
-        //     ->setParameter('principalOffice',$search['principaloffice']);
-
-        // }
+        }
 
 
         return $qb->orderBy('taa.id', 'ASC')->getQuery();

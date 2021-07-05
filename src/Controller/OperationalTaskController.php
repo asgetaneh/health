@@ -89,10 +89,10 @@ class OperationalTaskController extends AbstractController
         $maxcount = 0;
         $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableInitiative);
         $taskUsers = $taskUserRepository->findTaskUsers($user);
-        foreach ($taskUsers as $value) {
-            $value->setType(1);
-            $em->flush();
-        }
+        // foreach ($taskUsers as $value) {
+        //     $value->setType(1);
+        //     $em->flush();
+        // }
         foreach ($operationalTasks as $operationals) {
             $count = $count +
                 $operationals->getWeight();
@@ -144,6 +144,11 @@ class OperationalTaskController extends AbstractController
                         $performerTask->setDeligateBy($delegatedBy);
                     }
                     $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
+                    foreach($user->getOperationalManagers() as $op){
+                        $opOff=$op->getOperationalOffice();
+                    }
+                    // dd($opOff);
+                    $performerTask->setOperationalOffice($opOff);
                     $performerTask->setCreatedBy($user);
                     $weight = $form->getData()->getWeight();
                     if ($count + $weight > 100) {
@@ -200,9 +205,11 @@ class OperationalTaskController extends AbstractController
             $user = $delegatedBy;
         }
         $social = 0;
+        $currentYear = AmharicHelper::getCurrentYear();
+// dd($currentYear);
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principlaOffice]);
+        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice,$currentYear);
         $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),

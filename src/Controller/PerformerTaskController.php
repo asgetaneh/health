@@ -47,11 +47,10 @@ class PerformerTaskController extends AbstractController
             $taskUsers->setRejectReason($reason);
             $em->flush();
             $this->addFlash('success', 'Task Reject successfully !');
-            return $this->render('performer_task/index.html.twig', [
-                'taskUsers' => $taskUserRepository->findPerformerTaskUsers($this->getUser())
-                // 'count'=>$count,
+            return $this->redirectToRoute('performer_task_index');
 
-            ]);
+
+            
         }
         $taskUsers = $taskUserRepository->findPerformerTaskUsers($this->getUser());
 
@@ -87,37 +86,32 @@ class PerformerTaskController extends AbstractController
         // ->setMethod('Get')
             ->add("performerName", EntityType::class, [
                 'class' => UserInfo::class,
-                'placeholder' => 'Choose an planning year',
+                'placeholder' => 'All',
                 'required' => false,
 
             ])
             ->add("taskName", EntityType::class, [
                 'class' => PerformerTask::class,
-                'placeholder' => 'Choose an planning year',
+                'placeholder' => 'All',
                 'required' => false,
 
             ])
-            ->add('operationalOffice', EntityType::class, [
-                'class' => OperationalOffice::class,
-                'required' => false,
-
-                'placeholder' => 'Choose an principal office',
-            ])
+          
             ->add('initiative', EntityType::class, [
                 'class' => Initiative::class,
                 'required' => false,
 
-                'placeholder' => 'Choose an principal office',
+                'placeholder' => 'All',
             ])
             ->add("quarter", EntityType::class, [
                 'class' => PlanningQuarter::class,
-                'placeholder' => 'Choose an planning year',
+                'placeholder' => 'All',
                 'required' => false,
 
             ])
             ->add("planningYear", EntityType::class, [
                 'class' => PlanningYear::class,
-                'placeholder' => 'Choose an planning year',
+                'placeholder' => 'All',
                 'required' => false,
 
             ])->getForm();
@@ -134,7 +128,7 @@ class PerformerTaskController extends AbstractController
             $data = $paginator->paginate(
                 $performerTasks,
                 $request->query->getInt('page', 1),
-                6
+                10
     
             );     
              return $this->render('performer_task/report.html.twig', [

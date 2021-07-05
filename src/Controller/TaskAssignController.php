@@ -12,6 +12,7 @@ use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
+use App\Helper\AmharicHelper;
 use App\Helper\EmailHelper;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
@@ -19,6 +20,7 @@ use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
+use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
 use Dompdf\Dompdf;
@@ -99,6 +101,62 @@ class TaskAssignController extends AbstractController
             'task_assigns' => $taskAssignRepository->findAll(),
         ]);
     }
+     /**
+     * @Route("/pdf", name="task_assign_pdf")
+     */
+    public function taskPdf(Request $request, TaskUserRepository $taskUserRepository)
+    {
+        $em=$this->getDoctrine()->getManager();
+        $taskUserId=$request->request->get("user");
+        // dd($taskUserId);
+$fullName="";
+$quarter="";
+$principalOffice="";
+$operationalOffice="";
+$operationalManager="";
+$currentYear="";
+
+
+        $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$taskUserId,'status'=>0] );
+        foreach($taskUsers as $taskUser){
+            $fullName=$taskUser->getAssignedTo()->getUserInfo()->getFullName();
+            $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
+             $principalOffice=$taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
+             $operationalOffice=$taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
+         $operationalManager=$taskUser->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
+
+            }
+        // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
+        // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
+        $currentYear = AmharicHelper::getCurrentYear();
+    //  $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
+        $pdfOptions = new Options();
+   $pdfOptions->set('defaultFont', 'Arial');
+   $pdfOptions->set('isRemoteEnabled', true);
+   $dompdf = new Dompdf($pdfOptions);
+   $res = $this->renderView('task_assign/taskAssign_print.html.twig',[
+     'taskUsers'=>$taskUsers,
+     'date'=>  (new \DateTime())->format('y-m-d'),
+     'fullName'=>$fullName,
+     'quarter'=>$quarter,
+     'currentYear'=>$currentYear,
+     'operationalOffice'=>$operationalOffice,
+     'principalOffice'=>$principalOffice,
+    'operationalManager'=>$operationalManager,
+
+
+   ]); 
+
+   $dompdf->loadHtml($res);
+   $dompdf->setPaper('A4', 'Landscape');
+
+   // Render the HTML as PDF
+   $dompdf->render();
+   $dompdf->stream("TaskAssign.pdf", [
+       "Attachment" => false
+   ]);
+       //  dd($evaluations);
+   }
      /**
      * @Route("/evaluation", name="evaluation")
      */
@@ -287,6 +345,7 @@ class TaskAssignController extends AbstractController
               $taskUser->setAssignedTo($userId);
              $taskUser->setTaskAssign($taskAssign);
                           $taskUser->setStatus(0);
+                          $taskUser->setType(1);
 
           $em->persist($taskUser);
             // $this->mail(

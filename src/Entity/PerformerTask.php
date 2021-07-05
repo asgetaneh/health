@@ -73,6 +73,11 @@ class PerformerTask
      */
     private $deligateBy;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=OperationalOffice::class, inversedBy="performerTasks")
+     */
+    private $operationalOffice;
+
     public function __toString()
     {
         return $this->getName();
@@ -228,6 +233,18 @@ class PerformerTask
     public function setDeligateBy(?User $deligateBy): self
     {
         $this->deligateBy = $deligateBy;
+
+        return $this;
+    }
+
+    public function getOperationalOffice(): ?OperationalOffice
+    {
+        return $this->operationalOffice;
+    }
+
+    public function setOperationalOffice(?OperationalOffice $operationalOffice): self
+    {
+        $this->operationalOffice = $operationalOffice;
 
         return $this;
     }

@@ -76,6 +76,11 @@ class PlanningYear
      */
     private $quarterAccomplishments;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $ethYear;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -303,6 +308,18 @@ class PlanningYear
                 $quarterAccomplishment->setYear(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEthYear(): ?string
+    {
+        return $this->ethYear;
+    }
+
+    public function setEthYear(string $ethYear): self
+    {
+        $this->ethYear = $ethYear;
 
         return $this;
     }

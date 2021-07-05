@@ -106,7 +106,7 @@
 															Show
 														</button>
 													{% else %}
-														<button class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to Accept this Task?');">
+														<button class="btn btn-primary btn-sm accept" onclick="return confirm('Are you sure you want to Accept this Task?');">
 
 															Accept
 														</button>
@@ -178,5 +178,11 @@ var id = $(this).attr('data-performerTask');
 $('.taskUserId').val(id);
 })
 	</script>
+	<script>
+  $('.accept').clicck(function(){
+      location.reload(true);
+
+  })  
+    </script>
 
 {% endblock %}
