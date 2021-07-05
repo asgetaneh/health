@@ -59,6 +59,11 @@ class TaskUser
      */
     private $rejectReason;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $narrative;
+
     
 
     public function __construct()
@@ -200,6 +205,18 @@ class TaskUser
     public function setRejectReason(?string $rejectReason): self
     {
         $this->rejectReason = $rejectReason;
+
+        return $this;
+    }
+
+    public function getNarrative(): ?string
+    {
+        return $this->narrative;
+    }
+
+    public function setNarrative(?string $narrative): self
+    {
+        $this->narrative = $narrative;
 
         return $this;
     }

@@ -118,6 +118,8 @@
 											<th>TimeGap</th>
 											<th>Measurement</th>
 											<th>Chalenge</th>
+											<th>Narrative</th>
+
 
 										</tr>
 									</thead>
@@ -175,6 +177,10 @@
 													</table>
 												</td>
 												<td>{{ taskUser.note}}</td>
+												<td><a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank"  height="600">
+                                                Narrative Report</a>
+                                                </td>
+
 											</tr>
 
 										</tr>
@@ -190,23 +196,8 @@
 
 								<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Chalenge</button>
 							{% elseif status == 3 %}
-								{# {{ form_start(narativeForm,{'attr': {'role':'form'}}) }}
-								<div class="row">
 
-									<div class="form-group col-md-6 ">
-										{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
-										<div class="help-block with-errors"></div>
-									</div>
-
-									<input type="hidden" name="id" value="{{taskUserid}}">
-
-
-									<button type="submit" name="stock-request" class="btn btn-primary ">Narrative</button>
-
-								</div>
-								{{ form_end(narativeForm) }}
-								{# <button type="button" name="narrative" data-taskuserid="{{taskUserid}}" class="btn btn-primary narrative pull-right">Narrative Report</button> #}
-								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> 
+								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
 							{% elseif status == 4 %}
 								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
 

@@ -198,7 +198,7 @@ class PerformerTaskController extends AbstractController
         $uploadedFile->move($destination, $newFilename);
     //   dd($newFilename);
         //$user=$this->getUser()->getUserInfo();
-         $taskAc->setNarrative($newFilename);
+         $taskUsers->setNarrative($newFilename);
         $em->flush();
         $this->addFlash("tsuccess","Narrative Report Successfully uploaded !!");
         return $this->redirectToRoute('performer_task_index');

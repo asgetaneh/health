@@ -55,7 +55,7 @@ class PlanningYearController extends AbstractController
         $this->denyAccessUnlessGranted('vw_pln_yr');
        
             // $entityManager = $this->getDoctrine()->getManager();
-          $message="2014 Plan ";
+          $message="2014 Plan Created ";
           $userInfo="0923707888";
   $smsHelper->sendSms("Account Update ", $message, '["' . $userInfo . '"]');
 
