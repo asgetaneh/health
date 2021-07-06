@@ -43,7 +43,7 @@
 							<div class="col-md-4">
 								<label class="form-controll">Operational Office</label>
 
-								<select name="oper" class="oper select2" required></select>
+								<select id="oper" name="oper" class="oper select2" required="required"></select>
 
 
 								<div class="col-md-1">
@@ -84,6 +84,7 @@ for (let [key, value] of Object.entries(data)) {
 
 
 select.append('<option>' + value.name + '</option>');
+$("#oper").prop("required",true)
 
 
 }

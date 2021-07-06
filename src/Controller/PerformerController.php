@@ -28,126 +28,135 @@ class PerformerController extends AbstractController
     /**
      * @Route("/", name="performer_index", methods={"GET","POST"})
      */
-    public function index(PerformerRepository $performerRepository,Request $request,PaginatorInterface $paginator): Response
+    public function index(PerformerRepository $performerRepository, Request $request, PaginatorInterface $paginator): Response
     {
-         $this->denyAccessUnlessGranted('vw_prfm');
+        $this->denyAccessUnlessGranted('vw_prfm');
         $performer = new Performer();
         $form = $this->createForm(PerformerType::class, $performer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                     $this->denyAccessUnlessGranted('ad_prfm');
+            $this->denyAccessUnlessGranted('ad_prfm');
 
             $entityManager = $this->getDoctrine()->getManager();
-            $isActivePrincipal=$performerRepository->findActive($performer->getOperationalOffice(),$performer->getPerformer());
-               if ($isActivePrincipal) {
-                  $this->addFlash('danger',"performer is already assigned");
+            $isActivePrincipal = $performerRepository->findActive($performer->getOperationalOffice(), $performer->getPerformer());
+            if ($isActivePrincipal) {
+                $this->addFlash('danger', "performer is already assigned");
 
-                     return $this->redirectToRoute('performer_index');
-                  }
+                return $this->redirectToRoute('performer_index');
+            }
             $entityManager->persist($performer);
             $entityManager->flush();
 
             return $this->redirectToRoute('performer_index');
         }
-         if($request->request->get('deactive')){
-                      $this->denyAccessUnlessGranted('deact_prfm');
+        if ($request->request->get('deactive')) {
+            $this->denyAccessUnlessGranted('deact_prfm');
 
-             $performer=$performerRepository->find($request->request->get('deactive'));
-             $performer->setIsActive(false);
-              $this->getDoctrine()->getManager()->flush();
-               $this->addFlash('success',"deactivated successfuly");
-              return $this->redirectToRoute('performer_index');
-           
+            $performer = $performerRepository->find($request->request->get('deactive'));
+            $performer->setIsActive(false);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "deactivated successfuly");
+            return $this->redirectToRoute('performer_index');
         }
-          if($request->request->get('active')){
-                       $this->denyAccessUnlessGranted('act_prfm');
+        if ($request->request->get('active')) {
+            $this->denyAccessUnlessGranted('act_prfm');
 
-             $performer=$performerRepository->find($request->request->get('active'));
-           
-              
-             $performer->setIsActive(true);
-              $this->getDoctrine()->getManager()->flush();
-               $this->addFlash('success',"activated successfuly");
-              return $this->redirectToRoute('performer_index');
-           
-         }
-         
-         $data=$paginator->paginate(
-             $performerRepository->findAll(),
-             $request->query->getInt('page',1),
-             10
+            $performer = $performerRepository->find($request->request->get('active'));
+
+
+            $performer->setIsActive(true);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', "activated successfuly");
+            return $this->redirectToRoute('performer_index');
+        }
+
+        $data = $paginator->paginate(
+            $performerRepository->findAll(),
+            $request->query->getInt('page', 1),
+            10
 
         );
 
         return $this->render('performer/index.html.twig', [
             'performers' => $data,
-            'form'=> $form->createView()
+            'form' => $form->createView()
 
         ]);
     }
-      /**
+    /**
      * @Route("/choose", name="choose_office")
      */
-    public function choose(Request $request,OperationalOfficeRepository $operationalOfficeRepository,UserInfoRepository $userInfoRepository, UserRepository $userRepository)
+    public function choose(Request $request, OperationalOfficeRepository $operationalOfficeRepository, UserInfoRepository $userInfoRepository, UserRepository $userRepository)
     {
- $em=$this->getDoctrine()->getManager();
-         $filterform = $this->createFormBuilder()
-         
+        $em = $this->getDoctrine()->getManager();
+        $filterform = $this->createFormBuilder()
+
             ->add('principalOffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
                 // 'multiple' => true,
                 'required' => true
-            ])  
-              ->add('stafType', EntityType::class, [
+            ])
+            ->add('stafType', EntityType::class, [
                 'class' => StaffType::class,
                 // 'multiple' => true,
                 'required' => true
-            ])   
-             ->add('phoneNumber', TextType::class, [
-                
+            ])
+            ->add('phoneNumber', TextType::class, [
+
                 'required' => true
-            ])          
-             ->getForm();
-              $filterform->handleRequest($request);
+            ])
+            ->getForm();
+        $filterform->handleRequest($request);
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             // $operationalOffice= $filterform->getData([]);
-            $data=$filterform->getData();
-            $stafType=$data['stafType'];
-             $phoneNumber=$data['phoneNumber'];
+            $data = $filterform->getData();
+            $stafType = $data['stafType'];
+            $phoneNumber = $data['phoneNumber'];
+            $operatin=$request->request->get("oper"); 
+            // dd($operatin);
+            if ($operatin== null) {
 
-           $operationalOffices= $operationalOfficeRepository->findOneBy(['name'=>$request->request->get("oper")]);
-            // $operationalOffice=$operationalOffices->getId();
-            $performer=new Performer();
-            $performer->setOperationalOffice($operationalOffices);
-            $performer->setPerformer($this->getUser());
-           $users= $userRepository->find($this->getUser()->getId());
-           $userInfo= $userInfoRepository->findOneBy(['user'=>$users->getId()]);
-           $users->setStaffType($stafType);
-           $userInfo->setMobile($phoneNumber);
-           $users->setStatus(1);
-            $em->persist($performer);
-            $em->flush();
-          return $this->redirectToRoute('startegic_plan');
+                $this->addFlash('danger', "Operational Office Not Choose ");
+
+                return $this->redirectToRoute('choose_office');
+              
+            } else {
+                $operationalOffices = $operationalOfficeRepository->findOneBy(['name' => $request->request->get("oper")]);
+                // $operationalOffice=$operationalOffices->getId();
+                $performer = new Performer();
+                $performer->setOperationalOffice($operationalOffices);
+                $performer->setPerformer($this->getUser());
+                $users = $userRepository->find($this->getUser()->getId());
+                $userInfo = $userInfoRepository->findOneBy(['user' => $users->getId()]);
+                $users->setStaffType($stafType);
+                $userInfo->setMobile($phoneNumber);
+                $users->setStatus(1);
+                $em->persist($performer);
+                $em->flush();
+                return $this->redirectToRoute('startegic_plan');
+               
+            }
         }
-          return $this->render('performer/chooseOffice.html.twig', [
+        return $this->render('performer/chooseOffice.html.twig', [
             'filterform' => $filterform->createView(),
-        ]);}
-        /**
+        ]);
+    }
+    /**
      * @Route("/operationalfetch", name="operational_fetch")
      */
     public function taskFetch(Request $request, OperationalOfficeRepository $operationalOfficeRepository)
     {
-        $em=$this->getDoctrine()->getManager();
-         $principal= $request->request->get("principal");
-    //  dd($principal);
+        $em = $this->getDoctrine()->getManager();
+        $principal = $request->request->get("principal");
+        //  dd($principal);
         $principals = $operationalOfficeRepository->filterOperationalOffice($principal);
-    // dd($principals);
+        // dd($principals);
 
         return new JsonResponse($principals);
     }
-        
+
     /**
      * @Route("/new", name="performer_new", methods={"GET","POST"})
      */
@@ -178,7 +187,7 @@ class PerformerController extends AbstractController
      */
     public function show(Performer $performer): Response
     {
-                 $this->denyAccessUnlessGranted('vw_prfm_dtl');
+        $this->denyAccessUnlessGranted('vw_prfm_dtl');
 
         return $this->render('performer/show.html.twig', [
             'performer' => $performer,
@@ -190,7 +199,7 @@ class PerformerController extends AbstractController
      */
     public function edit(Request $request, Performer $performer): Response
     {
-                 $this->denyAccessUnlessGranted('edt_prfm');
+        $this->denyAccessUnlessGranted('edt_prfm');
 
         $form = $this->createForm(PerformerType::class, $performer);
         $form->handleRequest($request);
@@ -212,9 +221,9 @@ class PerformerController extends AbstractController
      */
     public function delete(Request $request, Performer $performer): Response
     {
-                 $this->denyAccessUnlessGranted('dlt_prfm');
+        $this->denyAccessUnlessGranted('dlt_prfm');
 
-        if ($this->isCsrfTokenValid('delete'.$performer->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $performer->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($performer);
             $entityManager->flush();
