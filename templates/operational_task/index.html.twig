@@ -118,17 +118,17 @@
 						<div class="widget-toolbox" id="widget-toolbox-1">
 							<div class="btn-toolbar">
 								<div
-									class="btn-group">
+									class="btn-group" style="margin-top:10px;margin-left:10px;">
 									{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
 
 									{% if countWeight < 100 %}
 										{% if social == 1 %}
-											<a class="btn btn-primary btn-sm btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
+											<a class="btn btn-primary  btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
 												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 												{% trans %}
 												Create{% endtrans %}</a>
 										{% else  %}
-											<a class="btn btn-primary btn-sm btn-white btn-round social" data-toggle="modal" data-target="#myModal">
+											<a class="btn btn-primary  btn-white btn-round social" data-toggle="modal" data-target="#myModal">
 												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 												{% trans %}
 												Create{% endtrans %}</a>
@@ -141,12 +141,17 @@
 											{% trans %}
 											Assign{% endtrans %}</a>
 									{% endif %}
-									{{initiativeName}}
+                                  
+								
 								</div>
+                                  <div class="pull-right" style="margin-bottom:20px; margin-top:10px;">  <span class="badge badge-info text-white"> {{initiativeName}}</span>	</div>
+
+                               
 								{# <div class="pull-right"> #}
 								{% if countWeight >= 100 %}
 
 									<div class="row ">
+                                    
 										<form action="{{path('task_assign_pdf')}}" method="post">
 
 											<div class="col-md-2 pull-right">
@@ -172,7 +177,7 @@
 						</div>
 
 						<div class="widget-main padding-16">
-
+                         
 							<div class="table-responsive">
 								<form class="form-inline" method="post" style="display:inline;">
 

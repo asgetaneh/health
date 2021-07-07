@@ -229,7 +229,8 @@ class PlanController extends AbstractController
 
         if (!$offices)
             $offices = $em->getRepository(PrincipalOffice::class)->findPrincipalOffice($this->getUser());
-
+            // dd($offices);
+// dd($em->getRepository(Initiative::class)->findBySuitable( $offices));
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
@@ -287,12 +288,15 @@ class PlanController extends AbstractController
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
             $suitableInitiative = $suitableInitiativeRepository->search($filterForm->getData());
+             $initiatives=$em->getRepository(Initiative::class)->search($filterForm->getData());
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
                 $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findAll();
+                 $initiatives=$em->getRepository(Initiative::class)->findAll();
             } else
                 $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
+                $initiatives=$em->getRepository(Initiative::class)->findBySuitable( $offices);
         }
 
 
@@ -306,6 +310,7 @@ class PlanController extends AbstractController
         return $this->render("plan/plan.html.twig", [
             "suitableplans" =>  $suitableInitiative,
             'quarters' => $quarters,
+            'initiatives'=> $initiatives,
             'filterform' => $filterForm->createView()
 
         ]);

@@ -10,13 +10,13 @@
 		<div class="widget-box widget-color-blue" id="widget-box-8">
 			<div class="widget-header">
 				<h5 class="widget-title bigger lighter">
-					<strong>Principal Office  Plans</strong>
+					<strong>{% trans %}Principal Office  Plans{% endtrans %}</strong>
 				</h5>
 				<div class="widget-toolbar"></div>
 				<div class="widget-toolbar">
 					<span class="badge badge-info">
 						{% trans %}Total{% endtrans %}
-						:{{suitableplans|length}}
+						{# :{{initiatives.getTotalItemCount()}} #}
 						<strong></strong>
 					</span>
 				</div>
@@ -30,172 +30,203 @@
 					</div>
 				</div>
 				<div class="widget-main padding-16">
-						<div class="row">
-							<div class="search-area well col-xs-12">
+					<div class="row">
+						<div class="search-area well col-xs-12">
 
-								<div class="row" style="margin-bottom:10px;">
-									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
-                                    <div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.initiative,'Initiative') }}
-											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
+							<div class="row" style="margin-bottom:10px;">
+								{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.initiative,'Initiative') }}
+										{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
 									</div>
-                                    <div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.kpi,'Kpi') }}
-											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
-									</div>
-                                    <div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.strategy,'Strategy') }}
-											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
-									</div>
-                                    <div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.objective,'Objective') }}
-											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
-									</div>
-                                    
-                                     <div class="clearfix"></div>
-                                    <div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.goal,'Goal') }}
-											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
-									</div>
-                                    
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.planyear,'Planning Year') }}
-											{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.principaloffice,"Principal Office") }}
-											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group" style="margin-top:25px;">
-											<input type="submit"  class="btn btn-primary btn-sm " value="Filter">
-										</div>
-									</div>
-                                   
-
-
-									{{ form_end(filterform) }}
 								</div>
-								<div class="pull-left">
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.kpi,'Kpi') }}
+										{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.strategy,'Strategy') }}
+										{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.objective,'Objective') }}
+										{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+									</div>
+								</div>
 
+								<div class="clearfix"></div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.goal,'Goal') }}
+										{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+									</div>
+								</div>
 
-									<form class="form-inline" method="post" style="display:inline;">
-
-										<div class="input-group">
-											<input type="text" class="form-control" name="search" placeholder="search"/>
-											<div class="input-group-btn">
-												<button type="submit" class="btn btn-default no-border btn-sm">
-													<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-												</button>
-											</div>
-										</div>
-									</form>
-
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.planyear,'Planning Year') }}
+										{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{ form_label(filterform.principaloffice,"Principal Office") }}
+										{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group" style="margin-top:25px;">
+										<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+									</div>
 								</div>
 
 
-								<div class="pull-right">
-									{# <div class="widget-toolbar no-border">
+								{{ form_end(filterform) }}
+							</div>
+							<div class="pull-left">
 
 
-										<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-											<b class="text-primary">Action</b>
-											<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-										</button>
+								<form class="form-inline" method="post" style="display:inline;">
 
-										<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-											<li>
-												<a href="#" id="suitablebutton">
-													<i class="ace-icon fa fa-stop green"></i>
-													Select As Suitable</a>
-											</li>
+									<div class="input-group">
+										<input type="text" class="form-control" name="search" placeholder="search"/>
+										<div class="input-group-btn">
+											<button type="submit" class="btn btn-default no-border btn-sm">
+												<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+											</button>
+										</div>
+									</div>
+								</form>
 
-											<li>
-
-												<a href="#">
-													<i class="ace-icon fa fa-stop pink2"></i>
-													Select As Non Suitable</a>
-											</li>
-
-
-										</ul>
-									</div> #}
-
-								</div>
 							</div>
 
+
+							<div class="pull-right"></div>
 						</div>
+
+					</div>
 					<div class="table-responsive">
 
 
-						<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+						<table class="table table-striped table-bordered table-hover" style="empty-cells: hide;">
 							<thead>
 								<tr>
 
-									<th>#</th>
-									<th>Initiative</th>
-									<th>bahavior</th>
-									{# <th>baseline</th> #}
-									<th>yearPlan</th>
-									<th>1st Quarter</th>
-									<th>2nd Quarter</th>
-									<th>3rd Quarter</th>
-									<th>4th  Quarter</th>
-									<th>Principal Office</th>
-									<th>Year</th>
-									<th>actions</th>
+									<th rowspan="2">#</th>
+									<th rowspan="2">Initiative</th>
+									<th rowspan="2">{% trans %}behavior{% endtrans %}</th>
+									<th rowspan="2">Principal Office</th>
+									<th rowspan="2">Year</th>
+									<th colspan="2">yearly</th>
+									<th colspan="2">1st Quarter</th>
+									<th colspan="2">2nd Quarter</th>
+									<th colspan="2">3rd Quarter</th>
+									<th colspan="2">4th  Quarter</th>
+
+
+								</tr>
+
+								<tr>
+
+
+									<th>plan</th>
+									<th>Accomplishment</th>
+									<th>plan</th>
+									<th>Accomplishment</th>
+									<th>plan</th>
+									<th>Accomplishment</th>
+									<th>plan</th>
+									<th>Accomplishment</th>
+									<th>plan</th>
+									<th>Accomplishment</th>
+
+
 								</tr>
 							</thead>
 							<tbody>
 								{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
 
 
-								{% for suitableplan in suitableplans %}
+								{% for initiative in initiatives %}
+									{% if is_granted('vw_all_pln') %}
+
+										{% set siz = initiative.suitableInitiatives|length + 1 %}
+									{% else %}
+										{% set office = [] %}
+										{% for item in app.user.principalManagers %}
+											{% set office = office|merge([item.principalOffice])%}
+										{% endfor %}
+
+										{% set principaloffices = office %}
+										{% set siz = 0 %}
+										{% for principaloffice in principaloffices %}
+											{% set siz = siz + initiative.suitableInitiatives|filter(suitable => suitable.principalOffice.id == principaloffice.id)|length %}
+
+										{% endfor %}
+										{% set siz = siz+1 %}
+
+									{% endif %}
 									<tr>
 
-										<td>{{ loop.index}}
-
-										</td>
-										<td>{{suitableplan.initiative|title }}</td>
-										<td>{{suitableplan.initiative.initiativeBehaviour|title }}</td>
-										{# <td>{{suitableplan.initiative.baseline }}</td> #}
+										<td rowspan="{{siz}}" style="vertical-align:middle;">{{ loop.index}}</td>
 
 
-										<td>
-											{# {% for behavior in suitableplan.initiative.initiativeBehaviour %} #}
+										<td rowspan="{{siz}}" style="vertical-align:middle;">{{initiative|title }}</td>
+										<td rowspan="{{siz}}" style="vertical-align:middle;">{{initiative.initiativeBehaviour|title }}</td>
 
-											{% if suitableplan.initiative.initiativeBehaviour.code == 0 %}
+
+									</tr>
+
+
+									{% for suitableplan in initiative.suitableInitiatives %}
+										<tr>
+											<td>{{suitableplan.principalOffice}}</td>
+											<td>{{suitableplan.planningYear}}</td>
+
+
+											{% if initiative.initiativeBehaviour.code == 0 %}
+
 												{% if suitableplan.initiative.socialAtrribute|length > 0 %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
 
-														<p>{{plan.socialAttribute.name|first|title}}
+													<td>
+														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+
+															{{plan.socialAttribute.name|first|title}}
 															:
-															{{plan.planValue}}</p>
+															{{plan.planValue}}
 
 
-													{% endfor %}
+														{% endfor %}
+													</td>
+													<td>
+														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+
+															{{plan.socialAttribute.name|first|title}}
+															:
+															{{plan.accompValue??"_"}}
+
+
+														{% endfor %}
+													</td>
+
 												{% else %}
 													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+														<td>
 
-														<p>
+															{{plan.planValue}}
 
-															{{plan.planValue}}</p>
+														</td>
+														<td>
 
+															{{plan.accompValue??"_"}}
 
+														</td>
 													{% endfor %}
 
 												{% endif %}
@@ -203,14 +234,19 @@
 
 												{% for attribute in suitableplan.initiative.socialAtrribute %}
 													{% set yearplan = suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+													{% set accomp = suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.accompValue) %}
 
-													{{attribute.name|title}}:{{yearplan ??"___" }}
+													<td>{{attribute.name|first|title}}:{{yearplan ??"___" }}</td>
+													<td>{{attribute.name|first|title}}:{{accomp ??"___" }}</td>
+
 												{% else %}
 													{% set yearplan = suitableplan.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
-													{{yearplan }}
+													{% set accomp = suitableplan.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.accompValue) %}
+													<td>{{yearplan ??"___" }}</td>
+													<td>{{accomp ??"___" }}</td>
+
+
 												{% endfor %}
-
-
 											{% elseif  suitableplan.initiative.initiativeBehaviour.code == 2  %}
 
 
@@ -220,18 +256,21 @@
 														{% set maxValue = max(plan.planValue,maxValue) %}
 
 													{% endfor %}
-													<p>{{attribute.name|first|title}}:
-														{{maxValue ??"___" }}</p>
+													<td>{{attribute.name|first|title}}:
+														{{maxValue ??"___" }}</td>
+													<td>{{attribute.name|first|title}}:
+														{{maxValue ??"___" }}</td>
 												{% else %}
 													{% set maxValue = 0 %}
 													{% for plan in suitableplan.planningAccomplishments %}
 														{% set maxValue = max(plan.planValue,maxValue) %}
-                                                         
-													{% endfor %}
-													<p>
-														{{maxValue == 0 ?"___" }}</p>
-												{% endfor %}
 
+													{% endfor %}
+													<td>
+														{{maxValue == 0 ?"___" :maxValue}}</td>
+													<td>
+														{{maxValue == 0 ?"___" :maxValue}}</td>
+												{% endfor %}
 											{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3  %}
 
 												{% for attribute in suitableplan.initiative.socialAtrribute %}
@@ -240,83 +279,78 @@
 														{% set maxValue = min(plan.planValue,maxValue) %}
 
 													{% endfor %}
-													<p>{{attribute.name|first|title}}:
-														{{maxValue == suitableplan.initiative.maximumValue ?"___" }}</p>
+													<td>{{attribute.name|first|title}}:
+														{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
+													<td>{{attribute.name|first|title}}:
+														{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
 												{% else %}
 													{% set maxValue = suitableplan.initiative.maximumValue %}
 													{% for plan in suitableplan.planningAccomplishments %}
 														{% set maxValue = min(plan.planValue,maxValue) %}
 
 													{% endfor %}
-													<p>
-														{{maxValue == suitableplan.initiative.maximumValue ?"___" }}</p>
+													<td>{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
+													<td>{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
 												{% endfor %}
 
 
 											{% endif %}
+											{% for quarter in quarters %}
 
-
-										</td>
-										{% for quarter in quarters %}
-											<td>
 
 												{% if suitableplan.initiative.socialAtrribute|length > 0 %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+													<td>
+														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
 
-														<p>{{plan.socialAttribute.name|first|title}}
+															{{plan.socialAttribute.name|first|title}}
 															:
-															{{plan.planValue}}</p>
+															{{plan.accompValue??"_"}}
 
 
-													{% endfor %}
+														{% endfor %}
+													</td>
+													<td>
+														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+
+
+															{{plan.socialAttribute.name|first|title}}
+															:
+															{{plan.accompValue??"_"}}
+
+
+														{% endfor %}
+													</td>
 												{% else %}
 													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
 
 
-														{{plan.planValue }}
+														<td>{{plan.planValue }}</td>
+														<td>{{plan.accompValue??"_"}}</td>
 
 													{% endfor %}
 												{% endif %}
 
 
-											</td>
-										{% endfor %}
-										<td>{{suitableplan.principalOffice}}</td>
-										<td>{{suitableplan.planningYear}}</td>
+											{% endfor %}
+
+										</tr>
 
 
-										<td>
+									{% endfor %}
+								</tr>
 
-											{% if suitableplan.planningAccomplishments|length > 0 %}
-												{# <a href="#" data-id="{{suitableplan.id}}" data-office="{{suitableplan.principalOffice.id}}" data-year="{{suitableplan.planningYear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
+							{% else %}
+								<tr>
+									<td colspan="8">no records found</td>
+								</tr>
+							{% endfor %}
 
-													<span class="glyphicon glyphicon-edit"></span>
+						</tbody>
+					</table>
+					{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
 
-
-												</a> #}
-												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitableplan.id}) }}">show</a>
-											{% else %}
-												<a class="btn btn-info btn-sm" title="show" href="{{ path('suitable_initiative_show', {'id': suitableplan.id}) }}">show</a>
-
-												
-
-											{% endif %}
-
-										</td>
-									</tr>
-								{% else %}
-									<tr>
-										<td colspan="8">no records found</td>
-									</tr>
-								{% endfor %}
-
-							</tbody>
-						</table>
-						{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
-
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-{% endblock %}
+</div>{% endblock %}

@@ -70,6 +70,22 @@ class InitiativeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    public function findBySuitable($office){
+        $qb=$this->createQueryBuilder('i');
+        $qb
+        ->select('i')
+        ->addSelect('s')
+        // ->join('i.principalOffice','po')
+        ->join('i.suitableInitiatives','s')
+        ->andWhere('s.principalOffice in(:soffice)')
+        //->andWhere('po.id = :office')
+        ->andwhere('i.isActive = 1')
+          ->setParameter('soffice',$office)
+        // ->setParameter('office',$office)
+        ;
+        return $qb->getQuery()->getResult();
+
+    }
     public function search($search=[]){
    
         $qb=$this->createQueryBuilder('i')

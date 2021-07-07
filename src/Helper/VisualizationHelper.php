@@ -20,13 +20,6 @@ class VisualizationHelper
 
 
 
-    // public function __construct(EntityManagerInterface $entityManager, PlanAchievementRepository $planAchievementRepository, GoalRepository $goalRepository, PlanningYearRepository $planningYearRepository)
-    // {
-    //     $this->entityManager = $entityManager;
-    //     $this->planAchievementRepository = $planAchievementRepository;
-    //     $this->goalRepository = $goalRepository;
-    //     $this->planningYearRepository = $planningYearRepository;
-    // }
     public static function  goal(EntityManagerInterface $em)
     {
         $datas = [];

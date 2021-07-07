@@ -7,7 +7,6 @@
     "editor.tabCompletion": "on",
     "editor.wrappingIndent": "indent",
     "editor.wrappingStrategy": "advanced",
-    "diffEditor.wordWrap": "on",
     "editor.defaultFormatter": "VisualStudioExptTeam.vscodeintellicode",
     "json.format.enable": false,
     "javascript.format.insertSpaceAfterCommaDelimiter": false,

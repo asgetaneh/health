@@ -144,8 +144,8 @@ class OperationalTaskController extends AbstractController
                         $performerTask->setDeligateBy($delegatedBy);
                     }
                     $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
-                    foreach($user->getOperationalManagers() as $op){
-                        $opOff=$op->getOperationalOffice();
+                    foreach ($user->getOperationalManagers() as $op) {
+                        $opOff = $op->getOperationalOffice();
                     }
                     // dd($opOff);
                     $performerTask->setOperationalOffice($opOff);
@@ -206,10 +206,10 @@ class OperationalTaskController extends AbstractController
         }
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
-// dd($currentYear);
+        // dd($currentYear);
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice,$currentYear);
+        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
         $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
