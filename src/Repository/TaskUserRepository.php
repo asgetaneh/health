@@ -77,7 +77,25 @@ class TaskUserRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+    public function findProgress($quarter,$currentYear,$principalOffice){
+        return $this->createQueryBuilder('t')
+           ->leftJoin('t.taskAssign','ta')
+           ->leftJoin('ta.PerformerTask','pt')
+           ->leftJoin('pt.PlanAcomplishment','pa')
+           ->leftJoin('pa.suitableInitiative','s')
+           ->leftJoin('s.planningYear','y')
+              ->andWhere('s.principalOffice = :principalOffice')
+            ->andWhere('y.ethYear = :currentYear')
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('principalOffice', $principalOffice)
+            ->andWhere('pt.quarter = :quarter')
+           ->setParameter('quarter',$quarter)
+           ->orderBy('t.id', 'ASC')
+           // ->setMaxResults(10)
+           ->getQuery()
+           ->getResult();
+
+    }
     
 
     // /**

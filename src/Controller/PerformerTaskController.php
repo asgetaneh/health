@@ -23,6 +23,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DomCrawler\Image;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,6 +168,42 @@ class PerformerTaskController extends AbstractController
     public function show(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
+        $narativeForm = $this->createFormBuilder()
+        ->add('narrative', FileType::class, array(
+            'attr' => array(
+                'id'=>'filePhoto',
+                // 'class' => 'sr-only',
+            //  'accept' => 'image/jpeg,image/png,image/jpg'
+            ),
+            'label'=>'',
+            
+            
+        ))
+        ->getForm();
+
+
+    $narativeForm->handleRequest($request);
+
+    if ($narativeForm->isSubmitted() && $narativeForm->isValid()) {
+        $taskPerformId=$request->request->get("id");
+        $taskAc=$taskAccomplishmentRepository->findOneBy(['taskUser'=>$taskPerformId]);
+        $taskUsers = $taskUserRepository->find($request->request->get('id'));
+        $taskUsers->setStatus(4);
+        $em = $this->getDoctrine()->getManager();
+        $uploadedFile = $narativeForm['narrative']->getData();
+        // dd($uploadedFile);
+
+        $destination = $this->getParameter('kernel.project_dir') . '/public/narrative';
+        $newFilename = $taskAc->getId().uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
+        $uploadedFile->move($destination, $newFilename);
+    //   dd($newFilename);
+        //$user=$this->getUser()->getUserInfo();
+         $taskUsers->setNarrative($newFilename);
+        $em->flush();
+        $this->addFlash("tsuccess","Narrative Report Successfully uploaded !!");
+        return $this->redirectToRoute('performer_task_index');
+
+     }
         if ($taskAcoompId = $request->request->get('taskAcoompId')) {
             $editedReportValue = $request->request->get('editedReportValue');
             $taskAcoompId = $request->request->get('taskAcoompId');
@@ -218,6 +255,8 @@ class PerformerTaskController extends AbstractController
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
+            'narativeForm'=>$narativeForm->createView()
+
         ]);
     }
     /**

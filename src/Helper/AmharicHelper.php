@@ -2,6 +2,9 @@
 namespace App\Helper;
 use DateTime;
 use Andegna\DateTime as AD;
+use App\Entity\PlanningQuarter;
+use Doctrine\ORM\EntityManagerInterface;
+
 class AmharicHelper 
 {
     public static function fromGretoEthstr($gregorian)
@@ -51,4 +54,20 @@ class AmharicHelper
         // dump($gregorian);
         return $ethipic->format(DATE_ATOM);
     }
+    public static function getCurrentQuarter( EntityManagerInterface $em
+    )
+    {
+        $quarterId=0;
+        $time = new DateTime('now');
+
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+            }
+        }
+        return $quarterId;
+
+    }
+    
 }

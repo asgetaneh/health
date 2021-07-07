@@ -80,73 +80,85 @@
 										<th>Office</th>
 
 										<th>actions</th>
+
 										<th>Report to Principal Office</th>
+										<th>Status</th>
+
 
 									</tr>
 								</thead>
 								<tbody>
 									{% set count =  suitableInitiatives.getItemNumberPerPage() * (suitableInitiatives.getCurrentPageNumber() -1) %}
 
+									{% set task = 0 %}
 
 									{% for suitableInitiative in suitableInitiatives %}
 
 										<tr>
 											{% set count = count + 1 %}
+
 											<td>{{ count}}</td>
 											<td>{{ suitableInitiative.initiative.name }}</td>
 
 											<td>{{ suitableInitiative.principalOffice.name  }}</td>
 
-
 											<td>
 												<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
-
-
 													Assign
 												</a>
 											</td>
+
 											<td>
-												{# <div class="row">
-													{% for item in suitableInitiative.initiative.socialAtrribute  %}
 
-														{% set status = 0 %}
-														<form action="{{path('acomplishment_task_detail_social')}}" method="post" class="">
-
-															<input type="hidden" name="suitId" value="{{suitableInitiative.id}}">
-															<input type="hidden" name="social" value="{{item.id}}">
-															<div class="col-md-6">
-
-																<button type="submit" title="show" class="btn btn-success btn-sm inline-d">
-																	Send
-																	{{item.name}}
-																</button>
-															</div>
-														</form>
-
-													{% endfor %}
-												</div> #}
-
-												{# {% if status == 1 %} #}
-													<a href="{{ path('acomplishment_task_detail', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-success btn-sm">
-														View
-													</a>
+												<a href="{{ path('acomplishment_task_detail', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-success btn-sm">
+													View
+												</a>
 												{# {% endif %} #}
 											</td>
-										</tr>
-									</td>
-								</tbody>
-							</tr>
-							{% set status = 1 %}
-						{% else %}
-							<tr>
-								<td colspan="8">no records found</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(suitableInitiatives) }}</div>
+											<td>
+												{% for performerTask in performerTasks %}
+													{% if loop.first %}
 
+														{% if performerTask.planAcomplishment.suitableInitiative.id == suitableInitiative.id %}
+															<h6 class="badge badge-success ">created</h6>
+														{% endif %}
+													{% endif %}
+												{% endfor %}
+												{% for taskUsers in taskUserss %}
+													{% if loop.first %}
+
+														{% if taskUsers.taskAssign.Performertask.planAcomplishment.suitableInitiative.id == suitableInitiative.id %}
+
+															<h6 class="badge badge-primary">assign</h6>
+															{% if taskUsers.taskAssign.Performertask.status == 0 %}
+
+																<h6 class="badge badge-danger">Send
+																</h6>
+
+
+															{% endif %}
+														{% endif %}
+													{% endif %}
+
+												{% endfor %}
+
+											</td>
+
+										</tr>
+
+									{% else %}
+										<tr>
+											<td colspan="8">no records found</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(suitableInitiatives) }}</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div></div></div>{% endblock %}
+{% endblock %}

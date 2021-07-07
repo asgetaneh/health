@@ -133,13 +133,12 @@ class LdapUserProvider implements UserProviderInterface
 
             $user->setUsername($username);
             $user->setRoles(['staff']);
-                        $user->setStatus(0);
+             $user->setStatus(0);
             $this->entityManager->persist($user);
             //$this->entityManager->flush();
-
             $userinfo->setUser($user);
         // $userinfo->setMobile($mobile);
-       $userinfo->setEmail($email);
+         $userinfo->setEmail($email);
         // $userinfo->setEmployeeNumber($employeeNumber);
         $userinfo->setFullName($fullName);
         $this->entityManager->persist($userinfo);

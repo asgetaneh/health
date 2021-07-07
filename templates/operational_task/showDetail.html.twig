@@ -121,6 +121,7 @@
 											<th>EndDate</th>
 											<th>TimeGap</th>
 											<th>Chalenge</th>
+											<th>Narrative Report</th>
 											<th>Measurement</th>
 
 										</tr>
@@ -139,6 +140,10 @@
 												<td>{{ taskUser.taskAssign.endDate }}</td>
 												<td>{{ taskUser.taskAssign.timeGap}}</td>
 												<td>{{ taskUser.note}}</td>
+												<td>
+													<a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank" height="600">
+														Narrative Report</a>
+												</td>
 
 												<td>
 

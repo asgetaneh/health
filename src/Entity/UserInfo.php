@@ -36,10 +36,7 @@ class UserInfo
      */
     private $email;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $mobile;
+ 
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -103,17 +100,7 @@ class UserInfo
         return $this;
     }
 
-    public function getMobile(): ?string
-    {
-        return $this->mobile;
-    }
-
-    public function setMobile(?string $mobile): self
-    {
-        $this->mobile = $mobile;
-
-        return $this;
-    }
+  
 
     public function getEmployeeNumber(): ?string
     {

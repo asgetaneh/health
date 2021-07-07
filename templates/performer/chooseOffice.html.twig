@@ -21,34 +21,41 @@
 
 							<div class="row">
 								{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-							<div class="col-md-4">
-								<div class="form-group form-group-sm">
-									{{ form_label(filterform.phoneNumber,'Phone Number ') }}
-									{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'' }}) }}
+								<div class="col-md-4">
+									<div class="form-group form-group-sm">
+										{{ form_label(filterform.phoneNumber,'Phone Number ') }}
+										{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'' }}) }}
+									</div>
 								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group form-group-sm">
-									{{ form_label(filterform.stafType,'Staff Type') }}
-									{{ form_widget(filterform.stafType,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
+								<div class="col-md-4">
+									<div class="form-group form-group-sm">
+										{{ form_label(filterform.alternativeEmail,'Alternative Email ') }}
+										{{ form_widget(filterform.alternativeEmail,{'attr':{'class':' Alternative Email form-control ','data-placeholder':'' }}) }}
+									</div>
 								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group form-group-sm">
-									{{ form_label(filterform.principalOffice,'Principal Office ') }}
-									{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
+
+								<div class="col-md-4">
+									<div class="form-group form-group-sm">
+										{{ form_label(filterform.stafType,'Staff Type') }}
+										{{ form_widget(filterform.stafType,{'attr':{'class':'select2 form-control ','data-placeholder':'' }}) }}
+									</div>
 								</div>
-							</div>
+								<div class="col-md-4">
+									<div class="form-group form-group-sm">
+										{{ form_label(filterform.principalOffice,'Principal Office ') }}
+										{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
+									</div>
+								</div>
 
-							<div class="col-md-4">
-								<label class="form-controll">Operational Office</label>
+								<div class="col-md-4">
+									<label class="form-controll">Operational Office</label>
 
-								<select name="oper" class="oper select2" required></select>
+									<select id="oper" name="oper" class="oper " required="required"></select>
+								</div>
 
-
-								<div class="col-md-1">
+								<div class="col-md-2">
 									<div class="form-group" style="margin-top:25px;">
-										<input type="submit" class="btn btn-primary btn-sm " value="Choose">
+										<input type="submit" class="btn btn-primary btn-sm " value="Choose" onclick="return confirm('Are you sure choose your Principal and Operational Office ?');">
 									</div>
 								</div>
 								{{form_end(filterform)}}
@@ -63,10 +70,10 @@
 {% endblock %}
 {% block javascripts %}
 	<script>
-    $(()=>{
-        $('.principal').trigger('change')
-    })
-		$('.principal').change(function () {
+		$(() => {
+$('.principal').trigger('change')
+})
+$('.principal').change(function () {
 var principal = $('.principal').val()
 // console.log(principal)
 var select = $('.oper')
@@ -84,6 +91,7 @@ for (let [key, value] of Object.entries(data)) {
 
 
 select.append('<option>' + value.name + '</option>');
+$("#oper").prop("required", true)
 
 
 }

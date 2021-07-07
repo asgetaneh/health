@@ -63,6 +63,11 @@ class TaskAccomplishment
      */
     private $evaluations;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $narrative;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -187,6 +192,18 @@ class TaskAccomplishment
                 $evaluation->setTaskAccomplishment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNarrative(): ?string
+    {
+        return $this->narrative;
+    }
+
+    public function setNarrative(?string $narrative): self
+    {
+        $this->narrative = $narrative;
 
         return $this;
     }
