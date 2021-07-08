@@ -123,7 +123,9 @@ class OperationalTaskController extends AbstractController
                 $endYear = AmharicHelper::getCurrentYearPara($endYear);
                 $quarterStartMonth = AmharicHelper::getCurrentMonth();
                 $quarterStartMonth = explode('-', $quarterStartMonth);
-
+                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+// dd($endYear,$quarterEndMonth,$quarterEndDate);
                 //   $startDate1=DateTimeFactory::of($startYear,$currentMonth,$quarterStartDate);
                 // dd($quarterStartMonth[1]);
                 $minDate = $startYear . ',' . $quarterStartMonth[1] . ',' . $quarterStartDate;
