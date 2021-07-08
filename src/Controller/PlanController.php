@@ -206,13 +206,16 @@ class PlanController extends AbstractController
 
         if ($request->request->get('id')) {
 
-            $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('id'));
+            $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findwithPlan($request->request->get('id'));
+            $plan=$em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableInitiative);
+            
             $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
-
+           
             // dd( count($initiative->getInitiativeBehaviour()),count($initiative->getSocialAtrribute()));
             $res = $this->renderView("plan/plan.modal.html.twig", [
                 "suitableInitiative" =>  $suitableInitiative, 'quarters' => $quarters,
-                'initiative' => $initiative
+                'initiative' => $initiative,
+                'plans'=>$plan
             ]);
             return new Response($res);
         }

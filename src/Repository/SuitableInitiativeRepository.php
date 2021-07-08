@@ -134,5 +134,17 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+     public function findwithPlan($id){
+        $qb=$this->createQueryBuilder('i');
+        $qb
+        ->select('i')
+        ->addSelect('p as plan')
+        ->leftJoin('i.planningAccomplishments','p')
+        ->andWhere('i.id  =:id')
+        // ->andwhere('i.isActive = 1')
+        ->setParameter('id',$id);
+        return $qb->getQuery()->getOneOrNullResult();
+
+    }
     
 }

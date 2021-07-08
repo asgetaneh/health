@@ -166,7 +166,10 @@ INSERT IGNORE INTO `permission` (`name`, `code`, `description`) VALUES
 -- plan
 
 ( 'View All principal Office Plan', 'vw_all_pln', 'View All principal Office Plan'),
-( 'Add plan and Casceding', 'csc_nd_pln', 'Add plan and Casceding'),
+( 'Add plan and Casceding', 'csc_nd_pln', 'Add plan and Casceding')
+( 'Add plan ', 'add_pln', 'Add plan ')
+( 'Edit plan ', 'edt_pln', 'edit plan ')
+,
 
 
 -- delegation

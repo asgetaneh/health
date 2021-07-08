@@ -219,19 +219,27 @@
 									<td>
 
 										{% if suitableplan.planningAccomplishments|length > 0 %}
+                                        {% if is_granted('edt_pln') %}
+                                        
+                                       
 											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
 
 												<span class="glyphicon glyphicon-edit"></span>
 
 
 											</a>
+                                             {% endif %}
 										{% else %}
+                                        {% if is_granted('add_pln') %}
+                                        
+                                        
 											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
 
 
 												<span class="glyphicon glyphicon-plus"></span>
 
 											</a>
+                                            {% endif %}
 
 										{% endif %}
 

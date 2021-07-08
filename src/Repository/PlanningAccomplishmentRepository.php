@@ -70,8 +70,8 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
     public function findBySuitable($suitable)
     {
         $qb = $this->createQueryBuilder('pa');
-        $qb->join('pa.plan', 'pl')
-            ->andwhere('pl.suitableInitiative in (:suitin)')
+        $qb
+            ->andwhere('pa.suitableInitiative =:suitin')
             ->setParameter('suitin', $suitable);
         return $qb->getQuery()->getResult();
     }

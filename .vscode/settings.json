@@ -19,5 +19,8 @@
     },
     "[php]": {
         "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
-    }
+    },
+    "diffEditor.wordWrap": "off",
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.autoIndent": "advanced"
 }

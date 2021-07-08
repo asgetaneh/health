@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row">
-		<div class="col-sm-4">
-			<div class="wrapper fadeInDown" style="height: 450px; width: 450px">
+	<div class="row" style="margin-bottom:40px;">
+		<div class="col-sm-4" style="margin-top:20px;">
+			<div class="wrapper fadeInDown" style="height: 400px; width: 400px">
 				<div id="formContent">
-					<div class="fadeIn first">
-						<img src="{{ asset('image/loginlogo.png') }}" id="icon" alt="User Icon" style="width: 300px; height: 280px"/>
+					<div class="fadeIn first" style="margin-top:20px;">
+						<img src="{{ asset('image/loginlogo.png') }}" id="icon" alt="User Icon" style="width: 250px; height: 250px"/>
 					<form method="post">
 						{% if error %}
 							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -48,7 +48,7 @@
 						</button>
 					</form>
 					<div id="formFooter">
-						<a class="underlineHover" href="#">Forgot Password?</a>
+						<a class="underlineHover" href="https://uas.ju.edu.et">Forgot Password?</a>
 					</div>
 					</div>
 
