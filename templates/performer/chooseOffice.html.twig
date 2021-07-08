@@ -23,8 +23,13 @@
 								{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
 								<div class="col-md-4">
 									<div class="form-group form-group-sm">
-										{{ form_label(filterform.phoneNumber,'Phone Number ') }}
-										{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'' }}) }}
+										<label class="form-controll">Phone Number(+251924XXXXXX)
+										</label>
+
+										<input
+										type="tel"   class="form-control"  placeholder="+251924XXXXXX" name="phoneNumber" pattern="[+]{1}[0-9]{12}" required>
+									{# {{ form_label(filterform.phoneNumber,'Phone Number ') }}
+																																																																		{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'', 'min':'10' }}) }} #}
 									</div>
 								</div>
 								<div class="col-md-4">

@@ -19,11 +19,11 @@ class UserGroupController extends AbstractController
     /**
      * @Route("/", name="user_group_index", methods={"GET"})
      */
-    public function index(UserGroupRepository $userGroupRepository,Request $request,PaginatorInterface $paginator): Response
+    public function index(UserGroupRepository $userGroupRepository, Request $request, PaginatorInterface $paginator): Response
     {
-       // $this->denyAccessUnlessGranted("sm_user");
-          $user_groups= $userGroupRepository->findAll();
-       $data = $paginator->paginate(
+        $this->denyAccessUnlessGranted("vw_usr_grp");
+        $user_groups = $userGroupRepository->findAll();
+        $data = $paginator->paginate(
             $user_groups,
             $request->query->getInt('page', 1),
             5
@@ -31,7 +31,6 @@ class UserGroupController extends AbstractController
         return $this->render('user_group/index.html.twig', [
             'user_groups' => $data,
         ]);
-    
     }
 
     /**
@@ -39,7 +38,7 @@ class UserGroupController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        // $this->denyAccessUnlessGranted("sm_user");
+        $this->denyAccessUnlessGranted("vw_usr_grp");
         $userGroup = new UserGroup();
         $form = $this->createForm(UserGroupType::class, $userGroup);
         $form->handleRequest($request);
@@ -76,6 +75,8 @@ class UserGroupController extends AbstractController
      */
     public function edit(Request $request, UserGroup $userGroup): Response
     {
+
+        $this->denyAccessUnlessGranted("vw_usr_grp");
         $form = $this->createForm(UserGroupType::class, $userGroup);
         $form->handleRequest($request);
 
@@ -96,7 +97,8 @@ class UserGroupController extends AbstractController
      */
     public function delete(Request $request, UserGroup $userGroup): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$userGroup->getId(), $request->request->get('_token'))) {
+        $this->denyAccessUnlessGranted("vw_usr_grp");
+        if ($this->isCsrfTokenValid('delete' . $userGroup->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($userGroup);
             $entityManager->flush();

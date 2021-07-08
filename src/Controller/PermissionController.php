@@ -19,15 +19,17 @@ class PermissionController extends AbstractController
     /**
      * @Route("/", name="permission_index", methods={"GET"})
      */
-    public function index(Request $request, PermissionRepository $permissionRepository,PaginatorInterface $paginator): Response
+    public function index(Request $request, PermissionRepository $permissionRepository, PaginatorInterface $paginator): Response
     {
-    $permissions = $permissionRepository->findAll();
+
+        $this->denyAccessUnlessGranted("vw_usr_per");
+        $permissions = $permissionRepository->findAll();
         $data = $paginator->paginate(
             $permissions,
             $request->query->getInt('page', 1),
             10
         );
-       
+
         return $this->render('permission/index.html.twig', [
             'permissions' => $data,
         ]);
@@ -38,6 +40,7 @@ class PermissionController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted("vw_usr_per");
         $permission = new Permission();
         $form = $this->createForm(PermissionType::class, $permission);
         $form->handleRequest($request);
@@ -61,6 +64,7 @@ class PermissionController extends AbstractController
      */
     public function show(Permission $permission): Response
     {
+        $this->denyAccessUnlessGranted("vw_usr_per");
         return $this->render('permission/show.html.twig', [
             'permission' => $permission,
         ]);
@@ -71,6 +75,8 @@ class PermissionController extends AbstractController
      */
     public function edit(Request $request, Permission $permission): Response
     {
+        $this->denyAccessUnlessGranted("vw_usr_per");
+
         $form = $this->createForm(PermissionType::class, $permission);
         $form->handleRequest($request);
 
@@ -91,7 +97,8 @@ class PermissionController extends AbstractController
      */
     public function delete(Request $request, Permission $permission): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$permission->getId(), $request->request->get('_token'))) {
+        $this->denyAccessUnlessGranted("vw_usr_per");
+        if ($this->isCsrfTokenValid('delete' . $permission->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($permission);
             $entityManager->flush();
