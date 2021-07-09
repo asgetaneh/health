@@ -18,47 +18,47 @@ class PerformerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Performer::class);
     }
-public function findAllsUser($user)
+    public function findAllsUser($user)
     {
 
         //dd($productNmae);
-        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice','oo')
-          ->leftJoin('oo.principalOffice','po')
-         ->leftJoin('s.performer','u')
-         ->leftJoin('u.userInfo','ui')
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice', 'oo')
+            ->leftJoin('oo.principalOffice', 'po')
+            ->leftJoin('s.performer', 'u')
+            ->leftJoin('u.userInfo', 'ui')
 
-            ->Select('ui.fullName')  
-           
+            ->Select('ui.fullName')
+
             ->addSelect('u.id')
             ->andWhere('po.id = :val')
             ->setParameter('val', $user)
             ->orderBy('s.id', 'ASC')
-          
+
             ->getQuery()
-            
+
             ->getResult();
     }
     public function filterDeliverBy($user)
     {
 
         //dd($productNmae);
-        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice','oo')
-          ->leftJoin('oo.principalOffice','po')
-         ->leftJoin('s.performer','u')
-         ->leftJoin('u.userInfo','ui')
+        return $this->createQueryBuilder('s')->leftJoin('s.operationalOffice', 'oo')
+            ->leftJoin('oo.principalOffice', 'po')
+            ->leftJoin('s.performer', 'u')
+            ->leftJoin('u.userInfo', 'ui')
 
-            ->Select('ui.fullName')  
-           
+            ->Select('ui.fullName')
+
             ->addSelect('u.id')
             ->andWhere('po.id = :val')
             ->setParameter('val', $user)
             ->orderBy('s.id', 'ASC')
-          
+
             ->getQuery()
-            
+
             ->getResult();
     }
-    
+
     // /**
     //  * @return Performer[] Returns an array of Performer objects
     //  */
@@ -87,17 +87,48 @@ public function findAllsUser($user)
         ;
     }
     */
-     public function findActive($operationaloffice,$performer){
-        $qb=$this->createQueryBuilder('om');
-       
-             $qb->andWhere('om.operationalOffice = :po')
-             ->andwhere('om.performer = :manager')
-            
-             ->setParameter('manager',$performer)
-             ->setParameter('po',$operationaloffice);
-       
-       
+    public function findActive($operationaloffice, $performer)
+    {
+        $qb = $this->createQueryBuilder('om');
+
+        $qb->andWhere('om.operationalOffice = :po')
+            ->andwhere('om.performer = :manager')
+
+            ->setParameter('manager', $performer)
+            ->setParameter('po', $operationaloffice);
+
+
         return $qb->getQuery()->getResult();
-      
+    }
+    public function search($search = [])
+    {
+        $qb = $this->createQueryBuilder('p');
+        if (isset($search['name'])) {
+
+            $qb
+                ->join('p.performer', 'pr')
+                ->join('pr.userInfo', 'ui')
+
+                ->andWhere("ui.fullName  LIKE '%" . $search['name'] . "%' ");
+        }
+        if (isset($search['principaloffice']) && sizeof($search['principaloffice']) > 0) {
+
+
+            $qb
+                ->join('p.operationalOffice', 'o')
+
+                ->andWhere("o.principalOffice in(:po)")
+                ->setParameter('po', $search['principaloffice']);
+        }
+        if (isset($search['operationaloffice']) && sizeof($search['operationaloffice']) > 0) {
+
+
+            $qb
+                ->join('p.operationalOffice', 'o')
+
+                ->andWhere("o.id in (:id)")
+                ->setParameter('id', $search['operationaloffice']);
+        }
+        return $qb->getQuery();
     }
 }

@@ -34,6 +34,20 @@ class PerformerController extends AbstractController
         $this->denyAccessUnlessGranted('vw_prfm');
         $performer = new Performer();
         $form = $this->createForm(PerformerType::class, $performer);
+
+        $filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add('operationaloffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+                'multiple' => true,
+                'required'=>false,
+            ])
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required'=>false,
+            ])->getForm();
+        $filterForm->handleRequest($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,9 +85,16 @@ class PerformerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('performer_index');
         }
+        if ($request->query->get('search')) {
+            $query = $performerRepository->search(['name' => $request->query->get('search')]);
+        } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
+           
+            $query =  $performerRepository->search($filterForm->getData());
+        } else
+            $query = $performerRepository->findAll();
 
         $data = $paginator->paginate(
-            $performerRepository->findAll(),
+            $query,
             $request->query->getInt('page', 1),
             10
 
@@ -81,7 +102,8 @@ class PerformerController extends AbstractController
 
         return $this->render('performer/index.html.twig', [
             'performers' => $data,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'filterform' => $filterForm->createView()
 
         ]);
     }
@@ -121,14 +143,13 @@ class PerformerController extends AbstractController
             $phoneNumber = $data['phoneNumber'];
             $alternativeEmail = $data['alternativeEmail'];
 
-            $operatin=$request->request->get("oper"); 
+            $operatin = $request->request->get("oper");
             // dd($operatin);
-            if ($operatin== null) {
+            if ($operatin == null) {
 
                 $this->addFlash('danger', "Operational Office Not Choose ");
 
                 return $this->redirectToRoute('choose_office');
-              
             } else {
                 $operationalOffices = $operationalOfficeRepository->findOneBy(['name' => $request->request->get("oper")]);
                 // $operationalOffice=$operationalOffices->getId();
@@ -146,8 +167,6 @@ class PerformerController extends AbstractController
                 $this->addFlash('success', "Successfully update your Information ");
 
                 return $this->redirectToRoute('startegic_plan');
-
-               
             }
         }
         return $this->render('performer/chooseOffice.html.twig', [

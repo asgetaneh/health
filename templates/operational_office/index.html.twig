@@ -44,113 +44,119 @@
 							</div>
 						</div>
 					</div>
-                    
+
 					<div class="widget-main padding-16">
-                    <div class="row">
-						<div class="search-area well col-md-12">
+						<div class="row">
+							<div class="search-area well col-md-12">
 
-							<div class="row">
-								
+								<div class="row">
+									{{ form_start(filterform) }}
+
+									<div class="form-group col-md-6" style="display:inline;">
+										{{ form_label(filterform.principaloffice," Principal Office") }}
+										{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
 									
 
+									</div>
+                                    <button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;" >{% trans %}filter{% endtrans %}</button>
+                                   	{{ form_end(filterform) }}
 
-									
+								</div>
+
+
 							</div>
 
+							<div class="table-responsive col-md-12 col-sm-12 col-xs-12 col-lg-12">
+								<form class="form-inline" method="get" style="display:inline;margin-bottom:15px;">
 
-						</div>
-                      
-						<div class="table-responsive col-md-12 col-sm-12 col-xs-12 col-lg-12">
-							<form class="form-inline" method="get" style="display:inline;margin-bottom:15px;">
-
-								<div class="input-group">
-									<input type="text" class="form-control" name="search" placeholder="Search">
-									<div class="input-group-btn">
-										<button type="submit" class="btn btn-default no-border btn-sm">
-											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-										</button>
-									</div>
-								</div>
-							</form>
-							<table class="table table-striped table-bordered table-hover" style="margin-top:15px;">
-
-								<thead>
-									<tr></tr>
-									<tr>
-										<th>#</th>
-										<th>Name</th>
-										<th>Manager</th>
-										<th>Principal Office</th>
-										<th>Status</th>
-
-										<th>Description</th>
-										<th>actions</th>
-									</tr>
-								</thead>
-							</tr>
-						</thead>
-						<tbody>
-							{% set count =  operational_offices.getItemNumberPerPage() * (operational_offices.getCurrentPageNumber() -1) %}
-							{% for operational_office in operational_offices %}
-								<tr>
-									{% set count = count + 1 %}
-									<td>{{ count }}</td>
-									<td>{{ operational_office.name }}</td>
-									<td>
-										{% for director in  
-                                        operational_office.operationalManagers %}
-											{{director.manager.userInfo}}
-										{% endfor %}
-
-									</td>
-									<td>{{ operational_office.principalOffice}}</td>
-
-									<td>
-										{% if operational_office.isActive %}
-											<span class="label label-success">Active</span>
-										{% else %}
-											<span class="label label-danger">deactive</span>
-
-										{% endif %}
-
-									</td>
-									{# <td>{{ operational_office.createAt ? operational_office.createAt|date('d-M-Y') : '' }}</td> #}
-									<td>{{ operational_office.description }}</td>
-									<td>
-										<a class="btn btn-primary btn-sm" href="{{ path('operational_office_show', {'id': operational_office.id}) }}" title="view details">
-											<i class="fa fa-eye"></i>
-										</a>
-										<a class="btn btn-warning btn-sm" href="{{ path('operational_office_edit', {'id': operational_office.id}) }}" title="edit">
-											<i class="fa fa-edit"></i>
-										</a>
-										<form class="" style="display:inline;" action="" method="post">
-
-
-											<input type="hidden" name="{{operational_office.isActive ?"deactive":"active"}}" value="{{ operational_office.id}}">
-											<button title="{{operational_office.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{operational_office.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{operational_office.isActive?" deactivate":" activate"}}')">
-												<span class="{{operational_office.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+									<div class="input-group">
+										<input type="text" class="form-control" name="search" placeholder="Search">
+										<div class="input-group-btn">
+											<button type="submit" class="btn btn-default no-border btn-sm">
+												<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
 											</button>
+										</div>
+									</div>
+								</form>
+								<table class="table table-striped table-bordered table-hover" style="margin-top:15px;">
 
-										</form>
-									</td>
-								</tr>
-							{% else %}
-								<tr>
-									<td colspan="6">no records found</td>
-								</tr>
-							{% endfor %}
+									<thead>
+										<tr></tr>
+										<tr>
+											<th>#</th>
+											<th>Name</th>
+											<th>Manager</th>
+											<th>Principal Office</th>
+											<th>Status</th>
 
-						</tbody>
-					</table>
-					<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operational_offices) }}</div>
+											<th>Description</th>
+											<th>actions</th>
+										</tr>
+									</thead>
+								</tr>
+							</thead>
+							<tbody>
+								{% set count =  operational_offices.getItemNumberPerPage() * (operational_offices.getCurrentPageNumber() -1) %}
+								{% for operational_office in operational_offices %}
+									<tr>
+										{% set count = count + 1 %}
+										<td>{{ count }}</td>
+										<td>{{ operational_office.name }}</td>
+										<td>
+											{% for director in  
+                                        operational_office.operationalManagers %}
+												{{director.manager.userInfo}}
+											{% endfor %}
+
+										</td>
+										<td>{{ operational_office.principalOffice}}</td>
+
+										<td>
+											{% if operational_office.isActive %}
+												<span class="label label-success">Active</span>
+											{% else %}
+												<span class="label label-danger">deactive</span>
+
+											{% endif %}
+
+										</td>
+										{# <td>{{ operational_office.createAt ? operational_office.createAt|date('d-M-Y') : '' }}</td> #}
+										<td>{{ operational_office.description }}</td>
+										<td>
+											<a class="btn btn-primary btn-sm" href="{{ path('operational_office_show', {'id': operational_office.id}) }}" title="view details">
+												<i class="fa fa-eye"></i>
+											</a>
+											<a class="btn btn-warning btn-sm" href="{{ path('operational_office_edit', {'id': operational_office.id}) }}" title="edit">
+												<i class="fa fa-edit"></i>
+											</a>
+											<form class="" style="display:inline;" action="" method="post">
+
+
+												<input type="hidden" name="{{operational_office.isActive ?"deactive":"active"}}" value="{{ operational_office.id}}">
+												<button title="{{operational_office.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{operational_office.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{operational_office.isActive?" deactivate":" activate"}}')">
+													<span class="{{operational_office.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+												</button>
+
+											</form>
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="6">no records found</td>
+									</tr>
+								{% endfor %}
+
+							</tbody>
+						</table>
+						<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operational_offices) }}</div>
+
+					</div>
 
 				</div>
-
 			</div>
-		</div>
 
+		</div>
 	</div>
-      </div>
 </div></div><div id="myModal" class="modal fade" role="dialog">
 <div
 	class="modal-dialog">

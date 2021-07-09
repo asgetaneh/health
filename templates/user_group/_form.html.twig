@@ -6,23 +6,23 @@
 
 <div class="row">
 
-	<div class="col-md-4">
+	<div class="col-md-8">
 		<div class="form-group">
 			<label class="floating-label" for="Name">UserGroup Name </label>
 			{{ form_widget(form.name,{'attr':{'class':'form-control price','required' : 'true'}}) }}
 		</div>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-12">
 		<div class="form-group fill">
 			<label class="floating-label">Description</label>
 			{{ form_widget(form.description,{'attr':{'class':'form-control price'}}) }}
 		</div>
 	</div>
 
-	<div class="col-md-12">
-		<button class="btn btn-primary float-right form-controll">{{ button_label|default('Save') }}</button>
+	
+		<button class="btn btn-primary  pull-right" style="display:inline">{{ button_label|default('Save') }}</button>
 
-	</div>
+
 
 
 </div>

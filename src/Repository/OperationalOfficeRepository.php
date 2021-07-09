@@ -73,6 +73,13 @@ class OperationalOfficeRepository extends ServiceEntityRepository
 
                 ->andWhere("o.name  LIKE '%" . $search['name'] . "%' ");
         }
+        if (isset($search['principaloffice'])) {
+
+            $qb
+
+                ->andWhere("o.principalOffice in(:po)")
+                ->setParameter('po', $search['principaloffice']);
+        }
         return $qb->getQuery();
     }
 }

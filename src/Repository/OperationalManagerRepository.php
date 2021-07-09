@@ -64,4 +64,35 @@ class OperationalManagerRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
       
     }
+    public function search($search = [])
+    {
+        $qb = $this->createQueryBuilder('p');
+        if (isset($search['name'])) {
+
+            $qb
+                ->join('p.manager', 'pr')
+                ->join('pr.userInfo', 'ui')
+
+                ->andWhere("ui.fullName  LIKE '%" . $search['name'] . "%' ");
+        }
+        if (isset($search['principaloffice']) && sizeof($search['principaloffice']) > 0) {
+
+
+            $qb
+                ->join('p.operationalOffice', 'o')
+
+                ->andWhere("o.principalOffice in(:po)")
+                ->setParameter('po', $search['principaloffice']);
+        }
+        if (isset($search['operationaloffice']) && sizeof($search['operationaloffice']) > 0) {
+
+
+            $qb
+                ->join('p.operationalOffice', 'o')
+
+                ->andWhere("o.id in (:id)")
+                ->setParameter('id', $search['operationaloffice']);
+        }
+        return $qb->getQuery();
+    }
 }

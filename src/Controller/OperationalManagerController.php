@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\OperationalManager;
+use App\Entity\OperationalOffice;
+use App\Entity\PrincipalOffice;
 use App\Form\OperationalManagerType;
 use App\Repository\OperationalManagerRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +28,20 @@ class OperationalManagerController extends AbstractController
         $operationalManager = new OperationalManager();
         $form = $this->createForm(OperationalManagerType::class, $operationalManager);
         $form->handleRequest($request);
+
+        $filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add('operationaloffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+                'multiple' => true,
+                'required'=>false,
+            ])
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required'=>false,
+            ])->getForm();
+        $filterForm->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('ad_opr_mng');
@@ -74,15 +91,26 @@ class OperationalManagerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('operational_manager_index');
         }
+
+         if ($request->query->get('search')) {
+            $query = $operationalManagerRepository->search(['name' => $request->query->get('search')]);
+        } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
+           
+            $query =  $operationalManagerRepository->search($filterForm->getData());
+        } else
+            $query = $operationalManagerRepository->findAll();
+
         $data = $paginator->paginate(
-            $operationalManagerRepository->findAll(),
+            $query,
             $request->query->getInt('page', 1),
             10
 
         );
+       
         return $this->render('operational_manager/index.html.twig', [
             'operational_managers' => $data,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+             'filterform' => $filterForm->createView()
         ]);
     }
 

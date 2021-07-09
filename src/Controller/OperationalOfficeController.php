@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\OperationalOffice;
+use App\Entity\PrincipalOffice;
 use App\Form\OperationalOfficeType;
 use App\Repository\OperationalOfficeRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +25,16 @@ class OperationalOfficeController extends AbstractController
     public function index(OperationalOfficeRepository $operationalOfficeRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $this->denyAccessUnlessGranted('vw_opof');
+        $filterForm=$this->createFormBuilder()
+         ->setMethod('Get')
+        ->add('principaloffice',EntityType::class,[
+            'class'=>PrincipalOffice::class,
+            'multiple'=>true
+        ])->getForm();
+        $filterForm->handleRequest($request);
+
+
+
         $operationalOffice = new OperationalOffice();
         $form = $this->createForm(OperationalOfficeType::class, $operationalOffice);
         $form->handleRequest($request);
@@ -59,7 +71,12 @@ class OperationalOfficeController extends AbstractController
         }
         if ($request->query->get('search')) {
             $query = $operationalOfficeRepository->search(['name' => $request->query->get('search')]);
-        } else
+        } 
+        elseif($filterForm->isSubmitted() && $filterForm->isValid()){
+            // dd($filterForm->getData()['principaloffice']);
+              $query = $operationalOfficeRepository->search($filterForm->getData());
+        }
+        else
             $query = $operationalOfficeRepository->findAll();
         $data = $paginator->paginate(
             $query,
@@ -71,7 +88,8 @@ class OperationalOfficeController extends AbstractController
         return $this->render('operational_office/index.html.twig', [
             'operational_offices' => $data,
 
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'filterform'=>$filterForm->createView()
         ]);
     }
 
