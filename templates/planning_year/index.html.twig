@@ -15,24 +15,24 @@
 						<strong>Planning Year</strong>
 					</h5>
 					<div class="widget-toolbar">
-                    
+
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
 							<strong>{{planning_years|length}}</strong>
 						</span>
-					
+
 					</div>
-                    <div class="widget-toolbar">
-                    
+					<div class="widget-toolbar">
+
 						<form action="{{path('sms_send')}}" method="post">
 							<button type="submit" name="send" class="btn btn-success">
-								            Plan Announcment
+								Plan Announcment
 							</button>
 						</form>
-					
+
 					</div>
-                    	
+
 				</div>
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
@@ -54,6 +54,7 @@
 									<tr>
 										<th>#</th>
 										<th>Title</th>
+										<th>Ethiopian Year</th>
 										<th>Planning Year</th>
 										<th>Description</th>
 										<th>IsActive</th>
@@ -66,6 +67,7 @@
 										<tr>
 											<td>{{ planning_year.id }}</td>
 											<td>{{ planning_year.title }}</td>
+											<td>{{ planning_year.ethYear }}</td>
 											<td>{{ planning_year.year ? planning_year.year|date('Y') : '' }}</td>
 											<td>{{ planning_year.description }}</td>
 											<td>
@@ -135,6 +137,12 @@
 
 					</div>
 
+					<div class="form-group">
+						{{ form_label(form.ethYear,"Ethiopian year") }}
+						{{ form_widget(form.ethYear,{'attr':{ 'class': 'form-control ','placeholder':'2013'}}) }}
+
+					</div>
+
 
 					<div class="form-group">
 						{{ form_label(form.description) }}
@@ -154,3 +162,4 @@
 
 	</div>
 {% endblock %}
+{% block javascripts %}{% endblock %}
