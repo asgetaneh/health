@@ -278,6 +278,7 @@
 													</td>
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
 													<input type="hidden" class="user" value="{{app.user.id}}">
+                                                    <input type="hidden" class="quartertask" value="{{performerTask.quarter.id}}">
 													<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
 													<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
 
@@ -447,6 +448,7 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 			$(document).ready(function () {
 var task = $('.task').val();
 var user = $('.user').val();
+var quartertask= $('.quartertask').val();
 
 var select = $('.crtask')
 
@@ -455,7 +457,8 @@ url:"{{ path('task_fetch') }}",
 method: "POST",
 data: {
 task: task,
-user: user
+user: user,
+quartertask: quartertask
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()

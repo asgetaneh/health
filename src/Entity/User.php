@@ -207,6 +207,16 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=StaffType::class, inversedBy="users")
      */
     private $staffType;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mobile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $alternativeEmail;
     public function __construct()
     {
       
@@ -1306,6 +1316,30 @@ class User implements UserInterface
     public function setStaffType(?StaffType $staffType): self
     {
         $this->staffType = $staffType;
+
+        return $this;
+    }
+
+    public function getMobile(): ?string
+    {
+        return $this->mobile;
+    }
+
+    public function setMobile(?string $mobile): self
+    {
+        $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    public function getAlternativeEmail(): ?string
+    {
+        return $this->alternativeEmail;
+    }
+
+    public function setAlternativeEmail(?string $alternativeEmail): self
+    {
+        $this->alternativeEmail = $alternativeEmail;
 
         return $this;
     }

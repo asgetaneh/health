@@ -172,8 +172,8 @@ class PerformerTaskController extends AbstractController
         ->add('narrative', FileType::class, array(
             'attr' => array(
                 'id'=>'filePhoto',
-                'class' => 'sr-only',
-             'accept' => 'image/jpeg,image/png,image/jpg'
+                // 'class' => 'sr-only',
+            //  'accept' => 'image/jpeg,image/png,image/jpg'
             ),
             'label'=>'',
             

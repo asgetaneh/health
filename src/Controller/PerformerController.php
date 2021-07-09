@@ -14,6 +14,7 @@ use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,6 +107,10 @@ class PerformerController extends AbstractController
 
                 'required' => true
             ])
+            ->add('alternativeEmail', EmailType::class, [
+
+                'required' => false
+            ])
             ->getForm();
         $filterform->handleRequest($request);
 
@@ -114,6 +119,8 @@ class PerformerController extends AbstractController
             $data = $filterform->getData();
             $stafType = $data['stafType'];
             $phoneNumber = $data['phoneNumber'];
+            $alternativeEmail = $data['alternativeEmail'];
+
             $operatin=$request->request->get("oper"); 
             // dd($operatin);
             if ($operatin== null) {
@@ -129,13 +136,17 @@ class PerformerController extends AbstractController
                 $performer->setOperationalOffice($operationalOffices);
                 $performer->setPerformer($this->getUser());
                 $users = $userRepository->find($this->getUser()->getId());
-                $userInfo = $userInfoRepository->findOneBy(['user' => $users->getId()]);
+                // $userInfo = $userInfoRepository->findOneBy(['user' => $users->getId()]);
                 $users->setStaffType($stafType);
-                $userInfo->setMobile($phoneNumber);
+                $users->setMobile($phoneNumber);
+                $users->setAlternativeEmail($alternativeEmail);
                 $users->setStatus(1);
                 $em->persist($performer);
                 $em->flush();
+                $this->addFlash('success', "Successfully update your Information ");
+
                 return $this->redirectToRoute('startegic_plan');
+
                
             }
         }

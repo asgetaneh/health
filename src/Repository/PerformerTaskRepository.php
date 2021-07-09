@@ -18,7 +18,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PerformerTask::class);
     }
-     public function filterDeliverBy($plan,$user)
+     public function filterDeliverBy($plan,$user,$quarter)
     {
 
         //dd($productNmae);
@@ -35,7 +35,11 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->orderBy('s.id', 'ASC')->
             andWhere('su.id = :plan')
             ->setParameter('plan', $plan)
+            ->
+            andWhere('s.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
           ->andWhere('s.createdBy = :user')
+          ->andWhere('s.status = 1')
             ->setParameter('user', $user)
             ->getQuery()
             
@@ -154,7 +158,24 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
-    
+    public function findProgress($quarter,$currentYear,$principalOffice){
+        return $this->createQueryBuilder('pt')
+         
+           ->leftJoin('pt.PlanAcomplishment','pa')
+           ->leftJoin('pa.suitableInitiative','s')
+           ->leftJoin('s.planningYear','y')
+              ->andWhere('s.principalOffice = :principalOffice')
+            ->andWhere('y.ethYear = :currentYear')
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('principalOffice', $principalOffice)
+            ->andWhere('pt.quarter = :quarter')
+           ->setParameter('quarter',$quarter)
+           ->orderBy('pt.id', 'ASC')
+           // ->setMaxResults(10)
+           ->getQuery()
+           ->getResult();
+
+    }
 
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects

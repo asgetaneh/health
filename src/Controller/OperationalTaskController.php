@@ -37,11 +37,13 @@ use App\Entity\Initiative;
 use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
+use App\Entity\TaskUser;
 use App\Entity\User;
 use App\Helper\AmharicHelper;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
+use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
@@ -80,7 +82,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         // dd($user);
-     
+
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -105,8 +107,10 @@ class OperationalTaskController extends AbstractController
         $quarterName = 0;
         $quarters = $planningQuarterRepository->findAll();
         foreach ($quarters as $quarter) {
+        //   dump($time);
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+        //   dd($time,$quarter->getEndDate());
 
-            if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
                 $quarterId = $quarter->getId();
                 $quarterName = $quarter->getName();
                 $quarterStartMonth1 = $quarter->getStartMonth();
@@ -146,10 +150,14 @@ class OperationalTaskController extends AbstractController
                         $performerTask->setDeligateBy($delegatedBy);
                     }
                     $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
-                    foreach($user->getOperationalManagers() as $op){
-                        $opOff=$op->getOperationalOffice();
+                    foreach ($user->getOperationalManagers() as $op) {
+                        $opOff = $op->getOperationalOffice();
                     }
-                    // dd($opOff);
+                    // dd($maxcount);
+                    if ($maxcount > 5) {
+                        $this->addFlash('danger', 'Task must be less than 7 !');
+                        return $this->redirectToRoute('operational_task_index', ['id' => $suitableInitiative->getId()]);
+                    }
                     $performerTask->setOperationalOffice($opOff);
                     $performerTask->setCreatedBy($user);
                     $weight = $form->getData()->getWeight();
@@ -157,10 +165,7 @@ class OperationalTaskController extends AbstractController
                         $this->addFlash('danger', 'Weight must be less than 100 !');
                         return $this->redirectToRoute('operational_task_index', ['id' => $suitableInitiative->getId()]);
                     }
-                    if ($maxcount > 6) {
-                        $this->addFlash('danger', 'Task must be less than 7 !');
-                        return $this->redirectToRoute('operational_task_index', ['id' => $suitableInitiative->getId()]);
-                    }
+
                     $em->persist($performerTask);
                     $em->flush();
                     $this->addFlash('success', ' Task Created Successfully!');
@@ -209,10 +214,15 @@ class OperationalTaskController extends AbstractController
         }
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
-// dd($currentYear);
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+
+        // dd($currentQuarter);
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice,$currentYear);
+        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
+        $performerTasks=$em->getRepository(PerformerTask::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
+        $taskUsers=$em->getRepository(TaskUser::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
+
         $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
@@ -222,6 +232,8 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'suitableInitiatives' => $data,
             'count' => $suitableInitiatives,
+            'performerTasks'=>$performerTasks,
+            'taskUserss'=>$taskUsers,
         ]);
     }
 
@@ -637,7 +649,7 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
-        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user);
+        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user,$request->request->get('quartertask'));
         // dd($units);
 
         return new JsonResponse($units);

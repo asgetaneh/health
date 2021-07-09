@@ -75,8 +75,9 @@ $('#example').DataTable();
 									<tr>
 										<th>Id</th>
 										<th>Name</th>
-										<th>Email</th>
 										<th>Phone Number</th>
+										<th>Email</th>
+										<th>Alternative Email</th>
 
 
 									</tr>
@@ -91,8 +92,9 @@ $('#example').DataTable();
 
 											<td>{{count}}</td>
 											<td>{{ userinfo.fullName }}</td>
+											<td>{{ userinfo.user.mobile }}</td>
 											<td>{{ userinfo.email }}</td>
-											<td>{{ userinfo.mobile }}</td>
+											<td>{{ userinfo.user.alternativeEmail }}</td>
 
 
 										</tr>
