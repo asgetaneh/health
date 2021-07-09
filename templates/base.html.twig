@@ -541,6 +541,12 @@ ace.settings.loadState('sidebar')
 									<li class="active">{% trans %}Dashboard{% endtrans %}</li>
 
 								{% endblock %}
+                                {% if app.user.status == 0 %}
+                                <div class="badge badge-danger">
+                                please choose your office
+									</div>
+                                {% endif %}
+                                
 								{% for item in app.user.principalManagers|filter(pr=> pr.isActive == 1) %}
 									<div class="badge badge-success">
 										{{item.principalOffice.name}}

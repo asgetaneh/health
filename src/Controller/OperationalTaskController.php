@@ -216,12 +216,10 @@ class OperationalTaskController extends AbstractController
         }
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
-<<<<<<< HEAD
         // dd($currentYear);
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
         $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
-=======
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
 
         // dd($currentQuarter);
@@ -231,7 +229,6 @@ class OperationalTaskController extends AbstractController
         $performerTasks=$em->getRepository(PerformerTask::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
         $taskUsers=$em->getRepository(TaskUser::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
 
->>>>>>> ff7fa077577bee95b19562528a45e13580537d3b
         $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
