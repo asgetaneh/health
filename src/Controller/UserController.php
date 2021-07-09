@@ -22,7 +22,7 @@ class UserController extends AbstractController
      */
     public function index(UserGroupRepository $userGroupRepository,Request $request,PaginatorInterface $paginator): Response
     {
-       // $this->denyAccessUnlessGranted("sm_user");
+       $this->denyAccessUnlessGranted("vw_usr_lst");
                     $user_groups= $userGroupRepository->findAll();
        $data = $paginator->paginate(
             $user_groups,
@@ -40,7 +40,7 @@ class UserController extends AbstractController
      */
     public function userList( Request $request, PaginatorInterface $paginator, UserInfoRepository $userInfoRepository): Response
     {
-        // $this->denyAccessUnlessGranted("sm_user");
+        $this->denyAccessUnlessGranted("vw_usr_lst");
         if ($request->request->get("name")) {
       $users = $userInfoRepository->filter($request->request->get("name"));
     //   dd($users);
@@ -63,7 +63,7 @@ class UserController extends AbstractController
      */
     public function user(UserGroup $userGroup, Request $request, UserRepository $userRepository)
     {
-        // $this->denyAccessUnlessGranted('ad_usr_t_grp');
+        $this->denyAccessUnlessGranted('vw_usr_lst');
 
         if ($request->request->get('usergroupuser')) {
             $users = $userRepository->findAll();
@@ -89,7 +89,7 @@ class UserController extends AbstractController
      */
     public function permission(UserGroup $userGroup, Request $request, PermissionRepository $permissionRepository)
     {
-        // $this->denyAccessUnlessGranted("sm_user");
+        $this->denyAccessUnlessGranted("vw_usr_lst");
         if ($request->request->get('usergrouppermission')) {
             $permissions = $permissionRepository->findAll();
             foreach ($permissions as $permission) {

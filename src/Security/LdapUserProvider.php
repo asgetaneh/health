@@ -111,18 +111,19 @@ class LdapUserProvider implements UserProviderInterface
         $email = $ldapEntry->getAttributes()['mail'][0];
         $username = $ldapEntry->getAttributes()['uid'][0];
         // $email = $ldapEntry->getAttributes()['mail'][0];
-        // if ($ldapEntry->getAttributes()['mobile']) {
-        //     # code...
-        //             $mobile = $ldapEntry->getAttributes()['mobile'][0];
-        // }
-        // else{
-        //     $mobile="no";
-        // }
-        //  if ($ldapEntry->getAttributes()['employeeNumber']) {
-        // $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];}
-        // else{
-        //       $employeeNumber="no";
-        // }
+        if ($ldapEntry->getAttributes()['mobile']) {
+            # code...
+                    $mobile = $ldapEntry->getAttributes()['mobile'][0];
+        }
+        else{
+            $mobile="no";
+        }
+         if ($ldapEntry->getAttributes()['employeeNumber']) {
+        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];}
+        else{
+              $employeeNumber="no";
+        }
+        // dd($employeeNumber);
         $userinfo = new UserInfo();
 
         $user = new User();
@@ -134,12 +135,12 @@ class LdapUserProvider implements UserProviderInterface
             $user->setUsername($username);
             $user->setRoles(['staff']);
              $user->setStatus(0);
+                     $user->setMobile($mobile);
             $this->entityManager->persist($user);
             //$this->entityManager->flush();
             $userinfo->setUser($user);
-        // $userinfo->setMobile($mobile);
          $userinfo->setEmail($email);
-        // $userinfo->setEmployeeNumber($employeeNumber);
+        $userinfo->setEmployeeNumber($employeeNumber);
         $userinfo->setFullName($fullName);
         $this->entityManager->persist($userinfo);
         $this->entityManager->flush();

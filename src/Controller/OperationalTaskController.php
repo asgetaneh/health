@@ -68,6 +68,7 @@ class OperationalTaskController extends AbstractController
      */
     public function index(Request $request, SuitableInitiative $suitableInitiative, PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {
+                 $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -123,7 +124,9 @@ class OperationalTaskController extends AbstractController
                 $endYear = AmharicHelper::getCurrentYearPara($endYear);
                 $quarterStartMonth = AmharicHelper::getCurrentMonth();
                 $quarterStartMonth = explode('-', $quarterStartMonth);
-
+                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+// dd($endYear,$quarterEndMonth,$quarterEndDate);
                 //   $startDate1=DateTimeFactory::of($startYear,$currentMonth,$quarterStartDate);
                 // dd($quarterStartMonth[1]);
                 $minDate = $startYear . ',' . $quarterStartMonth[1] . ',' . $quarterStartDate;

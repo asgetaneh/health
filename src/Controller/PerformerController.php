@@ -15,6 +15,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,10 +126,10 @@ class PerformerController extends AbstractController
                 // 'multiple' => true,
                 'required' => true
             ])
-            ->add('phoneNumber', TextType::class, [
+            // ->add('phoneNumber', NumberType::class, [
 
-                'required' => true
-            ])
+            //     'required' => true
+            // ])
             ->add('alternativeEmail', EmailType::class, [
 
                 'required' => false
@@ -140,12 +141,16 @@ class PerformerController extends AbstractController
             // $operationalOffice= $filterform->getData([]);
             $data = $filterform->getData();
             $stafType = $data['stafType'];
-            $phoneNumber = $data['phoneNumber'];
+            // $phoneNumber = $data['phoneNumber'];
             $alternativeEmail = $data['alternativeEmail'];
+
 
             $operatin = $request->request->get("oper");
             // dd($operatin);
             if ($operatin == null) {
+            $operatin=$request->request->get("oper"); 
+            $phoneNumber = $request->request->get('phoneNumber');
+            // dd($phoneNumber);
 
                 $this->addFlash('danger', "Operational Office Not Choose ");
 
