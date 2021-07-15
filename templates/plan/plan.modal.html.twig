@@ -49,7 +49,7 @@
 
 											{% for socialattribute in suitableInitiative.initiative.socialAtrribute %}
                                               {% set plan  = plans|filter(plan=>plan.quarter.id == quarter.id and plan.socialAttribute.id == socialattribute.id)|first %}
-                                                       {% set planvalue = plan.planValue %}
+                                                       {% set planvalue = plan?plan.planValue:null %}
 												{% if constant == true %}
                                                   
 													<div class="col-sm-6">
@@ -80,7 +80,7 @@
 											{% endfor %}
 										{% else %}
                                         {% set plan  = plans|filter(plan=>plan.quarter.id == quarter.id)|first %}
-                                         {% set planvalue = plan.planValue %}
+                                         {% set planvalue = plan?plan.planValue:null %}
 											{% if constant == true %}
 
 												<div class="col-sm-6">
