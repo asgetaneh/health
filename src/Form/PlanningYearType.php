@@ -13,16 +13,14 @@ class PlanningYearType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('title')
-            ->add('year',DateType::class,[
-                'widget'=>'single_text',
-                'input_format'=>'Y',
-               
+            ->add('title')
+            ->add('ethYear')
+            ->add('year', DateType::class, [
+                'widget' => 'single_text',
+                'input_format' => 'Y',
+
             ])
-            ->add('description')
-           
-            
-        ;
+            ->add('description');
     }
 
     public function configureOptions(OptionsResolver $resolver)

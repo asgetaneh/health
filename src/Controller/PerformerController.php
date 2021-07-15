@@ -143,6 +143,7 @@ class PerformerController extends AbstractController
             $stafType = $data['stafType'];
             // $phoneNumber = $data['phoneNumber'];
             $alternativeEmail = $data['alternativeEmail'];
+     $phoneNumber = $request->request->get('phoneNumber');
 
 
             $operatin = $request->request->get("oper");
