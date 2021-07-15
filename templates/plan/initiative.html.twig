@@ -137,8 +137,9 @@
 		</div>
 	</div>
 	<script>
+  $(funtion(){
 
-
+ 
 		$('#checkall2').click(function () {
 var $chk = $(':checkbox');
 $chk.prop('checked', $(this).is(':checked'));
@@ -151,5 +152,7 @@ $('#nonsuitablebutton').click(function () {
 $('#nonsuit').val(true);
 $('#initiative_form').submit();
 })
+ })
+
 	</script>
 {% endif %}

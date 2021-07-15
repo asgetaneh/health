@@ -28,7 +28,7 @@ class PermissionVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
 
     {
-        // return true;
+         return true;
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
