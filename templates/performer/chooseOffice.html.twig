@@ -27,9 +27,9 @@
 										</label>
 
 										<input
-										type="tel"   class="form-control"  placeholder="+251924XXXXXX" name="phoneNumber" pattern="[+]{1}[0-9]{12}" required>
+										type="tel" class="form-control" placeholder="+251924XXXXXX" name="phoneNumber" pattern="[+]{1}[0-9]{12}" required>
 									{# {{ form_label(filterform.phoneNumber,'Phone Number ') }}
-																																																																		{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'', 'min':'10' }}) }} #}
+																																																																											{{ form_widget(filterform.phoneNumber,{'attr':{'class':' phoneNumber form-control ','data-placeholder':'', 'min':'10' }}) }} #}
 									</div>
 								</div>
 								<div class="col-md-4">
@@ -60,7 +60,7 @@
 
 								<div class="col-md-2">
 									<div class="form-group" style="margin-top:25px;">
-										<input type="submit" class="btn btn-primary btn-sm " value="Choose" onclick="return confirm('Are you sure choose your Principal and Operational Office ?');">
+										<input type="submit" class="btn btn-primary btn-sm choose" value="Choose" onclick="return confirm('Are you sure choose your Principal and Operational Office ?');">
 									</div>
 								</div>
 								{{form_end(filterform)}}
@@ -75,10 +75,20 @@
 {% endblock %}
 {% block javascripts %}
 	<script>
+		$('.oper').click(function () {
+
+$('.choose').prop('disabled', false);
+})
+	</script>
+
+	<script>
+
 		$(() => {
 $('.principal').trigger('change')
 })
 $('.principal').change(function () {
+$('.choose').prop('disabled', true);
+
 var principal = $('.principal').val()
 // console.log(principal)
 var select = $('.oper')
@@ -104,4 +114,5 @@ $("#oper").prop("required", true)
 });
 })
 	</script>
+
 {% endblock %}

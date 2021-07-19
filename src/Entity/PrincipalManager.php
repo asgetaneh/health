@@ -17,7 +17,7 @@ class PrincipalManager
      */
     private $id;
 
-   
+
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="principalManagers")
@@ -43,13 +43,16 @@ class PrincipalManager
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $assignedBy;
-
+    public function __toString()
+    {
+        return $this->getPrincipal();
+    }
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    
+
 
     public function getPrincipal(): ?User
     {

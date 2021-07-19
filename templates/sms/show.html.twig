@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sms{% endblock %}
+
+{% block body %}
+    <h1>Sms</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ sms.id }}</td>
+            </tr>
+            <tr>
+                <th>SendDate</th>
+                <td>{{ sms.sendDate ? sms.sendDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Text</th>
+                <td>{{ sms.text }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('sms_index') }}">back to list</a>
+
+    <a href="{{ path('sms_edit', {'id': sms.id}) }}">edit</a>
+
+    {{ include('sms/_delete_form.html.twig') }}
+{% endblock %}

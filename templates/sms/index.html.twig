@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Send Sms
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header"></div>
+
+				<div class="widget-body">
+
+
+					<div class="widget-main padding-16">
+
+
+
+
+							<div class="row">
+								{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+								
+							
+
+							
+								<div class="col-md-4">
+									<div class="form-group form-group">
+										{{ form_label(filterform.principalOffice,'Principal Manager ') }}
+										{{ form_widget(filterform.principalOffice,{'attr':{'class':'select2  form-control ','data-placeholder':'' }}) }}
+									</div>
+								</div>
+                                	<div class="col-md-4">
+									<div class="form-group form-group">
+										{{ form_label(filterform.operationalOffice,'Operational Manager ') }}
+										{{ form_widget(filterform.operationalOffice,{'attr':{'class':'select2  form-control ','data-placeholder':'' }}) }}
+									</div>
+								</div>
+                                	<div class="col-md-4">
+									<div class="form-group form-group">
+										{{ form_label(filterform.performer,'Prformer ') }}
+										{{ form_widget(filterform.performer,{'attr':{'class':'select2 principal form-control ','data-placeholder':'' }}) }}
+									</div>
+								</div>
+                                	<div class="col-md-4">
+									<div class="form-group form-group">
+										{{ form_label(filterform.text,'Message ') }}
+										{{ form_widget(filterform.text,{'attr':{'class':' principal form-control ','data-placeholder':'' }}) }}
+									</div>
+								</div>
+
+								
+
+								<div class="col-md-2">
+									<div class="form-group" style="margin-top:25px;">
+										<input type="submit" class="btn btn-primary btn-sm " value="Sms" onclick="return confirm('Are you sure Send Sms ?');">
+									</div>
+								</div>
+								{{form_end(filterform)}}
+							</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{# {% block javascripts %}
+	<script>
+		$(() => {
+$('.principal').trigger('change')
+})
+$('.principal').change(function () {
+var principal = $('.principal').val()
+// console.log(principal)
+var select = $('.oper')
+
+$.ajax({
+url:"{{ path('operational_fetch') }}",
+method: "POST",
+data: {
+principal: principal
+},
+dataType: "json",
+success: function (data) {
+$('.oper').children().remove()
+for (let [key, value] of Object.entries(data)) {
+
+
+select.append('<option>' + value.name + '</option>');
+$("#oper").prop("required", true)
+
+
+}
+}
+});
+})
+	</script>
+{% endblock %} #}

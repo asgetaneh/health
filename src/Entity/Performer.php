@@ -25,13 +25,16 @@ class Performer
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive=1;
+    private $isActive = 1;
 
     /**
      * @ORM\ManyToOne(targetEntity=OperationalOffice::class, inversedBy="performers")
      */
     private $operationalOffice;
-
+    public function __toString()
+    {
+        return $this->getPerformer();
+    }
     public function getId(): ?int
     {
         return $this->id;
