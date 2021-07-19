@@ -79,7 +79,7 @@
 								</thead>
 								<tbody>
 									{% set count =  recoverInitiatives .getItemNumberPerPage() * (recoverInitiatives .getCurrentPageNumber() -1) %}
-									<form action="{{path('plan_index')}}" id="initiative_form" method="get">
+									<form action="{{path('plan_index')}}" id="initiative_form2" method="get">
 										<input type="hidden" name="planyear" value="{{planyear.id}}">
 										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
 										<input type="hidden" name="nonsuitable" id="nonsuit" value="">
@@ -136,8 +136,9 @@
 			</div>
 		</div>
 	</div>
+    <script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 	<script>
-  $(funtion(){
+  $(function(){
 
  
 		$('#checkall2').click(function () {
@@ -146,13 +147,13 @@ $chk.prop('checked', $(this).is(':checked'));
 
 })
 $('#suitablebutton2').click(function () {
-$('#initiative_form').submit();
+$('#initiative_form2').submit();
 })
 $('#nonsuitablebutton').click(function () {
 $('#nonsuit').val(true);
-$('#initiative_form').submit();
+$('#initiative_form2').submit();
 })
- })
+ });
 
 	</script>
 {% endif %}

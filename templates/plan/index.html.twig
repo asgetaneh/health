@@ -128,54 +128,54 @@
 											<div class="widget-main padding-16">
 												<div
 													class="row">{# <div class="search-area well col-xs-12">
-																																																																					<div></div>
-																																																																					<div class="pull-left">
-																																																														
-																																																														
-																																																																						<form class="form-inline" method="post" style="display:inline;">
-																																																														
-																																																																							<div class="input-group">
-																																																																								<input type="text" class="form-control" name="search" placeholder="search"/>
-																																																																								<div class="input-group-btn">
-																																																																									<button type="submit" class="btn btn-default no-border btn-sm">
-																																																																										<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																																																									</button>
-																																																																								</div>
-																																																																							</div>
-																																																																						</form>
-																																																														
-																																																																					</div>
-																																																														
-																																																														
-																																																																					<div class="pull-right">
-																																																																						<div class="widget-toolbar no-border">
-																																																														
-																																																														
-																																																																							<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-																																																																								<b class="text-primary">Action</b>
-																																																																								<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-																																																																							</button>
-																																																														
-																																																																							<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																																																																								<li>
-																																																																									<a href="#" id="suitablebutton">
-																																																																										<i class="ace-icon fa fa-stop green"></i>
-																																																																										Select As Suitable</a>
-																																																																								</li>
-																																																														
-																																																																								<li>
-																																																														
-																																																																									<a href="#">
-																																																																										<i class="ace-icon fa fa-stop pink2"></i>
-																																																																										Select As Non Suitable</a>
-																																																																								</li>
-																																																														
-																																																														
-																																																																							</ul>
-																																																																						</div>
-																																																														
-																																																																					</div>
-																																																																				</div> #}
+																																																																																			<div></div>
+																																																																																			<div class="pull-left">
+																																																																												
+																																																																												
+																																																																																				<form class="form-inline" method="post" style="display:inline;">
+																																																																												
+																																																																																					<div class="input-group">
+																																																																																						<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																																						<div class="input-group-btn">
+																																																																																							<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																																								<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																																							</button>
+																																																																																						</div>
+																																																																																					</div>
+																																																																																				</form>
+																																																																												
+																																																																																			</div>
+																																																																												
+																																																																												
+																																																																																			<div class="pull-right">
+																																																																																				<div class="widget-toolbar no-border">
+																																																																												
+																																																																												
+																																																																																					<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																																																																																						<b class="text-primary">Action</b>
+																																																																																						<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																																																																																					</button>
+																																																																												
+																																																																																					<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																																																																																						<li>
+																																																																																							<a href="#" id="suitablebutton">
+																																																																																								<i class="ace-icon fa fa-stop green"></i>
+																																																																																								Select As Suitable</a>
+																																																																																						</li>
+																																																																												
+																																																																																						<li>
+																																																																												
+																																																																																							<a href="#">
+																																																																																								<i class="ace-icon fa fa-stop pink2"></i>
+																																																																																								Select As Non Suitable</a>
+																																																																																						</li>
+																																																																												
+																																																																												
+																																																																																					</ul>
+																																																																																				</div>
+																																																																												
+																																																																																			</div>
+																																																																																		</div> #}
 
 												</div>
 												<div class="table-responsive">
@@ -254,8 +254,8 @@
 																	</td>
 																	<td>
 																		{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																																						<i class="fa fa-eye"></i>
-																																																																																																																																					</a> #}
+																																																																																																																																																								<i class="fa fa-eye"></i>
+																																																																																																																																																							</a> #}
 
 																		<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
 																			<span class="glyphicon glyphicon-plus"></span>
@@ -296,14 +296,14 @@
 				</div>
 				<div id="messages" class="tab-pane fade">
 					<div class="row">
-                    {% if recoverInitiatives is defined %}
-					
-							
-                           {{ include('plan/initiative.html.twig') }} 
+						{% if recoverInitiatives is defined %}
+
+
+							{{ include('plan/initiative.html.twig') }}
 
 						{% endif %}
-					
-					
+
+
 					</div>
 				</div>
 			</div>
@@ -314,23 +314,22 @@
 <!-- /.col -->
 <div class="plandiv" id="plandiv"></div>
 {{ include('plan/modal.html.twig') }}{% endblock %}{% block javascripts %}
+
+
 <script type="text/javascript">
 
 	$(function () {
 $('.select2').css('width', '90%').select2({allowClear: false})
 
 
+
 $('#suitablebutton').click(function () {
-
+ 
 $('#initiative_form').submit();
-})
+});
 
 
-$('#checkall').click(function () {
-var $chk = $(':checkbox');
-$chk.prop('checked', $(this).is(':checked'));
 
-})
 
 
 $('.addPlan').click(function () {
@@ -356,12 +355,12 @@ $('.planmodal').modal('toggle');
 }
 });
 })
-  $('.nav-tabs a').on('show.bs.tab', function(event){
-        var x = $(event.target).text();         // active tab
-        var y = $(event.relatedTarget).text(); 
-        // previous tab
-      
-    });
+$('.nav-tabs a').on('show.bs.tab', function (event) {
+var x = $(event.target).text(); // active tab
+var y = $(event.relatedTarget).text();
+// previous tab
+
+});
 
 });
 </script>{% endblock %}

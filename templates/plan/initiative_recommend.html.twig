@@ -1,3 +1,5 @@
+
+
 {% if initiatives is defined %}
 	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 		<div class="widget-box widget-color-blue" id="widget-box-8">
@@ -9,7 +11,7 @@
 				<div class="widget-toolbar">
 					<span class="badge badge-info">
 						{% trans %}Total{% endtrans %}
-						:{{initiatives.getTotalItemCount()}}
+						:{{initiatives|length}}
 						<strong></strong>
 					</span>
 				</div>
@@ -27,40 +29,40 @@
 						<div class="search-area col-md-12">
 							<div>
 								{# <form action="" class="form-inline" method="get">
-																																																																																												<div class="form-group">
-																																																																																													<input type="text">
-																																																																																												</div>
-																																																																																												<div class="form-group">
-																																																																																													<input type="text">
-																																																																																												</div>
-																																																																																			
-																																																																																			
-																																																																																												<div class="form-group"><input type="button" value="submit"></div>
-																																																																																			
-																																																																																											</form> #}
+																																																																																																																												<div class="form-group">
+																																																																																																																													<input type="text">
+																																																																																																																												</div>
+																																																																																																																												<div class="form-group">
+																																																																																																																													<input type="text">
+																																																																																																																												</div>
+																																																																																																																			
+																																																																																																																			
+																																																																																																																												<div class="form-group"><input type="button" value="submit"></div>
+																																																																																																																			
+																																																																																																																											</form> #}
 
 							</div>
 							<div
 								class="pull-left">{# <form class="form-inline" method="post" style="display:inline;">
-																																																																																											
-																																																																																																				<div class="input-group">
-																																																																																																					<input type="text" class="form-control" name="search" placeholder="search"/>
-																																																																																																					<div class="input-group-btn">
-																																																																																																						<button type="submit" class="btn btn-default no-border btn-sm">
-																																																																																																							<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																																																																																						</button>
-																																																																																																					</div>
-																																																																																																				</div>
-																																																																																																			</form> #}
+																																																																																																																															
+																																																																																																																																								<div class="input-group">
+																																																																																																																																									<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																																																																																									<div class="input-group-btn">
+																																																																																																																																										<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																																																																																											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																																																																																										</button>
+																																																																																																																																									</div>
+																																																																																																																																								</div>
+																																																																																																																																							</form> #}
 
 							</div>
 
 
 							<div class="pull-right">
-								<div class="widget-toolbar no-border">
+								<div class="widget-toolbar no-border" >
 
 
-									<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
+									<button  class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
 										<b class="text-primary">Action</b>
 										<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
 									</button>
@@ -78,38 +80,41 @@
 
 							</div>
 						</div>
-						<div class="table-responsive col-md-12">
+                        
+						<div class="table-responsive col-md-12" style="margin-top:20px;">
 
-
-							<table class="table table-striped table-bordered table-hover">
-								<div class="table-header"></div>
+                         
+							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+							
 								<thead>
 									<tr>
 										<th class="text-center">
 											<label class="inline">
 
-												<input type="checkbox" name="initiative[]" id="checkall" value="" class="ace">
+												<input type="checkbox"  id="checkall"  class="ace">
 												<span class="lbl"></span>
 											</label>
 										</th>
 										<th>#</th>
 										<th>{% trans %}Name{% endtrans %}</th>
-                                       
+
 										<th>{% trans %}Weight{% endtrans %}</th>
-                                       
+
 										<th>{% trans %}Description{% endtrans %}</th>
 										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
+                                
 								<tbody>
-									{% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %}
+									{# {% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %} #}
+									{% set count = 0 %}
 									<form action="{{path('plan_index')}}" id="initiative_form" method="get">
 										<input type="hidden" name="planyear" value="{{planyear.id}}">
 										<input type="hidden" name="office" value="{{pricipaloffice.id}}">
 
 										{% for initiative in initiatives %}
 											<tr>
-                                            {% set count = count+1 %}
+												{% set count = count+1 %}
 
 
 												<td class="text-center">
@@ -123,7 +128,7 @@
 												</td>
 												<td>{{ initiative.name }}</td>
 												<td>{{ initiative.weight }}</td>
-                                              
+
 
 												<td>{{ initiative.description|raw}}</td>
 												<td>
@@ -139,10 +144,12 @@
 												<td colspan="8">no records found</td>
 											</tr>
 										{% endfor %}
-									</form>
+                                        </form>
+									
 								</tbody>
+                                
 							</table>
-							<div class="pull-right" id="">{{ knp_pagination_render(initiatives) }}</div>
+							{# <div class="pull-right" id="">{{ knp_pagination_render(initiatives) }}</div> #}
 
 						</div>
 					</div>
@@ -152,32 +159,30 @@
 			</div>
 		</div>
 	</div>
+     <script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 	<script>
-		$('#suitablebutton').click(function () {
+  $(function(){
 
-       $('#initiative_form').submit();
+		$('#checkall').click(function () {
+var $chk = $(':checkbox');
+$chk.prop('checked', $(this).is(':checked'));
+
 })
-/*$('#custompaginator').click(function(){
-    alert("{{planyear.id}}");
-$.ajax({
-url: "{{ path('plan_index') }}",
-method: "post",
-data: {
 
-planyear: "{{planyear.id}}",
-office: "{{pricipaloffice.id}}"
+ 
+	
+$('#suitablebutton').click(function () {
+  
+$('#initiative_form').submit();
+})
 
+ });
 
-},
-success: function (data) {
-
-
-},
-error: function (data) {
-
-
-}
-});
-})*/
 	</script>
+     
+  
 {% endif %}
+
+
+
+

@@ -64,6 +64,7 @@ class PlanController extends AbstractController
 
 
             if ($request->query->get('initiative')) {
+               
 
 
                 if ($request->query->get('nonsuitable')) {
@@ -121,16 +122,12 @@ class PlanController extends AbstractController
             }
 
 
-            $initiativeData = $paginator->paginate(
-                $initiatives,
-                $request->query->getInt('page', 1),
-                10
-            );
+           
             return $this->render('plan/index.html.twig', [
 
                 'planningYears' =>  $activePlanningYear,
                 'offices' => $offices,
-                'initiatives' =>  $initiativeData,
+                'initiatives' =>  $initiatives,
                 'pricipaloffice' => $principaloffice,
                 'planyear' => $planningyear,
                 'recoverInitiatives' => $recoverData
