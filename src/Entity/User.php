@@ -217,6 +217,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $alternativeEmail;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sms::class, mappedBy="sender")
+     */
+    private $sms;
     public function __construct()
     {
       
@@ -253,6 +258,7 @@ class User implements UserInterface
         $this->performerTaskDelegate = new ArrayCollection();
         $this->taskAssignsDelegate = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
+        $this->sms = new ArrayCollection();
 
     }
     public function __toString()
@@ -1340,6 +1346,36 @@ class User implements UserInterface
     public function setAlternativeEmail(?string $alternativeEmail): self
     {
         $this->alternativeEmail = $alternativeEmail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sms[]
+     */
+    public function getSms(): Collection
+    {
+        return $this->sms;
+    }
+
+    public function addSms(Sms $sms): self
+    {
+        if (!$this->sms->contains($sms)) {
+            $this->sms[] = $sms;
+            $sms->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSms(Sms $sms): self
+    {
+        if ($this->sms->removeElement($sms)) {
+            // set the owning side to null (unless already changed)
+            if ($sms->getSender() === $this) {
+                $sms->setSender(null);
+            }
+        }
 
         return $this;
     }

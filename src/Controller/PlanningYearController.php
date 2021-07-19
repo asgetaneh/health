@@ -52,11 +52,14 @@ class PlanningYearController extends AbstractController
      */
     public function smsSend(Request $request, SmsHelper $smsHelper)
     {
-        $this->denyAccessUnlessGranted('vw_pln_yr');
+                //   dd(1);
+
+        // $this->denyAccessUnlessGranted('vw_pln_yr');
        
             // $entityManager = $this->getDoctrine()->getManager();
           $message="2014 Plan Created ";
           $userInfo="0923707888";
+        //   dd(1);
   $smsHelper->sendSms("Account Update ", $message, '["' . $userInfo . '"]');
 
             $this->addFlash('success',"planning year is created successfuly");

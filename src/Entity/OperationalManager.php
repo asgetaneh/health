@@ -25,13 +25,16 @@ class OperationalManager
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive=1;
+    private $isActive = 1;
 
     /**
      * @ORM\ManyToOne(targetEntity=OperationalOffice::class, inversedBy="operationalManagers")
      */
     private $operationalOffice;
-
+    public function __toString()
+    {
+        return $this->getManager();
+    }
     public function getId(): ?int
     {
         return $this->id;
