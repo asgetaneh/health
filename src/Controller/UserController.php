@@ -54,6 +54,7 @@ class UserController extends AbstractController
         );
         return $this->render('user/userlist.html.twig', [
             'users' => $data,
+            'count'=>$users,
         ]);
     }
    
