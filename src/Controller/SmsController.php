@@ -35,7 +35,7 @@ class SmsController extends AbstractController
     public function index(Request $request, UserRepository $userRepository, SmsHelper $smsHelper)
     {
         // $this->denyAccessUnlessGranted('sms_send');
-     
+
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
 
@@ -43,6 +43,8 @@ class SmsController extends AbstractController
                 'class' => PrincipalOffice::class,
                 'multiple' => true,
                 // 'placeholder' => 'All',
+                            'placeholder' => "All",
+
                 'required' => false
             ])
             ->add('operationalOffice', EntityType::class, [
@@ -63,12 +65,12 @@ class SmsController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         $mobileNumber = [];
-                $message = 0;
+        $message = 0;
 
         if ($form->isSubmitted() && $form->isValid()) {
             // $operationalOffice= $filterform->getData([]);
             $data = $form->getData();
-            
+
             //  $mobileNumber[]=null;
             $message = $data["message"];
             $sms = $userRepository->search($form->getData());
@@ -77,27 +79,31 @@ class SmsController extends AbstractController
                 $mobileNumber[] = $key->getMobile();
                 // dump($mobileNumber);
             }
-                    //   dd($mobileNumber,$message);
+            //   dd($mobileNumber,$message);
 
-             $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
 
-        $this->addFlash('success', "Message successfuly Send");
+            $this->addFlash('success', "Message successfuly Send");
+                        return $this->redirectToRoute('sms_index');
+
         }
-         if ($request->request->get("allmessgae")) {
-        $mobileNumber = [];
-         $message=$request->request->get("message");
-       $users=$userRepository->findAll();
-       foreach ($users as $user) {
-           $mobileNumber[]=$user->getMobile();
-       }
-    //    dd($mobileNumber);
-  $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+        if ($request->request->get("allmessgae")) {
+            $mobileNumber = [];
+            $message = $request->request->get("message");
+            $users = $userRepository->findAll();
+            foreach ($users as $user) {
+                $mobileNumber[] = $user->getMobile();
+            }
+            //    dd($mobileNumber);
+            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
 
-        $this->addFlash('success', "Message successfuly Send");
-      }
+            $this->addFlash('success', "Message successfuly Send");
+                                    return $this->redirectToRoute('sms_index');
+
+        }
 
         // $entityManager = $this->getDoctrine()->getManager();
-       
+
 
         // return $this->redirectToRoute('planning_year_index');
         return $this->render('sms/index.html.twig', [

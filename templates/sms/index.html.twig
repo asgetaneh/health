@@ -1,4 +1,4 @@
- {% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}
 	Send Sms
@@ -26,20 +26,26 @@
 
 							<div class="col-md-6">
 								<div class="form-group form-group">
-									{{ form_label(form.principalOffice,'Principal Office ') }}
-									{{ form_widget(form.principalOffice,{'attr':{'class':'select2 form-control  ','data-placeholder':'Principal Office' }}) }}
+									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.principalOffice) }}</label>
+									{{ form_widget(form.principalOffice,{'attr':{'class':'select2   ' }}) }}
+									<div class="help-block with-errors"></div>
+
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group form-group">
-									{{ form_label(form.operationalOffice,'Operational Office ') }}
-									{{ form_widget(form.operationalOffice,{'attr':{'class':'select2  form-control ','data-placeholder':'Operational Office' }}) }}
+									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.operationalOffice) }}</label>
+									{{ form_widget(form.operationalOffice,{'attr':{'class':'select2 ' }}) }}
+									<div class="help-block with-errors"></div>
+
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group form-group">
-									{{ form_label(form.performer,'Prformer ') }}
-									{{ form_widget(form.performer,{'attr':{'class':'select2 principal form-control ','data-placeholder':'Performer' }}) }}
+									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.performer) }}</label>
+									{{ form_widget(form.performer,{'attr':{'class':'select2  ' }}) }}
+									<div class="help-block with-errors"></div>
+
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -52,7 +58,7 @@
 
 							<div class="col-md-12">
 								<div class="form-group pull-right" style="margin-top:25px;">
-									<input type="submit" class="btn btn-primary btn-sm " value="Sms" >
+									<input type="submit" class="btn btn-primary btn-sm " value="Sms">
 								</div>
 							</div>
 
@@ -77,13 +83,13 @@
 				<div class="modal-header bg-info">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 
-					<h4 class="modal-title">Message 
+					<h4 class="modal-title">Message
 					</h4>
 
 				</div>
 				<form method="post" action="{{path('sms_index')}}">
 					<div class="modal-body">
-						<input type="hidden" name="allmessgae" value="1" >
+						<input type="hidden" name="allmessgae" value="1">
 						<div class="form-group">
 							<textArea name="message" class="form-control"></textArea>
 
@@ -103,7 +109,7 @@
 	</div>
 {% endblock %}
 {% block javascripts %}
-<script>
+	<script>
 		$('.show').click(function () {
 $('#sms').modal('show');
 
