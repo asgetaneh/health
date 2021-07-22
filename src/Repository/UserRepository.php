@@ -50,6 +50,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->orderBy('u.id', 'ASC')
             ->getQuery()->getResult();
     }
+    public function search($search = [])
+    {
+        //  dd($search['performer']);
+        $qb = $this->createQueryBuilder('u');
+        $qb->leftJoin('u.userInfo', 'ui')
+            ->leftJoin('u.principalManagers', 'pm')
+            ->leftJoin('u.operationalManagers', 'om');
+
+        if (isset($search['principalOffice']) && sizeof($search['principalOffice']) > 0) {
+
+            $qb->andWhere('pm.principalOffice  in (:principalOffice)')
+                ->setParameter('principalOffice', $search['principalOffice']);
+        }
+
+        if (isset($search['operationalOffice']) && sizeof($search['operationalOffice']) > 0) {
+            $qb->andWhere('om.operationalOffice  in (:operationalOffice)')
+                ->setParameter('operationalOffice', $search['operationalOffice']);
+        }
+         if (isset($search['performer']) && sizeof($search['performer']) > 0) {
+            $qb->andWhere('ui.id  in (:performer)')
+                ->setParameter('performer', $search['performer']);
+        }
+
+
+        return $qb = $qb->orderBy('u.id', 'ASC')->getQuery()->getResult();
+    }
+
 
 
     // /**

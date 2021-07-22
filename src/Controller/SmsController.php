@@ -12,10 +12,12 @@ use App\Entity\UserInfo;
 use App\Form\SmsType;
 use App\Helper\SmsHelper;
 use App\Repository\SmsRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,68 +28,90 @@ use Symfony\Component\Routing\Annotation\Route;
 class SmsController extends AbstractController
 {
     /**
-     * @Route("/", name="sms_index", methods={"GET"})
+     * @Route("/", name="sms_index")
      */
-    public function index(SmsRepository $smsRepository): Response
+
+
+    public function index(Request $request, UserRepository $userRepository, SmsHelper $smsHelper)
     {
+        // $this->denyAccessUnlessGranted('sms_send');
+
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true,
+                // 'placeholder' => 'All',
+                            'placeholder' => "All",
+
+                'required' => false
+            ])
+            ->add('operationalOffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+                'multiple' => true,
+                'required' => false
+            ])
+            ->add('performer', EntityType::class, [
+                'class' => UserInfo::class,
+                'multiple' => true,
+                'required' => false
+            ])
+
+            ->add('message', TextareaType::class, [
+
+                'required' => false
+            ])
+            ->getForm();
+        $form->handleRequest($request);
+        $mobileNumber = [];
+        $message = 0;
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $operationalOffice= $filterform->getData([]);
+            $data = $form->getData();
+
+            //  $mobileNumber[]=null;
+            $message = $data["message"];
+            $sms = $userRepository->search($form->getData());
+            // dd($sms,$message);
+            foreach ($sms as $key) {
+                $mobileNumber[] = $key->getMobile();
+                // dump($mobileNumber);
+            }
+            //   dd($mobileNumber,$message);
+
+            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+
+            $this->addFlash('success', "Message successfuly Send");
+                        return $this->redirectToRoute('sms_index');
+
+        }
+        if ($request->request->get("allmessgae")) {
+            $mobileNumber = [];
+            $message = $request->request->get("message");
+            $users = $userRepository->findAll();
+            foreach ($users as $user) {
+                $mobileNumber[] = $user->getMobile();
+            }
+            //    dd($mobileNumber);
+            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+
+            $this->addFlash('success', "Message successfuly Send");
+                                    return $this->redirectToRoute('sms_index');
+
+        }
+
+        // $entityManager = $this->getDoctrine()->getManager();
+
+
+        // return $this->redirectToRoute('planning_year_index');
         return $this->render('sms/index.html.twig', [
-            'sms' => $smsRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
-//   /**
-//      * @Route("/sms", name="sms_send")
-//      */
-//     public function smsSend(Request $request, SmsHelper $smsHelper)
-//     {
-//         // $this->denyAccessUnlessGranted('sms_send');
 
-//         $em = $this->getDoctrine()->getManager();
-//         $filterform = $this->createFormBuilder()
 
-//             ->add('principalOffice', EntityType::class, [
-//                 'class' => PrincipalOffice::class,
-//                 'multiple' => true,
-//                 'required' => true
-//             ])
-//             ->add('operationalOffice', EntityType::class, [
-//                 'class' => OperationalOffice::class,
-//                 'multiple' => true,
-//                 'required' => true
-//             ])
-//               ->add('performer', EntityType::class, [
-//                 'class' => UserInfo::class,
-//                 'multiple' => true,
-//                 'required' => true
-//             ])
-        
-//             ->add('text', TextType::class, [
-
-//                 'required' => false
-//             ])
-//             ->getForm();
-//         $filterform->handleRequest($request);
-
-//         if ($filterform->isSubmitted() && $filterform->isValid()) {
-//             // $operationalOffice= $filterform->getData([]);
-//             $data = $filterform->getData();
-          
-//         }
-// //             // $entityManager = $this->getDoctrine()->getManager();
-// //           $message="2014 Plan Created ";
-// //           $userInfo="0923707888";
-// //   $smsHelper->sendSms("Account Update ", $message, '["' . $userInfo . '"]');
-
-// //             $this->addFlash('success',"planning year is created successfuly");
-
-//             // return $this->redirectToRoute('planning_year_index');
-//         return $this->render('sms/index.html.twig', [
-//             'filterform' => $filterform->createView(),
-//         ]);
-        
-        
-
-     
-//     }
     /**
      * @Route("/new", name="sms_new", methods={"GET","POST"})
      */
@@ -146,7 +170,7 @@ class SmsController extends AbstractController
      */
     public function delete(Request $request, Sms $sms): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sms->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sms->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($sms);
             $entityManager->flush();

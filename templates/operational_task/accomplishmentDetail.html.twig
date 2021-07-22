@@ -245,7 +245,10 @@
 										{% endif %}
 										<input type="hidden" name="accomp[]" value="{{((grand_total * planValue) / weight_total) | number_format }}">
 									{% else %}
-										{% set percentPLan = (((grand_total * planValue)  / 100) * 100 ) / planValue %}
+										{% if planValue %}
+
+											{% set percentPLan = (((grand_total * planValue)  / 100) * 100 ) / planValue %}
+										{% endif %}
 										{% if percentPLan | number_format (2, '.','.') > 100 %}
 											<div class="badge badge-primary">
 

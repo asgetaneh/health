@@ -14,13 +14,15 @@
 {% endblock %}
 
 {% block body %}
+	{% set locale = app.request.locale %}
 
-		<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
-			<i class="ace-icon fa fa-eye bigger-110 blue"></i>
-			{% trans %}
-			View Strategic Map
-			{% endtrans %}</a>
-
+	<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+		<i class="ace-icon fa fa-eye bigger-110 blue"></i>
+		{% trans %}
+		View Strategic Map{% endtrans %}
+		<a href="{{ asset('assets/assets/images/strategic'~ locale ~'.png')}}" width="1300" target="_blank" height="600">
+			View</a>
+	</a>
 	{% set locale = app.request.locale %}
 
 	<div id="myModal" class="modal fade" role="dialog">

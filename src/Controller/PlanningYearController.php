@@ -48,7 +48,7 @@ class PlanningYearController extends AbstractController
         ]);
     }
     /**
-     * @Route("/sms", name="sms_send")
+     * @Route("/sms/year", name="sms_send_year")
      */
     public function smsSend(Request $request, SmsHelper $smsHelper)
     {

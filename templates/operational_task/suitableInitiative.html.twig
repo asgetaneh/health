@@ -23,7 +23,7 @@
 
 {% endblock %}
 {% block subTitle %}
-	<li class="active">{% trans %}Operational Office{% endtrans %}</li>
+	<li class="active">{% trans %}Operational Task{% endtrans %}</li>
 
 {% endblock %}
 {% block body %}
@@ -32,7 +32,7 @@
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
-					<h5 class="widget-title bigger lighter">Operational Office
+					<h5 class="widget-title bigger lighter">Operational Task
 					</h5>
 
 					<div class="widget-toolbar"></div>
@@ -91,9 +91,19 @@
 									{% set count =  suitableInitiatives.getItemNumberPerPage() * (suitableInitiatives.getCurrentPageNumber() -1) %}
 
 									{% set task = 0 %}
+									{% set create = 0 %}
+									{% set assign = 0 %}
 
 									{% for suitableInitiative in suitableInitiatives %}
+										{% for performerTask in performerTasks %}
+											{% if loop.first %}
 
+												{% if performerTask.planAcomplishment.suitableInitiative.id == suitableInitiative.id %}
+													{% set create = 1  %}
+												{% endif %}
+											{% endif %}
+										{% endfor %}
+										
 										<tr>
 											{% set count = count + 1 %}
 
@@ -103,9 +113,16 @@
 											<td>{{ suitableInitiative.principalOffice.name  }}</td>
 
 											<td>
+                                            {% if create == 1 %}
+                                            
 												<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
 													Assign
 												</a>
+                                                {% else %}
+                                                  <a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
+													Create
+												</a>  
+                                                {% endif %}
 											</td>
 
 											<td>
