@@ -195,6 +195,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "smalot/pdfparser": {
+        "version": "v1.0.2"
+    },
     "symfony/asset": {
         "version": "v5.2.4"
     },
