@@ -13,14 +13,7 @@
     <b class="arrow"></b>
 	<ul class="submenu" role="treeitem">
    
-         {% if is_granted('vw_suit_intv') %}
-        <li role="treeitem">
-			<a href="{{ path('suitable_initiative_index') }}">
-				<b class="fa fa-caret-right"></b>
-				{% trans %}suitable Initiative{% endtrans %}
-			</a>
-		</li>
-        {% endif %}
+        
         {% if is_granted('vw_intv_bvr') %}
         
        

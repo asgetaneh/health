@@ -323,10 +323,10 @@ $('.select2').css('width', '90%').select2({allowClear: false})
 
 
 
-$('#suitablebutton').click(function () {
+//$('#suitablebutton').click(function () {
  
-$('#initiative_form').submit();
-});
+//$('#initiative_form').submit();
+//});
 
 
 
@@ -362,5 +362,84 @@ var y = $(event.relatedTarget).text();
 
 });
 
+
+
+var myTable = 
+				$('#dynamic-table')
+				//.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
+				.DataTable( {
+					bAutoWidth: false,
+					"aoColumns": [
+					  { "bSortable": false },
+					  null, null,null, 
+					  { "bSortable": false }
+					],
+					"aaSorting": [],
+					
+					
+					//"bProcessing": true,
+			        //"bServerSide": true,
+			        //"sAjaxSource": "http://127.0.0.1/table.php"	,
+			
+					//,
+					//"sScrollY": "200px",
+					//"bPaginate": false,
+			
+					//"sScrollX": "100%",
+					//"sScrollXInner": "120%",
+					//"bScrollCollapse": true,
+					//Note: if you are applying horizontal scrolling (sScrollX) on a ".table-bordered"
+					//you may want to wrap the table inside a "div.dataTables_borderWrap" element
+			
+					//"iDisplayLength": 50
+			
+			
+					select: {
+						style: 'multi'
+					}
+			    } );
+
+                	myTable.on( 'select', function ( e, dt, type, index ) {
+					if ( type === 'row' ) {
+						$( myTable.row( index ).node() ).find('input:checkbox').prop('checked', true);
+					}
+				} );
+				myTable.on( 'deselect', function ( e, dt, type, index ) {
+					if ( type === 'row' ) {
+						$( myTable.row( index ).node() ).find('input:checkbox').prop('checked', false);
+					}
+				} );
+
+                $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
+
+                $('#dynamic-table > thead > tr > th input[type=checkbox], #dynamic-table_wrapper input[type=checkbox]').eq(0).on('click', function(){
+					var th_checked = this.checked;//checkbox inside "TH" table header
+					
+					$('#dynamic-table').find('tbody > tr').each(function(){
+						var row = this;
+						if(th_checked) myTable.row(row).select();
+						else  myTable.row(row).deselect();
+					});
+				});
+				$('#dynamic-table').on('click', 'td input[type=checkbox]' , function(){
+					var row = $(this).closest('tr').get(0);
+					if(this.checked) myTable.row(row).deselect();
+					else myTable.row(row).select();
+				});
+
+                  $('#suitablebutton').click(function () {
+                   var $form= $('#initiative_form');
+                    myTable.$('input[type="checkbox"]').each(function(){
+                       if(!$.contains(document,this)){
+                           if(this.checked){
+                               $form.append($('<input>').attr('type','hidden').attr('name',this.name).val(this.value)
+                               );
+                           }
+                       }
+                   })
+
+$('#initiative_form').submit();
+})
+			
 });
 </script>{% endblock %}

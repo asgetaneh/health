@@ -14,7 +14,7 @@ class PermissionVoter extends Voter
     }
     protected function supports($attribute, $subject)
     {
-        // return true;
+         return true;
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
         $permission=$this->session->get("PERMISSION");

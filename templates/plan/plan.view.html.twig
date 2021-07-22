@@ -83,7 +83,7 @@
 
 								<th>#</th>
 								<th>{% trans %}Initiative{% endtrans %}</th>
-								<th>{% trans %}Behavior{% endtrans %}</th>
+								<th>{% trans %}Base{% endtrans %}</th>
 								{# <th>baseline</th> #}
 								<th>{% trans %}yearPlan{% endtrans %} </th>
 								<th>{% trans %}1st Quarter{% endtrans %}</th>
@@ -105,7 +105,7 @@
 
 									</td>
 									<td>{{suitableplan.initiative|title }}</td>
-                                    <td>{{suitableplan.initiative.initiativeBehaviour|title }}</td>
+                                    <td>{{suitableplan.initiative.weight }}</td>
                                     {# <td>{{suitableplan.initiative.baseline }}</td> #}
 
 
