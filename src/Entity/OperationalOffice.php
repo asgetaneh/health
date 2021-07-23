@@ -78,6 +78,11 @@ class OperationalOffice
      * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="operationalOffice")
      */
     private $performerTasks;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=College::class, inversedBy="operationalOffices")
+     */
+    private $college;
     
     public function __construct()
     {
@@ -343,6 +348,18 @@ class OperationalOffice
                 $performerTask->setOperationalOffice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCollege(): ?College
+    {
+        return $this->college;
+    }
+
+    public function setCollege(?College $college): self
+    {
+        $this->college = $college;
 
         return $this;
     }

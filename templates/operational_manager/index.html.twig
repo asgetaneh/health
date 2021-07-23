@@ -46,26 +46,28 @@
 					<div class="widget-main padding-16">
 						<div class="row">
 							<div class="search-area well col-md-12">
+								{% if is_granted("all_acess_opr_mng")  %}
 
-								<div class="row">
-									{{ form_start(filterform) }}
+									<div class="row">
+										{{ form_start(filterform) }}
 
-									<div class="form-group col-md-6" style="display:inline;">
-										{{ form_label(filterform.principaloffice," Principal Office") }}
-										{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+										<div class="form-group col-md-6" style="display:inline;">
+											{{ form_label(filterform.principaloffice," Principal Office") }}
+											{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
 
+
+										</div>
+										<div class="form-group col-md-4" style="display:inline;">
+											{{ form_label(filterform.operationaloffice," Operational Office") }}
+											{{ form_widget(filterform.operationaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+
+										</div>
+										<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
+										{{ form_end(filterform) }}
 
 									</div>
-									<div class="form-group col-md-4" style="display:inline;">
-										{{ form_label(filterform.operationaloffice," Operational Office") }}
-										{{ form_widget(filterform.operationaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
-
-
-									</div>
-									<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
-									{{ form_end(filterform) }}
-
-								</div>
+								{% endif %}
 
 
 							</div>
