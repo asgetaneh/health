@@ -44,11 +44,24 @@ class College
      */
     private $departments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalOffice::class, mappedBy="college")
+     */
+    private $operationalOffices;
+  
+    public function __toString()
+
+    {
+       
+        return $this->getName();
+
+    }
     public function __construct()
     {
         $this->campus = new ArrayCollection();
         $this->departements = new ArrayCollection();
         $this->departments = new ArrayCollection();
+        $this->operationalOffices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,6 +171,36 @@ class College
             // set the owning side to null (unless already changed)
             if ($department->getCollege() === $this) {
                 $department->setCollege(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalOffice[]
+     */
+    public function getOperationalOffices(): Collection
+    {
+        return $this->operationalOffices;
+    }
+
+    public function addOperationalOffice(OperationalOffice $operationalOffice): self
+    {
+        if (!$this->operationalOffices->contains($operationalOffice)) {
+            $this->operationalOffices[] = $operationalOffice;
+            $operationalOffice->setCollege($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalOffice(OperationalOffice $operationalOffice): self
+    {
+        if ($this->operationalOffices->removeElement($operationalOffice)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalOffice->getCollege() === $this) {
+                $operationalOffice->setCollege(null);
             }
         }
 

@@ -17,16 +17,15 @@ class OperationalOfficeType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('principalOffice',EntityType::class,[
-                'class'=>PrincipalOffice::class,
-                  'query_builder' => function (EntityRepository $er) {
+            ->add('college')
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
                         ->andWhere('g.isActive = 1')
                         ->orderBy('g.id', 'ASC');
                 },
-            ])
-          
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -340,12 +340,15 @@ ace.settings.loadState('sidebar')
 											{% endtrans %}
 										</a>
 									</li> #}
+                                    {% if app.user.status != 1 %}
+                                    
 									<li class="">
 										<a href="{{ path('choose_office') }}">
 											<b class="fa fa-caret-right"></b>
 											{% trans %}choose Office{% endtrans %}
 										</a>
 									</li>
+                                    {% endif %}
 
 									{% if is_granted('vw_per') %}
 										<li role="treeitem">
