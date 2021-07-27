@@ -47,6 +47,7 @@ class PrincipalManagerController extends AbstractController
 
             $user = $form->getData()->getPrincipal()->getId();
             //   dd($user);
+            // Principal Managers
             $userGroup = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "Principal Managers"]);
             $users = $entityManager->getRepository(UserGroup::class)->findBy(['id' => $user]);
             foreach ($users as $user) {

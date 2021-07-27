@@ -252,7 +252,7 @@ class PerformerTaskController extends AbstractController
             }
         }
 
-        return $this->render('mobile/show.html.twig', [
+        return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
             'narativeForm'=>$narativeForm->createView()
