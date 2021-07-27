@@ -106,21 +106,14 @@
 
 						<div class="table-responsive">
 
-							<form action="{{path('performer_task_show')}}" method="post">
+							<form action="{{path('mobile_performer_task_show')}}" method="post">
 								<table id="simple-table" class="table  table-bordered table-hover">
 									<thead>
 										<tr>
 											<th>#</th>
 											<th>TaskName</th>
-											<th>Weight</th>
+											
 											<th>Details</th>
-											<th>StartDate</th>
-											<th>EndDate</th>
-											<th>TimeGap</th>
-											<th>Measurement</th>
-											<th>Chalenge</th>
-											<th>Narrative</th>
-
 
 										</tr>
 									</thead>
@@ -140,57 +133,8 @@
 														</a>
 													</div>
 												</td>
-												<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
-
-												<td>{{ taskUser.taskAssign.startDate  }}</td>
-												<td>{{ taskUser.taskAssign.endDate }}</td>
-												<td>{{ taskUser.taskAssign.timeGap}}</td>
-												<td>
-													<table class="table table-bordered table-responsive-xg table-hover">
-														<tr>
-															<th></th>
-															<th>Expected Value
-															</th>
-															<th>Measurement Description
-															</th>
-															<th>Report Value
-															</th>
-															<th>Edit
-															</th>
-
-														</tr>
-														{% for taskAccomplishment in taskAccomplishments   %}
-															<tr>
-																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
-
-																	<td>{{ taskAccomplishment.measurement.name }}</td>
-																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
-																	<td>{{ taskAccomplishment.expectedValue }}</td>
-																	<td>{{ taskAccomplishment.measureDescription }}</td>
-																	{% if taskAccomplishment.reportedValue %}
-																		<td>{{ taskAccomplishment.reportedValue  }}</td>
-
-																	{% else %}
-																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
-																	{% endif %}
-																	<td>
-																		<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">
-																			<i class="fa fa-edit"></i>
-																		</button>
-																	</td>
-																{% endif %}
-															</tr>
-														{% endfor %}
-
-
-													</table>
-												</td>
-												<td>{{ taskUser.note}}</td>
-												<td>
-													<a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank" height="600">
-														Narrative Report</a>
-												</td>
-
+												
+												
 											</tr>
 											<tr class="detail-row">
 												<td colspan="8">
@@ -264,21 +208,71 @@
 																					<span>{{ taskAccomplishment.measurement.name }}</span>
 																				</div>
 																			</div>
-																			<td>{{ taskAccomplishment.measurement.name }}</td>
-																			<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
-																			<td>{{ taskAccomplishment.expectedValue }}</td>
-																			<td>{{ taskAccomplishment.measureDescription }}</td>
-																			{% if taskAccomplishment.reportedValue %}
-																				<td>{{ taskAccomplishment.reportedValue  }}</td>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Expected Value
 
-																			{% else %}
-																				<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
-																			{% endif %}
-																			<td>
-																				<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">
-																					<i class="fa fa-edit"></i>
-																				</button>
-																			</td>
+																				</div>
+
+																				<div class="profile-info-value">
+																					<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
+																					<span>{{ taskAccomplishment.expectedValue }}</span>
+																				</div>
+																			</div>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Measurement Description
+																				</div>
+
+																				<div class="profile-info-value">
+																					<span>{{ taskAccomplishment.measureDescription }}</span>
+																				</div>
+																			</div>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Report Value
+																				</div>
+
+																				<div class="profile-info-value">
+																					{% if taskAccomplishment.reportedValue %}
+																						<span>{{ taskAccomplishment.reportedValue }}</span>
+
+																					{% else %}
+																						<input type="text" name="reportValue[]" class="form-conrol" required>
+																					{% endif %}
+																				</div>
+																			</div>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Edit
+																				</div>
+
+																				<div class="profile-info-value">
+																					<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">
+																						<i class="fa fa-edit"></i>
+																					</button>
+																				</div>
+																			</div>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Challenge
+																				</div>
+
+																				<div class="profile-info-value">
+																					{{ taskUser.note}}
+																				</div>
+																			</div>
+																			<div class="profile-info-row">
+																				<div class="profile-info-name">
+																					Narrative
+																				</div>
+
+																				<div class="profile-info-value">
+																					<a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank" height="600">
+																						Narrative Report</a>
+																				</div>
+																			</div>
+
 																		{% endif %}
 																	{% endfor %}
 
@@ -331,6 +325,7 @@
 										{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
 										<div class="help-block with-errors"></div>
 									</div>
+						     <input type="file" name="narrativeFile" class="form-control">
 
 									<input type="hidden" name="id" value="{{taskUserid}}">
 
@@ -379,7 +374,7 @@
 
 		</div>
 	</div>
-	{{ include('performer_task/modal.html.twig') }}
+	{{ include('mobile/modal.html.twig') }}
 {% endblock %}
 {% block javascripts %}
 	<script>
