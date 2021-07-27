@@ -1,0 +1,180 @@
+{% extends 'generalmobile.html.twig' %}
+
+{% block title %}
+	Choose Office
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					Performer Task
+					<div class="widget-toolbar">
+						Total:{{taskUsers|length}}
+
+					</div>
+				</div>
+
+				<div class="widget-body">
+
+
+					<div class="widget-main padding-16">
+
+						<table id="simple-table" class="table  table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>TaskName</th>
+									<th class="detail-col">Details</th>
+									<th>actions</th>
+
+
+								</tr>
+							</thead>
+
+							<tbody>
+								{% set count = 0 %}
+								{% for task_User in taskUsers %}
+									<tr>
+										{% set count = count + 1 %}
+										<td>{{ count}}</td>
+										<td>{{ task_User.taskAssign.performerTask.name }}</td>
+
+
+										<td class="center">
+											<div class="action-buttons">
+												<a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+													<i class="ace-icon fa fa-angle-double-down"></i>
+													<span class="sr-only">Details</span>
+												</a>
+											</div>
+										</td>
+
+										<td>
+											<form action="{{path('mobile_performer_task_show')}}" method="post" class="d-inline-block">
+												<input type="hidden" name="taskUser" value="{{task_User.id}}">
+												{% if task_User.status  %}
+													<button class="btn btn-primary btn-sm">
+														Show
+													</button>
+												{% else %}
+													<button class="btn btn-primary btn-sm accept" onclick="return confirm('Are you sure you want to Accept this Task?');">
+
+														Accept
+													</button>
+												{% endif %}
+											</form>
+											{% if task_User.status == 0 %}
+												<button type="button" name="reject" data-performertask="{{task_User.id}}" class="btn btn-sm btn-danger show ">
+													Reject</button>
+
+											{% endif %}
+
+
+										</td>
+									</tr>
+									<tr class="detail-row">
+										<td colspan="8">
+											<div class="table-detail">
+												<div class="row">
+
+
+													<div class="col-xs-12 col-sm-7">
+														<div class="space visible-xs"></div>
+
+														<div class="profile-user-info profile-user-info-striped">
+
+															<div class="profile-info-row">
+																<div class="profile-info-name">
+																	StartDate
+																</div>
+
+																<div class="profile-info-value">
+																	<span>{{ task_User.taskAssign.startDate  }}</span>
+																</div>
+															</div>
+
+															<div class="profile-info-row">
+																<div class="profile-info-name">
+																	EndDate
+																</div>
+
+																<div class="profile-info-value">
+																	<span>{{ task_User.taskAssign.endDate  }}</span>
+																</div>
+															</div>
+
+															<div class="profile-info-row">
+																<div class="profile-info-name">
+																	TimeGap
+																</div>
+
+																<div class="profile-info-value">
+																	<span>{{ task_User.taskAssign.timeGap }}</span>
+																</div>
+															</div>
+
+															<div class="profile-info-row">
+																<div class="profile-info-name">
+																	Weight
+																</div>
+
+																<div class="profile-info-value">
+																	<span>{{ task_User.taskAssign.performerTask.weight }}</span>
+																</div>
+															</div>
+
+															<div class="profile-info-row">
+																<div class="profile-info-name">
+																	Quantity
+																</div>
+
+																<div class="profile-info-value">
+																	<span>{{task_User.taskAssign.expectedValue}}</span>
+																</div>
+															</div>
+
+
+														</div>
+													</div>
+
+
+												</div>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</tbody>
+					</table>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}{% block javascripts %}
+<script type="text/javascript">
+	$('.show-details-btn').on('click', function (e) {
+e.preventDefault();
+$(this).closest('tr').next().toggleClass('open');
+$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+});
+</script>
+	<script>
+		$('.show').click(function () {
+$('#reject').modal('show');
+
+var id = $(this).attr('data-performerTask');
+$('.taskUserId').val(id);
+})
+	</script>
+	<script>
+  $('.accept').clicck(function(){
+      location.reload(true);
+
+  })  
+    </script>
+
+{% endblock %}

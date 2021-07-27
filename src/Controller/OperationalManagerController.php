@@ -100,12 +100,10 @@ class OperationalManagerController extends AbstractController
         } else
             $query = $operationalManagerRepository->findAll();
 
-        $data = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            10
+        $data =$query;
+          
 
-        );
+    
        
         return $this->render('operational_manager/index.html.twig', [
             'operational_managers' => $data,

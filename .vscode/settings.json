@@ -22,5 +22,8 @@
     },
     "diffEditor.wordWrap": "off",
     "editor.acceptSuggestionOnEnter": "smart",
-    "editor.autoIndent": "advanced"
+    "editor.autoIndent": "advanced",
+    "[html]": {
+        "editor.defaultFormatter": "mblode.twig-language"
+    }
 }

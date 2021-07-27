@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'generalmobile.html.twig' %}
 
 {% block title %}
 	Choose Office
@@ -92,7 +92,7 @@ var principal = $('.principal').val()
 var select = $('.oper')
 
 $.ajax({
-url:"{{ path('operational_fetch') }}",
+url:"{{ path('mobile_operational_fetch') }}",
 method: "POST",
 data: {
 principal: principal

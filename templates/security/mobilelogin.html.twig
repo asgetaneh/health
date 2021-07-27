@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			Log in</title>
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Font Awesome -->
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+		<!-- Ionicons -->
+		<link
+		rel="stylesheet" href="{{asset('assets/plugins/fontawesome/css/all.min.css')}}">
+
+		<!-- icheck bootstrap -->
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+		<link
+		href="{{asset('assets/plugins/fontface/OpenSans.css')}}" rel="stylesheet">
+	<!-- Google Font: Source Sans Pro -->
+	</head>
+
+	<body class="hold-transition login-page">
+
+		{% block fullbody %}
+			<div class="login-box">
+				<div class="login-logo">
+
+					<img src="{{ asset('image/logomis.png') }}" id="icon" alt="User Icon" style="width: 250px; height: 250px"/>
+					<br>
+					<a href="/road1/public/index.php">
+						<b>MIS</b>
+					</a>
+				</div>
+				{% block body %}
+
+					<!-- /.login-logo -->
+					<div class="card">
+						<div class="card-body login-card-body">
+							<p class="login-box-msg">Please sign in
+							</p>
+
+							<form method="post">
+								{% if error %}
+
+									<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+								{% endif %}
+
+								{% if app.user %}
+									<div class="mb-3">
+										You are logged in as
+										{{ app.user.username }},
+										<a href="{{ path('mobile_logout') }}">Logout</a>
+									</div>
+								{% endif %}
+								<center><img src="{{ asset('load.gif') }}" class="load" id="icon" alt="User Icon" style="width: 100px; height: 100px"/></center>
+
+								<div class="form-group mb-3">
+									<label for="Email">
+										Username</label>
+									<input type="text" value="{{ last_username }}" name="username" id="inputEmail" class="form-control" autocomplete="off" required autofocus>
+								</div>
+								<div class="form-group mb-4">
+									<label for="Password">Password</label>
+									<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="off" required>
+								</div>
+
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+								<center>
+									<button class="btn btn-info sign mb-4">Sign in</button>
+								</center>
+
+							</form>
+							<br/>
+							<div class=" float-right"></div>
+
+						</div>
+						<!-- /.login-card-body -->
+					</div>
+				{% endblock %}
+			</div>
+
+		{% endblock %}
+
+		<!-- /.login-box -->
+
+		<!-- jQuery -->
+		<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+		<!-- Bootstrap 4 -->
+		<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+		<!-- AdminLTE App -->
+		<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+		<script>
+			$(".load").hide();
+
+$(".sign").click(function () {
+$(".load").show();
+});
+		</script>
+	</body>
+</html>
