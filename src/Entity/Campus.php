@@ -33,7 +33,13 @@ class Campus
      * @ORM\ManyToMany(targetEntity=College::class, mappedBy="campus")
      */
     private $colleges;
+  public function __toString()
 
+    {
+       
+        return $this->getName();
+
+    }
     public function __construct()
     {
         $this->colleges = new ArrayCollection();
