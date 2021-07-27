@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\OperationalManager;
 use App\Entity\OperationalOffice;
 use App\Entity\PrincipalOffice;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Form\OperationalManagerType;
 use App\Repository\OperationalManagerRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -60,7 +62,21 @@ class OperationalManagerController extends AbstractController
 
                 return $this->redirectToRoute('operational_manager_index');
             }
-
+      $user= $form->getData()->getManager()->getId();
+    //   dd($user);
+    $userGroup=$entityManager->getRepository(UserGroup::class)->findOneBy(['name'=>"Operational managers"]);
+    // dd($userGroup);
+        // $users = $entityManager->getRepository(User::class)->findAll();
+        //     foreach ($users as $user) {
+        //         $userGroup->removeUser($user);
+        //     }
+            $users = $entityManager->getRepository(User::class) ->findBy(['id' => $user]);
+            foreach ($users as $user) {
+                $userGroup->addUser($user);
+            }
+            $userGroup->setUpdatedAt(new \DateTime());
+            $userGroup->setUpdatedBy($this->getUser());
+            // $this->getDoctrine()->getManager()->flush();
             $entityManager->persist($operationalManager);
             $entityManager->flush();
 
