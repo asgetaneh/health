@@ -310,7 +310,7 @@
 							</form>
 							{% if status == 4 %}
 
-								<form action="{{path('performer_task_send')}}" method="post">
+								<form action="{{path('mobile_performer_task_send')}}" method="post">
 									<input type="hidden" name="taskUserId" value="{{taskUserid}}">
 
 									<button type="submit" name="narrative" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report ?');">Send Report</button>
@@ -325,7 +325,7 @@
 										{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
 										<div class="help-block with-errors"></div>
 									</div>
-						     <input type="file" name="narrativeFile" class="form-control">
+						          <input type="file" name="narrativeFile" class="form-control">
 
 									<input type="hidden" name="id" value="{{taskUserid}}">
 

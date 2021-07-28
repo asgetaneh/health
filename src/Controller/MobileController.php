@@ -157,6 +157,20 @@ class MobileController extends AbstractController
 
         ]);
     }
+     /**
+     * @Route("/send", name="mobile_performer_task_send")
+     */
+    public function send(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $taskId = $request->request->get('taskUserId');
+        $taskUser = $taskUserRepository->find($taskId);
+        $taskUser->setStatus(5);
+        // $taskUser->setType(1);
+        $em->flush();
+        return $this->redirectToRoute('mobile_performer_task');
+    }
 
        /**
      * @Route("/choose", name="mobile_choose_office")
