@@ -105,13 +105,13 @@
 						</thead>
 						<tbody>
 							{% set principal = 0 %}
-							{% set count =  operational_managers.getItemNumberPerPage() * (operational_managers.getCurrentPageNumber() -1) %}
+							{% set count =  0 %}
 							{% for operational_manager in operational_managers %}
 								{% for item in app.user.principalManagers %}
 									{% set principal = item.principalOffice.name %}
 
 								{% endfor %}
-								{% if principal == operational_manager.operationalOffice.principalOffice or is_granted("all_acess_opr_mng")  %}
+								{% if principal == operational_manager.operationalOffice.principalOffice.name or is_granted("all_acess_opr_mng")  %}
 
 									<tr>
 										{% set count = count + 1 %}
@@ -171,7 +171,7 @@
 
 						</tbody>
 					</table>
-					<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operational_managers) }}</div>
+					{# <div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operational_managers) }}</div> #}
 
 				</div>
 

@@ -21,11 +21,11 @@ use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticato
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
+class MobileLoginFormAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'mobile_login';
 
     private $entityManager;
     private $urlGenerator;
@@ -77,7 +77,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
         //  dd($credentials['username']);
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-//    $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+   // $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
 
         $this->user = $user;
         //  dd($user);
@@ -172,7 +172,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         // else
         //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
 
-        return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        return new RedirectResponse($this->urlGenerator->generate('mobile_choose_office'));
         throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
     protected function getLoginUrl()

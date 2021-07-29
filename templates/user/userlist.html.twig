@@ -44,11 +44,27 @@ $('#example').DataTable();
 					<div class="widget-toolbar"></div>
 
 					<div class="widget-toolbar">
+						{% set numbernotChoose = 0 %}
+						{% for item in count %}
+							{% if item.user.status != 1 %}
+								{% set numbernotChoose = numbernotChoose + 1 %}
+							{% endif %}
+
+						{% endfor %}
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
 							<strong>{{count|length}}</strong>
 						</span>
+						<span class="badge badge-danger">
+
+							{% trans %}
+							Office Not Choose 
+							{% endtrans %}
+							:
+							<strong>{{numbernotChoose}}</strong>
+						</span>
+
 					</div>
 				</div>
 
@@ -70,7 +86,7 @@ $('#example').DataTable();
 								</div>
 							</form>
 
-							<table  class="table table-striped table-bordered" style="width:100%">
+							<table class="table table-striped table-bordered" style="width:100%">
 								<thead>
 									<tr>
 										<th>Id</th>

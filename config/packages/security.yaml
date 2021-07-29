@@ -16,6 +16,22 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        mobile:
+            pattern: ^/mobile/*
+            anonymous: lazy
+            provider: ldap_user_provider
+            form_login:
+                    remember_me: true
+                    login_path: mobile_login
+                    check_path: mobile_login
+            guard:
+                authenticators:
+                    - App\Security\MobileLoginFormAuthenticator
+                entry_point: App\Security\MobileLoginFormAuthenticator
+            logout:
+                path: mobile_logout
+                target: mobile_login
+
         main:
             anonymous: true
             lazy: true
@@ -26,7 +42,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_login
+                # target: app_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -39,6 +55,7 @@ security:
     access_control:
        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/mobile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/feed/back/new, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/achievement/goalHome, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/achievement/kpivis, roles: IS_AUTHENTICATED_ANONYMOUSLY }

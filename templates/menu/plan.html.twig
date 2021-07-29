@@ -15,7 +15,7 @@
 	<b class="arrow"></b>
 	<ul class="submenu nav-show" style="background:#3f87a6; color: #f5f6f8">
 
-		{# {% if is_granted('vw_all_pln') %} #}
+		{% if is_granted('csc_nd_pln') %}
 
 
 			<li>
@@ -25,7 +25,7 @@
 				</a>
 				<b class="arrow"></b>
 			</li>
-		{# {% endif %} #}
+		{% endif %}
 		{% if is_granted('csc_nd_pln') %}
 			<li>
 				<a href="{{ path('plan_index') }}" style="background:#3f87a6; color: #f5f6f8">

@@ -192,6 +192,7 @@ class PerformerController extends AbstractController
 
         return new JsonResponse($principals);
     }
+    
 
     /**
      * @Route("/new", name="performer_new", methods={"GET","POST"})
