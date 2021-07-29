@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PrincipalManager;
+use App\Entity\User;
 use App\Entity\UserGroup;
 use App\Form\PrincipalManagerType;
 use App\Repository\PrincipalManagerRepository;
@@ -49,7 +50,8 @@ class PrincipalManagerController extends AbstractController
             //   dd($user);
             // Principal Managers
             $userGroup = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "Principal Managers"]);
-            $users = $entityManager->getRepository(UserGroup::class)->findBy(['id' => $user]);
+            // dd($userGroup);
+            $users = $entityManager->getRepository(User::class)->findBy(['id' => $user]);
             foreach ($users as $user) {
                 $userGroup->addUser($user);
             }
