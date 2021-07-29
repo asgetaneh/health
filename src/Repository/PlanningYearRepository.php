@@ -47,4 +47,15 @@ class PlanningYearRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findLast()
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.id',"DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+              ->getOneOrNullResult()
+            // ->getSingleResult()
+        ;
+    }
+
 }

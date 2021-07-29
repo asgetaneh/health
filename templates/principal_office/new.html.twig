@@ -1,11 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New PrincipalOffice{% endblock %}
-
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('principal_office_plan')}}">{% trans %}
+			<strong>
+				Planned Principal Office{% endtrans %}
+			</strong>
+		</a>
+	</li>
+{% endblock %}
 {% block body %}
-    <h1>Create new PrincipalOffice</h1>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>Planned Principal Office</strong>
+					</h5>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{principal_offices.getTotalItemCount()}}</strong>
 
-    {{ include('principal_office/_form.html.twig') }}
+						</span>
+					</div>
+				</div>
+				<div class="widget-body">
+					<div class="widget-toolbox" id="widget-toolbox-1">
+						
+					</div>
+					<div class="widget-main padding-16">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
 
-    <a href="{{ path('principal_office_index') }}">back to list</a>
+								<thead>
+									<tr></tr>
+									<tr>
+										<th>#</th>
+										<th>Principal Office</th>
+										
+										<th>Director</th>
+
+										<th>Planning Year</th>
+
+										<th>IsPlanned</th>
+										
+									</tr>
+								</thead>
+							</tr>
+						</thead>
+						<tbody>
+							{% set count =  principal_offices.getItemNumberPerPage() * (principal_offices.getCurrentPageNumber() -1) %}
+							{% for principal_office in principal_offices %}
+								<tr>
+									{% set count = count + 1 %}
+									<td>{{ count }}</td>
+									<td>{{ principal_office.name }}</td>
+
+									
+									<td>
+										{% for director in  
+                                        principal_office.principalManagers|filter(director => director.isActive == 1) %}
+											{{director.principal|title}}
+										{% endfor %}
+
+									</td>
+                                    <td>{{year}}</td>
+                                    
+									<td>
+										{% if principal_office.suitableInitiatives|filter(suitable => suitable.planningYear.id == year.id )|length > 0 %}
+											<span class="label label-success"><strong>Yes</strong></span>
+										{% else %}
+											<span class="label label-danger"><strong>NO</strong></span>
+
+										{% endif %}
+
+									</td>
+									{# <td>{{ principal_office.createAt ? principal_office.createAt|date('d-M-Y') : '' }}</td> #}
+									
+									
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="6">no records found</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+					<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(principal_offices) }}</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</div></div>
 {% endblock %}

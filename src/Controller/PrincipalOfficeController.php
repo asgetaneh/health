@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Form\PrincipalOfficeType;
 use App\Repository\PrincipalOfficeRepository;
@@ -72,27 +73,29 @@ class PrincipalOfficeController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="principal_office_new", methods={"GET","POST"})
+     * @Route("/plan", name="principal_office_plan", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request,PaginatorInterface $paginator,PrincipalOfficeRepository $principalOfficeRepository): Response
     {
-         $this->denyAccessUnlessGranted('ad_pof');
-        $principalOffice = new PrincipalOffice();
-        $form = $this->createForm(PrincipalOfficeType::class, $principalOffice);
-        $form->handleRequest($request);
+        //  $this->denyAccessUnlessGranted('ad_pof');
+         $entityManager = $this->getDoctrine()->getManager();
+         $year=$entityManager->getRepository(PlanningYear::class)->findLast();
+      
+          $plan=$principalOfficeRepository->findPlannedOffice($year);
+       
+       
+ $data=$paginator->paginate(
+             $plan,
+             $request->query->getInt('page',1),
+             10
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($principalOffice);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('principal_office_index');
-        }
-
+        );
         return $this->render('principal_office/new.html.twig', [
-            'principal_office' => $principalOffice,
-            'form' => $form->createView(),
+            'principal_offices' => $data,
+            'year'=>$year
+            
         ]);
+       
     }
 
     /**

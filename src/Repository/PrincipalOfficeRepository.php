@@ -78,6 +78,20 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    public function findPlannedOffice($year){
+        $qb=$this->createQueryBuilder('p')
+        // ->select('p')
+        ->addSelect('s')
+        ->leftJoin('p.suitableInitiatives','s')
+        // ->orWhere('s.planningYear= :year')
+        // ->setParameter('year',$year)
+        
+        ;
+      
+        return $qb->getQuery();
+
+    }
+    
      public function findPrincipalOffice($user){
         $qb=$this->createQueryBuilder('po')
         ->leftJoin('po.principalManagers','pm')
