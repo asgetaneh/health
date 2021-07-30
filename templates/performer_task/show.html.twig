@@ -177,9 +177,14 @@
 													</table>
 												</td>
 												<td>{{ taskUser.note}}</td>
-												<td><a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank"  height="600">
-                                                Narrative Report</a>
-                                                </td>
+												<td>
+													{% if status >=4  %}
+
+														<a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank" height="600">
+															Narrative Report</a>
+
+													{% endif %}
+												</td>
 
 											</tr>
 
