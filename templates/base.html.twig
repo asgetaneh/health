@@ -104,7 +104,7 @@
 										<li>
 											<div class="dropdown">
 
-												<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{% trans %}Switch Language{% endtrans %}
+												<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">   {% trans %} Switch Language:{% endtrans %} {{app.request.locale|title}}
 													<span class="caret"></span>
 												</button>
 												<ul class="dropdown-menu">
@@ -791,7 +791,7 @@ document.write("<script src='                 {{ asset('assets/assets/js/jquery.
 								<script>
 									$(function () {
 
-$('.select2').css('width', '100%').select2({allowClear: false});
+
 
 
 })

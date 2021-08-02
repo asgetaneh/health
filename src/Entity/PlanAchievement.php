@@ -55,6 +55,11 @@ class PlanAchievement
      */
     private $quarterAccomplishments;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=0)
+     */
+    private $plan;
+
     public function __construct()
     {
         $this->quarterAccomplishments = new ArrayCollection();
@@ -165,6 +170,18 @@ class PlanAchievement
                 $quarterAccomplishment->setYearPlan(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPlan(): ?string
+    {
+        return $this->plan;
+    }
+
+    public function setPlan(string $plan): self
+    {
+        $this->plan = $plan;
 
         return $this;
     }

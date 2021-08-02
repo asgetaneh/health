@@ -104,7 +104,7 @@ class MobileLoginFormAuthenticator extends AbstractFormLoginAuthenticator implem
           $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
       //$user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
         $this->user = $user;
-        //  dd($user);
+       
         if (!$user) {
           
 

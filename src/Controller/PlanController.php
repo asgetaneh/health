@@ -325,9 +325,9 @@ class PlanController extends AbstractController
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
-
+        //  dd($request->request->get('planvalue'));
         if ($request->request->get('planvalue')) {
-
+   
             $planValues = $request->request->get('planvalue');
 
 
@@ -364,7 +364,7 @@ class PlanController extends AbstractController
 
                         $planAcomplishment->setSuitableInitiative($planInitiative);
                         $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
-                        if ((int) $planValues[$i] > 0) {
+                        if ($planValues[$i]) {
                             $planAcomplishment->setPlanValue((int) $planValues[$i]);
                         }
                         $planAcomplishment->setQuarter($planningquarter);
