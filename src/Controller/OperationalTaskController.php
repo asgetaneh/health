@@ -108,9 +108,7 @@ class OperationalTaskController extends AbstractController
         $quarterName = 0;
         $quarters = $planningQuarterRepository->findAll();
         foreach ($quarters as $quarter) {
-        //   dump($time);
             if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
-        //   dd($time,$quarter->getEndDate());
 
                 $quarterId = $quarter->getId();
                 $quarterName = $quarter->getName();
@@ -126,9 +124,6 @@ class OperationalTaskController extends AbstractController
                 $quarterStartMonth = explode('-', $quarterStartMonth);
                 $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
                 $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
-// dd($endYear,$quarterEndMonth,$quarterEndDate);
-                //   $startDate1=DateTimeFactory::of($startYear,$currentMonth,$quarterStartDate);
-                // dd($quarterStartMonth[1]);
                 $minDate = $startYear . ',' . $quarterStartMonth[1] . ',' . $quarterStartDate;
                 $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
                 $minDateEdit = $startYear . ',' . $quarterStartMonth1 . ',' . $quarterStartDate1;
@@ -555,24 +550,7 @@ class OperationalTaskController extends AbstractController
             'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
-    //  /**
-    //  * @Route("/intiative/accomplishment/list", name="initiative_accomplishment_social_list")
-    //  */
-    // public function acomplishmentListSocial(Request $request,SuitableInitiativeRepository $suitableInitiativeRepository, PrincipalManagerRepository $principalManagerRepository, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository): Response
-    // {
-    //      $socialcount=1;
-    //      $suitableId=$request->request->get("suitId");
-    //      $social=$request->request->get("social");
-    //      $suitableInitiative=$suitableInitiativeRepository->find($suitableId);
-
-    //     $principalOffice=$suitableInitiative->getPrincipalOffice()->getId();
-    //    $operatioanlSuitables=$operationalSuitableInitiativeRepository->findplanSocial($principalOffice,$suitableInitiative->getId(),$social);
-    //     // dd($operatioanlSuitables,$social);
-    //     return $this->render('operational_task/initiativeAccomplishment.html.twig', [
-    //         'operatioanlSuitables' => $operatioanlSuitables,
-    //         'social'=>$socialcount,
-    //     ]);
-    // }
+   
     /**
      * @Route("/intiative/accomplishment/{id}", name="initiative_accomplishment_list")
      */

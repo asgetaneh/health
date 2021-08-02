@@ -37,7 +37,24 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+  public function search($search = [])
+    {
+        $qb = $this->createQueryBuilder('p');
+        if (isset($search['name'])) {
 
+            $qb
+
+                ->andWhere("p.name  LIKE '%" . $search['name'] . "%' ");
+        }
+        if (isset($search['principaloffice'])) {
+
+            $qb
+
+                ->andWhere("p.id in(:po)")
+                ->setParameter('po', $search['principaloffice']);
+        }
+        return $qb->getQuery();
+    }
     // /**
     //  * @return PrincipalOffice[] Returns an array of PrincipalOffice objects
     //  */

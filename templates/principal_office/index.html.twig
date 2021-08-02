@@ -42,6 +42,37 @@
 						</div>
 					</div>
 					<div class="widget-main padding-16">
+
+						<div class="row">
+							<div class="search-area well col-md-12">
+
+								<div class="row">
+									{{ form_start(filterform) }}
+
+									<div class="form-group col-md-6" style="display:inline;">
+										{{ form_label(filterform.principaloffice," Principal Office") }}
+										{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+
+
+									</div>
+									<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
+									{{ form_end(filterform) }}
+
+								</div>
+							</div>
+						</div>
+
+						<form class="form-inline" method="get" style="display:inline;margin-bottom:15px;">
+
+							<div class="input-group">
+								<input type="text" class="form-control" name="search" placeholder="Search">
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-default no-border btn-sm">
+										<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+									</button>
+								</div>
+							</div>
+						</form>
 						<div class="table-responsive">
 							<table class="table table-striped table-bordered table-hover">
 
@@ -71,7 +102,7 @@
 
 									<td>
 										<ul class="list-unstyled spaced">
-                        
+
 											{% for office in  
                                         principal_office.operationalOffices|filter(office => office.isActive == 1) %}
 												<li>
@@ -105,17 +136,17 @@
 									<td>
 										<a class="btn btn-primary btn-sm" href="{{ path('principal_office_show', {'id': principal_office.id}) }}" title="view details">
 											<i class="fa fa-eye"></i>
-											</a>
+										</a>
 										<a class="btn btn-warning btn-sm" href="{{ path('principal_office_edit', {'id': principal_office.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
-											</a>
+										</a>
 										<form class="" style="display:inline;" action="" method="post">
 
 
 											<input type="hidden" name="{{principal_office.isActive ?"deactive":"active"}}" value="{{ principal_office.id}}">
 											<button type="submit" title="{{principal_office.isActive?"deactivate":"activate"}}" style="display:inline;" class="btn btn-sm {{ principal_office.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{principal_office.isActive?" deactivate":" activate"}}')">
-                                            <span class="{{principal_office.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
-                                            </button>
+												<span class="{{principal_office.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+											</button>
 
 										</form>
 									</td>
