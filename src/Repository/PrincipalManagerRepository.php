@@ -64,4 +64,26 @@ class PrincipalManagerRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
       
     }
+     public function search($search = [])
+    {
+        $qb = $this->createQueryBuilder('p');
+        if (isset($search['name'])) {
+
+            $qb
+                ->join('p.principal', 'pr')
+                ->join('pr.userInfo', 'ui')
+
+                ->andWhere("ui.fullName  LIKE '%" . $search['name'] . "%' ");
+        }
+        if (isset($search['principaloffice']) && sizeof($search['principaloffice']) > 0) {
+
+
+            $qb
+
+                ->andWhere("p.principalOffice in(:po)")
+                ->setParameter('po', $search['principaloffice']);
+        }
+       
+        return $qb->getQuery();
+    }
 }

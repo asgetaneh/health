@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\PrincipalManager;
+use App\Entity\PrincipalOffice;
 use App\Entity\User;
 use App\Entity\UserGroup;
 use App\Form\PrincipalManagerType;
 use App\Repository\PrincipalManagerRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +30,15 @@ class PrincipalManagerController extends AbstractController
         $principalManager = new PrincipalManager();
         $form = $this->createForm(PrincipalManagerType::class, $principalManager);
         $form->handleRequest($request);
+        $filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
 
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required' => false,
+            ])->getForm();
+        $filterForm->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -90,16 +100,26 @@ class PrincipalManagerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('principal_manager_index');
         }
+        if ($request->query->get('search')) {
+            $query = $principalManagerRepository->search(['name' => $request->query->get('search')]);
+        } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
+            $query =  $principalManagerRepository->search($filterForm->getData());
+        } else
+            $query = $principalManagerRepository->findAll();
+
+        // $data =$query;
         $data = $paginator->paginate(
-            $principalManagerRepository->findAll(),
+            $query,
             $request->query->getInt('page', 1),
             10
 
         );
         return $this->render('principal_manager/index.html.twig', [
             'principal_managers' =>  $data,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'filterform' => $filterForm->createView()
+
         ]);
     }
 
