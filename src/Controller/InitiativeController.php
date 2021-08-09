@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Goal;
 use App\Entity\Initiative;
+use App\Entity\InitiativeAttribute;
+use App\Entity\InitiativeCategory;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\Objective;
 use App\Entity\Perspective;
@@ -86,6 +88,12 @@ class InitiativeController extends AbstractController
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->add('category', EntityType::class, [
+                'class' => InitiativeCategory::class,
                 'multiple' => true,
                 'required' => false,
 

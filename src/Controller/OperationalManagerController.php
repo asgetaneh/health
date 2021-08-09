@@ -117,7 +117,7 @@ class OperationalManagerController extends AbstractController
             $query = $operationalManagerRepository->findAll();
 
         $data =$query;
-          
+        //   dd($data);
 
     
        

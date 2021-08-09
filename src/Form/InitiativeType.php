@@ -53,12 +53,24 @@ class InitiativeType extends AbstractType
                 //    'required' => false,
 
                 ])
+                
                 ->add('weight', null, [
                    
                     'attr' => ['class' => 'form-control'],
                     
                   
 
+                ])
+                 
+                ->add('category', null, [
+                   
+                    'attr' => ['class' => 'form-control'],
+                    
+                  
+
+                ])
+                 ->add('weight', null, [
+                    'attr' => ['class' => 'form-control']
                 ])
                 // ->add('baseline', null, [
                    

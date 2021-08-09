@@ -60,21 +60,21 @@
 									<div class="col-md-4">
 										<div class="form-group form-group-sm">
 											{{ form_label(filterform.goal,'Goal') }}
-											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'Choose goal' }}) }}
 										</div>
 									</div>
 
 									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.perspective,'Perspective') }}
-											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'Choose perspective' }}) }}
 										</div>
 									</div>
 
 									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.objective,'Objective') }}
-											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
+											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'Choose objective' }}) }}
 										</div>
 									</div>
 
@@ -82,19 +82,25 @@
 									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.strategy,'Strategy') }}
-											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'Choose strategy' }}) }}
 										</div>
 									</div>
 									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.kpi,'KPI') }}
-											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'Choose strategy' }}) }}
 										</div>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.principaloffice,'Responsible Office') }}
-											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
+											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'Choose responsible office' }}) }}
+										</div>
+									</div>
+                                    <div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.category,'Initiative Category') }}
+											{{ form_widget(filterform.category,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Initiative Category' }}) }}
 										</div>
 									</div>
 
@@ -131,6 +137,7 @@
 										<th>#</th>
 										<th>{% trans %}Initiative{% endtrans %}</th>
 										<th>{% trans %}Initiative Behaviour{% endtrans %}</th>
+										<th>{% trans %}Initiative Category{% endtrans %}</th>
 
 
 										{# <th>MinValue</th> #}
@@ -167,7 +174,7 @@
 												{{initiative.initiativeBehaviour }}
 											</td>
 											{# <td>{{ initiative.initiativeBehaviour.code }}</td> #}
-											{# <td>{{ initiative.maximumValue }}</td> #}
+											<td>{{ initiative.category }}</td>
 											<td>
 												{{ initiative.keyPerformanceIndicator|title }}
 											</td>

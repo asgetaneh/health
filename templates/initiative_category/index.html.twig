@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InitiativeCategory index{% endblock %}
+
+{% block body %}
+    <h1>InitiativeCategory index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for initiative_category in initiative_categories %}
+            <tr>
+                <td>{{ initiative_category.id }}</td>
+                <td>{{ initiative_category.name }}</td>
+                <td>{{ initiative_category.description }}</td>
+                <td>
+                    <a href="{{ path('initiative_category_show', {'id': initiative_category.id}) }}">show</a>
+                    <a href="{{ path('initiative_category_edit', {'id': initiative_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('initiative_category_new') }}">Create new</a>
+{% endblock %}

@@ -26,7 +26,20 @@
 			</a>
 		</li>
          {% endif %}
-        {% if is_granted('vw_intv_atr') %}
+         {% if is_granted('vw_intv_bvr') %}
+        
+       
+		
+		<li role="treeitem">
+			<a href="{{ path('initiative_category_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Initiative Category
+				{% endtrans %}
+			</a>
+		</li>
+         {% endif %}
+         
+        {# {% if is_granted('vw_intv_atr') %}
         
         
 		<li role="treeitem">
@@ -36,7 +49,7 @@
 				{% endtrans %}
 			</a>
 		</li>
-        {% endif %}
+        {% endif %} #}
         </ul>
         </li>
         {% endif %}

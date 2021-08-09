@@ -202,3 +202,9 @@
 		{{ form_end(form) }}
 	</div>
 </div></div>{% endblock %}
+{% block javascripts %}<script>
+$(function () {
+$('.select2').css('width', '90%').select2({allowClear: false})
+
+
+})</script>{% endblock %}

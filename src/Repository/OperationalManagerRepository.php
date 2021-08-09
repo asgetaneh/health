@@ -93,6 +93,6 @@ class OperationalManagerRepository extends ServiceEntityRepository
                 ->andWhere("o.id in (:id)")
                 ->setParameter('id', $search['operationaloffice']);
         }
-        return $qb->getQuery();
+        return $qb->getQuery()->getResult();
     }
 }

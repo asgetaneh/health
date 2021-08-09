@@ -68,7 +68,7 @@ class OperationalTaskController extends AbstractController
      */
     public function index(Request $request, SuitableInitiative $suitableInitiative, PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
     {
-                 $this->denyAccessUnlessGranted('opr_task');
+        $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -83,8 +83,12 @@ class OperationalTaskController extends AbstractController
             }
         }
         // dd($user);
+        $initiativeAttr = $em->getRepository(InitiativeAttribute::class)->findAll();
 
         $performerTask = new PerformerTask();
+        // foreach ($initiativeAttr as $init) {
+        //     $performerTask->setSocial($init);
+        // }
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
         $taskMeasurement = new TaskMeasurement();
@@ -133,16 +137,17 @@ class OperationalTaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
-                $plans = $planningAccomplishmentRepository->findplanAccomp($suitableInitiative, $form->getData()->getSocial()->getId());
+                $plans = $planningAccomplishmentRepository->findBy(['suitableInitiative' => $suitableInitiative]);
             } else {
                 $plans = $planningAccomplishmentRepository->findBy(['suitableInitiative' => $suitableInitiative]);
             }
             // dd($plans);
             foreach ($plans as  $value) {
-                // dd($value);
                 if ($value->getQuarter() == $planningQuarterRepository->find($quarterId)) {
                     $performerTask->setPlanAcomplishment($value);
                     $performerTask->setStatus(1);
+                    dump($value);
+
                     if ($delegatedUser) {
                         $delegatedBy = $delegatedUser->getDelegatedUser();
                         $performerTask->setDeligateBy($delegatedBy);
@@ -150,13 +155,11 @@ class OperationalTaskController extends AbstractController
                     $performerTask->setQuarter($planningQuarterRepository->find($quarterId));
                     foreach ($user->getOperationalManagers() as $op) {
                         $opOff = $op->getOperationalOffice();
-
                     }
                     // dd($maxcount);
                     if ($maxcount > 5) {
                         $this->addFlash('danger', 'Task must be less than 7 !');
                         return $this->redirectToRoute('operational_task_index', ['id' => $suitableInitiative->getId()]);
-
                     }
                     $performerTask->setOperationalOffice($opOff);
                     $performerTask->setCreatedBy($user);
@@ -224,8 +227,8 @@ class OperationalTaskController extends AbstractController
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
         $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
-        $performerTasks=$em->getRepository(PerformerTask::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
-        $taskUsers=$em->getRepository(TaskUser::class)->findProgress($currentQuarter,$currentYear,$principlaOffice);
+        $performerTasks = $em->getRepository(PerformerTask::class)->findProgress($currentQuarter, $currentYear, $principlaOffice);
+        $taskUsers = $em->getRepository(TaskUser::class)->findProgress($currentQuarter, $currentYear, $principlaOffice);
 
         $data = $paginator->paginate(
             $suitableInitiatives,
@@ -236,8 +239,8 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'suitableInitiatives' => $data,
             'count' => $suitableInitiatives,
-            'performerTasks'=>$performerTasks,
-            'taskUserss'=>$taskUsers,
+            'performerTasks' => $performerTasks,
+            'taskUserss' => $taskUsers,
         ]);
     }
 
@@ -550,7 +553,7 @@ class OperationalTaskController extends AbstractController
             'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
-   
+
     /**
      * @Route("/intiative/accomplishment/{id}", name="initiative_accomplishment_list")
      */
@@ -636,7 +639,7 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
-        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user,$request->request->get('quartertask'));
+        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
         // dd($units);
 
         return new JsonResponse($units);
