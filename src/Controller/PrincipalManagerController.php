@@ -106,6 +106,8 @@ class PrincipalManagerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('principal_manager_index');
         }
+                    $count = $principalManagerRepository->findAll();
+
         if ($request->query->get('search')) {
             $query = $principalManagerRepository->search(['name' => $request->query->get('search')]);
         } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
@@ -124,7 +126,8 @@ class PrincipalManagerController extends AbstractController
         return $this->render('principal_manager/index.html.twig', [
             'principal_managers' =>  $data,
             'form' => $form->createView(),
-            'filterform' => $filterForm->createView()
+            'filterform' => $filterForm->createView(),
+            'totalcount'=>$count
 
         ]);
     }
