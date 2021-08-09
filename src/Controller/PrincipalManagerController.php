@@ -60,6 +60,7 @@ class PrincipalManagerController extends AbstractController
             //   dd($user);
             // Principal Managers
             $userGroup = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "Principal Managers"]);
+              $userGroupcas = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "cascading"]);
             // dd($userGroup);
             $users = $entityManager->getRepository(User::class)->findBy(['id' => $user]);
             foreach ($users as $user) {
@@ -67,6 +68,11 @@ class PrincipalManagerController extends AbstractController
             }
             $userGroup->setUpdatedAt(new \DateTime());
             $userGroup->setUpdatedBy($this->getUser());
+             foreach ($users as $user) {
+                $userGroupcas->addUser($user);
+            }
+            $userGroupcas->setUpdatedAt(new \DateTime());
+            $userGroupcas->setUpdatedBy($this->getUser());
             $principalManager->setAssignedAt(new DateTime('now'));
             $principalManager->setAssignedBy($this->getUser());
             $entityManager->persist($principalManager);
