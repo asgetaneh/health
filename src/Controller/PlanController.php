@@ -25,6 +25,8 @@ use App\Repository\SuitableInitiativeRepository;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -400,7 +402,7 @@ class PlanController extends AbstractController
             $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);
             $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($planInitiative->getPrincipalOffice());
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
-            $isallActive = $this->getActivePlan($suitableplan);
+            $isallActive = $t0his->getActivePlan($suitableplan);
             $isOperationalReport = $isallActive ? true : false;
             $this->addFlash('success', " successfuly register your plan for  Suitable initiatives of your office! thank you for responding");
 
@@ -442,6 +444,41 @@ class PlanController extends AbstractController
             'planyear' => $planyear,
             'pricipaloffice' =>   $office,
         ]);
+    }
+    /**
+     * @Route("/print", name="plan_print", methods={"GET","POST"})
+     */
+    public function print(InitiativeRepository $initiativeRepository, Request $request, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $planyear = $em->getRepository(PlanningYear::class)->find($request->request->get('planyear'));
+        $office = $em->getRepository(PrincipalOffice::class)->find($request->request->get('office'));
+        $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($office->getId());
+        $pdfOptions = new Options();
+   $pdfOptions->set('defaultFont', 'Arial');
+   $pdfOptions->set('isRemoteEnabled', true);
+    $pdfOptions->setIsHtml5ParserEnabled(true);
+   $dompdf = new Dompdf($pdfOptions);
+    $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($office, $planyear);
+    $res=$this->renderView('plan/plan_print.html.twig',[
+          'suitableplans' => $suitableInitiatives,
+           'quarters' => $planningquarters,
+           'year'=>$planyear,
+           'office'=>$office
+
+    ]);
+
+   $dompdf->loadHtml($res);
+   $dompdf->setPaper('A4', 'Landscape');
+
+   // Render the HTML as PDF
+   $dompdf->render();
+   $dompdf->stream("plan.pdf", [
+       "Attachment" => false
+   ]);
+       
+      
     }
 
     /**
