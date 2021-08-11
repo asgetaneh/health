@@ -49,9 +49,6 @@ class PerformerTaskController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Task Reject successfully !');
             return $this->redirectToRoute('performer_task_index');
-
-
-            
         }
         $taskUsers = $taskUserRepository->findPerformerTaskUsers($this->getUser());
 
@@ -84,25 +81,17 @@ class PerformerTaskController extends AbstractController
     public function report(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, PaginatorInterface $paginator)
     {
         $filterForm = $this->createFormBuilder()
-        // ->setMethod('Get')
+            // ->setMethod('Get')
             ->add("performerName", EntityType::class, [
-                'class' => UserInfo::class,
-                'placeholder' => 'All',
-                'required' => false,
-
+                'class' => UserInfo::class, 'placeholder' => 'All', 'required' => false,
             ])
             ->add("taskName", EntityType::class, [
-                'class' => PerformerTask::class,
-                'placeholder' => 'All',
+                'class' => PerformerTask::class, 'placeholder' => 'All',
                 'required' => false,
-
             ])
-          
-            ->add('initiative', EntityType::class, [
-                'class' => Initiative::class,
-                'required' => false,
 
-                'placeholder' => 'All',
+            ->add('initiative', EntityType::class, [
+                'class' => Initiative::class,  'required' => false, 'placeholder' => 'All',
             ])
             ->add("quarter", EntityType::class, [
                 'class' => PlanningQuarter::class,
@@ -121,18 +110,16 @@ class PerformerTaskController extends AbstractController
 
             $performerTasks = $taskAccomplishmentRepository->search($filterForm->getData());
             // dd($performerTasks->getResult());
-        } else{
+        } else {
             $performerTasks = $taskAccomplishmentRepository->search();
+        }
+        $data = $paginator->paginate(
+            $performerTasks,
+            $request->query->getInt('page', 1),
+            10
 
-      
-            }  
-            $data = $paginator->paginate(
-                $performerTasks,
-                $request->query->getInt('page', 1),
-                10
-    
-            );     
-             return $this->render('performer_task/report.html.twig', [
+        );
+        return $this->render('performer_task/report.html.twig', [
             'performer_tasks_acomplishs' => $data,
             'filterform' => $filterForm->createView()
 
@@ -169,41 +156,40 @@ class PerformerTaskController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $narativeForm = $this->createFormBuilder()
-        ->add('narrative', FileType::class, array(
-            'attr' => array(
-                'id'=>'filePhoto',
-                // 'class' => 'sr-only',
-            //  'accept' => 'image/jpeg,image/png,image/jpg'
-            ),
-            'label'=>'',
-            
-            
-        ))
-        ->getForm();
+            ->add('narrative', FileType::class, array(
+                'attr' => array(
+                    'id' => 'filePhoto',
+                    // 'class' => 'sr-only',
+                    //  'accept' => 'image/jpeg,image/png,image/jpg'
+                ),
+                'label' => '',
 
 
-    $narativeForm->handleRequest($request);
+            ))
+            ->getForm();
 
-    if ($narativeForm->isSubmitted() && $narativeForm->isValid()) {
-        $taskPerformId=$request->request->get("id");
-        $taskAc=$taskAccomplishmentRepository->findOneBy(['taskUser'=>$taskPerformId]);
-        $taskUsers = $taskUserRepository->find($request->request->get('id'));
-        $taskUsers->setStatus(4);
-        $em = $this->getDoctrine()->getManager();
-        $uploadedFile = $narativeForm['narrative']->getData();
-        // dd($uploadedFile);
 
-        $destination = $this->getParameter('kernel.project_dir') . '/public/narrative';
-        $newFilename = $taskAc->getId().uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
-        $uploadedFile->move($destination, $newFilename);
-    //   dd($newFilename);
-        //$user=$this->getUser()->getUserInfo();
-         $taskUsers->setNarrative($newFilename);
-        $em->flush();
-        $this->addFlash("tsuccess","Narrative Report Successfully uploaded !!");
-        return $this->redirectToRoute('performer_task_index');
+        $narativeForm->handleRequest($request);
 
-     }
+        if ($narativeForm->isSubmitted() && $narativeForm->isValid()) {
+            $taskPerformId = $request->request->get("id");
+            $taskAc = $taskAccomplishmentRepository->findOneBy(['taskUser' => $taskPerformId]);
+            $taskUsers = $taskUserRepository->find($request->request->get('id'));
+            $taskUsers->setStatus(4);
+            $em = $this->getDoctrine()->getManager();
+            $uploadedFile = $narativeForm['narrative']->getData();
+            // dd($uploadedFile);
+
+            $destination = $this->getParameter('kernel.project_dir') . '/public/narrative';
+            $newFilename = $taskAc->getId() . uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
+            $uploadedFile->move($destination, $newFilename);
+            //   dd($newFilename);
+            //$user=$this->getUser()->getUserInfo();
+            $taskUsers->setNarrative($newFilename);
+            $em->flush();
+            $this->addFlash("tsuccess", "Narrative Report Successfully uploaded !!");
+            return $this->redirectToRoute('performer_task_index');
+        }
         if ($taskAcoompId = $request->request->get('taskAcoompId')) {
             $editedReportValue = $request->request->get('editedReportValue');
             $taskAcoompId = $request->request->get('taskAcoompId');
@@ -238,7 +224,7 @@ class PerformerTaskController extends AbstractController
             $taskUserno->setNote($note);
             $taskUserno->setStatus(3);
             $em->flush();
-            $this->addFlash('success', 'Chalenge successfully !');
+            $this->addFlash('success', 'Challenge successfully !');
             return $this->redirectToRoute('performer_task_index');
         }
         $taskUser = $request->request->get('taskUser');
@@ -255,7 +241,7 @@ class PerformerTaskController extends AbstractController
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
-            'narativeForm'=>$narativeForm->createView()
+            'narativeForm' => $narativeForm->createView()
 
         ]);
     }

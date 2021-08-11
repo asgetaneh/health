@@ -136,6 +136,13 @@ class InitiativeRepository extends ServiceEntityRepository
             ->setParameter('principalOffice',$search['principaloffice']);
             
         }
+         if(isset($search['category']) && sizeof($search['category'])>0 ){
+            $qb
+              ->leftJoin('i.category','c')
+            ->andWhere('c.id in (:category)')
+            ->setParameter('category',$search['category']);
+            
+        }
         if(isset($search['name']) ){
            
             $qb

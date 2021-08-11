@@ -86,6 +86,7 @@ class PerformerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('performer_index');
         }
+        $totalcount = $performerRepository->findAll();
         if ($request->query->get('search')) {
             $query = $performerRepository->search(['name' => $request->query->get('search')]);
         } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
@@ -104,7 +105,8 @@ class PerformerController extends AbstractController
         return $this->render('performer/index.html.twig', [
             'performers' => $data,
             'form' => $form->createView(),
-            'filterform' => $filterForm->createView()
+            'filterform' => $filterForm->createView(),
+            'totalcount'=>$totalcount
 
         ]);
     }

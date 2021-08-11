@@ -112,6 +112,13 @@ class Initiative implements TranslatableInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $measurement;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=InitiativeCategory::class, inversedBy="initiatives")
+     */
+    private $category;
+
+   
      
      const NUMERICAL=0;
      const RATIO=1;
@@ -414,6 +421,19 @@ class Initiative implements TranslatableInterface
 
         return $this;
     }
+
+    public function getCategory(): ?InitiativeCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?InitiativeCategory $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
 
    
     

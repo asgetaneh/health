@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New InitiativeCategory{% endblock %}
+
+{% block body %}
+    <h1>Create new InitiativeCategory</h1>
+
+    {{ include('initiative_category/_form.html.twig') }}
+
+    <a href="{{ path('initiative_category_index') }}">back to list</a>
+{% endblock %}

@@ -6,15 +6,12 @@ use App\Repository\InitiativeAttributeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
-use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=InitiativeAttributeRepository::class)
  */
-class InitiativeAttribute implements TranslatableInterface
+class InitiativeAttribute
 {
-    use TranslatableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -61,7 +58,40 @@ class InitiativeAttribute implements TranslatableInterface
     private $code;
 
     
-    
+      /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+ 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
     public function __construct()
     {
         $this->behavioralPlanningAccomplishments = new ArrayCollection();

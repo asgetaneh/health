@@ -78,6 +78,11 @@ class PerformerTask
      */
     private $operationalOffice;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $initiativeAttribute;
+
     public function __toString()
     {
         return $this->getName();
@@ -245,6 +250,18 @@ class PerformerTask
     public function setOperationalOffice(?OperationalOffice $operationalOffice): self
     {
         $this->operationalOffice = $operationalOffice;
+
+        return $this;
+    }
+
+    public function getInitiativeAttribute(): ?int
+    {
+        return $this->initiativeAttribute;
+    }
+
+    public function setInitiativeAttribute(?int $initiativeAttribute): self
+    {
+        $this->initiativeAttribute = $initiativeAttribute;
 
         return $this;
     }
