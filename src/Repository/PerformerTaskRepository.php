@@ -83,7 +83,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
-    public function findInitiativeBySocial($suitableinitiative,$user,$social)
+    public function findInitiativeBySocial($suitableinitiative,$user)
     {
 
         //dd($productNmae);
@@ -92,10 +92,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('s.PlanAcomplishment','pl') 
            ->andWhere('pl.suitableInitiative = :initiative')
            ->andWhere('s.createdBy = :user')
-         ->andWhere('s.social = :social')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
-            ->setParameter('social', $social)
 
                         ->orderBy('s.id', 'ASC')
             ->getQuery()

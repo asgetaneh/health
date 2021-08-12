@@ -68,10 +68,16 @@ class PlanningAccomplishment
      */
     private $operationalSuitableInitiatives;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="planAccomplishmentSocial")
+     */
+    private $performerTaskSocial;
+
     public function __construct()
     {
         $this->performerTasks = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
+        $this->performerTaskSocial = new ArrayCollection();
     }
 
    
@@ -223,6 +229,36 @@ class PlanningAccomplishment
             // set the owning side to null (unless already changed)
             if ($operationalSuitableInitiative->getPlanningAcomplishment() === $this) {
                 $operationalSuitableInitiative->setPlanningAcomplishment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PerformerTask[]
+     */
+    public function getPerformerTaskSocial(): Collection
+    {
+        return $this->performerTaskSocial;
+    }
+
+    public function addPerformerTaskSocial(PerformerTask $performerTaskSocial): self
+    {
+        if (!$this->performerTaskSocial->contains($performerTaskSocial)) {
+            $this->performerTaskSocial[] = $performerTaskSocial;
+            $performerTaskSocial->setPlanAccomplishmentSocial($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerformerTaskSocial(PerformerTask $performerTaskSocial): self
+    {
+        if ($this->performerTaskSocial->removeElement($performerTaskSocial)) {
+            // set the owning side to null (unless already changed)
+            if ($performerTaskSocial->getPlanAccomplishmentSocial() === $this) {
+                $performerTaskSocial->setPlanAccomplishmentSocial(null);
             }
         }
 

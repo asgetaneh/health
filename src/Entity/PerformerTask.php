@@ -83,6 +83,11 @@ class PerformerTask
      */
     private $initiativeAttribute;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="performerTaskSocial")
+     */
+    private $planAccomplishmentSocial;
+
     public function __toString()
     {
         return $this->getName();
@@ -262,6 +267,18 @@ class PerformerTask
     public function setInitiativeAttribute(?int $initiativeAttribute): self
     {
         $this->initiativeAttribute = $initiativeAttribute;
+
+        return $this;
+    }
+
+    public function getPlanAccomplishmentSocial(): ?PlanningAccomplishment
+    {
+        return $this->planAccomplishmentSocial;
+    }
+
+    public function setPlanAccomplishmentSocial(?PlanningAccomplishment $planAccomplishmentSocial): self
+    {
+        $this->planAccomplishmentSocial = $planAccomplishmentSocial;
 
         return $this;
     }

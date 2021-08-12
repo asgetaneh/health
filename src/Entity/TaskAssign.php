@@ -96,6 +96,11 @@ class TaskAssign
      */
     private $expectedValue;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expectedValueSocial;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
@@ -339,6 +344,18 @@ class TaskAssign
     public function setExpectedValue(?int $expectedValue): self
     {
         $this->expectedValue = $expectedValue;
+
+        return $this;
+    }
+
+    public function getExpectedValueSocial(): ?int
+    {
+        return $this->expectedValueSocial;
+    }
+
+    public function setExpectedValueSocial(?int $expectedValueSocial): self
+    {
+        $this->expectedValueSocial = $expectedValueSocial;
 
         return $this;
     }

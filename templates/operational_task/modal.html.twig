@@ -27,14 +27,13 @@
 				{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
 				{# {% if social == 1 %} #}
 
-				<div class="form-group social" style="display:none">
-					{{ form_label(form.social) }}
-					{{ form_widget(form.social,{'attr':{ 'class': 'form-control select2'}}) }}
-
-				</div>
+				{# <div class="form-group social" style="display:none">
+													{{ form_label(form.social) }}
+													{{ form_widget(form.social,{'attr':{ 'class': 'form-control select2'}}) }}
+								
+												</div> #}
 				{# {% endif %} #}
-				<div class="form-group">
-					{{ form_label(form.name) }}
+					<div class="form-group"> {{ form_label(form.name) }}
 					{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
 
 				</div>
@@ -52,10 +51,10 @@
 				</div>
 
 				{# <div class="form-group">
-																									{{ form_label(form.quarter) }}
-																									{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
-																				
-																								</div> #}
+																																	{{ form_label(form.quarter) }}
+																																	{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
+																												
+																																</div> #}
 
 
 			</div>
@@ -80,8 +79,8 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 
 					<h4 class="modal-title">Assign Task</h4>
-					<h3>{{initiativeName}}
-					</h3>
+					<h4>{{initiativeName}}
+					</h4>
 
 				</div>
 				<div class="modal-body">
@@ -159,7 +158,13 @@
 							<tr>
 								<th>#</th>
 								<th>Name</th>
-								<th>ExpectedValue</th>
+
+								<th>Expected Value {% if social == 1 %}Male {% endif %}</th>
+								{% if social == 1 %}
+									<th>Expected Value Female</th>
+
+								{% endif %}
+
 								<th>Description</th>
 
 
@@ -174,9 +179,12 @@
 									<td>{{ count}}</td>
 									<td>{{ measurement.name }}</td>
 									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
+									<td><input type="number" name="expectedValue" class="form-control"></td>
+									{% if social == 1 %}
 
-									<td><input type="number" name="expectedValue[]" class="form-control"></td>
-									<td><input type="text" name="measurementDescription[]" class="form-control" required></td>
+										<td><input type="number" name="expectedValueSocial" class="form-control"></td>
+									{% endif %}
+									<td><textArea name="measurementDescription" class="form-control" required></textArea></td>
 
 
 								</tr>

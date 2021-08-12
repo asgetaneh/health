@@ -205,13 +205,17 @@ class PerformerTaskController extends AbstractController
         }
         if ($report = $request->request->get('reportValue')) {
             $reportValue = $request->request->get('reportValue');
-            $ids = $request->request->get('taskAccomplishmentId');
-            foreach ($ids as $key => $value) {
-                $taskAccomplishment = $taskAccomplishmentRepository->find($value);
-                $taskAccomplishment->setReportedValue($reportValue[$key]);
-                $taskUser = $taskUserRepository->findOneBy(['id' => $taskAccomplishment->getTaskUser()->getId()]);
-                $taskUser->setStatus(2);
+            $reportValueSocial = $request->request->get('reportValueSocial');
+            $id = $request->request->get('taskAccomplishmentId');
+            $taskAccomplishment = $taskAccomplishmentRepository->find($id);
+            $taskAccomplishment->setReportedValue($reportValue);
+            if ($reportValue) {
+
+                $taskAccomplishment->setReportedValueSocial($reportValueSocial);
             }
+            $taskUser = $taskUserRepository->findOneBy(['id' => $taskAccomplishment->getTaskUser()->getId()]);
+            $taskUser->setStatus(2);
+
             $em->flush();
             $this->addFlash('success', 'Reported successfully !');
             return $this->redirectToRoute('performer_task_index');
@@ -224,7 +228,7 @@ class PerformerTaskController extends AbstractController
             $taskUserno->setNote($note);
             $taskUserno->setStatus(3);
             $em->flush();
-            $this->addFlash('success', 'Challenge successfully !');
+            $this->addFlash('success', 'thank you for responding  !');
             return $this->redirectToRoute('performer_task_index');
         }
         $taskUser = $request->request->get('taskUser');
@@ -234,14 +238,22 @@ class PerformerTaskController extends AbstractController
             if ($key->getStatus() < 1) {
                 $key->setStatus(1);
                 $em->flush();
-                $this->addFlash('success', 'Task Accept successfully !');
+                $this->addFlash('success', 'Thank you for accepting your task!');
+            }
+        }
+           $social = 0;
+          
+        foreach ($taskAccomplishments[0]->getTaskUser()->getTaskAssign()->getPerformerTask()->getPlanAcomplishment()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
+            if ($va->getName()) {
+                $social = 1;
             }
         }
 
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
-            'narativeForm' => $narativeForm->createView()
+            'narativeForm' => $narativeForm->createView(),
+            'social'=>$social
 
         ]);
     }

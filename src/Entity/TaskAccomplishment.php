@@ -68,6 +68,21 @@ class TaskAccomplishment
      */
     private $narrative;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expectedValueSocial;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $reportedValueSocial;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $accomplishmentValueSocial;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -204,6 +219,42 @@ class TaskAccomplishment
     public function setNarrative(?string $narrative): self
     {
         $this->narrative = $narrative;
+
+        return $this;
+    }
+
+    public function getExpectedValueSocial(): ?int
+    {
+        return $this->expectedValueSocial;
+    }
+
+    public function setExpectedValueSocial(?int $expectedValueSocial): self
+    {
+        $this->expectedValueSocial = $expectedValueSocial;
+
+        return $this;
+    }
+
+    public function getReportedValueSocial(): ?int
+    {
+        return $this->reportedValueSocial;
+    }
+
+    public function setReportedValueSocial(?int $reportedValueSocial): self
+    {
+        $this->reportedValueSocial = $reportedValueSocial;
+
+        return $this;
+    }
+
+    public function getAccomplishmentValueSocial(): ?int
+    {
+        return $this->accomplishmentValueSocial;
+    }
+
+    public function setAccomplishmentValueSocial(?int $accomplishmentValueSocial): self
+    {
+        $this->accomplishmentValueSocial = $accomplishmentValueSocial;
 
         return $this;
     }

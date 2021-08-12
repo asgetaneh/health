@@ -51,7 +51,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findDetailAccomplishSocial($suitableInitiative, $user, $social)
+    public function findDetailAccomplishSocial($suitableInitiative, $user)
     {
 
         //dd($productNmae);
@@ -61,10 +61,8 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->leftJoin('ps.PlanAcomplishment', 'pa')
             ->andWhere('pa.suitableInitiative = :val')
             ->andWhere('ps.createdBy = :user')
-            ->andWhere('ps.social = :social')
             ->setParameter('user', $user)
             ->setParameter('val', $suitableInitiative)
-            ->setParameter('social', $social)
             ->orderBy('ps.name', 'ASC')
 
             ->getQuery()

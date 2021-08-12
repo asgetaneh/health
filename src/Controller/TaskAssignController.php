@@ -42,54 +42,54 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class TaskAssignController extends AbstractController
 {
-   
-//   private $params;
-//     // private $approverRepository;
-//     private $logger;
-//     private $mailer;
-//     public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
-//     {
-//         // $this->approverRepository = $approverRepository;
-//         $this->logger = $logger;
-//         $this->mailer = $mailer;
-//         $this->params = $params;
-//     }
-//     /**
-//      * @Route("/mail", name="test_mail")
-//      */
-//     public function mail(Request $request, $performer, $formData, $message, $url)
-//     {
 
-//         $data = array();
-//         // dd($approver);
-//         array_push($data, ['name' => $formData->getName()]);
-//         array_push($data, ['weight' => $formData->getWeight()]);
-//         // array_push($data, ['domainName' => $formData->getDomainName()]);
-// // dd($this->params->get('app.sender_email'));
-//         $maillermessage = (new TemplatedEmail())
-//             ->from($this->params->get('app.sender_email'))
-//             ->to($performer->getUserInfo()->getEmail())
-//             ->subject('Time for Mis Mailer!')
-//             ->text('Sending emails is fun again!')
-//             ->htmlTemplate(
-//                 'page/mail.html.twig'
-//             )->context([
-//                 'taskName' => $formData->getName(),
-//                 'taskWeight' => $formData->getWeight(),
-//                 // 'domainName' => $formData->getDomainName(),
-//                 'message' => $message,
-//                 'url' => $url
-//             ]);
+    //   private $params;
+    //     // private $approverRepository;
+    //     private $logger;
+    //     private $mailer;
+    //     public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
+    //     {
+    //         // $this->approverRepository = $approverRepository;
+    //         $this->logger = $logger;
+    //         $this->mailer = $mailer;
+    //         $this->params = $params;
+    //     }
+    //     /**
+    //      * @Route("/mail", name="test_mail")
+    //      */
+    //     public function mail(Request $request, $performer, $formData, $message, $url)
+    //     {
 
-//         $state = $this->mailer->send($maillermessage);
+    //         $data = array();
+    //         // dd($approver);
+    //         array_push($data, ['name' => $formData->getName()]);
+    //         array_push($data, ['weight' => $formData->getWeight()]);
+    //         // array_push($data, ['domainName' => $formData->getDomainName()]);
+    // // dd($this->params->get('app.sender_email'));
+    //         $maillermessage = (new TemplatedEmail())
+    //             ->from($this->params->get('app.sender_email'))
+    //             ->to($performer->getUserInfo()->getEmail())
+    //             ->subject('Time for Mis Mailer!')
+    //             ->text('Sending emails is fun again!')
+    //             ->htmlTemplate(
+    //                 'page/mail.html.twig'
+    //             )->context([
+    //                 'taskName' => $formData->getName(),
+    //                 'taskWeight' => $formData->getWeight(),
+    //                 // 'domainName' => $formData->getDomainName(),
+    //                 'message' => $message,
+    //                 'url' => $url
+    //             ]);
 
-//         // return dd($state);
+    //         $state = $this->mailer->send($maillermessage);
 
-//         $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
-//         // $this->addFlash('success', 'Email sent');
+    //         // return dd($state);
 
-//         return $this->redirectToRoute('task_assign_new');
-//     }
+    //         $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
+    //         // $this->addFlash('success', 'Email sent');
+
+    //         return $this->redirectToRoute('task_assign_new');
+    //     }
 
 
     /**
@@ -101,168 +101,174 @@ class TaskAssignController extends AbstractController
             'task_assigns' => $taskAssignRepository->findAll(),
         ]);
     }
-     /**
+    /**
      * @Route("/pdf", name="task_assign_pdf")
      */
     public function taskPdf(Request $request, TaskUserRepository $taskUserRepository)
     {
-        $em=$this->getDoctrine()->getManager();
-        $taskUserId=$request->request->get("user");
+        $em = $this->getDoctrine()->getManager();
+        $taskUserId = $request->request->get("user");
         // dd($taskUserId);
-$fullName="";
-$quarter="";
-$principalOffice="";
-$operationalOffice="";
-$operationalManager="";
-$currentYear="";
+        $fullName = "";
+        $quarter = "";
+        $principalOffice = "";
+        $operationalOffice = "";
+        $operationalManager = "";
+        $currentYear = "";
 
 
-        $taskUsers=$taskUserRepository->findBy(['assignedTo'=>$taskUserId,'status'=>0] );
-        foreach($taskUsers as $taskUser){
-            $fullName=$taskUser->getAssignedTo()->getUserInfo()->getFullName();
-            $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
-             $principalOffice=$taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
-             $operationalOffice=$taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
-         $operationalManager=$taskUser->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
-
-            }
+        $taskUsers = $taskUserRepository->findBy(['assignedTo' => $taskUserId, 'status' => 0]);
+        foreach ($taskUsers as $taskUser) {
+            $fullName = $taskUser->getAssignedTo()->getUserInfo()->getFullName();
+            $quarter = $taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
+            $principalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
+            $operationalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
+            $operationalManager = $taskUser->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
+        }
         // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
         // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
         $currentYear = AmharicHelper::getCurrentYear();
-    //  $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
+        //  $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
         $pdfOptions = new Options();
-   $pdfOptions->set('defaultFont', 'Arial');
-   $pdfOptions->set('isRemoteEnabled', true);
-   $dompdf = new Dompdf($pdfOptions);
-   $res = $this->renderView('task_assign/taskAssign_print.html.twig',[
-     'taskUsers'=>$taskUsers,
-     'date'=>  (new \DateTime())->format('y-m-d'),
-     'fullName'=>$fullName,
-     'quarter'=>$quarter,
-     'currentYear'=>$currentYear,
-     'operationalOffice'=>$operationalOffice,
-     'principalOffice'=>$principalOffice,
-    'operationalManager'=>$operationalManager,
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($pdfOptions);
+        $res = $this->renderView('task_assign/taskAssign_print.html.twig', [
+            'taskUsers' => $taskUsers,
+            'date' => (new \DateTime())->format('y-m-d'),
+            'fullName' => $fullName,
+            'quarter' => $quarter,
+            'currentYear' => $currentYear,
+            'operationalOffice' => $operationalOffice,
+            'principalOffice' => $principalOffice,
+            'operationalManager' => $operationalManager,
 
 
-   ]); 
+        ]);
 
-   $dompdf->loadHtml($res);
-   $dompdf->setPaper('A4', 'Landscape');
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A4', 'Landscape');
 
-   // Render the HTML as PDF
-   $dompdf->render();
-   $dompdf->stream("TaskAssign.pdf", [
-       "Attachment" => false
-   ]);
-       //  dd($evaluations);
-   }
-     /**
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("TaskAssign.pdf", [
+            "Attachment" => false
+        ]);
+        //  dd($evaluations);
+    }
+    /**
      * @Route("/evaluation", name="evaluation")
      */
-    public function evaluation(Request $request )
-    {   $em=$this->getDoctrine()->getManager();
-                $staffCriterias=$em->getRepository(StaffEvaluationBehaviorCriteria::class)->findAll();
-     $form = $this->createFormBuilder()
-           ->add('name', EntityType::class,
-               ['class' => UserInfo::class,
-                'required' => true])
+    public function evaluation(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $staffCriterias = $em->getRepository(StaffEvaluationBehaviorCriteria::class)->findAll();
+        $form = $this->createFormBuilder()
+            ->add(
+                'name',
+                EntityType::class,
+                [
+                    'class' => UserInfo::class,
+                    'required' => true
+                ]
+            )
             ->add('quarter', EntityType::class, [
                 'class' => PlanningQuarter::class,
                 'required' => true
 
-            ]) ->add('year', EntityType::class, [
+            ])->add('year', EntityType::class, [
                 'class' => PlanningYear::class,
                 'required' => true
 
             ])
             ->getForm();
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userId=$form->getData()['name']->getUser()->getId();
-           $quarter=$form->getData()['quarter']->getId();
-           $year=$form->getData()['year']->getId();
-            $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
-                //   dd($taskAssigns);
-           return $this->render('task_assign/evaluation.html.twig',[
-            'form'=>$form->createView(),
-            'evaluations'=>$evaluations,
-            'staffCriterias'=>$staffCriterias,
-            'visible'=>1,
-            'userId'=>$userId,
-            'year'=>$year,
-            'quarter'=>$quarter, ]);
+            $userId = $form->getData()['name']->getUser()->getId();
+            $quarter = $form->getData()['quarter']->getId();
+            $year = $form->getData()['year']->getId();
+            $evaluations = $em->getRepository(Evaluation::class)->findEvaluationTasks($userId, $quarter, $year);
+            //   dd($taskAssigns);
+            return $this->render('task_assign/evaluation.html.twig', [
+                'form' => $form->createView(),
+                'evaluations' => $evaluations,
+                'staffCriterias' => $staffCriterias,
+                'visible' => 1,
+                'userId' => $userId,
+                'year' => $year,
+                'quarter' => $quarter,
+            ]);
         }
-       if ($request->request->get("evaluattonValues")) {
-           $sum=0;
-           $count=0;
-           $average=0;
-            $userId=$request->request->get("userId");
-            $quarter=$request->request->get("quarter");
-            $year=$request->request->get("year");
-            $evaluattonValues=$request->request->get("evaluattonValues");
-            $values=$request->request->get("values");
-               foreach ($evaluattonValues as $key => $value) {
-                   $count++;
-                   $sum=$sum+$values[$key];
-               }        
-    $evaluations=$em->getRepository(Evaluation::class)->findEvaluatinCriteia($userId,$quarter,$year);
-    foreach ($evaluations as $value) {
-        $value->setBehavior($sum);
-    }
-       $em->flush();
-        $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
-                //   dd($taskAssigns);
-           return $this->render('task_assign/evaluation.html.twig',[
-            'form'=>$form->createView(),
-            'evaluations'=>$evaluations,
-            'staffCriterias'=>$staffCriterias,
-            'visible'=>1,
-            'userId'=>$userId,
-            'year'=>$year,
-            'quarter'=>$quarter, ]);
-
-
-                }
+        if ($request->request->get("evaluattonValues")) {
+            $sum = 0;
+            $count = 0;
+            $average = 0;
+            $userId = $request->request->get("userId");
+            $quarter = $request->request->get("quarter");
+            $year = $request->request->get("year");
+            $evaluattonValues = $request->request->get("evaluattonValues");
+            $values = $request->request->get("values");
+            foreach ($evaluattonValues as $key => $value) {
+                $count++;
+                $sum = $sum + $values[$key];
+            }
+            $evaluations = $em->getRepository(Evaluation::class)->findEvaluatinCriteia($userId, $quarter, $year);
+            foreach ($evaluations as $value) {
+                $value->setBehavior($sum);
+            }
+            $em->flush();
+            $evaluations = $em->getRepository(Evaluation::class)->findEvaluationTasks($userId, $quarter, $year);
+            //   dd($taskAssigns);
+            return $this->render('task_assign/evaluation.html.twig', [
+                'form' => $form->createView(),
+                'evaluations' => $evaluations,
+                'staffCriterias' => $staffCriterias,
+                'visible' => 1,
+                'userId' => $userId,
+                'year' => $year,
+                'quarter' => $quarter,
+            ]);
+        }
         if ($request->request->get("quarter")) {
-             $userId=$request->request->get("userId");
-        $fullName=$em->getRepository(UserInfo::class)->findOneBy(['user'=>$userId]);
-        $fullName=$fullName->getFullName();
-             $quarter=$request->request->get("quarter");
-            $year=$request->request->get("year");
-          $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
-             $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
-        $pdfOptions->set('isRemoteEnabled', true);
-        $dompdf = new Dompdf($pdfOptions);
-        $res = $this->renderView('task_assign/print.html.twig',[
-          'evaluations'=>$evaluations,
-          'date'=>  (new \DateTime())->format('y-m-d'),
-          'fullName'=>$fullName
+            $userId = $request->request->get("userId");
+            $fullName = $em->getRepository(UserInfo::class)->findOneBy(['user' => $userId]);
+            $fullName = $fullName->getFullName();
+            $quarter = $request->request->get("quarter");
+            $year = $request->request->get("year");
+            $evaluations = $em->getRepository(Evaluation::class)->findEvaluationTasks($userId, $quarter, $year);
+            $pdfOptions = new Options();
+            $pdfOptions->set('defaultFont', 'Arial');
+            $pdfOptions->set('isRemoteEnabled', true);
+            $dompdf = new Dompdf($pdfOptions);
+            $res = $this->renderView('task_assign/print.html.twig', [
+                'evaluations' => $evaluations,
+                'date' => (new \DateTime())->format('y-m-d'),
+                'fullName' => $fullName
 
-        ]); 
+            ]);
 
-        $dompdf->loadHtml($res);
-        $dompdf->setPaper('A5', 'Landscape');
+            $dompdf->loadHtml($res);
+            $dompdf->setPaper('A5', 'Landscape');
 
-        // Render the HTML as PDF
-        $dompdf->render();
-        $dompdf->stream("Evaluation.pdf", [
-            "Attachment" => false
-        ]);
+            // Render the HTML as PDF
+            $dompdf->render();
+            $dompdf->stream("Evaluation.pdf", [
+                "Attachment" => false
+            ]);
             //  dd($evaluations);
         }
 
-    return $this->render('task_assign/evaluation.html.twig',[
-        'form'=>$form->createView(),
-        'visible'=>0,
-         'staffCriterias'=>$staffCriterias,
+        return $this->render(
+            'task_assign/evaluation.html.twig',
+            [
+                'form' => $form->createView(),
+                'visible' => 0,
+                'staffCriterias' => $staffCriterias,
 
-    ]
-            
+            ]
+
         );
-      
     }
 
     /**
@@ -287,126 +293,135 @@ $currentYear="";
             'form' => $form->createView(),
         ]);
     }
-/**
+    /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(Request $request,PlanningAccomplishmentRepository $planningAccomplishmentRepository, UserRepository $userRepository,PerformerTaskRepository $performerTaskRepository,
-    TaskMeasurementRepository $taskMeasurementRepository)
-    {        $em = $this->getDoctrine()->getManager();
+    public function performerFetch(
+        Request $request,
+        PlanningAccomplishmentRepository $planningAccomplishmentRepository,
+        UserRepository $userRepository,
+        PerformerTaskRepository $performerTaskRepository,
+        TaskMeasurementRepository $taskMeasurementRepository
+    ) {
+        $em = $this->getDoctrine()->getManager();
 
-          $user= $this->getUser();
-         
-     $delegatedUser=$em->getRepository(Delegation::class)->findOneBy(["delegatedUser"=>$user,'status'=>1]);
-     if ($delegatedUser) {
-   $delegatedBy=$delegatedUser->getDelegatedBy();
-        $user=$delegatedBy;
+        $user = $this->getUser();
 
-     }
-        $status=0;
-          $initibativeId=0;
-            $users=$request->request->get('user');
-            $tasks=$request->request->get('task');
-            $tasksss=$request->request->get('task');
-            $measurementids=$request->request->get('measurementId');
-            $measurementids=$request->request->get('measurementId');
-            $expectedValues=$request->request->get('expectedValue');
-            $startDate=$request->request->get('startDate');
-            $endDate=$request->request->get('endDate');
-            $timeGap=$request->request->get('timeGap');
-            $measurementDescriptions=$request->request->get("measurementDescription");
+        $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
+        if ($delegatedUser) {
+            $delegatedBy = $delegatedUser->getDelegatedBy();
+            $user = $delegatedBy;
+        }
+        $status = 0;
+        $initibativeId = 0;
+        $users = $request->request->get('user');
+        $tasks = $request->request->get('task');
+        $tasksss = $request->request->get('task');
+        $measurementids = $request->request->get('measurementId');
+        $expectedValueSocial = $request->request->get('expectedValueSocial');
+        $expectedValue = $request->request->get('expectedValue');
+        $startDate = $request->request->get('startDate');
+        $endDate = $request->request->get('endDate');
+        $timeGap = $request->request->get('timeGap');
+        $measurementDescriptions = $request->request->get("measurementDescription");
 
-//    $taskAccoplishment=new TaskAccomplishment();
-           foreach ($tasks as $key => $value) {
-                 $taskAssign = new TaskAssign();
+        //    $taskAccoplishment=new TaskAccomplishment();
+        foreach ($tasks as $key => $value) {
+            $taskAssign = new TaskAssign();
 
             $task = $tasksss[$key];
-             $taskId=$performerTaskRepository->find($task);
-             $initibativeId=$taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
-        $planId=$taskId->getPlanAcomplishment();
-             $taskAssign->setPerformerTask($taskId);
-           
-             $taskAssign->setAssignedAt(new \DateTime());
-             $taskAssign->setAssignedBy($user);
-                  if ($delegatedUser) {
-              $taskAssign->setDelegate($delegatedUser->getDelegatedUser());}
-             $taskAssign->setType(1);
-           $taskAssign->setStartDate($startDate);
-            $taskAssign->setEndDate($endDate);
-           $taskAssign->setTimeGap($timeGap);
-        //    dd($expectedValues[$key]);
-         $taskAssign->setExpectedValue($expectedValues[0]);
-             $taskAssign->setStatus(1);
-             $em->persist($taskAssign);
-              $em->flush();
-           foreach ($users as $key => $valuet) { 
-              $taskUser=new TaskUser();
-                           $userId=$userRepository->find($valuet);
-                        //    dd($userId);
-              $taskUser->setAssignedTo($userId);
-             $taskUser->setTaskAssign($taskAssign);
-                          $taskUser->setStatus(0);
-                          $taskUser->setType(1);
+            $taskId = $performerTaskRepository->find($task);
+            $initibativeId = $taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
+            $planId = $taskId->getPlanAcomplishment();
+            $taskAssign->setPerformerTask($taskId);
 
-          $em->persist($taskUser);
-            // $this->mail(
-            //     $request,
-            //     $userId,
-            //     $taskId,
-            //     "your Assigend to performer this Task " . $userId->getUserInfo(),
-            //     '10.140.10.19'
-            // );
-              $em->flush();
-              
-              
-               foreach ($measurementids as  $key => $valuea) {
-              $taskAccoplishment=new TaskAccomplishment();
-            $measurementid = $measurementids[$key];
-            $expectedValue = $expectedValues[$key];
-            $measurementDescription = $measurementDescriptions[$key];
-           $taskmeasurementId=$taskMeasurementRepository->find($valuea);
-             $taskAccoplishment->setTaskUser($taskUser);
-            $taskAccoplishment->setMeasurement($taskmeasurementId);
-            $taskAccoplishment->setExpectedValue($expectedValue);
-          $taskAccoplishment->setMeasureDescription($measurementDescription);
-             $em->persist($taskAccoplishment);
-              $em->flush();
-
+            $taskAssign->setAssignedAt(new \DateTime());
+            $taskAssign->setAssignedBy($user);
+            if ($delegatedUser) {
+                $taskAssign->setDelegate($delegatedUser->getDelegatedUser());
             }
+            $taskAssign->setType(1);
+            $taskAssign->setStartDate($startDate);
+            $taskAssign->setEndDate($endDate);
+            $taskAssign->setTimeGap($timeGap);
+            //    dd($expectedValues[$key]);
+            $taskAssign->setExpectedValue($expectedValue);
+            if ($expectedValueSocial) {
+                # code...
 
-           $em->persist($taskAssign);
-              $em->flush();
+                $taskAssign->setExpectedValueSocial($expectedValueSocial);
+            }
+            $taskAssign->setStatus(1);
+            $em->persist($taskAssign);
+            $em->flush();
+            foreach ($users as $key => $valuet) {
+                $taskUser = new TaskUser();
+                $userId = $userRepository->find($valuet);
+                //    dd($userId);
+                $taskUser->setAssignedTo($userId);
+                $taskUser->setTaskAssign($taskAssign);
+                $taskUser->setStatus(0);
+                $taskUser->setType(1);
 
-              }
-              $em->persist($taskAssign);
+                $em->persist($taskUser);
+                // $this->mail(
+                //     $request,
+                //     $userId,
+                //     $taskId,
+                //     "your Assigend to performer this Task " . $userId->getUserInfo(),
+                //     '10.140.10.19'
+                // );
+                $em->flush();
 
-              $em->flush();
+
+                foreach ($measurementids as  $key => $valuea) {
+                    $taskAccoplishment = new TaskAccomplishment();
+                    $measurementid = $measurementids[$key];
+                    $measurementDescription = $measurementDescriptions[$key];
+                    $taskmeasurementId = $taskMeasurementRepository->find($valuea);
+                    $taskAccoplishment->setTaskUser($taskUser);
+                    $taskAccoplishment->setMeasurement($taskmeasurementId);
+                    $taskAccoplishment->setExpectedValue($expectedValue);
+                    if ($expectedValueSocial) {
+                        $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
+                    }
+                    $taskAccoplishment->setMeasureDescription($measurementDescription);
+                    $em->persist($taskAccoplishment);
+                    $em->flush();
+                }
+
+                $em->persist($taskAssign);
+                $em->flush();
+            }
+            $em->persist($taskAssign);
+
+            $em->flush();
         }
-                      $em->flush();
-                      $planId=$planningAccomplishmentRepository->find($planId);
-              if($planId->getStatus()<2){
-                  $planId->setStatus(2);
-                  $em->flush();
-              }
-                // $aproverlist = $this->approverRepository->findAll();
-            // return dd($aproverlist);
-               
-            // foreach ($aproverlist as $list) {
+        $em->flush();
+        $planId = $planningAccomplishmentRepository->find($planId);
+        if ($planId->getStatus() < 2) {
+            $planId->setStatus(2);
+            $em->flush();
+        }
+        // $aproverlist = $this->approverRepository->findAll();
+        // return dd($aproverlist);
 
-            //     if ($list->getRole() != 'dns') {
-            //         // dump($list);
+        // foreach ($aproverlist as $list) {
 
-            //         $this->mail($request, $list->getApprover()->getEmail(), $res, "Task Assined By " . $this->getUser()->getUserInfo()->getFullName(), '10.140.10.19');
-            //     }
-            //     // dump($list);
+        //     if ($list->getRole() != 'dns') {
+        //         // dump($list);
 
-            //     // $this->mail($request, 'lemi.diriba@ju.edu.et', $res, "Serever Request by " . $this->getUser()->getUserInfo()->getFullName(), 'sms.ju.edu.et');
-            // }
+        //         $this->mail($request, $list->getApprover()->getEmail(), $res, "Task Assined By " . $this->getUser()->getUserInfo()->getFullName(), '10.140.10.19');
+        //     }
+        //     // dump($list);
 
-              
-          
-            $this->addFlash('success', 'Task Assignd successfully !');
-            return $this->redirectToRoute('operational_task_index',['id'=>$initibativeId]);
+        //     // $this->mail($request, 'lemi.diriba@ju.edu.et', $res, "Serever Request by " . $this->getUser()->getUserInfo()->getFullName(), 'sms.ju.edu.et');
+        // }
 
+
+
+        $this->addFlash('success', 'Task Assignd successfully !');
+        return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
     }
     /**
      * @Route("/{id}", name="task_assign_show", methods={"GET"})
@@ -417,7 +432,7 @@ $currentYear="";
             'task_assign' => $taskAssign,
         ]);
     }
-   
+
 
     /**
      * @Route("/{id}/edit", name="task_assign_edit", methods={"GET","POST"})
@@ -444,7 +459,7 @@ $currentYear="";
      */
     public function delete(Request $request, TaskAssign $taskAssign): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$taskAssign->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $taskAssign->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($taskAssign);
             $entityManager->flush();

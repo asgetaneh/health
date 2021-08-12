@@ -155,14 +155,44 @@
 																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
-																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
-																	<td>{{ taskAccomplishment.expectedValue }}</td>
+																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
+																	<td>
+																		{% if social == 1 %}
+																			Male=
+																		{% endif %}
+																		{{ taskAccomplishment.expectedValue }}
+																		{% if social == 1 %}
+
+																			Female={{ taskAccomplishment.expectedValueSocial }}
+																		{% endif %}
+																	</td>
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
 																	{% if taskAccomplishment.reportedValue %}
-																		<td>{{ taskAccomplishment.reportedValue  }}</td>
+																		<td>
+																			{% if social == 1 %}
+																				Male=
+																			{% endif %}
+																			{{ taskAccomplishment.reportedValue  }}
+																			{% if social == 1  %}
+
+																				Female={{ taskAccomplishment.reportedValueSocial }}
+																			{% endif %}
+																		</td>
+
 
 																	{% else %}
-																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
+																		<td>
+																			{% if social == 1  %}
+
+																				Male
+																			{% endif %}
+																			<input type="number" name="reportValue" class="form-conrol" required>
+																			{% if social == 1  %}
+																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
+
+
+																			{% endif %}
+																		</td>
 																	{% endif %}
 																	<td>
 																		<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">
@@ -173,9 +203,9 @@
 															</tr>
 														{% endfor %}
 
-
 													</table>
 												</td>
+
 												<td>{{ taskUser.note}}</td>
 												<td>
 													{% if status >=4  %}
@@ -185,119 +215,69 @@
 
 													{% endif %}
 												</td>
-
 											</tr>
+										</tbody>
+									</tbody>
+								</tr>
 
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-
-								</tbody>
-							</table>
-							{% if status == 2 %}
-
-								<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Challenge</button>
-							{% elseif status == 3 %}
-
-								<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
-							{% elseif status == 4 %}
-								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
-
-							{% else %}
-								<button type="submit" name="report" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report this Value?');">Report</button>
-
-							{% endif %}
-
-						</form>
-						{% if status == 4 %}
-
-							<form action="{{path('performer_task_send')}}" method="post">
-								<input type="hidden" name="taskUserId" value="{{taskUserid}}">
-
-								<button type="submit" name="narrative" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report ?');">Send Report</button>
-							</form>
-						{% endif %}
-						{% if status == 3 %}
-
-							{{ form_start(narativeForm,{'attr': {'role':'form'}}) }}
-							<div class="row">
-
-								<div class="form-group col-md-6 ">
-									{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
-									<div class="help-block with-errors"></div>
-								</div>
-
-								<input type="hidden" name="id" value="{{taskUserid}}">
-
-
-								<button type="submit" name="stock-request" class="btn btn-primary ">Narrative</button>
-
-							</div>
-							{{ form_end(narativeForm) }}
-						{% endif %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div id="edit" class="modal fade" role="dialog">
-	<div
-		class="modal-dialog " style="width:400px;">
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header bg-info">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-
-				<h4 class="modal-title">Edit Report Value
-				</h4>
-
-			</div>
-			<form method="post" action="{{path('performer_task_show')}}">
-				<div class="modal-body">
-					<input type="hidden" name="taskAcoompId" class="taskAcoompId">
-					<div class="form-group">
-						<input type="number" name="editedReportValue" class="form-control">
-
-					</div>
-				</div>
-
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
-					<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
-				</div>
-
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="8">no records found</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% if status == 2 %}
+					<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Challenge</button>
+				{% elseif status == 3 %}
+					<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
+				{% elseif status == 4 %}
+					{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
+				{% else %}
+					<button type="submit" name="report" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report this Value?');">Report</button>
+				{% endif %}
 			</form>
-
-
+			{% if status == 4 %}
+				<form action="{{path('performer_task_send')}}" method="post"><input type="hidden" name="taskUserId" value="{{taskUserid}}"><button type="submit" name="narrative" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report ?');">Send Report</button>
+				</form>
+			{% endif %}
+			{% if status == 3 %}
+				{{ form_start(narativeForm,{'attr': {'role':'form'}}) }}<div class="row">
+					<div class="form-group col-md-6 ">
+						{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
+						<div class="help-block with-errors"></div>
+					</div><input type="hidden" name="id" value="{{taskUserid}}"><button type="submit" name="stock-request" class="btn btn-primary ">Narrative</button>
+				</div>
+				{{ form_end(narativeForm) }}
+			{% endif %}
 		</div>
-
 	</div>
+</div></div></div></div><div id="edit" class="modal fade" role="dialog"><divclass="modal-dialog" style="width:400px;"><!-- Modal content--><div class="modal-content">
+<div class="modal-header bg-info">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">Edit Report Value</h4>
 </div>
-{{ include('performer_task/modal.html.twig') }}{% endblock %}{% block javascripts %}
-<script>
-	$('.show').click(function () {
+<form method="post" action="{{path('performer_task_show')}}">
+	<div class="modal-body"><input type="hidden" name="taskAcoompId" class="taskAcoompId"><div class="form-group"><input type="number" name="editedReportValue" class="form-control"></div>
+	</div>
+	<div class="modal-footer justify-content-between">
+		<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>
+		<button type="submit" name="stock-request" value="stock-request" class="btn btn-primary go">Edit</button>
+	</div>
+</form></div></div></div>{{ include('performer_task/modal.html.twig') }}{% endblock %}{% block javascripts %}<script>$('.show').click(function () {
 $('#chalenge').modal('show');
 
 var id = $(this).attr('data-taskUserId');
 $('.taskUserid').val(id);
-})
-</script>
-<script>
-	$('.edit').click(function () {
+})</script><script>$('.edit').click(function () {
 $('#edit').modal('show');
 
 var id = $(this).attr('data-accomp');
 $('.taskAcoompId').val(id);
 console.log(id)
 
-})
-</script>
-<script>
-	$('.narrative').click(function () {
+})</script><script>$('.narrative').click(function () {
 $('#narrative').modal('show');
 
 var id = $(this).attr('data-taskUserId');
@@ -309,10 +289,7 @@ console.log(id)
 $('#cancel').click(function () {
 location.reload(true);
 
-})
-</script>
-<script>
-	$('.skip').click(function () {
+})</script><script>$('.skip').click(function () {
 
 var select = $('.crtask')
 var taskId = $(this).attr('data-taskuseridd');
@@ -330,5 +307,4 @@ success: function (data) { // $('.department').children().remove()
 });
 location.reload(true);
 
-})
-</script>{% endblock %}
+})</script>{% endblock %}

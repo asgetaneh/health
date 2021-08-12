@@ -169,14 +169,43 @@
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
-																	<td>{{ taskAccomplishment.expectedValue }}</td>
-																	<td>{{ taskAccomplishment.reportedValue }}</td>
+																	<td>
+																		{% if social == 1 %}
+																			Male=
+																		{% endif %}
+																		{{ taskAccomplishment.expectedValue }}
+																		{% if social == 1 %}
+
+																			Female={{ taskAccomplishment.expectedValueSocial }}
+																		{% endif %}
+																	</td>
+																	<td>
+																		{% if social == 1 %}
+																			Male=
+																		{% endif %}
+																		{{ taskAccomplishment.reportedValue }}
+																		{% if social == 1 %}
+
+																			Female={{ taskAccomplishment.reportedValue }}
+																		{% endif %}
+																	</td>
 																	{% if taskAccomplishment.accomplishmentValue %}
 																		<td>{{ taskAccomplishment.accomplishmentValue }}</td>
 
 
 																	{% else %}
-																		<td><input type="number" name="reportValue" class="form-conrol" required></td>
+																		<td>
+																			{% if social == 1  %}
+
+																				Male
+																			{% endif %}
+																			<input type="number" name="reportValue" class="form-conrol" required>
+																			{% if social == 1  %}
+																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
+
+
+																			{% endif %}
+																		</td>
 
 																	{% endif %}
 																{% endif %}
@@ -212,80 +241,20 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal fade  criteria" id="criteria">
-			<div
-				class="modal-dialog">
-
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header bg-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Criteria Report</h4>
-					</div>
-					<form action="{{path('performer_task_show')}}" method="post">
-						<div class="modal-body">
-							<input type="hidden" name="taskUserid" class="taskUserid">
-							<div class="form-group">
-
-								<table class="table-bordered table-hover" style="margin-top:10px;">
-									<tr>
-										<th>#
-										</th>
-										<th>Name
-										</th>
-										<th>Behavioural Value
-										</th>
-										<th>Total
-										</th>
-										<th>Values
-										</th>
-
-
-									</tr>
-									{% set count = 0 %}
-									{% for staffCriteria in staffCriterias   %}
-										<tr>
-											{% set count = count + 1 %}
-											<td>{{count}}</td>
-											<td>{{ staffCriteria.name }}</td>
-											<td>{{ staffCriteria.behavioralVariables }}</td>
-											<td>
-												<input type="text" name="evaluattonValues" class=" form-control"></td>
-
-
-										</tr>
-									{% else %}
-										<tr>
-											<td colspan="8">no records found</td>
-										</tr>
-									{% endfor %}
-
-								</table>
-							</div>
-						</div>
-
-
-					</div>
-					<div class="modal-footer">
-						<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Set{% endtrans %}"/>
-						<input type="button" class="btn btn-danger pull-left" value="Cancel" id="cancel" data-dismiss="modal">
-					</div>
-				</form>
-			</div>
-		</div>
-	{% endblock %}
-	{% block javascripts %}
-		<script>
-			$('.show').click(function () {
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		$('.show').click(function () {
 $('#chalenge').modal('show');
 
 var id = $(this).attr('data-taskUserId');
 $('.taskUserid').val(id);
 console.log(consumableGroupId);
 })
-		</script>
-		<script>
-			$('.criteria').click(function () {
+	</script>
+	<script>
+		$('.criteria').click(function () {
 $('#criteria').modal('show');
 
 var id = $(this).attr('data-taskUseridoperational');
@@ -300,5 +269,5 @@ $('.close').click(function () {
 location.reload(true);
 
 })
-		</script>
-	{% endblock %}
+	</script>
+{% endblock %}
