@@ -11,6 +11,7 @@
 				<div class="modal-body">
 					<form method="post" action="{{path('plan_phase_office')}}" id="planform" class="form-horizontal">
 						<div class="row">
+                        <div class="col-sm-12" id="response"></div>
 							<div class="col-sm-12">
 
 								{% set constant = false %}
@@ -494,13 +495,31 @@ $("input:enabled:text").each(function(){
 
 return haserror;
 }
+function checkplan(){
+   var input=$("input:enabled:text").length;
+   var i=0;
+   $("input:enabled:text").each(function(){
+    if($(this).val()==0){
+        i++;
+    }
+   })
+   if(i==input){
+       return false;
+   }
+   else
+   return true;
+}
 
 
 
 $('#planform').submit(function(event){
 
 
-
+if(!checkplan()){
+    $("#response").html('<div class="alert alert-danger"> <stron> All Quarter plan is not allowed to be zero</strong></div>');
+    event.preventDefault();
+ return; 
+}
  if(!validateForm()){
      event.preventDefault();
  return;
