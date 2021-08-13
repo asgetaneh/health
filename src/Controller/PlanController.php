@@ -66,7 +66,7 @@ class PlanController extends AbstractController
 
 
             if ($request->query->get('initiative')) {
-               
+
 
 
                 if ($request->query->get('nonsuitable')) {
@@ -124,7 +124,7 @@ class PlanController extends AbstractController
             }
 
 
-           
+
             return $this->render('plan/index.html.twig', [
 
                 'planningYears' =>  $activePlanningYear,
@@ -206,15 +206,15 @@ class PlanController extends AbstractController
         if ($request->request->get('id')) {
 
             $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findwithPlan($request->request->get('id'));
-            $plan=$em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableInitiative);
-            
+            $plan = $em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableInitiative);
+
             $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
-           
+
             // dd( count($initiative->getInitiativeBehaviour()),count($initiative->getSocialAtrribute()));
             $res = $this->renderView("plan/plan.modal.html.twig", [
                 "suitableInitiative" =>  $suitableInitiative, 'quarters' => $quarters,
                 'initiative' => $initiative,
-                'plans'=>$plan
+                'plans' => $plan
             ]);
             return new Response($res);
         }
@@ -231,8 +231,8 @@ class PlanController extends AbstractController
 
         if (!$offices)
             $offices = $em->getRepository(PrincipalOffice::class)->findPrincipalOffice($this->getUser());
-            // dd($offices);
-// dd($em->getRepository(Initiative::class)->findBySuitable( $offices));
+        // dd($offices);
+        // dd($em->getRepository(Initiative::class)->findBySuitable( $offices));
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
@@ -290,15 +290,15 @@ class PlanController extends AbstractController
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
             $suitableInitiative = $suitableInitiativeRepository->search($filterForm->getData());
-             $initiatives=$em->getRepository(Initiative::class)->search($filterForm->getData());
+            $initiatives = $em->getRepository(Initiative::class)->search($filterForm->getData());
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
                 $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findAll();
-                 $initiatives=$em->getRepository(Initiative::class)->findAll();
+                $initiatives = $em->getRepository(Initiative::class)->findAll();
             } else
                 $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
-                $initiatives=$em->getRepository(Initiative::class)->findBySuitable( $offices);
+            $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
         }
 
 
@@ -312,7 +312,7 @@ class PlanController extends AbstractController
         return $this->render("plan/plan.html.twig", [
             "suitableplans" =>  $suitableInitiative,
             'quarters' => $quarters,
-            'initiatives'=> $initiatives,
+            'initiatives' => $initiatives,
             'filterform' => $filterForm->createView()
 
         ]);
@@ -329,7 +329,7 @@ class PlanController extends AbstractController
         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
         //  dd($request->request->get('planvalue'));
         if ($request->request->get('planvalue')) {
-   
+
             $planValues = $request->request->get('planvalue');
 
 
@@ -402,7 +402,7 @@ class PlanController extends AbstractController
             $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);
             $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($planInitiative->getPrincipalOffice());
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
-            $isallActive = $t0his->getActivePlan($suitableplan);
+            $isallActive = $this->getActivePlan($suitableplan);
             $isOperationalReport = $isallActive ? true : false;
             $this->addFlash('success', " successfuly register your plan for  Suitable initiatives of your office! thank you for responding");
 
@@ -451,34 +451,32 @@ class PlanController extends AbstractController
     public function print(InitiativeRepository $initiativeRepository, Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
         $planyear = $em->getRepository(PlanningYear::class)->find($request->request->get('planyear'));
         $office = $em->getRepository(PrincipalOffice::class)->find($request->request->get('office'));
         $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($office->getId());
         $pdfOptions = new Options();
-   $pdfOptions->set('defaultFont', 'Arial');
-   $pdfOptions->set('isRemoteEnabled', true);
-    $pdfOptions->setIsHtml5ParserEnabled(true);
-   $dompdf = new Dompdf($pdfOptions);
-    $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($office, $planyear);
-    $res=$this->renderView('plan/plan_print.html.twig',[
-          'suitableplans' => $suitableInitiatives,
-           'quarters' => $planningquarters,
-           'year'=>$planyear,
-           'office'=>$office
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $pdfOptions->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($pdfOptions);
+        $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($office, $planyear);
+        $res = $this->renderView('plan/plan_print.html.twig', [
+            'suitableplans' => $suitableInitiatives,
+            'quarters' => $planningquarters,
+            'year' => $planyear,
+            'office' => $office
 
-    ]);
+        ]);
 
-   $dompdf->loadHtml($res);
-   $dompdf->setPaper('A4', 'Landscape');
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A4', 'Landscape');
 
-   // Render the HTML as PDF
-   $dompdf->render();
-   $dompdf->stream("plan.pdf", [
-       "Attachment" => false
-   ]);
-       
-      
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("plan.pdf", [
+            "Attachment" => false
+        ]);
     }
 
     /**
