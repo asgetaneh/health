@@ -140,7 +140,7 @@ class TaskAssignController extends AbstractController
             'operationalManager' => $operationalManager,
 
 
-        ],'pharmacy Reciving Log Report','landscape');
+        ],'Task Assign Form','landscape');
        
         // $pdfOptions = new Options();
         // $pdfOptions->set('defaultFont', 'Arial');
