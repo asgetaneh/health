@@ -224,11 +224,11 @@ class OperationalTaskController extends AbstractController
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
 
         // dd($currentQuarter);
-        $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
-        $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
+        // $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
+        $operationalOffice =  $operation->getOperationalOffice()->getId();
         $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
-        $performerTasks = $em->getRepository(PerformerTask::class)->findProgress($currentQuarter, $currentYear, $principlaOffice);
-        $taskUsers = $em->getRepository(TaskUser::class)->findProgress($currentQuarter, $currentYear, $principlaOffice);
+        $performerTasks = $em->getRepository(PerformerTask::class)->findProgress($currentQuarter, $currentYear, $operationalOffice);
+        $taskUsers = $em->getRepository(TaskUser::class)->findProgress($currentQuarter, $currentYear, $operationalOffice);
 
         $data = $paginator->paginate(
             $suitableInitiatives,
@@ -322,13 +322,15 @@ class OperationalTaskController extends AbstractController
                 'required' => false,
 
                 'placeholder' => 'Choose an principal office',
-            ])->getForm();
+            ])
+            ->getForm();
         $filterForm->handleRequest($request);
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
             $suitableInitiatives = $suitableInitiativeRepository->search($filterForm->getData());
         } else
-            $suitableInitiatives = $suitableInitiativeRepository->findAll();
+         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice"=>$principalOffice]);
 
         return $this->render('operational_task/report.html.twig', [
             'suitable_initiatives' => $suitableInitiatives,

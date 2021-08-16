@@ -156,16 +156,16 @@ class PerformerTaskRepository extends ServiceEntityRepository
             
             ->getResult();
     }
-    public function findProgress($quarter,$currentYear,$principalOffice){
+    public function findProgress($quarter,$currentYear,$operationalOffice){
         return $this->createQueryBuilder('pt')
          
            ->leftJoin('pt.PlanAcomplishment','pa')
            ->leftJoin('pa.suitableInitiative','s')
            ->leftJoin('s.planningYear','y')
-              ->andWhere('s.principalOffice = :principalOffice')
+              ->andWhere('pt.operationalOffice = :operationalOffice')
             ->andWhere('y.ethYear = :currentYear')
             ->setParameter('currentYear', $currentYear)
-            ->setParameter('principalOffice', $principalOffice)
+            ->setParameter('operationalOffice', $operationalOffice)
             ->andWhere('pt.quarter = :quarter')
            ->setParameter('quarter',$quarter)
            ->orderBy('pt.id', 'ASC')

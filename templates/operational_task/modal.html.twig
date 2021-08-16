@@ -28,10 +28,10 @@
 				{# {% if social == 1 %} #}
 
 				{# <div class="form-group social" style="display:none">
-													{{ form_label(form.social) }}
-													{{ form_widget(form.social,{'attr':{ 'class': 'form-control select2'}}) }}
-								
-												</div> #}
+																	{{ form_label(form.social) }}
+																	{{ form_widget(form.social,{'attr':{ 'class': 'form-control select2'}}) }}
+												
+																</div> #}
 				{# {% endif %} #}
 					<div class="form-group"> {{ form_label(form.name) }}
 					{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
@@ -51,10 +51,10 @@
 				</div>
 
 				{# <div class="form-group">
-																																	{{ form_label(form.quarter) }}
-																																	{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
-																												
-																																</div> #}
+																																					{{ form_label(form.quarter) }}
+																																					{{ form_widget(form.quarter,{'attr':{ 'class': 'form-control'}}) }}
+																																
+																																				</div> #}
 
 
 			</div>
@@ -142,7 +142,7 @@
 
 							<lable class=" control-label no-padding-right">
 								<b>
-									Time Gap
+									Contingency Days
 									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
@@ -159,7 +159,10 @@
 								<th>#</th>
 								<th>Name</th>
 
-								<th>Expected Value {% if social == 1 %}Male {% endif %}</th>
+								<th>Expected Value
+									{% if social == 1 %}Male
+									{% endif %}
+								</th>
 								{% if social == 1 %}
 									<th>Expected Value Female</th>
 
@@ -184,7 +187,9 @@
 
 										<td><input type="number" name="expectedValueSocial" class="form-control"></td>
 									{% endif %}
-									<td><textArea name="measurementDescription" class="form-control" required></textArea></td>
+									<td>
+										<textArea name="measurementDescription" class="form-control" required></textArea>
+									</td>
 
 
 								</tr>
@@ -233,7 +238,7 @@
 
 							<th>Start Date</th>
 							<th>End Date</th>
-							<th>Time Gap</th>
+							<th>Contingency Days</th>
 							<th>Quantity</th>
 
 						</tr>

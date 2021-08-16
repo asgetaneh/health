@@ -36,12 +36,12 @@ class OperationalManagerController extends AbstractController
             ->add('operationaloffice', EntityType::class, [
                 'class' => OperationalOffice::class,
                 'multiple' => true,
-                'required'=>false,
+                'required' => false,
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
                 'multiple' => true,
-                'required'=>false,
+                'required' => false,
             ])->getForm();
         $filterForm->handleRequest($request);
 
@@ -62,15 +62,15 @@ class OperationalManagerController extends AbstractController
 
                 return $this->redirectToRoute('operational_manager_index');
             }
-      $user= $form->getData()->getManager()->getId();
-    //   dd($user);
-    $userGroup=$entityManager->getRepository(UserGroup::class)->findOneBy(['name'=>"Operational managers"]);
-    // dd($userGroup);
-        // $users = $entityManager->getRepository(User::class)->findAll();
-        //     foreach ($users as $user) {
-        //         $userGroup->removeUser($user);
-        //     }
-            $users = $entityManager->getRepository(User::class) ->findBy(['id' => $user]);
+            $user = $form->getData()->getManager()->getId();
+            //   dd($user);
+            $userGroup = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "Operational managers"]);
+            // dd($userGroup);
+            // $users = $entityManager->getRepository(User::class)->findAll();
+            //     foreach ($users as $user) {
+            //         $userGroup->removeUser($user);
+            //     }
+            $users = $entityManager->getRepository(User::class)->findBy(['id' => $user]);
             foreach ($users as $user) {
                 $userGroup->addUser($user);
             }
@@ -108,23 +108,31 @@ class OperationalManagerController extends AbstractController
             return $this->redirectToRoute('operational_manager_index');
         }
 
-         if ($request->query->get('search')) {
+        if ($request->query->get('search')) {
             $query = $operationalManagerRepository->search(['name' => $request->query->get('search')]);
         } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
-           
+
             $query =  $operationalManagerRepository->search($filterForm->getData());
         } else
+        if ($this->isGranted('all_acess_opr_mng')) {
             $query = $operationalManagerRepository->findAll();
+        } else {
+            $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+            $query = $operationalManagerRepository->findByPrincipal($principalOffice);
+        }
+        $data = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
 
-        $data =$query;
-        //   dd($data);
+        );
 
-    
-       
+
+
         return $this->render('operational_manager/index.html.twig', [
             'operational_managers' => $data,
             'form' => $form->createView(),
-             'filterform' => $filterForm->createView()
+            'filterform' => $filterForm->createView()
         ]);
     }
 

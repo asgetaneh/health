@@ -47,6 +47,18 @@ class OperationalManagerRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+     public function findByPrincipal($principalOffice){
+        $qb=$this->createQueryBuilder('om');
+             $qb->leftJoin('om.operationalOffice' ,'oo')
+             ->andwhere('oo.principalOffice = :principalOffice')
+            
+             ->setParameter('principalOffice',$principalOffice);
+           
+        
+        return $qb->getQuery()->getResult();
+      
+    }
      public function findActive($operationaloffice,$manager=null){
         $qb=$this->createQueryBuilder('om');
         if ($manager) {

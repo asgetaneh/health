@@ -115,7 +115,7 @@
 											<th>Weight</th>
 											<th>StartDate</th>
 											<th>EndDate</th>
-											<th>TimeGap</th>
+											<th>Contingency Days</th>
 											<th>Measurement</th>
 											<th>Challenge</th>
 											<th>Narrative</th>
@@ -230,6 +230,9 @@
 				</table>
 				{% if status == 2 %}
 					<button type="button" name="chalenge" data-taskuserid="{{taskUserid}}" class="btn btn-primary show pull-right">Challenge</button>
+					<div class="pull-left">
+						<button type="button" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skipChallenge  pull-right">Skip</button>
+					</div>
 				{% elseif status == 3 %}
 					<button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button>
 				{% elseif status == 4 %}
@@ -307,4 +310,24 @@ success: function (data) { // $('.department').children().remove()
 });
 location.reload(true);
 
-})</script>{% endblock %}
+})</script>
+<script>$('.skipChallenge').click(function () {
+
+var select = $('.crtask')
+var taskId = $(this).attr('data-taskuseridd');
+confirm("Are you Sure To Skip");
+$.ajax({
+url:"{{ path('task_challenge_skip') }}",
+method: "POST",
+data: {
+taskId: taskId
+},
+dataType: "json",
+success: function (data) { // $('.department').children().remove()
+
+}
+});
+location.reload(true);
+
+})</script>
+{% endblock %}

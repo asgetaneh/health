@@ -241,8 +241,8 @@ class PerformerTaskController extends AbstractController
                 $this->addFlash('success', 'Thank you for accepting your task!');
             }
         }
-           $social = 0;
-          
+        $social = 0;
+
         foreach ($taskAccomplishments[0]->getTaskUser()->getTaskAssign()->getPerformerTask()->getPlanAcomplishment()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
             if ($va->getName()) {
                 $social = 1;
@@ -253,7 +253,7 @@ class PerformerTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
             'narativeForm' => $narativeForm->createView(),
-            'social'=>$social
+            'social' => $social
 
         ]);
     }
@@ -270,6 +270,20 @@ class PerformerTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskUsers' => $taskUsers,
         ]);
+    }
+    
+     /**
+     * @Route("/skip/challenge", name="task_challenge_skip")
+     */
+    public function skipChallenge(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $taskId = $request->request->get('taskId');
+        $taskUser = $taskUserRepository->find($request->request->get('taskId'));
+        $taskUser->setStatus(3);
+        $em->flush();
+        return new JsonResponse($taskUser);
     }
     /**
      * @Route("/skip", name="task_narrative_skip")
@@ -340,14 +354,26 @@ class PerformerTaskController extends AbstractController
         if ($id = $request->request->get('id')) {
             $weight = $request->request->get('weight');
             $countWeight = $request->request->get('countWeight');
-            $performerTask = $performerTaskRepository->find($id);
-            //   dd(( 100-$countWeight)+$weight);
-            if (((100 - $countWeight) + $weight)  > 100) {
-                $this->addFlash('danger', 'Weight must be less than 100 !');
-                return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
-            }
+            $task = $request->request->get('task');
 
-            $performerTask->setWeight($weight);
+            $performerTask = $performerTaskRepository->find($id);
+            if ($weight) {
+
+                $remainig = $countWeight - $performerTask->getWeight();
+                // $availeble=$remainig-$weight;
+                $total = $remainig + $weight;
+                // dd($remainig,$weight,$total);
+
+                //   dd(( 100-$countWeight)+$weight);
+                if ($total > 100) {
+                    $this->addFlash('danger', 'Weight must be less than 100 !');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+                }
+                $performerTask->setWeight($weight);
+            }
+            if ($task) {
+                $performerTask->setName($task);
+            }
             $em->flush();
             $this->addFlash('success', 'Weight Updated successfully !');
 

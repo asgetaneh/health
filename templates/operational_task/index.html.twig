@@ -141,17 +141,20 @@
 											{% trans %}
 											Assign{% endtrans %}</a>
 									{% endif %}
-                                  
-								
-								</div>
-                                  <div class="pull-right" style="margin-bottom:20px; margin-top:10px;">  <span class="badge badge-info text-white"> {{initiativeName}}</span>	</div>
 
-                               
+
+								</div>
+								<div class="pull-right" style="margin-bottom:20px; margin-top:10px;">
+									<span class="badge badge-info text-white">
+										{{initiativeName}}</span>
+								</div>
+
+
 								{# <div class="pull-right"> #}
 								{% if countWeight >= 100 %}
 
 									<div class="row ">
-                                    
+
 										<form action="{{path('task_assign_pdf')}}" method="post">
 
 											<div class="col-md-2 pull-right">
@@ -177,7 +180,7 @@
 						</div>
 
 						<div class="widget-main padding-16">
-                         
+
 							<div class="table-responsive">
 								<form class="form-inline" method="post" style="display:inline;">
 
@@ -190,6 +193,7 @@
 										</div>
 									</div>
 								</form>
+
 								{% if performerTasks %}
 
 
@@ -229,12 +233,12 @@
 														{% set statusaccept = 0 %}
 														<table class="table table-bordered table-responsive-xg table-hover">
 															<tr>
-                                                            <th></th>
+																<th></th>
 																<th>Start Date
 																</th>
 																<th>End Date
 																</th>
-																<th>Time Gap</th>
+																<th>Contingency Days</th>
 																<th>Quantity</th>
 																<th>Reason</th>
 
@@ -253,7 +257,17 @@
 																			{{taskUser.taskAssign.endDate}}
 																		</td>
 																		<td>{{taskUser.taskAssign.timeGap}}</td>
-																		<td>{{taskUser.taskAssign.expectedValue}}</td>
+                                                                        <td>
+																			{% if social == 1 %}Male=
+																			{% endif %}
+																			{{taskUser.taskAssign.expectedValue}}
+																			{% if social == 1 %}Female=
+																				{{taskUser.taskAssign.expectedValueSocial}}
+																			{% endif %}
+
+
+																		</td>
+																		{# <td>{{taskUser.taskAssign.expectedValue}}</td> #}
 
 																		<td>{{taskUser.rejectReason}}
 																			{% if taskUser.status == 6 %}
@@ -277,14 +291,14 @@
 													<td>
 														{% if countWeight < 100 %}
 
-															<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" data-target="#edit" type="button">
+															<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" title="edit" data-target="#edit" type="button">
 																<i class="fa fa-edit"></i>
 															</button>
 														{% endif %}
 													</td>
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
 													<input type="hidden" class="user" value="{{app.user.id}}">
-                                                    <input type="hidden" class="quartertask" value="{{performerTask.quarter.id}}">
+													<input type="hidden" class="quartertask" value="{{performerTask.quarter.id}}">
 													<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
 													<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
 
@@ -300,8 +314,8 @@
 
 										</tbody>
 									</table>
-								{% endif %}
 
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -360,6 +374,7 @@ $('#edit').modal('show');
 var perTaskId = $(this).attr('data-taskId');
 var countWeight = $('.countWeight1').val()
 $('.countWeight').val(countWeight)
+
 $.ajax({
 url:"{{ path('performer_task_value_edit') }}",
 method: "POST",
@@ -370,7 +385,7 @@ dataType: "json",
 success: function (data) {
 var trHTML = '';
 $.each(data, function (i, item) {
-trHTML += '<tr><td>' + item.name + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group quantityBatch" placeholder="Weight" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
+trHTML += '<tr><td>' + item.name + '</td><td>' + '<input class="form-control" type="text" name="task" class="form-group " placeholder="Task"> ' + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group " placeholder="Weight" > <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td> </tr>';
 
 
 });
@@ -402,7 +417,7 @@ data = data.data;
 
 $.each(data, function (i, item) {
 
-trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap" max="6" placeholder="timeGap" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
+trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap" max="6" placeholder="ContingencyDays	" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
 
 
 });
@@ -421,7 +436,7 @@ minDate: calendar.newDate(parseInt(minDate[0]), parseInt(minDate[1]), parseInt(m
 });
 })
 		</script>
-	
+
 		<script>
 			$(document).ready(function () {
 
@@ -450,7 +465,7 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 			$(document).ready(function () {
 var task = $('.task').val();
 var user = $('.user').val();
-var quartertask= $('.quartertask').val();
+var quartertask = $('.quartertask').val();
 
 var select = $('.crtask')
 

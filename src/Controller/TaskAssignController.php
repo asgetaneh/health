@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Helper\DomPrint;
 use App\Entity\Delegation;
 use App\Entity\Evaluation;
 use App\Entity\PlanningQuarter;
@@ -104,7 +104,7 @@ class TaskAssignController extends AbstractController
     /**
      * @Route("/pdf", name="task_assign_pdf")
      */
-    public function taskPdf(Request $request, TaskUserRepository $taskUserRepository)
+    public function taskPdf(Request $request,DomPrint $domPrint, TaskUserRepository $taskUserRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $taskUserId = $request->request->get("user");
@@ -129,11 +129,7 @@ class TaskAssignController extends AbstractController
         // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
         $currentYear = AmharicHelper::getCurrentYear();
         //  $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
-        $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
-        $pdfOptions->set('isRemoteEnabled', true);
-        $dompdf = new Dompdf($pdfOptions);
-        $res = $this->renderView('task_assign/taskAssign_print.html.twig', [
+          $domPrint->print('task_assign/taskAssign_print.html.twig', [
             'taskUsers' => $taskUsers,
             'date' => (new \DateTime())->format('y-m-d'),
             'fullName' => $fullName,
@@ -144,16 +140,33 @@ class TaskAssignController extends AbstractController
             'operationalManager' => $operationalManager,
 
 
-        ]);
+        ],'pharmacy Reciving Log Report','landscape');
+       
+        // $pdfOptions = new Options();
+        // $pdfOptions->set('defaultFont', 'Arial');
+        // $pdfOptions->set('isRemoteEnabled', true);
+        // $dompdf = new Dompdf($pdfOptions);
+        // $res = $this->renderView('task_assign/taskAssign_print.html.twig', [
+        //     'taskUsers' => $taskUsers,
+        //     'date' => (new \DateTime())->format('y-m-d'),
+        //     'fullName' => $fullName,
+        //     'quarter' => $quarter,
+        //     'currentYear' => $currentYear,
+        //     'operationalOffice' => $operationalOffice,
+        //     'principalOffice' => $principalOffice,
+        //     'operationalManager' => $operationalManager,
 
-        $dompdf->loadHtml($res);
-        $dompdf->setPaper('A4', 'Landscape');
 
-        // Render the HTML as PDF
-        $dompdf->render();
-        $dompdf->stream("TaskAssign.pdf", [
-            "Attachment" => false
-        ]);
+        // ]);
+
+        // $dompdf->loadHtml($res);
+        // $dompdf->setPaper('A4', 'Landscape');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+        // $dompdf->stream("TaskAssign.pdf", [
+        //     "Attachment" => false
+        // ]);
         //  dd($evaluations);
     }
     /**
@@ -238,7 +251,7 @@ class TaskAssignController extends AbstractController
             $year = $request->request->get("year");
             $evaluations = $em->getRepository(Evaluation::class)->findEvaluationTasks($userId, $quarter, $year);
             $pdfOptions = new Options();
-            $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('defaultFont', 'Courier');
             $pdfOptions->set('isRemoteEnabled', true);
             $dompdf = new Dompdf($pdfOptions);
             $res = $this->renderView('task_assign/print.html.twig', [

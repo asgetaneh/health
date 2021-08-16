@@ -78,7 +78,7 @@
 										<th>TaskName</th>
 										<th>StartDate</th>
 										<th>EndDate</th>
-										<th>TimeGap</th>
+										<th>Contingency Days</th>
 										<th>Weight</th>
 										<th>Quantity</th>
 
@@ -96,7 +96,15 @@
 											<td>{{ task_User.taskAssign.endDate  }}</td>
 											<td>{{ task_User.taskAssign.timeGap }}</td>
 											<td>{{ task_User.taskAssign.performerTask.weight }}</td>
-											<td>{{task_User.taskAssign.expectedValue}}</td>
+											<td>
+												{% if task_User.taskAssign.expectedValueSocial %}
+													Male=
+												{% endif %}
+												{{task_User.taskAssign.expectedValue}}
+												{% if task_User.taskAssign.expectedValue %}
+													Female={{task_User.taskAssign.expectedValueSocial}}
+												{% endif %}
+											</td>
 
 											<td>
 												<form action="{{path('performer_task_show')}}" method="post" class="d-inline-block">
@@ -179,10 +187,10 @@ $('.taskUserId').val(id);
 })
 	</script>
 	<script>
-  $('.accept').clicck(function(){
-      location.reload(true);
+		$('.accept').clicck(function () {
+location.reload(true);
 
-  })  
-    </script>
+})
+	</script>
 
 {% endblock %}
