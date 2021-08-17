@@ -22,7 +22,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -182,6 +185,55 @@ class InitiativeController extends AbstractController
             'initiative' => $initiative,
             'form' => $form->createView(),
         ]);
+    }
+     /**
+     * @Route("/excel", name="excel_initiative", methods={"GET","POST"})
+     */
+
+    public function excel(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
+    {
+         $session = new Session();
+        // $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+      if ($session->get('filter')) {
+           
+            $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
+            
+       
+        } else
+            $initiativestotal = $initiativeRepository->findAll();
+
+
+      $spreadsheet = new Spreadsheet();
+            foreach (range('A', 'E') as $columnID) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+            }
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Initiative Number');
+            $sheet->setCellValue('B1', 'Initiative Name');
+            $sheet->setCellValue('C1', 'Kpi');
+            $sheet->setCellValue('D1', 'Weight');
+            $sheet->setCellValue('E1', 'Behaviour');
+
+            $totalResult = $initiativestotal;
+            // dd($totalResult);
+            $x = 2;
+            $soh = 0;
+            foreach ($totalResult as $result) {
+                $sheet->setCellValue('A' . $x, $result->getInitiativeNumber());
+                $sheet->setCellValue('B' . $x, $result->getName());
+                $sheet->setCellValue('C' . $x, $result->getKeyPerformanceIndicator()->getName());
+                $sheet->setCellValue('D' . $x, $result->getWeight());
+                $sheet->setCellValue('E' . $x, $result->getInitiativeBehaviour());
+
+                $x++;
+            }
+            $writer = new Xlsx($spreadsheet);
+            $fileName = "Initiatives" . '.xlsx';
+            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+            $writer->save($temp_file);
+            return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+        
     }
     /**
      * @Route("/printes", name="print_initiative", methods={"GET","POST"})

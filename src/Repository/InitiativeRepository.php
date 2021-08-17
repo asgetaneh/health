@@ -153,6 +153,6 @@ class InitiativeRepository extends ServiceEntityRepository
             
         }
 
-        return $qb->orderBy('i.id','ASC')->getQuery();
+        return $qb->orderBy('i.initiativeNumber','ASC')->getQuery();
     }
 }
