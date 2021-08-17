@@ -94,7 +94,7 @@
 											<td>
 												{% for director in  
                                         principal_office.principalManagers|filter(director => director.isActive == 1) %}
-													{{director.principal|title}}
+								{{director.principal.userInfo.fullName|title}}
 												{% endfor %}
 
 											</td>
