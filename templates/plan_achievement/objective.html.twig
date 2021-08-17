@@ -36,8 +36,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																											<i class="ace-icon fa fa-refresh"></i>
-																										</a> #}
+																															<i class="ace-icon fa fa-refresh"></i>
+																														</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -67,20 +67,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																							<h5 class="widget-title">
-																								<strong>Initiative Achievement</strong>
-																							</h5>
-														
-																							<div class="widget-toolbar">
-														
-														
-																								<a href="#" id="reload" data-action="reload">
-																									<i class="ace-icon fa fa-refresh"></i>
-																								</a>
-														
-														
-																							</div>
-																						</div> #}
+																																					<h5 class="widget-title">
+																																						<strong>Initiative Achievement</strong>
+																																					</h5>
+																												
+																																					<div class="widget-toolbar">
+																												
+																												
+																																						<a href="#" id="reload" data-action="reload">
+																																							<i class="ace-icon fa fa-refresh"></i>
+																																						</a>
+																												
+																												
+																																					</div>
+																																				</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="table-responsive">
@@ -148,17 +148,18 @@
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div id="messages">
-				<canvas id="myChart" width="400" height="400"></canvas>
-				<div id="legend"></div>
+
+				<div id="messages">
+					<canvas id="myChart" width="400" height="400"></canvas>
+					{# <div id="legend"></div> #}
+				</div>
 			</div>
 
 
 		</div>
 	</div>
-</div>{% endblock %}{% block javascripts %}
+{% endblock %}{% block javascripts %}
 <script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
 <script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
 <script>
@@ -177,16 +178,12 @@ return color;
 }
 var bgcolor = [];
 var fillColor = [];{% for objective in data.objective %}bgcolor.push(getRandomColor());
-fillColor.push(getRandomColor());{% endfor %}
-
-
-var ctx = document.getElementById("myChart").getContext('2d');
+fillColor.push(getRandomColor());{% endfor %}var ctx = document.getElementById("myChart").getContext('2d');
 
 
 var dat = {
 labels: [{{ data.year|join(',') }}],
-datasets: [{% for objective in data.objective %}
-{
+datasets: [{% for objective in data.objective %}{
 
 label: "{{ objective.name }}",
 fillColor: fillColor[{{ loop.index }}],
@@ -198,9 +195,7 @@ backgroundColor: [{% for i in range(1,objective.achieve|length) %}bgcolor[{{ loo
 borderColor: [{% for i in range(1,objective.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
 borderWidth: 1
 }
-{% if loop.last != true %},
-{% endif %}
-{% endfor %}]
+{% if loop.last != true %},{% endif %}{% endfor %}]
 };
 
 

@@ -9,11 +9,14 @@ use App\Entity\UserGroup;
 use App\Form\PrincipalManagerType;
 use App\Repository\PrincipalManagerRepository;
 use DateTime;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -39,6 +42,8 @@ class PrincipalManagerController extends AbstractController
                 'required' => false,
             ])->getForm();
         $filterForm->handleRequest($request);
+        $session = new Session();
+        $session->remove('filter');
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -57,18 +62,17 @@ class PrincipalManagerController extends AbstractController
             }
 
             $user = $form->getData()->getPrincipal()->getId();
-            //   dd($user);
-            // Principal Managers
+
             $userGroup = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "Principal Managers"]);
-              $userGroupcas = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "cascading"]);
-            // dd($userGroup);
+            $userGroupcas = $entityManager->getRepository(UserGroup::class)->findOneBy(['name' => "cascading"]);
+
             $users = $entityManager->getRepository(User::class)->findBy(['id' => $user]);
             foreach ($users as $user) {
                 $userGroup->addUser($user);
             }
             $userGroup->setUpdatedAt(new \DateTime());
             $userGroup->setUpdatedBy($this->getUser());
-             foreach ($users as $user) {
+            foreach ($users as $user) {
                 $userGroupcas->addUser($user);
             }
             $userGroupcas->setUpdatedAt(new \DateTime());
@@ -106,12 +110,14 @@ class PrincipalManagerController extends AbstractController
             $this->addFlash('success', "activated successfuly");
             return $this->redirectToRoute('principal_manager_index');
         }
-                    $count = $principalManagerRepository->findAll();
+        $count = $principalManagerRepository->findAll();
 
         if ($request->query->get('search')) {
+            $session->set('filter', ['name' => $request->query->get('search')]);
+
             $query = $principalManagerRepository->search(['name' => $request->query->get('search')]);
         } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
-
+            $session->set('filter', $filterForm->getData());
             $query =  $principalManagerRepository->search($filterForm->getData());
         } else
             $query = $principalManagerRepository->findAll();
@@ -127,8 +133,46 @@ class PrincipalManagerController extends AbstractController
             'principal_managers' =>  $data,
             'form' => $form->createView(),
             'filterform' => $filterForm->createView(),
-            'totalcount'=>$count
+            'totalcount' => $count
 
+        ]);
+    }
+    /**
+     * @Route("/print", name="print_principal", methods={"GET","POST"})
+     */
+
+    public function print(Request $request, PaginatorInterface $paginator, PrincipalManagerRepository $principalManagerRepository)
+    {
+        $session = new Session();
+        // $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+        if ($session->get('filter')) {
+
+            $initiativestotal  = $principalManagerRepository->search($session->get('filter'))->getResult();
+        } else
+            $initiativestotal = $principalManagerRepository->findAll();
+
+
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $pdfOptions->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($pdfOptions);
+
+        $res = $this->renderView('principal_manager/print.html.twig', [
+            'principal_managers' => $initiativestotal,
+            // 'year' => $year
+
+
+        ]);
+
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A4', 'Landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("principal manager.pdf", [
+            "Attachment" => false
         ]);
     }
 

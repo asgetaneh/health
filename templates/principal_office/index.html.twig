@@ -102,13 +102,14 @@
 
 									<td>
 										<ul class="list-unstyled spaced">
-
+                                            {% set cout = 1 %}
 											{% for office in  
                                         principal_office.operationalOffices|filter(office => office.isActive == 1) %}
 												<li>
-													<i class="ace-icon fa fa-check green"></i>
+													<b>{{cout}}.</b>
 													{{office|title}}
 												</li>
+                                                {% set cout = cout+1 %}
 
 											{% endfor %}
 										</ul>

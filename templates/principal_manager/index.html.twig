@@ -2,22 +2,22 @@
 {% block subTitle %}
 	<li class="active">{% trans %}
 		SMIS{% endtrans %}</li>
-		<li class="active">
-        <a href="{{path('principal_manager_index')}}">{% trans %}
-        <strong>
-		Principal Manager{% endtrans %}
-        </strong></a>
-        </li>
+	<li class="active">
+		<a href="{{path('principal_manager_index')}}">{% trans %}
+			<strong>
+				Principal Manager{% endtrans %}
+			</strong>
+		</a>
+	</li>
 {% endblock %}
 
 {% block body %}
-    
 
-    
-    	<div class="row">
+
+	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
-				<div class="widget-header"> 
+				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
 						<strong>Principal Managers</strong>
 					</h5>
@@ -44,64 +44,72 @@
 						</div>
 					</div>
 					<div class="widget-main padding-16">
-                    	<div class="row">
+						<div class="row">
 							<div class="search-area well col-md-12">
 
-									<div class="row">
-										{{ form_start(filterform) }}
+								<div class="row">
+									{{ form_start(filterform) }}
 
-										<div class="form-group col-md-6" style="display:inline;">
-											{{ form_label(filterform.principaloffice," Principal Office") }}
-											{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
+									<div class="form-group col-md-6" style="display:inline;">
+										{{ form_label(filterform.principaloffice," Principal Office") }}
+										{{ form_widget(filterform.principaloffice,{'attr':{ 'class': 'select2 form-control'}}) }}
 
-
-										</div>
-										
-										<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
-										{{ form_end(filterform) }}
 
 									</div>
+
+									<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
+									{{ form_end(filterform) }}
+
+								</div>
 
 
 							</div>
 						</div>
-                        <form class="form-inline" method="get" style="display:inline;margin-bottom:15px;">
+						<form class="form-inline" method="get" style="display:inline;margin-bottom:15px;">
 
-								<div class="input-group">
-									<input type="text" class="form-control" name="search" placeholder="Search">
-									<div class="input-group-btn">
-										<button type="submit" class="btn btn-default no-border btn-sm">
-											<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-										</button>
-									</div>
+							<div class="input-group">
+								<input type="text" class="form-control" name="search" placeholder="Search">
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-default no-border btn-sm">
+										<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+									</button>
 								</div>
-							</form>
+							</div>
+						</form>
 						<div class="table-responsive">
+                        <form action="{{path('print_principal')}}" method="post">
+
+								<button type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right" style="margin-bottom:30px;">
+									<i class=" fa fa-file-pdf-o"></i>
+									PDF
+								</button>
+							</form>
 							<table class="table table-striped table-bordered table-hover">
 
 								<thead>
 									<tr></tr>
 									<tr>
 										<th>#</th>
-										<th>Principal </th>
+										<th>Principal
+										</th>
 										<th>Principal Office</th>
 
 										<th>Status</th>
-										
-										
+
+
 										<th>actions</th>
 									</tr>
 								</thead>
 							</tr>
 						</thead>
 						<tbody>
-                        	{% set count =  principal_managers.getItemNumberPerPage() * (principal_managers.getCurrentPageNumber() -1) %}
+							{% set count =  principal_managers.getItemNumberPerPage() * (principal_managers.getCurrentPageNumber() -1) %}
 							{% for principal_manager in principal_managers %}
 								<tr>
-                                {% set count = count + 1 %}
+									{% set count = count + 1 %}
 									<td>{{ count }}</td>
 									<td>{{ principal_manager.principal.userInfo }}</td>
-                                   <td>{{ principal_manager.principalOffice|title }}</td>
+									<td>{{ principal_manager.principalOffice|title }}</td>
 									<td>
 										{% if principal_manager.isActive %}
 											<span class="label label-success">Active</span>
@@ -116,20 +124,20 @@
 									<td>
 										<a title="view" class="btn btn-primary btn-sm" href="{{ path('principal_manager_show', {'id': principal_manager.id}) }}" title="view details">
 											<i class="fa fa-eye"></i>
-											</a>
+										</a>
 										<a title="{% trans %}Edit{% endtrans %}" class="btn btn-warning btn-sm" href="{{ path('principal_manager_edit', {'id': principal_manager.id}) }}" title="edit">
 											<i class="fa fa-edit"></i>
-											</a>
-                                          
-                                            <form  class="" style="display:inline;" action="" method="post">
-                                            
-                                                  
-                                                    <input type="hidden" name="{{principal_manager.isActive ?"deactive":"active"}}" value ="{{ principal_manager.id}}">
-                                                    <button title="{{principal_manager.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{principal_manager.isActive?"btn-danger":"btn-success"}}" value="">
-                                                        <span class="{{principal_manager.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
-                                                        </button>
-                                            </form>
-                                            
+										</a>
+
+										<form class="" style="display:inline;" action="" method="post">
+
+
+											<input type="hidden" name="{{principal_manager.isActive ?"deactive":"active"}}" value="{{ principal_manager.id}}">
+											<button title="{{principal_manager.isActive ?"deactive":"active"}}" type="submit" class="btn btn-sm {{principal_manager.isActive?" btn-danger":" btn-success"}}" value="">
+												<span class="{{principal_manager.isActive?"fa fa-times":"ace-icon fa fa-check "}}"></span>
+											</button>
+										</form>
+
 									</td>
 								</tr>
 							{% else %}
@@ -182,16 +190,9 @@
 		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 		{{ form_end(form) }}
 	</div>
-</div></div>
-{% endblock %}
+</div></div>{% endblock %}{% block javascripts %}<script>
+$(function () {
+$('.select2').css('width', '90%').select2({allowClear: false})
 
-{% block javascripts %}
 
-<script>
-    $(function () {
-      $('.select2').css('width', '90%').select2({allowClear: false})
-      
-      
-
-    })
-  </script>{% endblock %}
+})</script>{% endblock %}

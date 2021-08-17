@@ -15,12 +15,15 @@ use App\Form\InitiativeType;
 use App\Helper\Helper;
 use App\Repository\InitiativeRepository;
 use DateTime;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @Route("/initiative")
@@ -43,7 +46,7 @@ class InitiativeController extends AbstractController
             foreach ($locales as $key => $value) {
                 $initiative->translate($value)->setName($request->request->get('initiative')[$value]);
 
-                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value."description"]);
+                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value . "description"]);
             }
             $initiative->setCreatedAt(new DateTime('now'));
             $initiative->setCreatedBy($this->getUser());
@@ -55,13 +58,13 @@ class InitiativeController extends AbstractController
             return $this->redirectToRoute('initiative_index');
         }
         $filterform = $this->createFormBuilder()
-           ->setMethod('Get')
+            ->setMethod('Get')
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
                 'multiple' => true,
                 'required' => false
             ])
-            
+
             ->add('objective', EntityType::class, [
                 'class' => Objective::class,
                 'multiple' => true,
@@ -129,15 +132,19 @@ class InitiativeController extends AbstractController
         }
 
         $filterform->handleRequest($request);
+        $session=new Session();
+        $session->remove('filter');
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $session->set('filter',$filterform->getData());
             $initiatives = $initiativeRepository->search($filterform->getData());
+            
         } elseif ($request->query->get('search')) {
-           
-            $initiatives = $initiativeRepository->search(['name' =>$request->query->get('search')]);
+               $session->set('filter',['name' => $request->query->get('search')]);
+            $initiatives = $initiativeRepository->search(['name' => $request->query->get('search')]);
         } else
             $initiatives = $initiativeRepository->findAlls();
-            $initiativestotal = $initiativeRepository->findAll();
+        $initiativestotal = $initiativeRepository->findAll();
 
         $data = $paginator->paginate(
             $initiatives,
@@ -146,7 +153,7 @@ class InitiativeController extends AbstractController
         );
         return $this->render('initiative/index.html.twig', [
             'initiatives' => $data,
-            'initiativestotal'=>$initiativestotal,
+            'initiativestotal' => $initiativestotal,
             'form' => $form->createView(),
             'filterform' => $filterform->createView(),
         ]);
@@ -176,6 +183,46 @@ class InitiativeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    /**
+     * @Route("/printes", name="print_initiative", methods={"GET","POST"})
+     */
+
+    public function print(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
+    {
+         $session = new Session();
+        // $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+      if ($session->get('filter')) {
+           
+            $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
+            
+       
+        } else
+            $initiativestotal = $initiativeRepository->findAll();
+
+
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $pdfOptions->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($pdfOptions);
+
+        $res = $this->renderView('initiative/print.html.twig', [
+            'initiatives' => $initiativestotal,
+            // 'year' => $year
+
+
+        ]);
+
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A4', 'Landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("juinitiative.pdf", [
+            "Attachment" => false
+        ]);
+    }
 
     /**
      * @Route("/{id}", name="initiative_show", methods={"GET"})
@@ -201,11 +248,11 @@ class InitiativeController extends AbstractController
         $locales = Helper::locales();
 
         if ($form->isSubmitted() && $form->isValid()) {
-           
+
             foreach ($locales as $key => $value) {
                 $initiative->translate($value)->setName($request->request->get('initiative')[$value]);
 
-                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value."description"]);
+                $initiative->translate($value)->setDescription($request->request->get('initiative')[$value . "description"]);
             }
             $initiative->mergeNewTranslations();
 

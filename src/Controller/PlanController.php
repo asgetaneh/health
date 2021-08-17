@@ -366,8 +366,8 @@ class PlanController extends AbstractController
 
                         $planAcomplishment->setSuitableInitiative($planInitiative);
                         $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
-                        if ($planValues[$i]) {
-                            $planAcomplishment->setPlanValue((int) $planValues[$i]);
+                        if (isset($planValues[$i])) {
+                            $planAcomplishment->setPlanValue( $planValues[$i]);
                         }
                         $planAcomplishment->setQuarter($planningquarter);
                         if ($edit == false) {
