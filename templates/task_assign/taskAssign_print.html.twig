@@ -118,7 +118,7 @@
 			<h4>ትምህርት ክፍል/ ፋካልቲ/ ቡድን:<u>{{operationalOffice}}</u>
 				<h4>ዓመት:<u>{{currentYear}}</u>
 					ሩብ
-					:<u>{{quarter}}</u>
+																				:<u>{{quarter}}</u>
 				</h4>
 				<h4>የስራ ተረካቢ ስም
 					<u>
@@ -132,6 +132,7 @@
 						<tr>
 							<th>#</th>
 							<th>ተግባር</th>
+							<th>ዝርዝር መረጃ</th>
 							<th>ክብደት</th>
 							<th>የሚጀምርበት ቀን</th>
 							<th>የሚጠናቅቅበት ቀን</th>
@@ -149,18 +150,37 @@
 								{% set count = count + 1 %}
 								<td>{{count}}</td>
 								<td>{{ taskUser.taskAssign.performerTask.name}}</td>
+								<td>{{ taskUser.taskAssign.performerTask.description}}</td>
 								<td>{{ taskUser.taskAssign.performerTask.weight}}</td>
 								<td>{{ taskUser.taskAssign.startDate }}</td>
 								<td>{{ taskUser.taskAssign.endDate }}</td>
 								<td>{{ taskUser.taskAssign.timeGap }}</td>
-								<td>{{ taskUser.taskAssign.expectedValue }}</td>
-								<td>________</td>
+								<td>
+									{% if taskUser.taskAssign.expectedValueSocial %}
+										Male=
+									{% endif %}
+									{{ taskUser.taskAssign.expectedValue }}
+									{% if taskUser.taskAssign.expectedValueSocial %}
+										Female=
+										{{ taskUser.taskAssign.expectedValueSocial }}
+									{% endif %}
+								</td>
+
+								<td>
+									{% if taskUser.taskAssign.expectedValueSocial %}
+										Male=
+									{% endif %}
+									_______
+									{% if taskUser.taskAssign.expectedValueSocial %}
+										Female=_______
+									{% endif %}
+								</td>
 
 
 							</tr>
 						{% else %}
 							<tr>
-								<td colspan="8">no records found</td>
+								<td colspan="9">no records found</td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -169,15 +189,17 @@
 					<u>
 						{{operationalManager}}
 					</u>
-                    ከላይ ያለውን ስራ ተስማምቼ ለመረከቤ በፊርማ አረጋግጣለሁ: <u>________</u>
+					ከላይ ያለውን ስራ ተስማምቼ ለመረከቤ በፊርማ አረጋግጣለሁ:
+					<u>________</u>
 				</h4>
 				<h5>የሰራተኛው ፊርማ
 					<u>________</u>
 				</h5>
-                <h5>ሰራተኛው ስራውን ፈፅሞ ያስረከበበት ቀን
+				<h5>ሰራተኛው ስራውን ፈፅሞ ያስረከበበት ቀን
 
 					<u>________</u>
-                    ኃላፊው ስራውን የተረከበበት ቀን  <u>________</u>
+					ኃላፊው ስራውን የተረከበበት ቀን
+					<u>________</u>
 				</h5>
 			</div>
 		</body>
