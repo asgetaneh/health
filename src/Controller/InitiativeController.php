@@ -261,6 +261,7 @@ class InitiativeController extends AbstractController
 
         $res = $this->renderView('initiative/print.html.twig', [
             'initiatives' => $initiativestotal,
+            
             // 'year' => $year
 
 
