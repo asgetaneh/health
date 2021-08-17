@@ -141,6 +141,10 @@ class OperationalTaskController extends AbstractController
             } else {
                 $plans = $planningAccomplishmentRepository->findBy(['suitableInitiative' => $suitableInitiative, 'quarter' => $quarterId]);
             }
+            if (!$plans) {
+                $this->addFlash('danger', 'Plan Not Set for this Initiative');
+                return $this->redirectToRoute('operational_task_index', ['id' => $suitableInitiative->getId()]);
+            }
             // dd($plans);
             $performerTask->setPlanAcomplishment($plans[0]);
             if ($social == 1) {
@@ -329,8 +333,8 @@ class OperationalTaskController extends AbstractController
 
             $suitableInitiatives = $suitableInitiativeRepository->search($filterForm->getData());
         } else
-         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice"=>$principalOffice]);
+            $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+        $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
 
         return $this->render('operational_task/report.html.twig', [
             'suitable_initiatives' => $suitableInitiatives,
@@ -351,8 +355,8 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy();
             $user = $delegatedBy;
         }
-         $social = 0;
-          
+        $social = 0;
+
         foreach ($suitableInitiative->getInitiative()->getSocialAtrribute() as $va) {
             if ($va->getName()) {
                 $social = 1;
@@ -369,39 +373,39 @@ class OperationalTaskController extends AbstractController
         //     }
         // }
         // if ($socialAttr == 1) {
-            $initiativeName = $suitableInitiative->getInitiative()->getName();
-            $initiativeId = $suitableInitiative->getId();
-            $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user);
-            $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative, $user);
-            // $performerTasksSocial = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user, $female);
-            // $taskAcomolishsSocial = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative, $user, $female);
+        $initiativeName = $suitableInitiative->getInitiative()->getName();
+        $initiativeId = $suitableInitiative->getId();
+        $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user);
+        $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative, $user);
+        // $performerTasksSocial = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user, $female);
+        // $taskAcomolishsSocial = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative, $user, $female);
 
 
-            $time = new DateTime('now');
-            $endDate = 0;
-            $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
-            foreach ($quarters as $quarter) {
-                if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
-                    $endDate = $quarter->getEndDate();
-                }
+        $time = new DateTime('now');
+        $endDate = 0;
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
+                $endDate = $quarter->getEndDate();
             }
-            $diff = $endDate->diff($time);
-            if ($diff->m == 0) {
-                $remainingdays = $diff->d;
-            } else {
-                $remainingdays = $diff->m * 30 + $diff->d;
-            }
-            // dd($performerTasksmale);
-            return $this->render('operational_task/accomplishmentDetail.html.twig', [
-                'taskAcomolishs' => $taskAcomolishs,
-                'initiativeName' => $initiativeName,
-                'initiativeId' => $initiativeId,
-                'performerTasks' => $performerTasks,
-                'social' => $social,
-                'remainingdays' => $remainingdays,
-                // 'taskUsers'=>$taskUsers
+        }
+        $diff = $endDate->diff($time);
+        if ($diff->m == 0) {
+            $remainingdays = $diff->d;
+        } else {
+            $remainingdays = $diff->m * 30 + $diff->d;
+        }
+        // dd($performerTasksmale);
+        return $this->render('operational_task/accomplishmentDetail.html.twig', [
+            'taskAcomolishs' => $taskAcomolishs,
+            'initiativeName' => $initiativeName,
+            'initiativeId' => $initiativeId,
+            'performerTasks' => $performerTasks,
+            'social' => $social,
+            'remainingdays' => $remainingdays,
+            // 'taskUsers'=>$taskUsers
 
-            ]);
+        ]);
         // } else {
 
         //     $em = $this->getDoctrine()->getManager();
@@ -710,7 +714,7 @@ class OperationalTaskController extends AbstractController
             $evaluateUser = $taskAccomplishment->getTaskUser()->getAssignedTo();
             $taskAccomplishment->setAccomplishmentValue($reportValue);
             if ($reportValueSocial) {
-          $taskAccomplishment->setAccomplishmentValueSocial($reportValueSocial);
+                $taskAccomplishment->setAccomplishmentValueSocial($reportValueSocial);
             }
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
