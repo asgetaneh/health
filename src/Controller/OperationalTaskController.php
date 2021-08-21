@@ -250,54 +250,6 @@ class OperationalTaskController extends AbstractController
 
 
 
-    // /**
-    //  * @Route("/accomplisment/social", name="acomplishment_task_detail_social")
-    //  */
-    // public function accomplishmentSocial(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository)
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-    //     $user = $this->getUser();
-    //     $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
-    //     if ($delegatedUser) {
-    //         $delegatedBy = $delegatedUser->getDelegatedBy();
-    //         $user = $delegatedBy;
-    //         // dd($delegatedUser->getDelegatedUser());
-    //     }
-    //     $social = 1;
-    //     $socialAtr = $request->request->get("social");
-    //     $suitableId = $request->request->get("suitId");
-    //     $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitableId);
-    //     $initiativeName = $suitableInitiative->getInitiative()->getName();
-    //     $initiativeId = $suitableInitiative->getId();
-    //     $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user, $socialAtr);
-    //     $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableInitiative, $user, $socialAtr);
-
-
-    //     $time = new DateTime('now');
-    //     $endDate = 0;
-    //     $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
-    //     foreach ($quarters as $quarter) {
-    //         if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
-    //             $endDate = $quarter->getEndDate();
-    //         }
-    //     }
-    //     $diff = $endDate->diff($time);
-    //     if ($diff->m == 0) {
-    //         $remainingdays = $diff->d;
-    //     } else {
-    //         $remainingdays = $diff->m * 30 + $diff->d;
-    //     }
-    //     return $this->render('operational_task/accomplishmentDetail.html.twig', [
-    //         'taskAcomolishs' => $taskAcomolishs,
-    //         'initiativeName' => $initiativeName,
-    //         'initiativeId' => $initiativeId,
-    //         'performerTasks' => $performerTasks,
-    //         'social' => $social,
-    //         'remainingdays' => $remainingdays,
-    //         // 'taskUsers'=>$taskUsers
-
-    //     ]);
-    // }
 
 
     /**
@@ -362,17 +314,7 @@ class OperationalTaskController extends AbstractController
                 $social = 1;
             }
         }
-        // $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
-        // foreach ($socials as $so) {
-        //     if ($so->getCode() == 1) {
-        //         $socialAttr = 1;
-        //         $male = $so->getId();
-        //     }
-        //     if ($so->getCode() == 2) {
-        //         $female = $so->getId();
-        //     }
-        // }
-        // if ($socialAttr == 1) {
+      
         $initiativeName = $suitableInitiative->getInitiative()->getName();
         $initiativeId = $suitableInitiative->getId();
         $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableInitiative, $user);
@@ -406,42 +348,7 @@ class OperationalTaskController extends AbstractController
             // 'taskUsers'=>$taskUsers
 
         ]);
-        // } else {
-
-        //     $em = $this->getDoctrine()->getManager();
-
-        //     $initiativeName = $suitableInitiative->getInitiative()->getName();
-        //     $initiativeId = $suitableInitiative->getId();
-        //     $performerTasks = $performerTaskRepository->findInitiativeBy($suitableInitiative, $user);
-        //     $total1 = 0;
-        //     $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplish($suitableInitiative, $user);
-
-        //     $taskUsers = $taskUserRepository->findTaskUsers($user);
-        //     $time = new DateTime('now');
-        //     $endDate = 0;
-        //     $quarters = $planningQuarterRepository->findAll();
-        //     foreach ($quarters as $quarter) {
-        //         if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
-        //             $endDate = $quarter->getEndDate();
-        //         }
-        //     }
-        //     $diff = $endDate->diff($time);
-        //     if ($diff->m == 0) {
-        //         $remainingdays = $diff->d;
-        //     } else {
-        //         $remainingdays = $diff->m * 30 + $diff->d;
-        //     }
-        //     return $this->render('operational_task/accomplishmentDetail.html.twig', [
-        //         'taskAcomolishs' => $taskAcomolishs,
-        //         'initiativeName' => $initiativeName,
-        //         'initiativeId' => $initiativeId,
-        //         'performerTasks' => $performerTasks,
-        //         'social' => 0,
-        //         'remainingdays' => $remainingdays,
-        //         'taskUsers' => $taskUsers
-
-        //     ]);
-        // }
+       
     }
 
 
