@@ -18,25 +18,39 @@ class TaskAssignRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TaskAssign::class);
     }
-       public function findPerformerTaskEdit($id)
+    public function findPerformerTaskEdit($id)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
-      
 
 
-            ->Select('s.id')  
-                 ->addSelect('s.startDate')
+
+            ->Select('s.id')
+            ->addSelect('s.startDate')
             ->addSelect('s.endDate')
-               ->addSelect('s.expectedValue')
-            ->orderBy('s.id', 'ASC')->
-            andWhere('s.id = :id')
+            ->addSelect('s.expectedValue')
+            ->orderBy('s.id', 'ASC')->andWhere('s.id = :id')
             ->setParameter('id', $id)
-        
+
             ->getQuery()
-            
+
             ->getResult();
+    }
+    public function getTaskStatusAssigned($id, $office)
+    {
+        // dd($id);
+
+        return $this->createQueryBuilder('ta')
+            ->leftJoin('ta.PerformerTask', 's')
+            ->leftJoin('s.PlanAcomplishment', 'pa')
+            ->leftJoin('pa.suitableInitiative', 'su')
+            ->select('count(ta.id)')->andWhere('su.id =  :id')
+            ->andWhere('s.operationalOffice =  :office')
+            ->setParameter('office', $office)
+            ->setParameter('id', $id)
+
+            ->getQuery()->getSingleScalarResult();
     }
 
     // /**
