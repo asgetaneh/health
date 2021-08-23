@@ -154,6 +154,8 @@ class InitiativeRepository extends ServiceEntityRepository
                 ->andWhere("t.name  LIKE '%" . $search['name'] . "%' ");
         }
 
-        return $qb->orderBy('i.id', 'ASC')->getQuery();
+
+        return $qb->orderBy('i.initiativeNumber','ASC')->getQuery();
+
     }
 }
