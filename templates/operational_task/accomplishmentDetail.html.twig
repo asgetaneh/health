@@ -94,12 +94,7 @@
 								{% if performerTasks %}
 
 
-									{# {% if social == 1 %}
-																																					<h5>Male</h5>
-																																					{% else %}
-																											
-																																				{% endif %} #}
-
+								
 									<table class="table table-striped table-hover" style="margin-top:10px; wi height:100px;">
 										<thead>
 											<tr>
@@ -130,13 +125,13 @@
 
 
 													<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
-													{% if social %}
+													{# {% if social %}
 
-														{# <input type="hidden" name="social[]" value="{{performerTask.social.id}}"> #}
+														<input type="hidden" name="social[]" value="{{performerTask.social.id}}">
 													{% else %}
 														<input type="hidden" name="social" value="0">
 
-													{% endif %}
+													{% endif %} #}
 													<td colspan="2">
 														<table class="table table-bordered  table-responsive-xl table-hover">
 															<tr>

@@ -19,6 +19,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
         parent::__construct($registry, TaskAccomplishment::class);
     }
 
+  
     public function findTask($user)
     {
 

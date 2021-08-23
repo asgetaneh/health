@@ -18,161 +18,171 @@ class PerformerTaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PerformerTask::class);
     }
-     public function filterDeliverBy($plan,$user,$quarter)
+
+    public function getTaskStatus($id, $office)
+    {
+        // dd($id);
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.PlanAcomplishment', 'pa')
+            ->leftJoin('pa.suitableInitiative', 'su')
+            ->select('count(s.id)')->andWhere('su.id =  :id')
+            ->andWhere('s.operationalOffice =  :office')
+            ->setParameter('office', $office)
+            ->setParameter('id', $id)
+
+            ->getQuery()->getSingleScalarResult();
+    }
+    public function filterDeliverBy($plan, $user, $quarter)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
-        ->leftJoin('s.PlanAcomplishment','pa')
-         ->leftJoin('pa.suitableInitiative','su')
+            ->leftJoin('s.PlanAcomplishment', 'pa')
+            ->leftJoin('pa.suitableInitiative', 'su')
 
 
-            ->Select('s.name')  
-           
+            ->Select('s.name')
+
             ->addSelect('s.id')
             // ->addSelect('s.user')
 
-            ->orderBy('s.id', 'ASC')->
-            andWhere('su.id = :plan')
+            ->orderBy('s.id', 'ASC')->andWhere('su.id = :plan')
             ->setParameter('plan', $plan)
-            ->
-            andWhere('s.quarter = :quarter')
+            ->andWhere('s.quarter = :quarter')
             ->setParameter('quarter', $quarter)
-          ->andWhere('s.createdBy = :user')
-          ->andWhere('s.status = 1')
+            ->andWhere('s.createdBy = :user')
+            ->andWhere('s.status = 1')
             ->setParameter('user', $user)
             ->getQuery()
-            
+
             ->getResult();
     }
-    public function findPerformerInitiativeTask($user,$initiative)
+    public function findPerformerInitiativeTask($user, $initiative)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment','pl')  
-           ->andWhere('pl.suitableInitiative = :initiative')
+            ->leftJoin('s.PlanAcomplishment', 'pl')
+            ->andWhere('pl.suitableInitiative = :initiative')
             ->andWhere('s.createdBy = :user')
-           ->andWhere('s.status = 1')
+            ->andWhere('s.status = 1')
 
 
 
             ->setParameter('initiative', $initiative)
-                        ->setParameter('user', $user)
+            ->setParameter('user', $user)
 
-                        ->orderBy('s.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
-     public function findInitiativeBy($suitableinitiative,$user)
+    public function findInitiativeBy($suitableinitiative, $user)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment','pl')  
-           ->andWhere('pl.suitableInitiative = :initiative')
-           ->andWhere('s.createdBy = :user')
+            ->leftJoin('s.PlanAcomplishment', 'pl')
+            ->andWhere('pl.suitableInitiative = :initiative')
+            ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
 
-                        ->orderBy('s.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
-    public function findInitiativeBySocial($suitableinitiative,$user)
+    public function findInitiativeBySocial($suitableinitiative, $user)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment','pl') 
-           ->andWhere('pl.suitableInitiative = :initiative')
-           ->andWhere('s.createdBy = :user')
+            ->leftJoin('s.PlanAcomplishment', 'pl')
+            ->andWhere('pl.suitableInitiative = :initiative')
+            ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
 
-                        ->orderBy('s.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
-    
-     public function findsendToprincipal($user,$suitableinitiative)
+
+    public function findsendToprincipal($user, $suitableinitiative)
     {
 
         // dd($user);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment','pl')  
-           ->andWhere('pl.suitableInitiative = :initiative')
-           ->andWhere('s.createdBy = :user')
+            ->leftJoin('s.PlanAcomplishment', 'pl')
+            ->andWhere('pl.suitableInitiative = :initiative')
+            ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
-                        ->orderBy('s.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
-    public function findsendToprincipalSocial($user,$suitableinitiative,$social)
+    public function findsendToprincipalSocial($user, $suitableinitiative)
     {
 
         // dd($user);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment','pl')  
-           ->andWhere('pl.suitableInitiative = :initiative')
-           ->andWhere('s.social = :social')
-           ->andWhere('s.createdBy = :user')
-                       ->setParameter('social', $social)
+            ->leftJoin('s.PlanAcomplishment', 'pl')
+            ->andWhere('pl.suitableInitiative = :initiative')
+            ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
-                        ->orderBy('s.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
-     public function findPerformerTaskEdit($id)
+    public function findPerformerTaskEdit($id)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
-      
 
 
-            ->Select('s.name')  
-           
+
+            ->Select('s.name')
+
             ->addSelect('s.id')
-             ->addSelect('s.weight')
+            ->addSelect('s.weight')
 
-            ->orderBy('s.id', 'ASC')->
-            andWhere('s.id = :id')
+            ->orderBy('s.id', 'ASC')->andWhere('s.id = :id')
             ->setParameter('id', $id)
-        
+
             ->getQuery()
-            
+
             ->getResult();
     }
-    public function findProgress($quarter,$currentYear,$operationalOffice){
+    public function findProgress($quarter, $currentYear, $operationalOffice)
+    {
         return $this->createQueryBuilder('pt')
-         
-           ->leftJoin('pt.PlanAcomplishment','pa')
-           ->leftJoin('pa.suitableInitiative','s')
-           ->leftJoin('s.planningYear','y')
-              ->andWhere('pt.operationalOffice = :operationalOffice')
+
+            ->leftJoin('pt.PlanAcomplishment', 'pa')
+            ->leftJoin('pa.suitableInitiative', 's')
+            ->leftJoin('s.planningYear', 'y')
+            ->andWhere('pt.operationalOffice = :operationalOffice')
             ->andWhere('y.ethYear = :currentYear')
             ->setParameter('currentYear', $currentYear)
             ->setParameter('operationalOffice', $operationalOffice)
             ->andWhere('pt.quarter = :quarter')
-           ->setParameter('quarter',$quarter)
-           ->orderBy('pt.id', 'ASC')
-           // ->setMaxResults(10)
-           ->getQuery()
-           ->getResult();
-
+            ->setParameter('quarter', $quarter)
+            ->orderBy('pt.id', 'ASC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**
