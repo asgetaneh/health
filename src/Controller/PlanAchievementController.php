@@ -373,7 +373,7 @@ class PlanAchievementController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-
+dd(VisualizationHelper::Initiative($em,[]));
 
         return $this->render('plan_achievement/initiative.html.twig', [
             'plan_achievements' => $planAchievementRepository->findAll(),

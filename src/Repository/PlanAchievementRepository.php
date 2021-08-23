@@ -76,6 +76,17 @@ class PlanAchievementRepository extends ServiceEntityRepository
             return $qb->orderBy('p.year','ASC')->getQuery()->getResult();
         
     }
+     public function findInitiativeData($initiative)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.initiative =:initiative')
+            // ->andWhere('p.year =:year')
+            ->setParameter('initiative', $initiative)
+            ;
+            return $qb->getQuery()->getResult();
+        
+    }
+
     public function findByInitiative($initiative, $year)
     {
         $qb = $this->createQueryBuilder('p')

@@ -47,112 +47,113 @@ class InitiativeRepository extends ServiceEntityRepository
         ;
     }
     */
-     public function findAlls()
+    public function findAlls()
     {
         return $this->createQueryBuilder('g')
 
-            ->orderBy('g.initiativeNumber','ASC')
+            ->orderBy('g.initiativeNumber', 'ASC')
 
-        
 
-            
+
+
+
 
             ->getQuery();
-        
     }
-    public function findByPrincipalAndOffice($office){
-        $qb=$this->createQueryBuilder('i');
-        $qb
-        ->join('i.principalOffice','po')
-        ->andWhere('po.id = :office')
-        ->andwhere('i.isActive = 1')
-        ->setParameter('office',$office);
-        return $qb->getQuery()->getResult();
+    public function findByJu()
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.category', 'c')
+            ->andWhere('c.code=1 or c.code = 5 or c.code=6 or c.code=7 or c.id is null')
+            ->orderBy('g.initiativeNumber', 'ASC')
 
+
+
+
+
+            ->getQuery()->getResult();
     }
-    public function findBySuitable($office){
-        $qb=$this->createQueryBuilder('i');
+
+    public function findByPrincipalAndOffice($office)
+    {
+        $qb = $this->createQueryBuilder('i');
         $qb
-        ->select('i')
-        ->addSelect('s')
-        // ->join('i.principalOffice','po')
-        ->join('i.suitableInitiatives','s')
-        ->andWhere('s.principalOffice in(:soffice)')
-        //->andWhere('po.id = :office')
-        ->andwhere('i.isActive = 1')
-          ->setParameter('soffice',$office)
-        // ->setParameter('office',$office)
+            ->join('i.principalOffice', 'po')
+            ->andWhere('po.id = :office')
+            ->andwhere('i.isActive = 1')
+            ->setParameter('office', $office);
+        return $qb->getQuery()->getResult();
+    }
+    public function findBySuitable($office)
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb
+            ->select('i')
+            ->addSelect('s')
+            // ->join('i.principalOffice','po')
+            ->join('i.suitableInitiatives', 's')
+            ->andWhere('s.principalOffice in(:soffice)')
+            //->andWhere('po.id = :office')
+            ->andwhere('i.isActive = 1')
+            ->setParameter('soffice', $office)
+            // ->setParameter('office',$office)
         ;
         return $qb->getQuery()->getResult();
-
     }
-    public function search($search=[]){
-   
-        $qb=$this->createQueryBuilder('i')
-       
-       
-    
-        ;
-        if(isset($search['goal']) && sizeof($search['goal'])>0){
+    public function search($search = [])
+    {
+
+        $qb = $this->createQueryBuilder('i');
+        if (isset($search['goal']) && sizeof($search['goal']) > 0) {
             $qb
-             ->innerJoin('i.keyPerformanceIndicator','k')
-            ->innerJoin('k.strategy','s')
-            ->innerJoin('s.objective','o')
-            ->andWhere('o.goal in (:goal)')
-            ->setParameter('goal',$search['goal']);
-
+                ->innerJoin('i.keyPerformanceIndicator', 'k')
+                ->innerJoin('k.strategy', 's')
+                ->innerJoin('s.objective', 'o')
+                ->andWhere('o.goal in (:goal)')
+                ->setParameter('goal', $search['goal']);
         }
-          if(isset($search['perspective']) && sizeof($search['perspective'])>0 ){
+        if (isset($search['perspective']) && sizeof($search['perspective']) > 0) {
             $qb->andWhere('o.perspective in (:perspective)')
-            ->setParameter('perspective',$search['perspective']);
-            
+                ->setParameter('perspective', $search['perspective']);
         }
-         if(isset($search['objective']) && sizeof($search['objective'])>0 ){
+        if (isset($search['objective']) && sizeof($search['objective']) > 0) {
 
-            $qb 
-             ->Join('i.keyPerformanceIndicator','k')
-            ->Join('k.strategy','s')
-            ->andWhere('s.objective in (:objective)')
-            ->setParameter('objective',$search['objective']);
-            
+            $qb
+                ->Join('i.keyPerformanceIndicator', 'k')
+                ->Join('k.strategy', 's')
+                ->andWhere('s.objective in (:objective)')
+                ->setParameter('objective', $search['objective']);
         }
-         if(isset($search['strategy']) && sizeof($search['strategy'])>0 ){
+        if (isset($search['strategy']) && sizeof($search['strategy']) > 0) {
 
-            $qb 
-            ->Join('i.keyPerformanceIndicator','k')
-            ->andWhere('k.strategy in (:strategy)')
-            ->setParameter('strategy',$search['strategy']);
-            
+            $qb
+                ->Join('i.keyPerformanceIndicator', 'k')
+                ->andWhere('k.strategy in (:strategy)')
+                ->setParameter('strategy', $search['strategy']);
         }
-          if(isset($search['kpi']) && sizeof($search['kpi'])>0 ){
+        if (isset($search['kpi']) && sizeof($search['kpi']) > 0) {
             $qb->andWhere('i.keyPerformanceIndicator in (:kpi)')
-            ->setParameter('kpi',$search['kpi']);
-            
+                ->setParameter('kpi', $search['kpi']);
         }
-         if(isset($search['principaloffice']) && sizeof($search['principaloffice'])>0 ){
+        if (isset($search['principaloffice']) && sizeof($search['principaloffice']) > 0) {
             $qb
-              ->leftJoin('i.principalOffice','p')
-            ->andWhere('p.id in (:principalOffice)')
-            ->setParameter('principalOffice',$search['principaloffice']);
-            
+                ->leftJoin('i.principalOffice', 'p')
+                ->andWhere('p.id in (:principalOffice)')
+                ->setParameter('principalOffice', $search['principaloffice']);
         }
-         if(isset($search['category']) && sizeof($search['category'])>0 ){
+        if (isset($search['category']) && sizeof($search['category']) > 0) {
             $qb
-              ->leftJoin('i.category','c')
-            ->andWhere('c.id in (:category)')
-            ->setParameter('category',$search['category']);
-            
+                ->leftJoin('i.category', 'c')
+                ->andWhere('c.id in (:category)')
+                ->setParameter('category', $search['category']);
         }
-        if(isset($search['name']) ){
-           
-            $qb
-            ->leftJoin('i.translations','t')
-            ->andWhere("t.name  LIKE '%".$search['name']."%' ");
-        
+        if (isset($search['name'])) {
 
-            
+            $qb
+                ->leftJoin('i.translations', 't')
+                ->andWhere("t.name  LIKE '%" . $search['name'] . "%' ");
         }
 
-        return $qb->orderBy('i.id','ASC')->getQuery();
+        return $qb->orderBy('i.id', 'ASC')->getQuery();
     }
 }

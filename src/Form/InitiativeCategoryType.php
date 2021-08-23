@@ -13,6 +13,7 @@ class InitiativeCategoryType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('code')
             ->add('description')
         ;
     }

@@ -77,12 +77,26 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     }
     public function findByYear($initiative,$planyear){
         $qb=$this->createQueryBuilder('s');
-        $qb->andwhere('s.initiative = :initiative')
+        $qb
+        ->join('s.planningAccomplishments','p')
+        ->andWhere('p.id is not null and p.accompValue is not null')
+        ->andwhere('s.initiative = :initiative')
         ->andwhere('s.planningYear = :planyear')
         ->setParameter('planyear',$planyear)
-       
         ->setParameter('initiative',$initiative);
         return $qb->getQuery()->getResult();
+
+    }
+    public function countByPrincipalOffice($initiative,$planyear){
+        $qb=$this->createQueryBuilder('s');
+        $qb
+        ->join('s.principalOffice','p')
+        ->select('count(DISTINCT p.id) as count')
+        ->andwhere('s.initiative = :initiative')
+        ->andwhere('s.planningYear = :planyear')
+        ->setParameter('planyear',$planyear)
+        ->setParameter('initiative',$initiative);
+        return $qb->getQuery()->getSingleScalarResult();
 
     }
     public function findByoffice($principaloffice,$planyear){

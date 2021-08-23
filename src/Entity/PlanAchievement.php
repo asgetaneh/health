@@ -56,7 +56,7 @@ class PlanAchievement
     private $quarterAccomplishments;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0)
+     * @ORM\Column(type="decimal", precision=10, scale=0,nullable=true)
      */
     private $plan;
 
@@ -174,12 +174,12 @@ class PlanAchievement
         return $this;
     }
 
-    public function getPlan(): ?string
+    public function getPlan(): ?float
     {
         return $this->plan;
     }
 
-    public function setPlan(string $plan): self
+    public function setPlan(float $plan): self
     {
         $this->plan = $plan;
 

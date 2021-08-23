@@ -23,9 +23,6 @@ class QuarterAccomplishment
      */
     private $quarter;
 
-   
-
-
     /**
      * @ORM\Column(type="float",nullable=true)
      */
@@ -40,6 +37,11 @@ class QuarterAccomplishment
      * @ORM\JoinColumn(nullable=false)
      */
     private $yearPlan;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $quarterPlan;
 
     public function getId(): ?int
     {
@@ -83,6 +85,18 @@ class QuarterAccomplishment
     public function setYearPlan(?PlanAchievement $yearPlan): self
     {
         $this->yearPlan = $yearPlan;
+
+        return $this;
+    }
+
+    public function getQuarterPlan(): ?float
+    {
+        return $this->quarterPlan;
+    }
+
+    public function setQuarterPlan(?float $quarterPlan): self
+    {
+        $this->quarterPlan = $quarterPlan;
 
         return $this;
     }

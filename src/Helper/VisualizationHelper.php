@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Entity\Goal;
+use App\Entity\Initiative;
 use App\Entity\Objective;
 use App\Entity\PlanAchievement;
 use App\Entity\PlanningYear;
@@ -71,6 +72,49 @@ class VisualizationHelper
         }
             $datas['year'] = self::getYear($em);
             $datas['objective']=$objectiveDatas;
+            return $datas;
+    }
+    public static function  Initiative(EntityManagerInterface $em,$initiative=[])
+    {
+        $planningYears = $em->getRepository(PlanningYear::class)->findAll();
+        $datas = [];
+        $initiativeDatas = [];
+        $year=[];
+        if(count($initiative)<1)
+        $initiatives =$em->getRepository(Initiative::class)->findByJu();
+        else
+         $initiatives=$initiative;
+        foreach ($initiatives as $key => $initiative) {
+            $initiativedata = [];
+
+
+            $achieveData = [];
+            foreach ($planningYears as $planningYear) {
+             $achievement = $em->getRepository(PlanAchievement::class)->findByInitiative($initiative,$planningYear);
+              if($achievement){
+                  $achieveData[]=$achievement->getPlan();
+                   $achieveData[] = $achievement->getAccomplishmentValue();
+                   
+              }
+              else{
+
+                  $achieveData[]=0;
+                  $achieveData[]=0;
+              }
+          
+           
+
+           
+            $initiativedata['name'] = $initiative->getName();
+            $initiativedata['achieve'] = $achieveData;
+            
+
+
+            $initiativeDatas[$key] = $initiativedata;
+        }
+          }
+           $datas['year'] = self::getYear($em);
+            $datas['initiative']=$initiativeDatas;
             return $datas;
     }
     public static function getYear($em)

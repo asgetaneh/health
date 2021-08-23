@@ -301,6 +301,7 @@ class OperationalTaskController extends AbstractController
      */
     public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request): Response
     {
+           $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
@@ -329,7 +330,7 @@ class OperationalTaskController extends AbstractController
 
             $suitableInitiatives = $suitableInitiativeRepository->search($filterForm->getData());
         } else
-         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+      
             $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice"=>$principalOffice]);
 
         return $this->render('operational_task/report.html.twig', [

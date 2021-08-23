@@ -33,6 +33,11 @@ class InitiativeCategory
      * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="category")
      */
     private $initiatives;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $code;
   
     public function __toString()
 
@@ -101,6 +106,18 @@ class InitiativeCategory
                 $initiative->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
