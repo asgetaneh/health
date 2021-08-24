@@ -238,6 +238,9 @@ class InitiativeController extends AbstractController
 
     public function print(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
     {
+        set_time_limit(120);
+                
+
         $session = new Session();
         // $em = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
@@ -267,8 +270,8 @@ class InitiativeController extends AbstractController
                 table{
 
                 border-collapse:collapse;
-                width:90% !important;
-                font-size:10px;
+                width:80% !important;
+                font-size:12px;
                 font-family:"times-new-roman";
 
 
@@ -287,12 +290,12 @@ class InitiativeController extends AbstractController
                     <thead>
                         <tr >
                             <th width="10">#</th>
-                            <th width="45">Initiative</th>
+                            <th width="20">Initiative</th>
                          <th width="15">Initiative Behaviour</th>
                             <th width="15">KPI</th>
                             <th width="45">Principal Office</th>
                             <th width="15">Weight</th>
-                              <th width="25">Initiative Category</th>
+                              <th width="5">Initiative Category</th>
 
                             
                         </tr>
@@ -303,10 +306,11 @@ class InitiativeController extends AbstractController
             $c += 1;
             $table .= '<tr><td>' . $c . '</td><td> ' . $initiative->getName() . '</td><td>' . $initiative->getInitiativeBehaviour() . '</td>
             <td> ' . $initiative->getKeyPerformanceIndicator() . '</td><td>';
-            
+            $count=0;
             foreach ($initiative->getPrincipalOffice() as $office) {
-                $table .= '	<li>'.
-                $office .'</li>';
+                $count+=1;
+                $table .= '<p>'.$count.','.
+                $office .'</p>';
             }
 
 
@@ -318,6 +322,7 @@ class InitiativeController extends AbstractController
 
         $table .= ' </tbody></table>';
         $end = '</body></html>';
+        // return new Response($start . $body . $table . $end);
         $dompdf->loadHtml($start . $body . $table . $end);
  
         $pdfOptions->setIsHtml5ParserEnabled(true);
