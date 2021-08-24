@@ -152,7 +152,7 @@ class InitiativeHelper
     {
        
         self::sync($em);
-         return;
+        
 
           $planningYear =  $em->getRepository(PlanningYear::class)->findLast();
         $quarters =  $em->getRepository(PlanningQuarter::class)->findAll();
@@ -161,6 +161,7 @@ class InitiativeHelper
         foreach ($kpis as $kpi) {
             $initiatives = $kpi->getInitiatives();
             $kpiWieght = $kpi->getWeight();
+             $countinitiative=count($initiatives);
 
            
                 $exist = true;
@@ -173,22 +174,28 @@ class InitiativeHelper
                     $exist = false;
                     $em->persist($kpiAch);
                 }
+               
                 foreach ($quarters as $quarter) {
                     $totalAccomp = 0;
                     $totalPlan = 0;
+                   
                     foreach ($initiatives as $initiative) {
                         $initAchievement = $em->getRepository(PlanAchievement::class)->findByInitiative($initiative, $planningYear);
+                        if(!$initAchievement)
+                        continue;
                         $quarterAchievement = $em->getRepository(QuarterAccomplishment::class)->findByAchievement($initAchievement, $quarter);
-                        if ($quarterAchievement) {
-                            $totalAccomp = $totalAccomp + $quarterAchievement->getAchievementValue();
+                        if ($quarterAchievement->getQuarterPlan()) {
+                            $totalAccomp = $totalAccomp + (($quarterAchievement->getAchievementValue()*$initiative->getWeight())/$quarterAchievement->getQuarterPlan());
                         }
-                        $totalPlan = $totalPlan + $initiative->getWeight();
+                         $totalPlan = $totalPlan + $quarterAchievement->getQuarterPlan();
                     }
-                    $netAccomp = round(($totalAccomp / $totalPlan) * $kpiWieght, 2);
+                    $netAccomp = ceil($totalAccomp/$countinitiative);
+                    $quarterplan=$totalPlan/$countinitiative;
                     if (!$exist) {
                         $kpiQuarterAch = new QuarterAccomplishment();
                         $kpiQuarterAch->setQuarter($quarter);
                         $kpiQuarterAch->setYearPlan($kpiAch);
+                        $kpiQuarterAch->setQuarterPlan($quarterplan);
                         $kpiQuarterAch->setAchievementValue($netAccomp);
                         $em->persist($kpiQuarterAch);
                     } else {
@@ -198,9 +205,11 @@ class InitiativeHelper
                             $kpiQuarterAch = new QuarterAccomplishment();
                             $kpiQuarterAch->setQuarter($quarter);
                             $kpiQuarterAch->setYearPlan($kpiAch);
+                            
                             $isNotexist = false;
                         }
                         $kpiQuarterAch->setAchievementValue($netAccomp);
+                        $kpiQuarterAch->setQuarterPlan($quarterplan);
                         if (!$isNotexist) {
                             $em->persist($kpiQuarterAch);
                         }
@@ -215,21 +224,21 @@ class InitiativeHelper
 
     public static function calculateYearly($em)
     {
-        $planningYears = $em->getRepository(PlanningYear::class)->findAll();
+        $planningYear =  $em->getRepository(PlanningYear::class)->findLast();
         $quarters =  $em->getRepository(PlanningQuarter::class)->findAll();
         $kpis = $em->getRepository(KeyPerformanceIndicator::class)->findAll();
         $quarterSize = count($quarters);
 
         foreach ($kpis as $kpi) {
-            foreach ($planningYears as $planningYear) {
+            // foreach ($planningYears as $planningYear) {
                 $kpiAch = $em->getRepository(PlanAchievement::class)->findByKpi($kpi, $planningYear);
                 $quarterSum = $em->getRepository(PlanAchievement::class)->findKpiSum($kpi, $planningYear);
-                $quarterAverage = round($quarterSum / $quarterSize, 2);
-                if ($quarterAverage != $kpiAch->getAccomplishmentValue()) {
-                    $kpiAch->setAccomplishmentValue($quarterAverage);
+                $quarterAverage = round($quarterSum /$quarterSize, 2);
+               
+                 $kpiAch->setAccomplishmentValue($quarterAverage);
                     $em->flush();
-                }
-            }
+               
+            // }
         }
     }
     public static function objectiveSync($em)

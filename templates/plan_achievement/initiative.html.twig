@@ -111,6 +111,12 @@
 											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
 										</div>
 									</div>
+                                    	<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.year,'Planning Year') }}
+											{{ form_widget(filterform.year,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
+										</div>
+									</div>
 
 									<div class="col-md-1">
 										<div class="form-group" style="margin-top:25px;">
@@ -135,24 +141,41 @@
 										<table class="table table-striped table-bordered table-hover">
 											<thead>
 												<tr>
-													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">#</th>
+													<th rowspan="3" style="text-align:left;background-color:#778899;color: white;">#</th>
 																													   
-													<th rowspan="2" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Initiative{% endtrans %}</th>
+													<th rowspan="3" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Initiative{% endtrans %}</th>
 
-													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">{% trans %}Wieght{% endtrans %}</th>
-													<th colspan="7" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Achievement{% endtrans %}</th>
+													<th rowspan="3" style="text-align:left;background-color:#778899;color: white;">{% trans %}Wieght{% endtrans %}</th>
+													<th colspan="12" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Achievement{% endtrans %}</th>
 
 												</tr>
 												<tr>
 
-													<th style="text-align:left;background-color:#808080;color: white;">Year</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Year Total</th>
+													<th rowspan="2"  style="text-align:left;background-color:#808080;color: white;">Year</th>
+													<th style="text-align:left;background-color:#808080;color: white;" colspan="2">Year Total</th>
 
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 1</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 2</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 3</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 4</th>
+													<th style="text-align:left;background-color:#808080;color: white;"  colspan="2">Quarter 1</th>
+													<th style="text-align:left;background-color:#808080;color: white;" colspan="2">Quarter 2</th>
+													<th style="text-align:left;background-color:#808080;color: white;" colspan="2" >Quarter 3</th>
+													<th style="text-align:left;background-color:#808080;color: white;" colspan="2" >Quarter 4</th>
 												</tr>
+                                                <tr>
+                                                	<th style="text-align:left;background-color:#808080;color: white;">plan</th>
+
+													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
+													<th style="text-align:left;background-color:#808080;color: white;">plan</th>
+
+													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
+                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
+
+													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
+                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
+
+													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
+                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
+
+													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
+                                                </tr>
 											</thead>
 											<tbody>
 												{% set count =  plan_achievements.getItemNumberPerPage() * (plan_achievements.getCurrentPageNumber() -1) %}
@@ -168,9 +191,10 @@
 
 														<tr>
 															<td>{{ achievement.year}}</td>
+                                                            <td>{{ achievement.plan}}</td>
 															<td>{{ achievement.accomplishmentValue??"0"}}</td>
 															{% for quartAccomp in achievement.quarterAccomplishments %}
-
+                                                                <td>{{ quartAccomp.quarterplan??"0" }}</td>
 																<td>{{ quartAccomp.achievementValue??"0" }}</td>
 															{% endfor %}
 														</tr>

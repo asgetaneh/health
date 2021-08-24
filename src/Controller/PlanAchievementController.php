@@ -8,6 +8,7 @@ use App\Entity\KeyPerformanceIndicator;
 use App\Entity\Objective;
 use App\Entity\Perspective;
 use App\Entity\PlanAchievement;
+use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Entity\QuarterAccomplishment;
 use App\Entity\Strategy;
@@ -329,6 +330,12 @@ class PlanAchievementController extends AbstractController
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+              ->add('year', EntityType::class, [
+                'class' => PlanningYear::class,
                 'multiple' => true,
                 'required' => false,
 

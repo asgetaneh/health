@@ -282,7 +282,9 @@ class PlanController extends AbstractController
                 'required' => false,
 
                 'placeholder' => 'Choose an principal office',
-            ])->getForm();
+            ])
+      
+            ->getForm();
         $filterForm->handleRequest($request);
 
 
