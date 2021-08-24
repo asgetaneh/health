@@ -29,6 +29,15 @@ class General
     //  dd($count);
         return $count;
     }
+     public static function getTaskStatusSend(EntityManager $entityManager,$id,$office)
+    {
+
+        # code...
+    $count= $entityManager->getRepository(PerformerTask::class)->getTaskStatusSend($id,$office);
+    //  dd($count);
+        return $count;
+    }
+    
     
    
     

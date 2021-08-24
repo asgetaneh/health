@@ -45,6 +45,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
             new TwigFunction('getTaskStatusAssigned', [$this, 'getTaskStatusAssigned']),
+            new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
+
 
 
 
@@ -63,6 +65,12 @@ class AppExtension extends AbstractExtension
     {
 
         $req = General::getTaskStatusAssigned($this->entityManager, $id, $office);
+        return ($req);
+    }
+    function getTaskStatusSend($id, $office)
+    {
+
+        $req = General::getTaskStatusSend($this->entityManager, $id, $office);
         return ($req);
     }
 }

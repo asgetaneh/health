@@ -33,6 +33,22 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getQuery()->getSingleScalarResult();
     }
+    public function getTaskStatusSend($id, $office)
+    {
+        // dd($id);
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.PlanAcomplishment', 'pa')
+            ->leftJoin('pa.suitableInitiative', 'su')
+            ->select('count(s.id)')->andWhere('su.id =  :id')
+            ->andWhere('s.status =  0')
+            ->andWhere('s.operationalOffice =  :office')
+            ->setParameter('office', $office)
+            ->setParameter('id', $id)
+
+            ->getQuery()->getSingleScalarResult();
+    }
+
     public function filterDeliverBy($plan, $user, $quarter)
     {
 

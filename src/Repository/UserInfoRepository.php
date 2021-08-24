@@ -59,6 +59,16 @@ class UserInfoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+      public function findStatus($search=[])
+    {
+        return $this->createQueryBuilder('s')
+        ->leftJoin('s.user','u')
+           ->andWhere('u.status  = :status')
+           ->setParameter('status',$search['status'])
+            ->orderBy('s.id', 'ASC')
+            ->getQuery();
+    }
+    
 
     // /**
     //  * @return UserInfo[] Returns an array of UserInfo objects

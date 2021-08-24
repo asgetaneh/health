@@ -150,13 +150,13 @@
 														assign
 													</div>
 												{% endif %}
-												{# {% if getTaskStatusSend(suitableInitiative.id,office) %}
-													<div class="badge badge-primary">
-														create
+												{% if getTaskStatusSend(suitableInitiative.id,office) %}
+													<div class="badge badge-success">
+														send
 													</div>
-												{% endif %} #}
+												{% endif %}
 
-												{# {{getTaskStatusAssigned(suitableInitiative.id,office)}} #}
+												{# {{getTaskStatusSend(suitableInitiative.id,office)}} #}
 
 
 											</td>
