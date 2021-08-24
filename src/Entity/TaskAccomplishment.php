@@ -19,7 +19,7 @@ class TaskAccomplishment
      */
     private $id;
 
-   
+
 
     /**
      * @ORM\ManyToOne(targetEntity=TaskMeasurement::class, inversedBy="taskAccomplishments")
@@ -36,7 +36,7 @@ class TaskAccomplishment
      */
     private $accomplishmentValue;
 
-    
+
 
     /**
      * @ORM\ManyToOne(targetEntity=TaskUser::class, inversedBy="taskAccomplishments")
@@ -93,7 +93,7 @@ class TaskAccomplishment
         return $this->id;
     }
 
-  
+
 
     public function getMeasurement(): ?TaskMeasurement
     {
@@ -131,7 +131,7 @@ class TaskAccomplishment
         return $this;
     }
 
-   
+
 
     public function getTaskUser(): ?TaskUser
     {

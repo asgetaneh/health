@@ -119,7 +119,7 @@ class TaskAssignController extends AbstractController
 
 
         $taskUsers = $taskUserRepository->findBy(['assignedTo' => $taskUserId, 'status' => 0]);
-      
+
         foreach ($taskUsers as $taskUser) {
             $fullName = $taskUser->getAssignedTo()->getUserInfo()->getFullName();
             $quarter = $taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
@@ -130,7 +130,7 @@ class TaskAssignController extends AbstractController
         // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
         // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
         $currentYear = AmharicHelper::getCurrentYear();
-          foreach ($taskUsers as $value) {
+        foreach ($taskUsers as $value) {
             $value->setStatus(5);
         }
         $em->flush();
@@ -147,7 +147,6 @@ class TaskAssignController extends AbstractController
 
 
         ], 'Task Assign Form', 'landscape');
-
     }
     /**
      * @Route("/evaluation", name="evaluation")
@@ -315,10 +314,11 @@ class TaskAssignController extends AbstractController
         $expectedValue = $request->request->get('expectedValue');
         $startDate = $request->request->get('startDate');
         $endDate = $request->request->get('endDate');
+
+        // dd($startDate,$endDate);
         $timeGap = $request->request->get('timeGap');
         $measurementDescriptions = $request->request->get("measurementDescription");
 
-        //    $taskAccoplishment=new TaskAccomplishment();
         foreach ($tasks as $key => $value) {
             $taskAssign = new TaskAssign();
 
@@ -327,7 +327,16 @@ class TaskAssignController extends AbstractController
             $initibativeId = $taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
             $planId = $taskId->getPlanAcomplishment();
             $taskAssign->setPerformerTask($taskId);
-
+            if ($startDate > $endDate) {
+                $this->addFlash('danger', 'Start Date must be less than from End Date !');
+                return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
+            }
+            if ($timeGap > 6) {
+                $this->addFlash('danger', 'Contengency Date be less than 7 !');
+                return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
+                // dd(1);
+                # code...
+            }
             $taskAssign->setAssignedAt(new \DateTime());
             $taskAssign->setAssignedBy($user);
             if ($delegatedUser) {
@@ -370,7 +379,7 @@ class TaskAssignController extends AbstractController
                 foreach ($measurementids as  $key => $valuea) {
                     $taskAccoplishment = new TaskAccomplishment();
                     $measurementid = $measurementids[$key];
-                    $measurementDescription = $measurementDescriptions[$key];
+                    // $measurementDescription = $measurementDescriptions[$key];
                     $taskmeasurementId = $taskMeasurementRepository->find($valuea);
                     $taskAccoplishment->setTaskUser($taskUser);
                     $taskAccoplishment->setMeasurement($taskmeasurementId);
@@ -378,7 +387,7 @@ class TaskAssignController extends AbstractController
                     if ($expectedValueSocial) {
                         $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
                     }
-                    $taskAccoplishment->setMeasureDescription($measurementDescription);
+                    $taskAccoplishment->setMeasureDescription($measurementDescriptions);
                     $em->persist($taskAccoplishment);
                     $em->flush();
                 }

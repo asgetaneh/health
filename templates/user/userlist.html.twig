@@ -59,7 +59,7 @@ $('#example').DataTable();
 						<span class="badge badge-danger">
 
 							{% trans %}
-							Office Not Choose 
+							Office Not Choose
 							{% endtrans %}
 							:
 							<strong>{{numbernotChoose}}</strong>
@@ -69,11 +69,32 @@ $('#example').DataTable();
 				</div>
 
 				<div class="widget-body">
+					<div class="row">
+						{{ form_start(form) }}
+
+						<div class="form-group col-md-4 " style="display:inline;">
+							{{ form_label(form.status,"Office") }}
+							{{ form_widget(form.status,{'attr':{ 'class': ' form-control'}}) }}
+
+
+						</div>
+						<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
+						{{ form_end(form) }}
+
+					</div>
+                     <form action="{{path('print_user')}}" method="post">
+
+								<button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
+									<i class=" fa fa-file-pdf text-danger"></i>
+									PDF
+								</button>
+							</form>
 
 
 					<div class="widget-main padding-16">
 
 						<div class="table-responsive">
+
 							<form class="form-inline" method="post" style="display:inline;">
 
 								<div class="input-group">

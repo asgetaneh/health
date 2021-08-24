@@ -27,6 +27,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @Route("/initiative")
@@ -135,15 +136,14 @@ class InitiativeController extends AbstractController
         }
 
         $filterform->handleRequest($request);
-        $session=new Session();
+        $session = new Session();
         $session->remove('filter');
 
         if ($filterform->isSubmitted() && $filterform->isValid()) {
-            $session->set('filter',$filterform->getData());
+            $session->set('filter', $filterform->getData());
             $initiatives = $initiativeRepository->search($filterform->getData());
-            
         } elseif ($request->query->get('search')) {
-               $session->set('filter',['name' => $request->query->get('search')]);
+            $session->set('filter', ['name' => $request->query->get('search')]);
             $initiatives = $initiativeRepository->search(['name' => $request->query->get('search')]);
         } else
             $initiatives = $initiativeRepository->findAlls();
@@ -186,54 +186,51 @@ class InitiativeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-     /**
+    /**
      * @Route("/excel", name="excel_initiative", methods={"GET","POST"})
      */
 
     public function excel(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
     {
-         $session = new Session();
+        $session = new Session();
         // $em = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
-      if ($session->get('filter')) {
-           
+        if ($session->get('filter')) {
+
             $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
-            
-       
         } else
             $initiativestotal = $initiativeRepository->findAll();
 
 
-      $spreadsheet = new Spreadsheet();
-            foreach (range('A', 'E') as $columnID) {
-                $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
-            }
-            $sheet = $spreadsheet->getActiveSheet();
-            $sheet->setCellValue('A1', 'Initiative Number');
-            $sheet->setCellValue('B1', 'Initiative Name');
-            $sheet->setCellValue('C1', 'Kpi');
-            $sheet->setCellValue('D1', 'Weight');
-            $sheet->setCellValue('E1', 'Behaviour');
+        $spreadsheet = new Spreadsheet();
+        foreach (range('A', 'E') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Initiative Number');
+        $sheet->setCellValue('B1', 'Initiative Name');
+        $sheet->setCellValue('C1', 'Kpi');
+        $sheet->setCellValue('D1', 'Weight');
+        $sheet->setCellValue('E1', 'Behaviour');
 
-            $totalResult = $initiativestotal;
-            // dd($totalResult);
-            $x = 2;
-            $soh = 0;
-            foreach ($totalResult as $result) {
-                $sheet->setCellValue('A' . $x, $result->getInitiativeNumber());
-                $sheet->setCellValue('B' . $x, $result->getName());
-                $sheet->setCellValue('C' . $x, $result->getKeyPerformanceIndicator()->getName());
-                $sheet->setCellValue('D' . $x, $result->getWeight());
-                $sheet->setCellValue('E' . $x, $result->getInitiativeBehaviour());
+        $totalResult = $initiativestotal;
+        // dd($totalResult);
+        $x = 2;
+        $soh = 0;
+        foreach ($totalResult as $result) {
+            $sheet->setCellValue('A' . $x, $result->getInitiativeNumber());
+            $sheet->setCellValue('B' . $x, $result->getName());
+            $sheet->setCellValue('C' . $x, $result->getKeyPerformanceIndicator()->getName());
+            $sheet->setCellValue('D' . $x, $result->getWeight());
+            $sheet->setCellValue('E' . $x, $result->getInitiativeBehaviour());
 
-                $x++;
-            }
-            $writer = new Xlsx($spreadsheet);
-            $fileName = "Initiatives" . '.xlsx';
-            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-            $writer->save($temp_file);
-            return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
-        
+            $x++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $fileName = "Initiatives" . '.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
     /**
      * @Route("/printes", name="print_initiative", methods={"GET","POST"})
@@ -241,40 +238,102 @@ class InitiativeController extends AbstractController
 
     public function print(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
     {
-         $session = new Session();
+        set_time_limit(120);
+                
+
+        $session = new Session();
         // $em = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
-      if ($session->get('filter')) {
-           
+        if ($session->get('filter')) {
+
             $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
-            
-       
-        } else
+        } else {
             $initiativestotal = $initiativeRepository->findAll();
-
-
+        }
+        $count=0;
+               foreach ($initiativestotal as $initiative) {
+                   $count++;
+               }
+       
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $pdfOptions->set('isRemoteEnabled', true);
-        $pdfOptions->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($pdfOptions);
+        $c = 0;
 
-        $res = $this->renderView('initiative/print.html.twig', [
-            'initiatives' => $initiativestotal,
-            
-            // 'year' => $year
+        $start = '<html>
+                            <head>
+                            <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style>
+
+                table{
+
+                border-collapse:collapse;
+                width:80% !important;
+                font-size:12px;
+                font-family:"times-new-roman";
 
 
-        ]);
 
-        $dompdf->loadHtml($res);
+                }
+               
+                </style>
+                            </head>
+                            <body> 
+                           
+                            
+                            ';
+        $body  = '<center><h3 >Ju Initiative   </h3></center>Total : ' . $count.' <br/>';
+        $table = '    
+                    <table border="1" >
+                    <thead>
+                        <tr >
+                            <th width="10">#</th>
+                            <th width="20">Initiative</th>
+                         <th width="15">Initiative Behaviour</th>
+                            <th width="15">KPI</th>
+                            <th width="45">Principal Office</th>
+                            <th width="15">Weight</th>
+                              <th width="5">Initiative Category</th>
+
+                            
+                        </tr>
+                    </thead>
+                    <tbody>';
+        foreach ($initiativestotal as $initiative) {
+
+            $c += 1;
+            $table .= '<tr><td>' . $c . '</td><td> ' . $initiative->getName() . '</td><td>' . $initiative->getInitiativeBehaviour() . '</td>
+            <td> ' . $initiative->getKeyPerformanceIndicator() . '</td><td>';
+            $count=0;
+            foreach ($initiative->getPrincipalOffice() as $office) {
+                $count+=1;
+                $table .= '<p>'.$count.','.
+                $office .'</p>';
+            }
+
+
+
+           $table.= '</td><td> ' . $initiative->getWeight() . '</td>
+<td> ' . $initiative->getCategory() . '</td>
+             </tr>';
+        }
+
+        $table .= ' </tbody></table>';
+        $end = '</body></html>';
+        // return new Response($start . $body . $table . $end);
+        $dompdf->loadHtml($start . $body . $table . $end);
+ 
+        $pdfOptions->setIsHtml5ParserEnabled(true);
+
         $dompdf->setPaper('A4', 'Landscape');
 
-        // Render the HTML as PDF
         $dompdf->render();
         $dompdf->stream("juinitiative.pdf", [
             "Attachment" => false
         ]);
+        return $this->redirectToRoute('initiative_index');
     }
 
     /**
