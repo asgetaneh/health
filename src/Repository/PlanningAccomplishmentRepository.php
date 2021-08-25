@@ -47,6 +47,42 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findPrincipalReports($search = [], $quarterId)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        if (isset($search['principalOffice']) ) {
+
+
+            $qb
+                ->leftJoin('pa.suitableInitiative', 's')
+                ->andWhere('s.principalOffice = :principalOffice')
+               
+                ->setParameter('principalOffice', $search['principalOffice']);
+        }
+         if (isset($search['planningQuarter'])) {
+
+
+            $qb
+                ->andWhere('pa.quarter = :planningQuarter')
+                
+                ->setParameter('planningQuarter', $search['planningQuarter']);
+        }
+         if (isset($search['planningYear']) ) {
+
+
+            $qb
+                ->leftJoin('pa.suitableInitiative', 'p')
+                ->andWhere('p.planningYear = :planningYear')
+               
+                ->setParameter('planningYear', $search['planningYear']);
+        }
+
+
+
+        return $qb->getQuery();
+    }
+
     public function findDuplication($suitableinitiative, $attrib = null, $quarter)
     {
         $qb = $this->createQueryBuilder('pa');
@@ -103,14 +139,14 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
     public function findByQuarter($suitable, $quarter)
     {
         $qb = $this->createQueryBuilder('pa')
-           
+
             ->andwhere('pa.suitableInitiative = :suitin')
 
             ->andwhere('pa.quarter = :quarter')
             // ->andWhere('pa.accompValue is not null')
             ->setParameter('suitin', $suitable)
             ->setParameter('quarter', $quarter);
-       
+
         return $qb->getQuery()->getResult();
     }
 
