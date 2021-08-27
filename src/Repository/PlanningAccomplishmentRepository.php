@@ -48,33 +48,51 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
     }
     */
 
+    public function findPrincipal($search,  $quarterId)
+    {
+        $qb = $this->createQueryBuilder('pa');
+
+
+        $qb
+            ->leftJoin('pa.suitableInitiative', 's')
+            ->andWhere('s.principalOffice = :principalOffice')
+            ->andWhere('pa.quarter = :quarter')
+            ->setParameter('quarter', $quarterId)
+
+            ->setParameter('principalOffice', $search);
+
+
+
+
+        return $qb->getQuery()->getResult();
+    }
     public function findPrincipalReports($search = [], $quarterId)
     {
         $qb = $this->createQueryBuilder('pa');
-        if (isset($search['principalOffice']) ) {
+        if (isset($search['principalOffice'])) {
 
 
             $qb
                 ->leftJoin('pa.suitableInitiative', 's')
                 ->andWhere('s.principalOffice = :principalOffice')
-               
+
                 ->setParameter('principalOffice', $search['principalOffice']);
         }
-         if (isset($search['planningQuarter'])) {
+        if (isset($search['planningQuarter'])) {
 
 
             $qb
                 ->andWhere('pa.quarter = :planningQuarter')
-                
+
                 ->setParameter('planningQuarter', $search['planningQuarter']);
         }
-         if (isset($search['planningYear']) ) {
+        if (isset($search['planningYear'])) {
 
 
             $qb
                 ->leftJoin('pa.suitableInitiative', 'p')
                 ->andWhere('p.planningYear = :planningYear')
-               
+
                 ->setParameter('planningYear', $search['planningYear']);
         }
 

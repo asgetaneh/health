@@ -12,7 +12,6 @@ use App\Entity\PrincipalOffice;
 use App\Form\PlanningYearType;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
-use Proxies\__CG__\App\Entity\PlanningQuarter as EntityPlanningQuarter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +46,7 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
-             ->add('planningQuarter', EntityType::class, [
+            ->add('planningQuarter', EntityType::class, [
                 'class' => PlanningQuarter::class,
                 // 'multiple' => true,
                 // 'placeholder' => 'All',
@@ -55,7 +54,7 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
-             ->add('planningYear', EntityType::class, [
+            ->add('planningYear', EntityType::class, [
                 'class' => PlanningYear::class,
                 // 'multiple' => true,
                 // 'placeholder' => 'All',
@@ -67,51 +66,86 @@ class SmisReportController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         $custom = 0;
-        $percent = 0;
-        $average = 0;
-        $count = 0;
-        $principalOffice=0;
-
-
-
+       
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipalReports($form->getData(), $quarterId);
-            foreach ($principalReports->getResult() as $value) {
-                $sum = 0;
-                $count = $count + 1;
-                $accomplish = $value->getAccompValue();
-                $plan = $value->getPlanValue();
+            $principalOffice = $form->getData()['principalOffice']->getId();
+        $quarterId = $form->getData()['planningQuarter']->getId();
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
+            $percent = 0;
+            $average = 0;
+            $c = 0;
+            $sum = 0;
+            foreach ($principalReports as $value1) {
+                $c = $c + 1;
+                $accomplish = $value1->getAccompValue();
+                $plan = $value1->getPlanValue();
                 $sum = ($accomplish * 100) / $plan;
                 $percent = $percent + $sum;
-
-                # code...
             }
-            $average = $percent / $count;
-            // dd($average);
-            $principalOffice=$form->getData()['principalOffice']->getName();
-            $custom=1;
+            if ($percent > 0) {
+                $average = $percent / $c;
+                $accomp[] = $average;
+            } else {
+                $accomp[] = 0;
+            }
+            $principalOffice = $form->getData()['principalOffice']->getName();
+            $principal[] = $principalOffice;
+                    // dd($principal,$accomp);
 
-            
         } else {
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findBy(['quarter' => $quarterId]);
+
+
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findAll();
+            foreach ($principalOffices as $value) {
+                $prin = $value->getId();
+
+                $pri = $em->getRepository(PlanningAccomplishment::class)->findPrincipal(
+                    $prin,
+                    $quarterId
+                );
+                $percent = 0;
+                $average = 0;
+                $c = 0;
+                $sum = 0;
+                foreach ($pri as $value1) {
+                    $c = $c + 1;
+                    $accomplish = $value1->getAccompValue();
+                    $plan = $value1->getPlanValue();
+                    $sum = ($accomplish * 100) / $plan;
+                    $percent = $percent + $sum;
+                }
+                if ($percent > 0) {
+                    $average = $percent / $c;
+                    $accomp[] = $average;
+                } else {
+                    $accomp[] = 0;
+                }
+                $principalOffice = $value->getName();
+                $principal[] = $principalOffice;
+            }
         }
 
         $operational_Reports = $em->getRepository(OperationalSuitableInitiative::class)->findBy(['quarter' => $quarterId]);
-        // dd($principalReports);
+        dd($operational_Reports);
         $data = $paginator->paginate(
-            $principalReports,
+            $principal,
             $request->query->getInt('page', 1),
-            6
+            10
+        );
+        $dataac = $paginator->paginate(
+            $accomp,
+            $request->query->getInt('page', 1),
+            10
         );
         return $this->render('smis_report/index.html.twig', [
-            'principal_reports' => $data,
+            'principals' => $data,
+            'accomp' => $dataac,
             'operational_Reports' => $operational_Reports,
             'form' => $form->createView(),
-            'custom'=>$custom,
-            'average'=>$average,
-            'principalOffice'=>$principalOffice
+            'custom' => $custom,
+            'average' => $average,
         ]);
     }
 }

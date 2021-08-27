@@ -24,7 +24,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							{# <strong>{{principal_offices.getTotalItemCount()}}</strong> #}
+							<strong>{{principals.getTotalItemCount()}}</strong>
 
 						</span>
 					</div>
@@ -65,31 +65,7 @@
 							</div>
 						</div>
 						<div class="table-responsive">
-							{% if custom == 1 %}
-
-								Total Accomplishment of
-								{{ principalOffice }}
-								=
-								{% if average > 100  %}
-									<b class="badge badge-primary">
-
-										{{ average | number_format(2, '.',',') }}%
-									</b>
-								{% elseif average <= 100  and average >= 75 %}
-									<b class="badge badge-success">
-
-										{{ average | number_format(2, '.',',') }}%</b>
-								{% elseif average <= 74  and average >= 50 %}
-
-									<b class="badge badge-warning">
-
-										{{ average | number_format(2, '.',',') }}%</b>
-								{% else %}
-									<b class="badge badge-danger">
-
-										{{ average | number_format(2, '.',',') }}%</b>
-								{% endif %}
-							{% endif %}
+							
 
 
 							<table class="table table-striped table-bordered table-hover">
@@ -98,15 +74,10 @@
 
 									<tr>
 										<th>#</th>
-
 										<th>Principal Office</th>
-										<th>Initiative
-										</th>
-										<th>Year</th>
-										<th>Quarter</th>
-										<th>Plan</th>
-										<th>Accomplishment</th>
-										<th>Percent</th>
+										<th>
+											Accomplishment</th>
+
 										<th>Operational Office Detail</th>
 
 									</tr>
@@ -114,42 +85,37 @@
 
 
 								<tbody>
-									{% set count =  principal_reports.getItemNumberPerPage() * (principal_reports.getCurrentPageNumber() -1) %}
-									{% for principal_report in principal_reports %}
-										{% set percent = 0 %}
+									{% set c = 0 %}
+									{% set count =  principals.getItemNumberPerPage() * (principals.getCurrentPageNumber() -1) %}
+									{% for principal in principals   %}
+
 										<tr>
 											{% set count = count + 1 %}
+											{% set c = c + 1 %}
+
 											<td>{{ count }}</td>
-											<td>{{ principal_report.suitableInitiative.principalOffice }}</td>
-											<td>{{ principal_report.suitableInitiative.initiative }}</td>
+											<td>{{principal}}</td>
+											<td>
+												{% if accomp[c - 1] > 100  %}
+													<b class="badge badge-primary">
 
-											<td>{{ principal_report.suitableInitiative. planningyear }}</td>
+														{{ accomp[c - 1] | number_format(2, '.',',') }}%
+													</b>
+												{% elseif accomp[c - 1] <= 100  and accomp[c - 1] >= 75 %}
+													<b class="badge badge-success">
 
-											<td>{{ principal_report.quarter }}</td>
+														{{ accomp[c - 1] | number_format(2, '.',',') }}%</b>
+												{% elseif accomp[c - 1] <= 74  and accomp[c - 1] >= 50 %}
 
-											<td>{{ principal_report.planValue }}</td>
+													<b class="badge badge-warning">
 
-											<td>{{ principal_report.accompValue }}</td>
-											{% set percent = (principal_report.accompValue * 100) / principal_report.planValue %}
-											{% if percent > 100  %}
-												<td class="badge badge-primary">
+														{{ accomp[c - 1] | number_format(2, '.',',') }}%</b>
+												{% else %}
+													<b class="badge badge-danger">
 
-													{{ percent | number_format(2, '.',',') }}
-												</td>
-											{% elseif percent <= 100  and percent >= 75 %}
-												<td class="badge badge-success">
-
-													{{ percent | number_format(2, '.',',') }}</td>
-											{% elseif percent <= 74  and percent >= 50 %}
-
-												<td class="badge badge-warning">
-
-													{{ percent | number_format(2, '.',',') }}</td>
-											{% else %}
-												<td class="badge badge-danger">
-
-													{{ percent | number_format(2, '.',',') }}</td>
-											{% endif %}
+														{{ accomp[c - 1] | number_format(2, '.',',') }}%</b>
+												{% endif %}
+											</td>
 
 
 											<td class="center">
@@ -179,45 +145,7 @@
 														</thead>
 
 
-														<tbody>
-
-															{% for operational_Report in operational_Reports %}
-																{% set percent2 = 0 %}
-																<tr>
-																	{% if principal_report.suitableInitiative.principalOffice == operational_Report.operationalOffice.principalOffice %}
-																		{% if principal_report.id == operational_Report.planningAcomplishment.id %}
-
-
-																			<td>{{ operational_Report.operationalOffice }}</td>
-																			<td>{{ principal_report.planValue }}</td>
-																			<td>{{ operational_Report.accomplishedValue }}</td>
-
-																			{% set percent2 = (operational_Report.accomplishedValue * 100) / principal_report.planValue %}
-
-																			{% if percent2 > 100  %}
-																				<td class="badge badge-primary">
-
-																					{{ percent2 | number_format(2, '.',',') }}
-																				</td>
-																			{% elseif percent2 <= 100  and percent2 >= 75 %}
-																				<td class="badge badge-success">
-
-																					{{ percent2 | number_format(2, '.',',') }}</td>
-																			{% elseif percent2 <= 74  and percent2 >= 50 %}
-
-																				<td class="badge badge-warning">
-
-																					{{ percent2 | number_format(2, '.',',') }}</td>
-																			{% else %}
-																				<td class="badge badge-danger">
-
-																					{{ percent2 | number_format(2, '.',',') }}</td>
-																			{% endif %}
-																		{% endif %}
-																	{% endif %}
-																</tr>
-															{% endfor %}
-														</tbody>
+														<tbody></tbody>
 													</table>
 
 
@@ -233,7 +161,7 @@
 
 								</tbody>
 							</table>
-							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(principal_reports) }}</div>
+							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(principals) }}</div>
 
 						</div>
 

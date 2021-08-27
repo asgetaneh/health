@@ -22,43 +22,50 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
     // /**
     //  * @return OperationalSuitableInitiative[] Returns an array of OperationalSuitableInitiative objects
     //  */
-    
-    
-    public function findplan($principalOffice,$suitable)
+
+
+    public function findplan($principalOffice, $suitable)
     {
         return $this->createQueryBuilder('o')
-           ->leftJoin('o.operationalOffice','op')
-           ->leftJoin('o.PlanningAcomplishment','pa')
+            ->leftJoin('o.operationalOffice', 'op')
+            ->leftJoin('o.PlanningAcomplishment', 'pa')
             ->andWhere('op.principalOffice = :val')
-             ->andWhere('pa.suitableInitiative = :suitable')
-         ->andWhere('o.status = 1')
+            ->andWhere('pa.suitableInitiative = :suitable')
+            ->andWhere('o.status = 1')
             ->setParameter('val', $principalOffice)
             ->setParameter('suitable', $suitable)
             ->orderBy('o.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-     public function findplanSocial($principalOffice,$suitable,$social)
+    public function findplanSocial($principalOffice, $suitable, $social)
     {
         return $this->createQueryBuilder('o')
-           ->leftJoin('o.operationalOffice','op')
-           ->leftJoin('o.PlanningAcomplishment','pa')
-             ->andWhere('op.principalOffice = :val')
+            ->leftJoin('o.operationalOffice', 'op')
+            ->leftJoin('o.PlanningAcomplishment', 'pa')
+            ->andWhere('op.principalOffice = :val')
             ->andWhere('o.social = :social')
             ->andWhere('o.status = 1')
-             ->andWhere('pa.suitableInitiative = :suitable')
+            ->andWhere('pa.suitableInitiative = :suitable')
             ->setParameter('val', $principalOffice)
-                        ->setParameter('social', $social)
+            ->setParameter('social', $social)
             ->setParameter('suitable', $suitable)
             ->orderBy('o.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    
+    // public function findBySelect($quarter)
+    // {
+    //     return $this->createQueryBuilder('o')
+    //         ->Select('SUM(o.accomplishedValue) as total')
+    //         ->addSelect('o.status as office')
+    //         ->andWhere('o.quarter = :quarter')
+    //         ->groupBy('o.operationalOffice')
+    //         ->setParameter('quarter', $quarter)
+    //         ->getQuery()->getResult();
+    // }
 
     /*
     public function findOneBySomeField($value): ?OperationalSuitableInitiative
