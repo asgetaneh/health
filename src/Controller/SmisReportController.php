@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Evaluation;
 use App\Entity\Initiative;
+use App\Entity\OperationalOffice;
 use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
@@ -66,12 +67,12 @@ class SmisReportController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         $custom = 0;
-       
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
-        $quarterId = $form->getData()['planningQuarter']->getId();
+            $quarterId = $form->getData()['planningQuarter']->getId();
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
             $percent = 0;
             $average = 0;
@@ -92,7 +93,7 @@ class SmisReportController extends AbstractController
             }
             $principalOffice = $form->getData()['principalOffice']->getName();
             $principal[] = $principalOffice;
-                    // dd($principal,$accomp);
+            // dd($principal,$accomp);
 
         } else {
 
@@ -128,7 +129,9 @@ class SmisReportController extends AbstractController
         }
 
         $operational_Reports = $em->getRepository(OperationalSuitableInitiative::class)->findBy(['quarter' => $quarterId]);
-        dd($operational_Reports);
+        $operationalOffices = $em->getRepository(OperationalOffice::class)->findAll();
+
+        // dd($operational_Reports);
         $data = $paginator->paginate(
             $principal,
             $request->query->getInt('page', 1),
@@ -144,8 +147,8 @@ class SmisReportController extends AbstractController
             'accomp' => $dataac,
             'operational_Reports' => $operational_Reports,
             'form' => $form->createView(),
-            'custom' => $custom,
-            'average' => $average,
+            
+            'operationalOffices'=>$operationalOffices
         ]);
     }
 }
