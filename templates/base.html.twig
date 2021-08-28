@@ -442,7 +442,7 @@ ace.settings.loadState('sidebar')
 
 							{{ include('menu/office.html.twig') }}
 
-							{% if is_granted("vw_usr_lst") or  is_granted("vw_usr_grp")  %}
+							{% if is_granted("pre_rep")   %}
 
 								<li class="toplist">
 									<a href="#" class="dropdown-toggle ">

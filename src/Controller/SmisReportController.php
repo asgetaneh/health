@@ -26,6 +26,8 @@ class SmisReportController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator)
     {
+                $this->denyAccessUnlessGranted('pre_rep');
+
         $em = $this->getDoctrine()->getManager();
         $time = new DateTime('now');
         $quarterId = 0;
