@@ -327,10 +327,10 @@ class TaskAssignController extends AbstractController
             $initibativeId = $taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
             $planId = $taskId->getPlanAcomplishment();
             $taskAssign->setPerformerTask($taskId);
-            if ($startDate > $endDate) {
-                $this->addFlash('danger', 'Start Date must be less than from End Date !');
-                return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
-            }
+            // if ($startDate > $endDate) {
+            //     $this->addFlash('danger', 'Start Date must be less than from End Date !');
+            //     return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
+            // }
             if ($timeGap > 6) {
                 $this->addFlash('danger', 'Contengency Date be less than 7 !');
                 return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
