@@ -100,14 +100,7 @@
 									{% set assign = 0 %}
 
 									{% for suitableInitiative in suitableInitiatives %}
-										{% for performerTask in performerTasks %}
-											{% if loop.first %}
-
-												{% if performerTask.planAcomplishment.suitableInitiative.id == suitableInitiative.id %}
-													{% set create = 1  %}
-												{% endif %}
-											{% endif %}
-										{% endfor %}
+										
 
 										<tr>
 											{% set count = count + 1 %}

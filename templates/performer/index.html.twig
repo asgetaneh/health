@@ -128,7 +128,7 @@
 										</td>
 										<td>
 											{% for principal_manager in performer.operationalOffice.principalOffice.principalManagers|filter(principal => principal.isActive == true) %}
-												{{principal_manager.principal}}
+											{{principal_manager.principal.userInfo.fullName|title}}
 											{% endfor %}
 										</td>
 										<td>{{ performer.operationalOffice.principalOffice}}

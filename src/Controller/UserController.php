@@ -22,6 +22,16 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class UserController extends AbstractController
 {
     /**
+     * @Route("/maintenance", name="under_maintenance")
+     */
+    public function maintenance(Request $request)
+    {
+
+        return $this->render(
+            'user/maintenance.html.twig'
+        );
+    }
+    /**
      * @Route("/user", name="user")
      */
     public function index(UserGroupRepository $userGroupRepository, Request $request, PaginatorInterface $paginator): Response
@@ -78,7 +88,7 @@ class UserController extends AbstractController
         );
         return $this->render('user/userlist.html.twig', [
             'users' => $data,
-            'count' => $users=$userInfoRepository->findAll(),
+            'count' => $users = $userInfoRepository->findAll(),
             'form' => $form->createView(),
         ]);
     }
@@ -236,6 +246,7 @@ class UserController extends AbstractController
 
         ]);
     }
+  
     //     /**
     //      * @Route("/userFetch", name="user_group_permission")
     //      */

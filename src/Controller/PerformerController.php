@@ -181,6 +181,7 @@ class PerformerController extends AbstractController
             'filterform' => $filterform->createView(),
         ]);
     }
+    
     /**
      * @Route("/operationalfetch", name="operational_fetch")
      */

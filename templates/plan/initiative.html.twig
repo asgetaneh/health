@@ -70,10 +70,11 @@
 											</label>
 										</th>
 										<th>#</th>
+										<th>{% trans %}Goal{% endtrans %}</th>
 										<th>{% trans %}Name{% endtrans %}</th>
 										<th>{% trans %}Weight{% endtrans %}</th>
 										<th>{% trans %}Selected As{% endtrans %}</th>
-										<th>{% trans %}Description{% endtrans %}</th>
+										{# <th>{% trans %}Description{% endtrans %}</th> #}
 										<th>{% trans %}actions{% endtrans %}</th>
 									</tr>
 								</thead>
@@ -85,7 +86,7 @@
 										<input type="hidden" name="nonsuitable" id="nonsuit" value="">
 
 										{% for initiative in recoverInitiatives %}
-                                        {% set count = count+1 %}
+											{% set count = count+1 %}
 											<tr>
 
 
@@ -98,6 +99,8 @@
 												<td>{{count}}
 
 												</td>
+												<td>{{initiative.keyPerformanceIndicator.strategy.objective.goal|title}}</td>
+
 												<td>{{ initiative.name }}</td>
 												<td>{{ initiative.weight }}</td>
 												<td>
@@ -109,7 +112,7 @@
 													{% endif %}
 
 												</td>
-												<td>{{ initiative.description|raw}}</td>
+												{# <td>{{ initiative.description|raw}}</td> #}
 												<td>
 													<a href="{{ path('initiative_show', {'id': initiative.id}) }}" class="btn btn-primary btn-sm">
 														<i class="fa fa-eye"></i>
@@ -136,12 +139,12 @@
 			</div>
 		</div>
 	</div>
-    <script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 	<script>
-  $(function(){
+		$(function () {
 
- 
-		$('#checkall2').click(function () {
+
+$('#checkall2').click(function () {
 var $chk = $(':checkbox');
 $chk.prop('checked', $(this).is(':checked'));
 
@@ -153,7 +156,6 @@ $('#nonsuitablebutton').click(function () {
 $('#nonsuit').val(true);
 $('#initiative_form2').submit();
 })
- });
-
+});
 	</script>
 {% endif %}

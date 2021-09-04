@@ -170,9 +170,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         // else if (in_array("Approve", $user->getRoles()))
         //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
         // else
-        //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
-
-        return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        
+        return new RedirectResponse($this->urlGenerator->generate('under_maintenance'));
+        // return new RedirectResponse($this->urlGenerator->generate('choose_office'));
         throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
     protected function getLoginUrl()

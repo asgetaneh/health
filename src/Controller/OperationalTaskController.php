@@ -67,7 +67,7 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request, SuitableInitiative $suitableInitiative, PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository): Response
+    public function index(Request $request, SuitableInitiative $suitableInitiative, PlanningQuarterRepository $planningQuarterRepository, TaskUserRepository $taskUserRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository,  PerformerTaskRepository $performerTaskRepository): Response
     {
         $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
@@ -199,7 +199,7 @@ class OperationalTaskController extends AbstractController
             'maxContengencyTime' => $maxContengencyTime,
             'minDate' => $minDate,
             'minDateEdit' => $minDateEdit,
-            'measurements' => $taskMeasurementRepository->findAll(),
+            'measurements' => $em->getRepository(TaskMeasurement::class)->findAll(),
             'social' => $social,
             'formtask' => $formtask->createView(),
             'initiativeName' => $suitableInitiative->getInitiative()->getName(),
@@ -227,16 +227,16 @@ class OperationalTaskController extends AbstractController
         // dd($currentYear);
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $principlaOffice =  $operation->getOperationalOffice()->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        // dd($currentYear);
 
         // dd($currentQuarter);
-        // $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
-        $operationalOffice =  $operation->getOperationalOffice()->getId();
+        if ($currentQuarter == 1) {
+            $currentYear=$currentYear+1;
+        }
+        // dd($currentYear);
         $suitableInitiatives = $suitableInitiativeRepository->findSuitableInitiatve($principlaOffice, $currentYear);
-        $performerTasks = $em->getRepository(PerformerTask::class)->findProgress($currentQuarter, $currentYear, $operationalOffice);
-        $taskUsers = $em->getRepository(TaskUser::class)->findProgress($currentQuarter, $currentYear, $operationalOffice);
-
+        
         $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
@@ -246,8 +246,7 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'suitableInitiatives' => $data,
             'count' => $suitableInitiatives,
-            'performerTasks' => $performerTasks,
-            'taskUserss' => $taskUsers,
+           
         ]);
     }
 
@@ -407,18 +406,11 @@ class OperationalTaskController extends AbstractController
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $opOffice = $operation->getOperationalOffice();
         $principal = $opOffice->getPrincipalOffice();
-
-        // $social = $request->request->get('social');
         $accomp = $request->request->get('accomp');
         $suitiniId = $request->request->get('suitableinitiative');
         $quarterId = $request->request->get('quarterId');
-        // dd($accomp,$social,$suitiniId,$quarterId);
-
         $quarter = $planningQuarterRepository->find($quarterId);
-        // dd($quarter);
-
         $socialAttribute = $em->getRepository(InitiativeAttribute::class)->findAll();
-        //    $socialAttribute2=$em->getRepository(InitiativeAttribute::class)->find($social[1]);
         $performerTasks1 = $performerTaskRepository->findsendToprincipalSocial($user, $suitiniId);
         foreach ($performerTasks1 as $value) {
             $value->setStatus(0);

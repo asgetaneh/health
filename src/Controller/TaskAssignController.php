@@ -288,10 +288,7 @@ class TaskAssignController extends AbstractController
     /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(
-        Request $request,
-        PlanningAccomplishmentRepository $planningAccomplishmentRepository,
-        UserRepository $userRepository,
+    public function performerFetch(Request $request,PlanningAccomplishmentRepository $planningAccomplishmentRepository, UserRepository $userRepository,
         PerformerTaskRepository $performerTaskRepository,
         TaskMeasurementRepository $taskMeasurementRepository
     ) {

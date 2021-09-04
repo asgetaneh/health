@@ -76,28 +76,29 @@
 				</div>
 				<div class="table-responsive">
 
-             <form action="{{path('plan_print')}}" method="post">
-             <input type="hidden" name="planyear" value="{{planyear.id}}">
-															<input type="hidden" name="office" value="{{pricipaloffice.id}}">
-          <button  type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right">
-											<i class=" fa fa-print"></i>
-											Print
-										</button>
-             </form>
+					<form action="{{path('plan_print')}}" method="post">
+						<input type="hidden" name="planyear" value="{{planyear.id}}">
+						<input type="hidden" name="office" value="{{pricipaloffice.id}}">
+						<button type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right">
+							<i class=" fa fa-print"></i>
+							Print
+						</button>
+					</form>
 					<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 						<thead>
 							<tr>
 
 								<th>#</th>
+								<th>{% trans %}Goal{% endtrans %}</th>
 								<th>{% trans %}Initiative{% endtrans %}</th>
 								<th>{% trans %}Base{% endtrans %}</th>
 								{# <th>baseline</th> #}
-								<th>{% trans %}yearPlan{% endtrans %} </th>
+								<th>{% trans %}yearPlan{% endtrans %}
+								</th>
 								<th>{% trans %}1st Quarter{% endtrans %}</th>
 								<th>{% trans %}2nd Quarter{% endtrans %}</th>
 								<th>{% trans %}3rd Quarter{% endtrans %}</th>
 								<th>{% trans %}4th  Quarter{% endtrans %}</th>
-                                <th>{% trans %}Denominator{% endtrans %}</th>
 								<th>{% trans %}actions{% endtrans %}</th>
 							</tr>
 						</thead>
@@ -111,9 +112,11 @@
 									<td>{{ loop.index}}
 
 									</td>
+									<td>{{suitableplan.initiative.keyPerformanceIndicator.strategy.objective.goal|title}}</td>
+
 									<td>{{suitableplan.initiative|title }}</td>
-                                    <td>{{suitableplan.initiative.weight }}</td>
-                                    {# <td>{{suitableplan.initiative.baseline }}</td> #}
+									<td>{{suitableplan.initiative.weight }}</td>
+									{# <td>{{suitableplan.initiative.baseline }}</td> #}
 
 
 									<td>
@@ -221,38 +224,37 @@
 
 										</td>
 									{% endfor %}
-                                      <td>{{suitableplan.denominator}}</td>
 
 									<td>
 
 										{% if suitableplan.planningAccomplishments|length > 0 %}
-                                        {% if is_granted('edt_pln') %}
-                                        
-                                       
-											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
-
-												<span class="glyphicon glyphicon-edit"></span>
+											{% if is_granted('edt_pln') %}
 
 
-											</a>
-                                             {% endif %}
+												<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
+
+													<span class="glyphicon glyphicon-edit"></span>
+
+
+												</a>
+											{% endif %}
 										{% else %}
-                                        {% if is_granted('add_pln') %}
-                                        
-                                        
-											<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
+											{% if is_granted('add_pln') %}
 
 
-												<span class="glyphicon glyphicon-plus"></span>
+												<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
 
-											</a>
-                                            {% endif %}
+
+													<span class="glyphicon glyphicon-plus"></span>
+
+												</a>
+											{% endif %}
 
 										{% endif %}
 
 									</td>
 
-                                  
+
 								</tr>
 							{% else %}
 								<tr>

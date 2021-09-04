@@ -58,6 +58,8 @@ class PlanController extends AbstractController
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
             $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
             $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+            //  $recoverData=$recoverInitiatives;
+            //  dd($recoverData);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             //  dd( $principaloffice);
             $plancount = 0;
