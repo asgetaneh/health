@@ -156,17 +156,17 @@
 									<div class="row ">
 
 										<form action="{{path('task_assign_pdf')}}" method="post">
-
-											<div class="col-md-2 pull-right">
+											<div class="col-md-4 ">
+												<select autocomplete="off" name="user" class="form-control userlist   "></select>
+											</div>
+											<div class="col-md-3 ">
 
 												<button class="btn btn-sm btn-danger t" type="submit">
 													<i class="fa fa-file-pdf-o "></i>
 
 												</button>
 											</div>
-											<div class="col-md-2 pull-right">
-												<select autocomplete="off" name="user" class="form-control userlist   "></select>
-											</div>
+
 										</form>
 
 									</div>
@@ -257,7 +257,7 @@
 																			{{taskUser.taskAssign.endDate}}
 																		</td>
 																		<td>{{taskUser.taskAssign.timeGap}}</td>
-                                                                        <td>
+																		<td>
 																			{% if social == 1 %}Male=
 																			{% endif %}
 																			{{taskUser.taskAssign.expectedValue}}
@@ -497,21 +497,21 @@ $('.social').show();
 })
 		</script>
 		{# <script>
-			$('.timeGap').keyup(function () {
-var timeGap = $('.timeGap').val()
-if (timeGap > 6) {
-$('.error').text("maximum time gap is 6")
-$('.assign').prop('disabled', true);
-} else {
-$('.error').text("")
-$('.assign').prop('disabled', false);
-
-
-}
-
-
-})
-		</script> #}
+					$('.timeGap').keyup(function () {
+		var timeGap = $('.timeGap').val()
+		if (timeGap > 6) {
+		$('.error').text("maximum time gap is 6")
+		$('.assign').prop('disabled', true);
+		} else {
+		$('.error').text("")
+		$('.assign').prop('disabled', false);
+		
+		
+		}
+		
+		
+		})
+				</script> #}
 		<link
 		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
 

@@ -64,6 +64,11 @@ class TaskUser
      */
     private $narrative;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $print;
+
     
 
     public function __construct()
@@ -217,6 +222,18 @@ class TaskUser
     public function setNarrative(?string $narrative): self
     {
         $this->narrative = $narrative;
+
+        return $this;
+    }
+
+    public function getPrint(): ?int
+    {
+        return $this->print;
+    }
+
+    public function setPrint(?int $print): self
+    {
+        $this->print = $print;
 
         return $this;
     }

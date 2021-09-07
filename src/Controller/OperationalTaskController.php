@@ -452,68 +452,68 @@ class OperationalTaskController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/intiative/accomplishment/{id}", name="initiative_accomplishment_list")
-     */
-    public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,  OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $socialcount = 0;
-        $socialAttr = 0;
-        $principalOffice = $suitableInitiative->getPrincipalOffice()->getId();
-        //    $operatioanlSuitables=$operationalSuitableInitiativeRepository->findplan($principalOffice,$suitableInitiative->getId());
-        $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
-        $initiativeName = $suitableInitiative->getInitiative()->getName();
-        $time = new DateTime('now');
-        $endDate = 0;
-        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
-        foreach ($quarters as $quarter) {
-            if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
-                $endDate = $quarter->getEndDate();
-            }
-        }
-        $diff = $endDate->diff($time);
-        if ($diff->m == 0) {
-            $remainingdays = $diff->d;
-        } else {
-            $remainingdays = $diff->m * 30 + $diff->d;
-        }
-        // dd($remainingdays);
-        // dd($initiativeName);
-        if ($socials) {
+    // /**
+    //  * @Route("/intiative/accomplishment/{id}", name="initiative_accomplishment_list")
+    //  */
+    // public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,  OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository): Response
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //     $socialcount = 0;
+    //     $socialAttr = 0;
+    //     $principalOffice = $suitableInitiative->getPrincipalOffice()->getId();
+    //     //    $operatioanlSuitables=$operationalSuitableInitiativeRepository->findplan($principalOffice,$suitableInitiative->getId());
+    //     $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
+    //     $initiativeName = $suitableInitiative->getInitiative()->getName();
+    //     $time = new DateTime('now');
+    //     $endDate = 0;
+    //     $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+    //     foreach ($quarters as $quarter) {
+    //         if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
+    //             $endDate = $quarter->getEndDate();
+    //         }
+    //     }
+    //     $diff = $endDate->diff($time);
+    //     if ($diff->m == 0) {
+    //         $remainingdays = $diff->d;
+    //     } else {
+    //         $remainingdays = $diff->m * 30 + $diff->d;
+    //     }
+    //     // dd($remainingdays);
+    //     // dd($initiativeName);
+    //     if ($socials) {
 
-            foreach ($socials as $so) {
-                if ($so->getCode() == 1) {
-                    $socialAttr = 1;
-                    $male = $so->getId();
-                }
-                if ($so->getCode() == 2) {
-                    $female = $so->getId();
-                }
-            }
-        }
-        if ($socialAttr == 1) {
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $male);
-            $operatioanlSuitablessocails = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $female);
+    //         foreach ($socials as $so) {
+    //             if ($so->getCode() == 1) {
+    //                 $socialAttr = 1;
+    //                 $male = $so->getId();
+    //             }
+    //             if ($so->getCode() == 2) {
+    //                 $female = $so->getId();
+    //             }
+    //         }
+    //     }
+    //     if ($socialAttr == 1) {
+    //         $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $male);
+    //         $operatioanlSuitablessocails = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $female);
 
-            return $this->render('operational_task/initiativeAccomplishment.html.twig', [
-                'operatioanlSuitables' => $operatioanlSuitables,
-                'operatioanlSuitablessocails' => $operatioanlSuitablessocails,
-                'initiativeName' => $initiativeName,
-                'remainingdays' => $remainingdays,
-                'social' => 1,
+    //         return $this->render('operational_task/initiativeAccomplishment.html.twig', [
+    //             'operatioanlSuitables' => $operatioanlSuitables,
+    //             'operatioanlSuitablessocails' => $operatioanlSuitablessocails,
+    //             'initiativeName' => $initiativeName,
+    //             'remainingdays' => $remainingdays,
+    //             'social' => 1,
 
-            ]);
-        } else {
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId());
-            return $this->render('operational_task/initiativeAccomplishment.html.twig', [
-                'operatioanlSuitables' => $operatioanlSuitables,
-                'initiativeName' => $initiativeName,
-                'remainingdays' => $remainingdays,
-                'social' => 0,
-            ]);
-        }
-    }
+    //         ]);
+    //     } else {
+    //         $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId());
+    //         return $this->render('operational_task/initiativeAccomplishment.html.twig', [
+    //             'operatioanlSuitables' => $operatioanlSuitables,
+    //             'initiativeName' => $initiativeName,
+    //             'remainingdays' => $remainingdays,
+    //             'social' => 0,
+    //         ]);
+    //     }
+    // }
     /**
      * @Route("/userFetch", name="user_fetch")
      */

@@ -121,6 +121,7 @@ class TaskAssignController extends AbstractController
         $taskUsers = $taskUserRepository->findBy(['assignedTo' => $taskUserId, 'status' => 0]);
 
         foreach ($taskUsers as $taskUser) {
+            
             $fullName = $taskUser->getAssignedTo()->getUserInfo()->getFullName();
             $quarter = $taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
             $principalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();

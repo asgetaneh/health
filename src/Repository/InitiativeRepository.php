@@ -78,11 +78,15 @@ class InitiativeRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('i');
         $qb
+            ->leftJoin('i.keyPerformanceIndicator', 'k')
+            ->leftJoin('k.strategy', 'st')
+            ->leftJoin('st.objective', 'o')
+            ->leftJoin('o.goal', 'g')
             ->join('i.principalOffice', 'po')
             ->andWhere('po.id = :office')
             ->andwhere('i.isActive = 1')
             ->setParameter('office', $office);
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('g.id', 'ASC')->getQuery()->getResult();
     }
     public function findBySuitable($office)
     {
