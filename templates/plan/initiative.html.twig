@@ -71,6 +71,8 @@
 										</th>
 										<th>#</th>
 										<th>{% trans %}Goal{% endtrans %}</th>
+										<th>{% trans %}Kpi{% endtrans %}</th>
+
 										<th>{% trans %}Name{% endtrans %}</th>
 										<th>{% trans %}Weight{% endtrans %}</th>
 										<th>{% trans %}Selected As{% endtrans %}</th>
@@ -100,6 +102,7 @@
 
 												</td>
 												<td>{{initiative.keyPerformanceIndicator.strategy.objective.goal|title}}</td>
+												<td>{{initiative.keyPerformanceIndicator|title}}</td>
 
 												<td>{{ initiative.name }}</td>
 												<td>{{ initiative.weight }}</td>
