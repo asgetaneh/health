@@ -90,6 +90,8 @@
 
 								<th>#</th>
 								<th>{% trans %}Goal{% endtrans %}</th>
+								<th>{% trans %}Kpi{% endtrans %}</th>
+
 								<th>{% trans %}Initiative{% endtrans %}</th>
 								<th>{% trans %}Base{% endtrans %}</th>
 								{# <th>baseline</th> #}
@@ -103,16 +105,17 @@
 							</tr>
 						</thead>
 						<tbody>
-							{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+							{% set count =  suitableplans.getItemNumberPerPage() * (suitableplans.getCurrentPageNumber() -1) %}
 
 
 							{% for suitableplan in suitableplans %}
 								<tr>
-
-									<td>{{ loop.index}}
+									{% set count = count + 1 %}
+									<td>{{ count}}
 
 									</td>
 									<td>{{suitableplan.initiative.keyPerformanceIndicator.strategy.objective.goal|title}}</td>
+									<td>{{suitableplan.initiative.keyPerformanceIndicator|title}}</td>
 
 									<td>{{suitableplan.initiative|title }}</td>
 									<td>{{suitableplan.initiative.weight }}</td>
