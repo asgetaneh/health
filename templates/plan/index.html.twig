@@ -11,7 +11,7 @@
 			<div class="tabbable">
 				<ul class="nav nav-tabs nav-justified tab-color-blue  " id="myTab">
 					<li class="active">
-						<a data-toggle="tab" href="#home" class="lead text-primary" aria-expanded="true">
+						<a data-toggle="tab" id="tabHome" href="#home" class="lead text-primary" aria-expanded="true">
 
 							<strong>{% trans %}Cascading{% endtrans %}</strong>
 						</a>
@@ -451,7 +451,16 @@ $('#initiative_form').submit();
 
 <script>
 	$(document).ready(function () {
-     $('.page-link').each(function(){
+        $('#tabHome').click(function(){
+            location.hash="";
+            var newUrl = location.href.replace("page="+{{ app.request.query.get('page') }}, "page=1");
+            window.location.replace(newUrl);
+        })
+     $('#home .page-link').each(function(){
+         var href = $(this).attr('href');
+         $(this).attr('href',href+"#home")
+              })
+             $('#messages .page-link').each(function(){
          var href = $(this).attr('href');
          $(this).attr('href',href+"#messages")
               })

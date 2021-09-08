@@ -111,7 +111,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('planyear', $planyear)
             ->setParameter('office', $principaloffice);
         return $qb
-            ->orderBy('g.id', 'ASC')->getQuery()->getResult();
+            ->orderBy('i.initiativeNumber', 'ASC')->getQuery()->getResult();
     }
     public function findAllActive($principaloffice, $planyear, $stat)
     {
