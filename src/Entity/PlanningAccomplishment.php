@@ -58,26 +58,17 @@ class PlanningAccomplishment
      */
     private $socialAttribute;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="PlanAcomplishment")
-     */
-    private $performerTasks;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="PlanningAcomplishment")
      */
     private $operationalSuitableInitiatives;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PerformerTask::class, mappedBy="planAccomplishmentSocial")
-     */
-    private $performerTaskSocial;
 
     public function __construct()
     {
-        $this->performerTasks = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
-        $this->performerTaskSocial = new ArrayCollection();
     }
 
    
@@ -175,35 +166,7 @@ class PlanningAccomplishment
         return $this;
     }
 
-    /**
-     * @return Collection|PerformerTask[]
-     */
-    public function getPerformerTasks(): Collection
-    {
-        return $this->performerTasks;
-    }
-
-    public function addPerformerTask(PerformerTask $performerTask): self
-    {
-        if (!$this->performerTasks->contains($performerTask)) {
-            $this->performerTasks[] = $performerTask;
-            $performerTask->setPlanAcomplishment($this);
-        }
-
-        return $this;
-    }
-
-    public function removePerformerTask(PerformerTask $performerTask): self
-    {
-        if ($this->performerTasks->removeElement($performerTask)) {
-            // set the owning side to null (unless already changed)
-            if ($performerTask->getPlanAcomplishment() === $this) {
-                $performerTask->setPlanAcomplishment(null);
-            }
-        }
-
-        return $this;
-    }
+  
 
     /**
      * @return Collection|OperationalSuitableInitiative[]
@@ -235,35 +198,7 @@ class PlanningAccomplishment
         return $this;
     }
 
-    /**
-     * @return Collection|PerformerTask[]
-     */
-    public function getPerformerTaskSocial(): Collection
-    {
-        return $this->performerTaskSocial;
-    }
-
-    public function addPerformerTaskSocial(PerformerTask $performerTaskSocial): self
-    {
-        if (!$this->performerTaskSocial->contains($performerTaskSocial)) {
-            $this->performerTaskSocial[] = $performerTaskSocial;
-            $performerTaskSocial->setPlanAccomplishmentSocial($this);
-        }
-
-        return $this;
-    }
-
-    public function removePerformerTaskSocial(PerformerTask $performerTaskSocial): self
-    {
-        if ($this->performerTaskSocial->removeElement($performerTaskSocial)) {
-            // set the owning side to null (unless already changed)
-            if ($performerTaskSocial->getPlanAccomplishmentSocial() === $this) {
-                $performerTaskSocial->setPlanAccomplishmentSocial(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
    
 }

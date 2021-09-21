@@ -56,11 +56,11 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     {
 
         //dd($productNmae);
-        return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
-            ->leftJoin('ts.taskAssign', 'ta')
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.taskAssign', 'ta')
             ->leftJoin('ta.PerformerTask', 'ps')
-            ->leftJoin('ps.PlanAcomplishment', 'pa')
-            ->andWhere('pa.suitableInitiative = :val')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->andWhere('pa.operationalSuitable = :val')
             ->andWhere('ps.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('val', $suitableInitiative)

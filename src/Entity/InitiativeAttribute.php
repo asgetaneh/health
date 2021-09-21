@@ -68,6 +68,11 @@ class InitiativeAttribute
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalPlanningAccomplishment::class, mappedBy="socialAttribute")
+     */
+    private $operationalPlanningAccomplishments;
+
  
     public function getName(): ?string
     {
@@ -98,6 +103,7 @@ class InitiativeAttribute
         $this->initiatives = new ArrayCollection();
         $this->planningAccomplishments = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
+        $this->operationalPlanningAccomplishments = new ArrayCollection();
     }
     public function __call($method, $arguments)
     {
@@ -265,6 +271,36 @@ class InitiativeAttribute
     public function setCode(?int $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalPlanningAccomplishment[]
+     */
+    public function getOperationalPlanningAccomplishments(): Collection
+    {
+        return $this->operationalPlanningAccomplishments;
+    }
+
+    public function addOperationalPlanningAccomplishment(OperationalPlanningAccomplishment $operationalPlanningAccomplishment): self
+    {
+        if (!$this->operationalPlanningAccomplishments->contains($operationalPlanningAccomplishment)) {
+            $this->operationalPlanningAccomplishments[] = $operationalPlanningAccomplishment;
+            $operationalPlanningAccomplishment->setSocialAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalPlanningAccomplishment(OperationalPlanningAccomplishment $operationalPlanningAccomplishment): self
+    {
+        if ($this->operationalPlanningAccomplishments->removeElement($operationalPlanningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalPlanningAccomplishment->getSocialAttribute() === $this) {
+                $operationalPlanningAccomplishment->setSocialAttribute(null);
+            }
+        }
 
         return $this;
     }

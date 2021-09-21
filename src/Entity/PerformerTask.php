@@ -53,10 +53,7 @@ class PerformerTask
      */
     private $quarter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="performerTasks")
-     */
-    private $PlanAcomplishment;
+    
 
     /**
      * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="performerTasks")
@@ -84,9 +81,16 @@ class PerformerTask
     private $initiativeAttribute;
 
     /**
-     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="performerTaskSocial")
+     * @ORM\ManyToOne(targetEntity=OperationalPlanningAccomplishment::class, inversedBy="performerTasks")
      */
-    private $planAccomplishmentSocial;
+    private $operationalPlanningAcc;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=OperationalPlanningAccomplishment::class, inversedBy="performerTasksSocial")
+     */
+    private $operationalPlanningAccSocial;
+
+   
 
     public function __toString()
     {
@@ -199,17 +203,7 @@ class PerformerTask
         return $this;
     }
 
-    public function getPlanAcomplishment(): ?PlanningAccomplishment
-    {
-        return $this->PlanAcomplishment;
-    }
-
-    public function setPlanAcomplishment(?PlanningAccomplishment $PlanAcomplishment): self
-    {
-        $this->PlanAcomplishment = $PlanAcomplishment;
-
-        return $this;
-    }
+  
 
     public function getSocial(): ?InitiativeAttribute
     {
@@ -271,17 +265,31 @@ class PerformerTask
         return $this;
     }
 
-    public function getPlanAccomplishmentSocial(): ?PlanningAccomplishment
+    public function getOperationalPlanningAcc(): ?OperationalPlanningAccomplishment
     {
-        return $this->planAccomplishmentSocial;
+        return $this->operationalPlanningAcc;
     }
 
-    public function setPlanAccomplishmentSocial(?PlanningAccomplishment $planAccomplishmentSocial): self
+    public function setOperationalPlanningAcc(?OperationalPlanningAccomplishment $operationalPlanningAcc): self
     {
-        $this->planAccomplishmentSocial = $planAccomplishmentSocial;
+        $this->operationalPlanningAcc = $operationalPlanningAcc;
 
         return $this;
     }
+
+    public function getOperationalPlanningAccSocial(): ?OperationalPlanningAccomplishment
+    {
+        return $this->operationalPlanningAccSocial;
+    }
+
+    public function setOperationalPlanningAccSocial(?OperationalPlanningAccomplishment $operationalPlanningAccSocial): self
+    {
+        $this->operationalPlanningAccSocial = $operationalPlanningAccSocial;
+
+        return $this;
+    }
+
+    
 
    
 

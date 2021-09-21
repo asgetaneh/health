@@ -75,6 +75,16 @@ class SuitableInitiative
      */
     private $status;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="suitableInitiative")
+     */
+    private $operationalSuitableInitiatives;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SuitableOperational::class, mappedBy="suitableInitiative")
+     */
+    private $suitableOperationals;
+
    
     
 
@@ -86,6 +96,7 @@ class SuitableInitiative
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
         $this->operationalInitiatives = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
+        $this->suitableOperationals = new ArrayCollection();
       
     }
 
@@ -300,6 +311,66 @@ class SuitableInitiative
                 return $this;
 
 }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setSuitableInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getSuitableInitiative() === $this) {
+                $operationalSuitableInitiative->setSuitableInitiative(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SuitableOperational[]
+     */
+    public function getSuitableOperationals(): Collection
+    {
+        return $this->suitableOperationals;
+    }
+
+    public function addSuitableOperational(SuitableOperational $suitableOperational): self
+    {
+        if (!$this->suitableOperationals->contains($suitableOperational)) {
+            $this->suitableOperationals[] = $suitableOperational;
+            $suitableOperational->setSuitableInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuitableOperational(SuitableOperational $suitableOperational): self
+    {
+        if ($this->suitableOperationals->removeElement($suitableOperational)) {
+            // set the owning side to null (unless already changed)
+            if ($suitableOperational->getSuitableInitiative() === $this) {
+                $suitableOperational->setSuitableInitiative(null);
+            }
+        }
+
+        return $this;
+    }
 
     
 

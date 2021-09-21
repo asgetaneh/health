@@ -49,6 +49,11 @@ class OperationalSuitableInitiative
      */
     private $social;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="operationalSuitableInitiatives")
+     */
+    private $suitableInitiative;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,6 +129,18 @@ class OperationalSuitableInitiative
     public function setSocial(?InitiativeAttribute $social): self
     {
         $this->social = $social;
+
+        return $this;
+    }
+
+    public function getSuitableInitiative(): ?SuitableInitiative
+    {
+        return $this->suitableInitiative;
+    }
+
+    public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
+    {
+        $this->suitableInitiative = $suitableInitiative;
 
         return $this;
     }

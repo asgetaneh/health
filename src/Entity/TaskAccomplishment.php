@@ -38,10 +38,7 @@ class TaskAccomplishment
 
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity=TaskUser::class, inversedBy="taskAccomplishments")
-     */
-    private $taskUser;
+ 
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -54,7 +51,7 @@ class TaskAccomplishment
     private $reportedValue;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $reportedAt;
 
@@ -63,10 +60,7 @@ class TaskAccomplishment
      */
     private $evaluations;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $narrative;
+  
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -82,6 +76,18 @@ class TaskAccomplishment
      * @ORM\Column(type="integer", nullable=true)
      */
     private $accomplishmentValueSocial;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $type;
+
+  
+
+    /**
+     * @ORM\OneToOne(targetEntity=TaskAssign::class, cascade={"persist", "remove"})
+     */
+    private $taskAssign;
 
     public function __construct()
     {
@@ -133,17 +139,7 @@ class TaskAccomplishment
 
 
 
-    public function getTaskUser(): ?TaskUser
-    {
-        return $this->taskUser;
-    }
-
-    public function setTaskUser(?TaskUser $taskUser): self
-    {
-        $this->taskUser = $taskUser;
-
-        return $this;
-    }
+   
 
     public function getMeasureDescription(): ?string
     {
@@ -157,24 +153,24 @@ class TaskAccomplishment
         return $this;
     }
 
-    public function getReportedValue(): ?int
+    public function getReportedValue(): ?string
     {
         return $this->reportedValue;
     }
 
-    public function setReportedValue(?int $reportedValue): self
+    public function setReportedValue(?string $reportedValue): self
     {
         $this->reportedValue = $reportedValue;
 
         return $this;
     }
 
-    public function getReportedAt(): ?string
+    public function getReportedAt(): ?\DateTimeInterface
     {
         return $this->reportedAt;
     }
 
-    public function setReportedAt(?string $reportedAt): self
+    public function setReportedAt(\DateTimeInterface $reportedAt): self
     {
         $this->reportedAt = $reportedAt;
 
@@ -211,17 +207,7 @@ class TaskAccomplishment
         return $this;
     }
 
-    public function getNarrative(): ?string
-    {
-        return $this->narrative;
-    }
-
-    public function setNarrative(?string $narrative): self
-    {
-        $this->narrative = $narrative;
-
-        return $this;
-    }
+   
 
     public function getExpectedValueSocial(): ?int
     {
@@ -255,6 +241,33 @@ class TaskAccomplishment
     public function setAccomplishmentValueSocial(?int $accomplishmentValueSocial): self
     {
         $this->accomplishmentValueSocial = $accomplishmentValueSocial;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+ 
+
+  
+    public function getTaskAssign(): ?TaskAssign
+    {
+        return $this->taskAssign;
+    }
+
+    public function setTaskAssign(?TaskAssign $taskAssign): self
+    {
+        $this->taskAssign = $taskAssign;
 
         return $this;
     }

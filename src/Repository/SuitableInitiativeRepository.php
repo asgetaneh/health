@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\SuitableInitiative;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry; 
 
 /**
  * @method SuitableInitiative|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,18 +23,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     //  * @return SuitableInitiative[] Returns an array of SuitableInitiative objects
     //  */
 
-    public function findSuitableInitiatve($principalOffice, $currentYear)
-    {
-        return $this->createQueryBuilder('s')
-            ->leftJoin('s.planningYear', 'y')
-            ->andWhere('s.principalOffice = :principalOffice')
-            ->andWhere('y.ethYear = :currentYear')
-            ->setParameter('currentYear', $currentYear)
-            ->setParameter('principalOffice', $principalOffice)
-            ->orderBy('s.id', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+  
 
 
     /*

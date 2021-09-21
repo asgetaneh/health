@@ -32,35 +32,35 @@
 		{% for taskAccomplishment in taskAccomplishments   %}
 			{% if loop.first %}
 
-				{% set type = taskAccomplishment.taskUser.type %}
-				{% set taskUseridoperational = taskAccomplishment.taskUser.id %}
+				{% set type = taskAccomplishment.taskAssign.type %}
+				{% set taskUseridoperational = taskAccomplishment.taskAssign.id %}
 
 				<ul class="steps">
-					<li data-step="1" class={% if taskAccomplishment.taskUser.type == 1 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="1" class={% if taskAccomplishment.taskAssign.type == 1 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">A</span>
 						<span class="title">
 							List Task</span>
 					</li>
-					<li data-step="2" class={% if taskAccomplishment.taskUser.type == 1 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="2" class={% if taskAccomplishment.taskAssign.type == 1 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">B</span>
 						<span class="title">
 							Assign Task
 						</span>
 					</li>
 
-					<li data-step="3" class={% if taskAccomplishment.taskUser.type == 2 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="3" class={% if taskAccomplishment.taskAssign.type == 2 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">C</span>
 						<span class="title">Accept Performers Report
 						</span>
 					</li>
 
-					<li data-step="4" class={% if taskAccomplishment.taskUser.type == 3 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 2 %} "active" {% else %} {% endif %}>
+					<li data-step="4" class={% if taskAccomplishment.taskAssign.type == 3 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 2 %} "active" {% else %} {% endif %}>
 						<span class="step">D</span>
 						<span class="title">
 							Evaluate Performer
 						</span>
 					</li>
-					<li data-step="5" class={% if taskAccomplishment.taskUser.type == 4 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 3 %} "active" {% else %} {% endif %}>
+					<li data-step="5" class={% if taskAccomplishment.taskAssign.type == 4 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 3 %} "active" {% else %} {% endif %}>
 						<span class="step">E</span>
 						<span class="title">
 							Send Report to Principals
@@ -129,19 +129,19 @@
 
 									<tbody>
 										{% set count = 0 %}
-										{% for taskUser in taskUsers %}
+										{% for taskAssign in taskAssigns %}
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
-												<td>{{ taskUser.taskAssign.performerTask.name }}</td>
-												<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
+												<td>{{ taskAssign.performerTask.name }}</td>
+												<td>{{ taskAssign.performerTask.weight  }}</td>
 
-												<td>{{ taskUser.taskAssign.startDate  }}</td>
-												<td>{{ taskUser.taskAssign.endDate }}</td>
-												<td>{{ taskUser.taskAssign.timeGap}}</td>
-												<td>{{ taskUser.note}}</td>
+												<td>{{ taskAssign.startDate  }}</td>
+												<td>{{ taskAssign.endDate }}</td>
+												<td>{{ taskAssign.timeGap}}</td>
+												<td>{{ taskAssign.challenge}}</td>
 												<td>
-													<a href="{{ asset('narrative/') }}{{taskUser.narrative}}" width="1300" target="_blank" height="600">
+													<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
 														Narrative Report</a>
 												</td>
 
@@ -164,7 +164,7 @@
 														</tr>
 														{% for taskAccomplishment in taskAccomplishments   %}
 															<tr>
-																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
+																{% if taskAssign.id == taskAccomplishment.taskAssign.id  %}
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">

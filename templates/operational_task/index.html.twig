@@ -31,15 +31,15 @@
 	<input type="hidden" class="minDateEdit" value="{{minDateEdit}}">
 	<div>
 
-		{% for taskUser in taskUsers %}
+		{% for taskAssign in taskAssigns %}
 			{% if loop.first %}
 				<ul class="steps">
-					<li data-step="1" class={% if taskUser.type == 1 %} "complete" {% elseif taskUser.type >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="1" class={% if taskAssign.type == 1 %} "complete" {% elseif taskAssign.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">A</span>
 						<span class="title">
 							List Task</span>
 					</li>
-					<li data-step="2" class={% if taskUser.type == 1 %} "complete" {% elseif taskUser.type >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="2" class={% if taskAssign.type == 1 %} "complete" {% elseif taskAssign.type >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">B</span>
 						<span class="title">
 							Assign Task
@@ -48,7 +48,7 @@
 
 					<li
 						data-step="3">
-						{# class={% if taskAccomplishment.taskUser.type == 3 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 3 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskAssign.type == 3 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 3 %} "active" {% else %} {% endif %}> #}
 						<span class="step">C</span>
 						<span class="title">Accept Performers Report
 						</span>
@@ -56,7 +56,7 @@
 
 					<li
 						data-step="4">
-						{# class={% if taskAccomplishment.taskUser.type == 4 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 4 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskAssign.type == 4 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 4 %} "active" {% else %} {% endif %}> #}
 						<span class="step">D</span>
 						<span class="title">
 							Evaluate Performer
@@ -64,7 +64,7 @@
 					</li>
 					<li
 						data-step="5">
-						{# class={% if taskAccomplishment.taskUser.type == 5 %} "complete" {% elseif taskAccomplishment.taskUser.type >= 5 %} "active" {% else %} {% endif %}> #}
+						{# class={% if taskAccomplishment.taskAssign.type == 5 %} "complete" {% elseif taskAccomplishment.taskAssign.type >= 5 %} "active" {% else %} {% endif %}> #}
 						<span class="step">E</span>
 						<span class="title">
 							Send Report to Principals
@@ -243,38 +243,38 @@
 																<th>Reason</th>
 
 															</tr>
-															{% for taskUser in taskUsers %}
+															{% for taskAssign in taskAssigns %}
 																{# {% if taskUser.status == 6 %} #}
-																<tr {% if taskUser.status == 6 %} class="text-danger" {% endif %}>
+																<tr {% if taskAssign.status == 6 %} class="text-danger" {% endif %}>
 
 
-																	{% if taskUser.taskAssign.performerTask.id == performerTask.id  %}
-																		{% set statusaccept = taskUser.status %}
-																		<td>{{taskUser.assignedTo.userInfo}}</td>
+																	{% if taskAssign.performerTask.id == performerTask.id  %}
+																		{% set statusaccept = taskAssign.status %}
+																		<td>{{taskAssign.assignedTo.userInfo}}</td>
 																		<td>
-																			{{taskUser.taskAssign.startDate}}</td>
+																			{{taskAssign.startDate}}</td>
 																		<td>
-																			{{taskUser.taskAssign.endDate}}
+																			{{taskAssign.endDate}}
 																		</td>
-																		<td>{{taskUser.taskAssign.timeGap}}</td>
+																		<td>{{taskAssign.timeGap}}</td>
 																		<td>
 																			{% if social == 1 %}Male=
 																			{% endif %}
-																			{{taskUser.taskAssign.expectedValue}}
+																			{{taskAssign.expectedValue}}
 																			{% if social == 1 %}Female=
-																				{{taskUser.taskAssign.expectedValueSocial}}
+																				{{taskAssign.expectedValueSocial}}
 																			{% endif %}
 
 
 																		</td>
-																		{# <td>{{taskUser.taskAssign.expectedValue}}</td> #}
+																		{# <td>{{taskAssign.taskAssign.expectedValue}}</td> #}
 
-																		<td>{{taskUser.rejectReason}}
-																			{% if taskUser.status == 6 %}
+																		<td>{{taskAssign.rejectReason}}
+																			{% if taskAssign.status == 6 %}
 																				{# <form action="{{path('task_resend')}}" method="post"> #}
-																				<input type="hidden" name="taskUserId" value="{{taskUser.id}}">
+																				<input type="hidden" name="taskUserId" value="{{taskAssign.id}}">
 
-																				<button class="btn btn-sm btn-info resend " data-performid="{{taskUser.taskAssign.id}}" type="button" data-target="#resend">
+																				<button class="btn btn-sm btn-info resend " data-performid="{{taskAssign.id}}" type="button" data-target="#resend">
 																					Resend
 																				</button>
 																			{% endif %}
@@ -299,8 +299,8 @@
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
 													<input type="hidden" class="user" value="{{app.user.id}}">
 													<input type="hidden" class="quartertask" value="{{performerTask.quarter.id}}">
-													<input type="hidden" class="task" value="{{performerTask.planAcomplishment.suitableInitiative.id}}">
-													<input type="hidden" class="office" value="{{performerTask.planAcomplishment.suitableInitiative.principalOffice.id}}">
+													<input type="hidden" class="task" value="{{performerTask.operationalPlanningAcc.operationalSuitable.id}}">
+													<input type="hidden" class="office" value="{{performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.principalOffice.id}}">
 
 													<input type="hidden" class="userprincipal" value="{{app.user.id}}">
 

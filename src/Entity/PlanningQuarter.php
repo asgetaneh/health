@@ -114,6 +114,11 @@ class PlanningQuarter
      */
     private $endMonth;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalPlanningAccomplishment::class, mappedBy="quarter")
+     */
+    private $operationalPlanningAccomplishments;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -124,6 +129,7 @@ class PlanningQuarter
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
         $this->quarterAccomplishments = new ArrayCollection();
+        $this->operationalPlanningAccomplishments = new ArrayCollection();
     }
     public function __toString()
     {
@@ -500,6 +506,36 @@ class PlanningQuarter
     public function setEndMonth(?int $endMonth): self
     {
         $this->endMonth = $endMonth;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalPlanningAccomplishment[]
+     */
+    public function getOperationalPlanningAccomplishments(): Collection
+    {
+        return $this->operationalPlanningAccomplishments;
+    }
+
+    public function addOperationalPlanningAccomplishment(OperationalPlanningAccomplishment $operationalPlanningAccomplishment): self
+    {
+        if (!$this->operationalPlanningAccomplishments->contains($operationalPlanningAccomplishment)) {
+            $this->operationalPlanningAccomplishments[] = $operationalPlanningAccomplishment;
+            $operationalPlanningAccomplishment->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalPlanningAccomplishment(OperationalPlanningAccomplishment $operationalPlanningAccomplishment): self
+    {
+        if ($this->operationalPlanningAccomplishments->removeElement($operationalPlanningAccomplishment)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalPlanningAccomplishment->getQuarter() === $this) {
+                $operationalPlanningAccomplishment->setQuarter(null);
+            }
+        }
 
         return $this;
     }

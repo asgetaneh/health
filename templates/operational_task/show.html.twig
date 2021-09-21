@@ -86,21 +86,21 @@
 								</thead>
 								<tbody>
 									{% set count = 0 %}
-									{% for taskUser in taskUsers %}
+									{% for taskAssign in taskAssigns %}
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
-											<td>{{ taskUser.taskAssign.performerTask.name }}</td>
-											<td>{{taskUser.assignedTo.userInfo}}</td>
+											<td>{{ taskAssign.performerTask.name }}</td>
+											<td>{{taskAssign.assignedTo.userInfo}}</td>
 
-											<td>{{ taskUser.taskAssign.startDate  }}</td>
-											<td>{{ taskUser.taskAssign.endDate  }}</td>
-											<td>{{ taskUser.taskAssign.timeGap }}</td>
-											<td>{{ taskUser.taskAssign.performerTask.weight }}</td>
+											<td>{{ taskAssign.startDate  }}</td>
+											<td>{{ taskAssign.endDate  }}</td>
+											<td>{{ taskAssign.timeGap }}</td>
+											<td>{{ taskAssign.performerTask.weight }}</td>
 											<td>
 												<form action="{{path('operational_task_show_detail')}}" method="post">
-													<input type="hidden" name="taskUser" value="{{taskUser.id}}">
-													{% if taskUser.type == 1 %}
+													<input type="hidden" name="taskAssign" value="{{taskAssign.id}}">
+													{% if taskAssign.type == 1 %}
 														<button class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to Accept this Report?');">
 															Accept
 														</button>

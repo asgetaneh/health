@@ -149,21 +149,21 @@
 															{% for taskAcomolish in taskAcomolishs %}
 																<tr>
 
-																	{% if performerTask.id == taskAcomolish.taskUser.taskAssign.performerTask.id %}
+																	{% if performerTask.id == taskAcomolish.taskAssign.performerTask.id %}
 																		{% set count = count + 1 %}
 																		{% set percent = taskAcomolish.accomplishmentValue * 100 / taskAcomolish.expectedValue %}
 																		{% if social == 1 %}
-																			{% set planValueSocial = taskAcomolish.taskUser.taskAssign.performerTask.planAccomplishmentSocial.planValue %}
+																			{% set planValueSocial = taskAcomolish.taskAssign.performerTask.operationalPlanningAccSocial.planValue %}
 																			{% set total_expected_valueSocial  =  total_expected_valueSocial + taskAcomolish.expectedValueSocial  %}
 																			{% set total_accomplish_valueSocial = total_accomplish_valueSocial + taskAcomolish.accomplishmentValueSocial %}
 																			{% set percentSocial = taskAcomolish.accomplishmentValueSocial * 100 / taskAcomolish.expectedValueSocial %}
 																		{% endif %}
 																		{% set total_expected_value  =  total_expected_value + taskAcomolish.expectedValue  %}
 
-																		{% set planValue = taskAcomolish.taskUser.taskAssign.performerTask.planAcomplishment.planValue %}
+																		{% set planValue = taskAcomolish.taskAssign.performerTask.operationalPlanningAcc.planValue %}
 
 																		{% set total_accomplish_value = total_accomplish_value + taskAcomolish.accomplishmentValue %}
-																		<td>{{taskAcomolish.taskUser.assignedTo.userInfo}}</td>
+																		<td>{{taskAcomolish.taskAssign.assignedTo.userInfo}}</td>
 																		<td>
 																			{% if social == 1 %}
 																				Male=

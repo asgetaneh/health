@@ -46,10 +46,7 @@ class OperationalTask
      */
     private $performerTasks;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TaskAssign::class, mappedBy="operationalTask")
-     */
-    private $taskAssigns;
+  
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="operationalTasks")
@@ -67,7 +64,6 @@ class OperationalTask
     public function __construct()
     {
         $this->performerTasks = new ArrayCollection();
-        $this->taskAssigns = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,35 +122,7 @@ class OperationalTask
 
   
 
-    /**
-     * @return Collection|TaskAssign[]
-     */
-    public function getTaskAssigns(): Collection
-    {
-        return $this->taskAssigns;
-    }
-
-    public function addTaskAssign(TaskAssign $taskAssign): self
-    {
-        if (!$this->taskAssigns->contains($taskAssign)) {
-            $this->taskAssigns[] = $taskAssign;
-            $taskAssign->setOperationalTask($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTaskAssign(TaskAssign $taskAssign): self
-    {
-        if ($this->taskAssigns->removeElement($taskAssign)) {
-            // set the owning side to null (unless already changed)
-            if ($taskAssign->getOperationalTask() === $this) {
-                $taskAssign->setOperationalTask(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
     public function getCreatedBy(): ?User
     {

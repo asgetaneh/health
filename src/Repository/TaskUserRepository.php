@@ -62,21 +62,7 @@ class TaskUserRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-     public function findTaskUsersList($value)
-    {
-        return $this->createQueryBuilder('t')
-        ->leftJoin('t.taskAssign','ta')
-         ->leftJoin('ta.PerformerTask','p')
-            ->andWhere('p.createdBy = :val')
-        ->andWhere('t.type < 3 ')
-                ->andWhere('t.status > 4 ')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            // ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+  
     public function findProgress($quarter,$currentYear,$operationalOffice){
         return $this->createQueryBuilder('t')
            ->leftJoin('t.taskAssign','ta')

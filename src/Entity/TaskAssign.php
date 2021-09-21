@@ -19,10 +19,7 @@ class TaskAssign
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=OperationalTask::class, inversedBy="taskAssigns")
-     */
-    private $operationalTask;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=PerformerTask::class, inversedBy="taskAssigns")
@@ -66,10 +63,7 @@ class TaskAssign
      */
     private $assignedTo;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TaskUser::class, mappedBy="taskAssign")
-     */
-    private $taskUsers;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -101,11 +95,25 @@ class TaskAssign
      */
     private $expectedValueSocial;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $rejectReason;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $challenge;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $narrative;
+
     public function __construct()
     {
         $this->taskAccomplishments = new ArrayCollection();
         $this->taskMeasurements = new ArrayCollection();
-        $this->taskUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,17 +121,7 @@ class TaskAssign
         return $this->id;
     }
 
-    public function getOperationalTask(): ?OperationalTask
-    {
-        return $this->operationalTask;
-    }
-
-    public function setOperationalTask(?OperationalTask $operationalTask): self
-    {
-        $this->operationalTask = $operationalTask;
-
-        return $this;
-    }
+  
 
     public function getPerformerTask(): ?PerformerTask
     {
@@ -200,35 +198,7 @@ class TaskAssign
         return $this;
     }
 
-    /**
-     * @return Collection|TaskUser[]
-     */
-    public function getTaskUsers(): Collection
-    {
-        return $this->taskUsers;
-    }
-
-    public function addTaskUser(TaskUser $taskUser): self
-    {
-        if (!$this->taskUsers->contains($taskUser)) {
-            $this->taskUsers[] = $taskUser;
-            $taskUser->setTaskAssign($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTaskUser(TaskUser $taskUser): self
-    {
-        if ($this->taskUsers->removeElement($taskUser)) {
-            // set the owning side to null (unless already changed)
-            if ($taskUser->getTaskAssign() === $this) {
-                $taskUser->setTaskAssign(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection|TaskAccomplishment[]
@@ -356,6 +326,42 @@ class TaskAssign
     public function setExpectedValueSocial(?int $expectedValueSocial): self
     {
         $this->expectedValueSocial = $expectedValueSocial;
+
+        return $this;
+    }
+
+    public function getRejectReason(): ?string
+    {
+        return $this->rejectReason;
+    }
+
+    public function setRejectReason(?string $rejectReason): self
+    {
+        $this->rejectReason = $rejectReason;
+
+        return $this;
+    }
+
+    public function getChallenge(): ?string
+    {
+        return $this->challenge;
+    }
+
+    public function setChallenge(?string $challenge): self
+    {
+        $this->challenge = $challenge;
+
+        return $this;
+    }
+
+    public function getNarrative(): ?string
+    {
+        return $this->narrative;
+    }
+
+    public function setNarrative(?string $narrative): self
+    {
+        $this->narrative = $narrative;
 
         return $this;
     }

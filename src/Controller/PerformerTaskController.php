@@ -37,23 +37,23 @@ class PerformerTaskController extends AbstractController
     /**
      * @Route("/", name="performer_task_index")
      */
-    public function index(Request $request, TaskUserRepository $taskUserRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
+    public function index(Request $request, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("taskUserId")) {
             $taskUserId = $request->request->get("taskUserId");
             $reason = $request->request->get("reason");
-            $taskUsers = $taskUserRepository->find($taskUserId);
+            $taskUsers = $taskAssignRepository->find($taskUserId);
             $taskUsers->setStatus(6);
             $taskUsers->setRejectReason($reason);
             $em->flush();
             $this->addFlash('success', 'Task Reject successfully !');
             return $this->redirectToRoute('performer_task_index');
         }
-        $taskUsers = $taskUserRepository->findPerformerTaskUsers($this->getUser());
+        $taskAssigns = $taskAssignRepository->findPerformerTaskUsers($this->getUser());
 
         return $this->render('performer_task/index.html.twig', [
-            'taskUsers' => $taskUsers,
+            'taskAssigns' => $taskAssigns,
             // 'count'=>$count,
 
         ]);
@@ -62,14 +62,14 @@ class PerformerTaskController extends AbstractController
     /**
      * @Route("/list", name="performer_task_list")
      */
-    public function list(Request $request, TaskUserRepository $taskUserRepository, TaskMeasurementRepository $taskMeasurementRepository, PerformerTaskRepository $performerTaskRepository)
+    public function list(Request $request, TaskAssignRepository $taskAssignRepository)
     {
 
-        $taskUsers = $taskUserRepository->findBy(['assignedTo' => $this->getUser(), 'status' => 5]);
+        $taskAssigns = $taskAssignRepository->findBy(['assignedTo' => $this->getUser(), 'status' => 5]);
         //  /   dd($taskUsers);
 
         return $this->render('performer_task/list.html.twig', [
-            'performer_tasks' => $taskUsers,
+            'taskAssigns' => $taskAssigns,
             // 'count'=>$count,
 
         ]);
@@ -152,7 +152,7 @@ class PerformerTaskController extends AbstractController
     /**
      * @Route("/show", name="performer_task_show", methods={"GET","POST"})
      */
-    public function show(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    public function show(Request $request, TaskAssignRepository $taskAssignRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $narativeForm = $this->createFormBuilder()
@@ -173,9 +173,9 @@ class PerformerTaskController extends AbstractController
 
         if ($narativeForm->isSubmitted() && $narativeForm->isValid()) {
             $taskPerformId = $request->request->get("id");
-            $taskAc = $taskAccomplishmentRepository->findOneBy(['taskUser' => $taskPerformId]);
-            $taskUsers = $taskUserRepository->find($request->request->get('id'));
-            $taskUsers->setStatus(4);
+            $taskAc = $taskAccomplishmentRepository->findOneBy(['taskAssign' => $taskPerformId]);
+            $taskAssignNa = $taskAssignRepository->find($request->request->get('id'));
+            $taskAssignNa->setStatus(4);
             $em = $this->getDoctrine()->getManager();
             $uploadedFile = $narativeForm['narrative']->getData();
             // dd($uploadedFile);
@@ -185,7 +185,7 @@ class PerformerTaskController extends AbstractController
             $uploadedFile->move($destination, $newFilename);
             //   dd($newFilename);
             //$user=$this->getUser()->getUserInfo();
-            $taskUsers->setNarrative($newFilename);
+            $taskAssignNa->setNarrative($newFilename);
             $em->flush();
             $this->addFlash("tsuccess", "Narrative Report Successfully uploaded !!");
             return $this->redirectToRoute('performer_task_index');
@@ -213,28 +213,28 @@ class PerformerTaskController extends AbstractController
 
                 $taskAccomplishment->setReportedValueSocial($reportValueSocial);
             }
-            $taskUser = $taskUserRepository->findOneBy(['id' => $taskAccomplishment->getTaskUser()->getId()]);
+            $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskUser->setStatus(2);
 
             $em->flush();
             $this->addFlash('success', 'Reported successfully !');
             return $this->redirectToRoute('performer_task_index');
         }
-        if ($request->request->get('note')) {
-            $note = $request->request->get('note');
+        if ($request->request->get('challenge')) {
+            $challenge = $request->request->get('challenge');
             $id = $request->request->get('taskUserid');
-            $taskUserno = $taskUserRepository->find($id);
+            $taskAssinCha = $taskAssignRepository->find($id);
 
-            $taskUserno->setNote($note);
-            $taskUserno->setStatus(3);
+            $taskAssinCha->setChallenge($challenge);
+            $taskAssinCha->setStatus(3);
             $em->flush();
             $this->addFlash('success', 'thank you for responding  !');
             return $this->redirectToRoute('performer_task_index');
         }
-        $taskUser = $request->request->get('taskUser');
-        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskUser' => $taskUser]);
-        $taskUsers = $taskUserRepository->findBy(['id' => $taskUser]);
-        foreach ($taskUsers as $key) {
+        $taskAssign = $request->request->get('taskUser');
+        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
+        $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
+        foreach ($taskAssigns as $key) {
             if ($key->getStatus() < 1) {
                 $key->setStatus(1);
                 $em->flush();
@@ -243,7 +243,7 @@ class PerformerTaskController extends AbstractController
         }
         $social = 0;
 
-        foreach ($taskAccomplishments[0]->getTaskUser()->getTaskAssign()->getPerformerTask()->getPlanAcomplishment()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
+        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()-> getInitiative()->getSocialAtrribute() as $va) {
             if ($va->getName()) {
                 $social = 1;
             }
@@ -251,7 +251,7 @@ class PerformerTaskController extends AbstractController
 
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
-            'taskUsers' => $taskUsers,
+            'taskAssigns' => $taskAssigns,
             'narativeForm' => $narativeForm->createView(),
             'social' => $social
 
@@ -260,54 +260,58 @@ class PerformerTaskController extends AbstractController
     /**
      * @Route("/list/show", name="performer_task_list_show", methods={"GET","POST"})
      */
-    public function listShow(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    public function listShow(Request $request, TaskAssignRepository $taskAssignRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
-        $taskUser = $request->request->get('taskUser');
-        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskUser' => $taskUser]);
-        $taskUsers = $taskUserRepository->findBy(['id' => $taskUser]);
+        $taskAssign = $request->request->get('taskAssign');
+        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
+        $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
 
         return $this->render('performer_task/listShow.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
-            'taskUsers' => $taskUsers,
+            'taskAssigns' => $taskAssigns,
         ]);
     }
     
      /**
      * @Route("/skip/challenge", name="task_challenge_skip")
      */
-    public function skipChallenge(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    public function skipChallenge(Request $request, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
 
         $taskId = $request->request->get('taskId');
-        $taskUser = $taskUserRepository->find($request->request->get('taskId'));
-        $taskUser->setStatus(3);
+        $taskAssign = $taskAssignRepository->find($taskId);
+        $taskAssign->setStatus(3);
         $em->flush();
-        return new JsonResponse($taskUser);
+        return new JsonResponse($taskAssign);
     }
     /**
      * @Route("/skip", name="task_narrative_skip")
      */
-    public function skip(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    public function skip(Request $request, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
 
         $taskId = $request->request->get('taskId');
-        $taskUser = $taskUserRepository->find($request->request->get('taskId'));
-        $taskUser->setStatus(4);
+        $taskAssign = $taskAssignRepository->find($request->request->get('taskId'));
+        $taskAssign->setStatus(4);
         $em->flush();
-        return new JsonResponse($taskUser);
+        return new JsonResponse($taskAssign);
     }
     /**
      * @Route("/send", name="performer_task_send")
      */
-    public function send(Request $request, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    public function send(Request $request, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskId = $request->request->get('taskUserId');
-        $taskUser = $taskUserRepository->find($taskId);
-        $taskUser->setStatus(5);
+        $taskAssignId = $request->request->get('taskAssignIds');
+        // dd($taskAssignId);
+        $taskAssign = $taskAssignRepository->find($taskAssignId);
+      $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskAssign'=>$taskAssign]);
+    //    dd($taskAccomplishment);
+    $taskAccomplishment->setReportedAt(new \DateTime());
+        $taskAssign->setStatus(5);
         // $taskUser->setType(1);
         $em->flush();
         return $this->redirectToRoute('performer_task_index');

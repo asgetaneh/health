@@ -83,6 +83,11 @@ class OperationalOffice
      * @ORM\ManyToOne(targetEntity=College::class, inversedBy="operationalOffices")
      */
     private $college;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SuitableOperational::class, mappedBy="operationalOffice")
+     */
+    private $suitableOperationals;
     
     public function __construct()
     {
@@ -92,6 +97,7 @@ class OperationalOffice
         $this->operationalInitiatives = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
+        $this->suitableOperationals = new ArrayCollection();
     }
   
     public function getId(): ?int
@@ -360,6 +366,36 @@ class OperationalOffice
     public function setCollege(?College $college): self
     {
         $this->college = $college;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SuitableOperational[]
+     */
+    public function getSuitableOperationals(): Collection
+    {
+        return $this->suitableOperationals;
+    }
+
+    public function addSuitableOperational(SuitableOperational $suitableOperational): self
+    {
+        if (!$this->suitableOperationals->contains($suitableOperational)) {
+            $this->suitableOperationals[] = $suitableOperational;
+            $suitableOperational->setOperationalOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuitableOperational(SuitableOperational $suitableOperational): self
+    {
+        if ($this->suitableOperationals->removeElement($suitableOperational)) {
+            // set the owning side to null (unless already changed)
+            if ($suitableOperational->getOperationalOffice() === $this) {
+                $suitableOperational->setOperationalOffice(null);
+            }
+        }
 
         return $this;
     }

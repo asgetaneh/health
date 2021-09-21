@@ -81,8 +81,10 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>TaskName</th>
-										<th>Office</th>
+										<th>Suitable Initiative</th>
+										<th>Operational Office</th>
+										<th>Plan</th>
+
 
 										<th>actions</th>
 
@@ -93,32 +95,39 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% set count =  suitableInitiatives.getItemNumberPerPage() * (suitableInitiatives.getCurrentPageNumber() -1) %}
+									{% set count =  operationalSuitables.getItemNumberPerPage() * (operationalSuitables.getCurrentPageNumber() -1) %}
 
 									{% set task = 0 %}
 									{% set create = 0 %}
 									{% set assign = 0 %}
 
-									{% for suitableInitiative in suitableInitiatives %}
-										
+									{% for operationalSuitable in operationalSuitables %}
+
 
 										<tr>
 											{% set count = count + 1 %}
 
 											<td>{{ count}}</td>
-											<td>{{ suitableInitiative.initiative.name }}</td>
+											<td>{{operationalSuitable. suitableInitiative.initiative.name }}</td>
 
-											<td>{{ suitableInitiative.principalOffice.name  }}</td>
+											<td>{{ operationalSuitable.operationalOffice.name  }}</td>
+                                            <td>
+											{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
+												{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
 
+													{{ operationalPlanningAccomplishment.planValue  }}
+												{% endif %}
+											{% endfor %}
+                                            </td>
 											<td>
 
-												{% if getTaskStatus(suitableInitiative.id,office) %}
+												{% if getTaskStatus(operationalSuitable.suitableInitiative.id,office) %}
 													{# {{getTaskStatus(suitableInitiative.id,office)}} #}
-													<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
+													<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
 														Assign
 													</a>
 												{% else %}
-													<a href="{{ path('operational_task_index', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-primary btn-sm">
+													<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
 														Create
 													</a>
 												{% endif %}
@@ -126,28 +135,28 @@
 
 											<td>
 
-												<a href="{{ path('acomplishment_task_detail', {'id': suitableInitiative.id}) }}" title="show" class="btn btn-success btn-sm">
-													View
+												<a href="{{ path('acomplishment_task_detail', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-success btn-sm">
+													Report
 												</a>
 												{# {% endif %} #}
 											</td>
 											<td>
 
-												{% if getTaskStatus(suitableInitiative.id,office) %}
+												{% if getTaskStatus(operationalSuitable.id,office) %}
 													<div class="badge badge-primary">
 														create
 													</div>
 												{% endif %}
-												{% if getTaskStatusAssigned(suitableInitiative.id,office) %}
+												{% if getTaskStatusAssigned(operationalSuitable.id,office) %}
 													<div class="badge badge-danger">
 														assign
 													</div>
 												{% endif %}
-												{% if getTaskStatusSend(suitableInitiative.id,office) %}
+												{# {% if getTaskStatusSend(operationalSuitable.suitableInitiative.id,office) %}
 													<div class="badge badge-success">
 														send
 													</div>
-												{% endif %}
+												{% endif %} #}
 
 												{# {{getTaskStatusSend(suitableInitiative.id,office)}} #}
 
@@ -164,7 +173,7 @@
 
 								</tbody>
 							</table>
-							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(suitableInitiatives) }}</div>
+							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operationalSuitables) }}</div>
 						</div>
 					</div>
 				</div>

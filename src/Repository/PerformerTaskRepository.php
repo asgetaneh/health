@@ -24,8 +24,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
         // dd($id);
 
         return $this->createQueryBuilder('s')
-            ->leftJoin('s.PlanAcomplishment', 'pa')
-            ->leftJoin('pa.suitableInitiative', 'su')
+            ->leftJoin('s.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'su')
             ->select('count(s.id)')->andWhere('su.id =  :id')
             ->andWhere('s.operationalOffice =  :office')
             ->setParameter('office', $office)
@@ -38,8 +38,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
         // dd($id);
 
         return $this->createQueryBuilder('s')
-            ->leftJoin('s.PlanAcomplishment', 'pa')
-            ->leftJoin('pa.suitableInitiative', 'su')
+            ->leftJoin('s.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa. ', 'su')
             ->select('count(s.id)')->andWhere('su.id =  :id')
             ->andWhere('s.status =  0')
             ->andWhere('s.operationalOffice =  :office')
@@ -54,8 +54,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
-            ->leftJoin('s.PlanAcomplishment', 'pa')
-            ->leftJoin('pa.suitableInitiative', 'su')
+            ->leftJoin('s.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'su')
 
 
             ->Select('s.name')
@@ -80,8 +80,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
         //dd($productNmae);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment', 'pl')
-            ->andWhere('pl.suitableInitiative = :initiative')
+            ->leftJoin('s.operationalPlanningAcc', 'pl')
+            ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->andWhere('s.status = 1')
 
@@ -112,17 +112,17 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findInitiativeBySocial($suitableinitiative, $user)
+    public function findInitiativeBySocial($suitableOperational, $user)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment', 'pl')
-            ->andWhere('pl.suitableInitiative = :initiative')
+            ->leftJoin('s.operationalPlanningAcc', 'pl')
+            ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
-            ->setParameter('initiative', $suitableinitiative)
+            ->setParameter('initiative', $suitableOperational)
 
             ->orderBy('s.id', 'ASC')
             ->getQuery()

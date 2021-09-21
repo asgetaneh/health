@@ -32,32 +32,32 @@
 		{% for taskAccomplishment in taskAccomplishments   %}
 			{% if loop.first %}
 
-				{% set status = taskAccomplishment.taskUser.status %}
-				{% set taskUserid = taskAccomplishment.taskUser.id %}
+				{% set status = taskAccomplishment.taskAssign.status %}
+				{% set taskUserid = taskAccomplishment.taskAssign.id %}
 
 				<ul class="steps">
-					<li data-step="1" class={% if taskAccomplishment.taskUser.status >= 1 %} "complete" {% else %} "active" {% endif %}>
+					<li data-step="1" class={% if taskAccomplishment.taskAssign.status >= 1 %} "complete" {% else %} "active" {% endif %}>
 						<span class="step">I</span>
 						<span class="title">Accept Or Reject Task</span>
 					</li>
-					<li data-step="2" class={% if taskAccomplishment.taskUser.status >= 2 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 1 %} "active" {% else %} {% endif %}>
+					<li data-step="2" class={% if taskAccomplishment.taskAssign.status >= 2 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 1 %} "active" {% else %} {% endif %}>
 						<span class="step">II</span>
 						<span class="title">Insert Report Timely
 						</span>
 					</li>
 
-					<li data-step="3" class={% if taskAccomplishment.taskUser.status >= 3 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 2 %} "active" {% else %} {% endif %}>
+					<li data-step="3" class={% if taskAccomplishment.taskAssign.status >= 3 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 2 %} "active" {% else %} {% endif %}>
 						<span class="step">III</span>
 						<span class="title">Chalenge Faced/Solutions</span>
 					</li>
 
-					<li data-step="4" class={% if taskAccomplishment.taskUser.status >= 4 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 3 %} "active" {% else %} {% endif %}>
+					<li data-step="4" class={% if taskAccomplishment.taskAssign.status >= 4 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 3 %} "active" {% else %} {% endif %}>
 						<span class="step">IV</span>
 						<span class="title">
 							Upload Narrative Report
 						</span>
 					</li>
-					<li data-step="5" class={% if taskAccomplishment.taskUser.status >= 5 %} "complete" {% elseif taskAccomplishment.taskUser.status >= 4 %} "active" {% else %} {% endif %}>
+					<li data-step="5" class={% if taskAccomplishment.taskAssign.status >= 5 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 4 %} "active" {% else %} {% endif %}>
 						<span class="step">V</span>
 						<span class="title">
 							Send Report to Operational Manager
@@ -124,18 +124,18 @@
 
 									<tbody>
 										{% set count = 0 %}
-										{% for taskUser in taskUsers %}
+										{% for taskAssign in taskAssigns %}
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
-												<td>{{ taskUser.taskAssign.performerTask.name }}</td>
-												<td>{{ taskUser.taskAssign.performerTask.weight  }}</td>
+												<td>{{ taskAssign.performerTask.name }}</td>
+												<td>{{ taskAssign.performerTask.weight  }}</td>
 
-												<td>{{ taskUser.taskAssign.startDate  }}</td>
-												<td>{{ taskUser.taskAssign.endDate }}</td>
-												<td>{{ taskUser.taskAssign.timeGap}}</td>
+												<td>{{ taskAssign.startDate  }}</td>
+												<td>{{ taskAssign.endDate }}</td>
+												<td>{{ taskAssign.timeGap}}</td>
 												<td>
-													<table class="table-bordered table-hover" style="margin-top:10px;">
+													<table class="table table-bordered table-responsive-xg table-hover">
 														<tr>
 															<th>Measurement
 															</th>
@@ -143,36 +143,39 @@
 															</th>
 															<th>Measurement Description
 															</th>
+															<th>Expected Value
+															</th>
 															<th>Report Value
+															</th>
+															<th>Accomplished Value
 															</th>
 
 														</tr>
 														{% for taskAccomplishment in taskAccomplishments   %}
 															<tr>
-																{% if taskUser.id == taskAccomplishment.taskUser.id  %}
+																{% if taskAssign.id == taskAccomplishment.taskAssign.id  %}
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId[]" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.expectedValue }}</td>
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
-																	{% if taskAccomplishment.reportedValue %}
-																		{% set percent = 0 %}
-																		{% set percent =  (taskAccomplishment.reportedValue * 100) /  taskAccomplishment.reportedValue %}
-																		{% if percent > 100  %}
-																			<td class="badge badge-primary">{{ taskAccomplishment.reportedValue }}</td>
-																		{% elseif percent <= 100  and percent >= 75 %}
-																			<td class="badge badge-success">{{ taskAccomplishment.reportedValue }}</td>
-																		{% elseif percent <= 74  and percent >= 50 %}
+																	<td>{{ taskAccomplishment.expectedValue }}</td>
+																	<td>{{ taskAccomplishment.reportedValue }}</td>
 
-																			<td class="badge badge-warning">{{ taskAccomplishment.reportedValue }}</td>
-																		{% else %}
-																			<td class="badge badge-danger">{{ taskAccomplishment.reportedValue }}</td>
-																		{% endif %}
+																	{% set percent = 0 %}
+																	{% set percent =  (taskAccomplishment.accomplishmentValue * 100) /  taskAccomplishment.accomplishmentValue %}
+																	{% if percent > 100  %}
+																		<td class="badge badge-primary">{{ taskAccomplishment.accomplishmentValue }}</td>
+																	{% elseif percent <= 100  and percent >= 75 %}
+																		<td class="badge badge-success">{{ taskAccomplishment.accomplishmentValue }}</td>
+																	{% elseif percent <= 74  and percent >= 50 %}
 
-
+																		<td class="badge badge-warning">{{ taskAccomplishment.accomplishmentValue }}</td>
 																	{% else %}
-																		<td><input type="text" name="reportValue[]" class="form-conrol" required></td>
+																		<td class="badge badge-danger">{{ taskAccomplishment.accomplishmentValue }}</td>
 																	{% endif %}
+
+
 																{% endif %}
 															</tr>
 														{% endfor %}
@@ -182,7 +185,7 @@
 												</td>
 											</tr>
 										</td>
-										<td>{{ taskUser.note}}</td>
+										<td>{{ taskAssign.challenge}}</td>
 									</tbody>
 								</tr>
 

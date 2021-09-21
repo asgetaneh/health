@@ -29,10 +29,6 @@ class TaskUser
      */
     private $assignedTo;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TaskAccomplishment::class, mappedBy="taskUser")
-     */
-    private $taskAccomplishments;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -73,7 +69,6 @@ class TaskUser
 
     public function __construct()
     {
-        $this->taskAccomplishments = new ArrayCollection();
         $this->staffEvaluationBehaviorCriterias = new ArrayCollection();
     }
 
@@ -106,35 +101,7 @@ class TaskUser
         return $this;
     }
 
-    /**
-     * @return Collection|TaskAccomplishment[]
-     */
-    public function getTaskAccomplishments(): Collection
-    {
-        return $this->taskAccomplishments;
-    }
-
-    public function addTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
-    {
-        if (!$this->taskAccomplishments->contains($taskAccomplishment)) {
-            $this->taskAccomplishments[] = $taskAccomplishment;
-            $taskAccomplishment->setTaskUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTaskAccomplishment(TaskAccomplishment $taskAccomplishment): self
-    {
-        if ($this->taskAccomplishments->removeElement($taskAccomplishment)) {
-            // set the owning side to null (unless already changed)
-            if ($taskAccomplishment->getTaskUser() === $this) {
-                $taskAccomplishment->setTaskUser(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
     public function getStatus(): ?int
     {

@@ -5,16 +5,20 @@ namespace App\Controller;
 use App\Helper\DomPrint;
 use App\Entity\Delegation;
 use App\Entity\Evaluation;
+use App\Entity\PerformerTask;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
 use App\Entity\StaffEvaluationBehaviorCriteria;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
+use App\Entity\TaskMeasurement;
 use App\Entity\TaskUser;
+use App\Entity\User;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
 use App\Helper\AmharicHelper;
 use App\Helper\EmailHelper;
+use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
@@ -121,7 +125,7 @@ class TaskAssignController extends AbstractController
         $taskUsers = $taskUserRepository->findBy(['assignedTo' => $taskUserId, 'status' => 0]);
 
         foreach ($taskUsers as $taskUser) {
-            
+
             $fullName = $taskUser->getAssignedTo()->getUserInfo()->getFullName();
             $quarter = $taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
             $principalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
@@ -289,9 +293,9 @@ class TaskAssignController extends AbstractController
     /**
      * @Route("/taskAssign", name="task_assign")
      */
-    public function performerFetch(Request $request,PlanningAccomplishmentRepository $planningAccomplishmentRepository, UserRepository $userRepository,
-        PerformerTaskRepository $performerTaskRepository,
-        TaskMeasurementRepository $taskMeasurementRepository
+    public function performerFetch(
+        Request $request,
+        PerformerTaskRepository $performerTaskRepository,OperationalPlanningAccomplishmentRepository $operationalPlanningAccomplishmentRepository
     ) {
         $em = $this->getDoctrine()->getManager();
 
@@ -322,8 +326,8 @@ class TaskAssignController extends AbstractController
 
             $task = $tasksss[$key];
             $taskId = $performerTaskRepository->find($task);
-            $initibativeId = $taskId->getPlanAcomplishment()->getSuitableInitiative()->getId();
-            $planId = $taskId->getPlanAcomplishment();
+            $initibativeId = $taskId->getOperationalPlanningAcc()->getOperationalSuitable()->getId();
+            $planId = $taskId->getOperationalPlanningAcc();
             $taskAssign->setPerformerTask($taskId);
             // if ($startDate > $endDate) {
             //     $this->addFlash('danger', 'Start Date must be less than from End Date !');
@@ -346,79 +350,50 @@ class TaskAssignController extends AbstractController
             $taskAssign->setTimeGap($timeGap);
             //    dd($expectedValues[$key]);
             $taskAssign->setExpectedValue($expectedValue);
+            $taskAssign->setStatus(0);
+            $user = $em->getRepository(User::class)->find($users[$key]);
+            $taskAssign->setAssignedTo($user);
             if ($expectedValueSocial) {
                 # code...
 
                 $taskAssign->setExpectedValueSocial($expectedValueSocial);
             }
-            $taskAssign->setStatus(1);
             $em->persist($taskAssign);
             $em->flush();
-            foreach ($users as $key => $valuet) {
-                $taskUser = new TaskUser();
-                $userId = $userRepository->find($valuet);
-                //    dd($userId);
-                $taskUser->setAssignedTo($userId);
-                $taskUser->setTaskAssign($taskAssign);
-                $taskUser->setStatus(0);
-                $taskUser->setType(1);
-
-                $em->persist($taskUser);
-                // $this->mail(
-                //     $request,
-                //     $userId,
-                //     $taskId,
-                //     "your Assigend to performer this Task " . $userId->getUserInfo(),
-                //     '10.140.10.19'
-                // );
-                $em->flush();
 
 
-                foreach ($measurementids as  $key => $valuea) {
-                    $taskAccoplishment = new TaskAccomplishment();
-                    $measurementid = $measurementids[$key];
-                    // $measurementDescription = $measurementDescriptions[$key];
-                    $taskmeasurementId = $taskMeasurementRepository->find($valuea);
-                    $taskAccoplishment->setTaskUser($taskUser);
-                    $taskAccoplishment->setMeasurement($taskmeasurementId);
-                    $taskAccoplishment->setExpectedValue($expectedValue);
-                    if ($expectedValueSocial) {
-                        $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
-                    }
-                    $taskAccoplishment->setMeasureDescription($measurementDescriptions);
-                    $em->persist($taskAccoplishment);
-                    $em->flush();
+            foreach ($measurementids as  $key => $valuea) {
+                $taskAccoplishment = new TaskAccomplishment();
+                $measurementid = $measurementids[$key];
+                // $measurementDescription = $measurementDescriptions[$key];
+                $taskmeasurementId = $em->getRepository(TaskMeasurement::class)->find($valuea);
+                $taskAccoplishment->setTaskAssign($taskAssign);
+                $taskAccoplishment->setMeasurement($taskmeasurementId);
+                $taskAccoplishment->setExpectedValue($expectedValue);
+                if ($expectedValueSocial) {
+                    $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
                 }
-
-                $em->persist($taskAssign);
+                $taskAccoplishment->setMeasureDescription($measurementDescriptions);
+                $em->persist($taskAccoplishment);
                 $em->flush();
             }
+
+            $em->persist($taskAssign);
+            $em->flush();
+
             $em->persist($taskAssign);
 
             $em->flush();
         }
         $em->flush();
-        $planId = $planningAccomplishmentRepository->find($planId);
+        // dd($planId);
+        $planId = $operationalPlanningAccomplishmentRepository->find($planId->getId());
+        // dd($planId);
         if ($planId->getStatus() < 2) {
             $planId->setStatus(2);
             $em->flush();
         }
-        // $aproverlist = $this->approverRepository->findAll();
-        // return dd($aproverlist);
-
-        // foreach ($aproverlist as $list) {
-
-        //     if ($list->getRole() != 'dns') {
-        //         // dump($list);
-
-        //         $this->mail($request, $list->getApprover()->getEmail(), $res, "Task Assined By " . $this->getUser()->getUserInfo()->getFullName(), '10.140.10.19');
-        //     }
-        //     // dump($list);
-
-        //     // $this->mail($request, 'lemi.diriba@ju.edu.et', $res, "Serever Request by " . $this->getUser()->getUserInfo()->getFullName(), 'sms.ju.edu.et');
-        // }
-
-
+      
 
         $this->addFlash('success', 'Task Assignd successfully !');
         return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);

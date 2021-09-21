@@ -87,29 +87,29 @@
 								</thead>
 								<tbody>
 									{% set count = 0 %}
-									{% for task_User in taskUsers %}
+									{% for taskAssign in taskAssigns %}
 										<tr>
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
-											<td>{{ task_User.taskAssign.performerTask.name }}</td>
-											<td>{{ task_User.taskAssign.startDate  }}</td>
-											<td>{{ task_User.taskAssign.endDate  }}</td>
-											<td>{{ task_User.taskAssign.timeGap }}</td>
-											<td>{{ task_User.taskAssign.performerTask.weight }}</td>
+											<td>{{ taskAssign.performerTask.name }}</td>
+											<td>{{ taskAssign.startDate  }}</td>
+											<td>{{ taskAssign.endDate  }}</td>
+											<td>{{ taskAssign.timeGap }}</td>
+											<td>{{ taskAssign.performerTask.weight }}</td>
 											<td>
-												{% if task_User.taskAssign.expectedValueSocial %}
+												{% if taskAssign.expectedValueSocial %}
 													Male=
 												{% endif %}
-												{{task_User.taskAssign.expectedValue}}
-												{% if task_User.taskAssign.expectedValueSocial %}
-													Female={{task_User.taskAssign.expectedValueSocial}}
+												{{taskAssign.expectedValue}}
+												{% if taskAssign.expectedValueSocial %}
+													Female={{taskAssign.expectedValueSocial}}
 												{% endif %}
 											</td>
 
 											<td>
 												<form action="{{path('performer_task_show')}}" method="post" class="d-inline-block">
-													<input type="hidden" name="taskUser" value="{{task_User.id}}">
-													{% if task_User.status  %}
+													<input type="hidden" name="taskUser" value="{{taskAssign.id}}">
+													{% if taskAssign.status  %}
 														<button class="btn btn-primary btn-sm">
 															Show
 														</button>
@@ -120,8 +120,8 @@
 														</button>
 													{% endif %}
 												</form>
-												{% if task_User.status == 0 %}
-													<button type="button" name="reject" data-performertask="{{task_User.id}}" class="btn btn-sm btn-danger show ">
+												{% if taskAssign.status == 0 %}
+													<button type="button" name="reject" data-performertask="{{taskAssign.id}}" class="btn btn-sm btn-danger show ">
 														Reject</button>
 
 												{% endif %}
