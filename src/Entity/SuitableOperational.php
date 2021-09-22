@@ -34,6 +34,11 @@ class SuitableOperational
      */
     private $planValue;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $denimonator;
+
     public function __construct()
     {
         $this->planValue = new ArrayCollection();
@@ -94,6 +99,18 @@ class SuitableOperational
                 $planValue->setOperationalSuitable(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDenimonator(): ?int
+    {
+        return $this->denimonator;
+    }
+
+    public function setDenimonator(?int $denimonator): self
+    {
+        $this->denimonator = $denimonator;
 
         return $this;
     }

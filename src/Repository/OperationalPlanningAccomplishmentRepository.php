@@ -47,4 +47,22 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
         ;
     }
     */
+     public function findDuplication($operationalSuitable, $attrib = null, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        $qb
+            ->andWhere('pa.operationalSuitable = :plan')
+            ->andWhere('pa.quarter = :quarter')
+            ->setParameter('plan', $operationalSuitable)
+            ->setParameter('quarter', $quarter);
+        if ($attrib) {
+            $qb->andWhere('pa.socialAttribute = :attrib')
+
+
+                ->setParameter('attrib', $attrib);
+        }
+
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

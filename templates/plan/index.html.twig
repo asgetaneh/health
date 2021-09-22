@@ -331,12 +331,14 @@ $('.select2').css('width', '90%').select2({allowClear: false})
 
 $('.addPlan').click(function () {
 var $initiativeId = $(this).attr('data-id');
+var $operationalOffice= $(this).attr('data-operational');
 $.ajax({
 url: "{{ path('plan_add') }}",
 method: "post",
 data: {
 
-id: $initiativeId
+id: $initiativeId,
+operational: $operationalOffice
 
 
 },
@@ -358,7 +360,11 @@ var y = $(event.relatedTarget).text();
 // previous tab
 
 });
-
+$('.show-details-btn').on('click', function(e) {
+					e.preventDefault();
+					$(this).closest('tr').next().toggleClass('open');
+					$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+				});
 
 var myTable = $('#dynamic-table').DataTable({
 bAutoWidth: false,
@@ -479,5 +485,6 @@ $(window).on("popstate", function () {
 var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
 $("a[href='" + anchor + "']").tab("show");
 });
+
 </script>
 {% endblock %} 

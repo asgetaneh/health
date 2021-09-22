@@ -10,6 +10,8 @@ use App\Entity\InitiativeAttribute;
 use App\Entity\InitiativeBehaviour;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\Objective;
+use App\Entity\OperationalOffice;
+use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\Plan;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningPhase;
@@ -18,6 +20,7 @@ use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Entity\Strategy;
 use App\Entity\SuitableInitiative;
+use App\Entity\SuitableOperational;
 use App\Form\PlanType;
 use App\Repository\InitiativeRepository;
 use App\Repository\PlanRepository;
@@ -207,6 +210,7 @@ class PlanController extends AbstractController
 
         if ($request->request->get('id')) {
 
+            $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operational'));
             $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findwithPlan($request->request->get('id'));
             $plan = $em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableInitiative);
 
@@ -216,7 +220,8 @@ class PlanController extends AbstractController
             $res = $this->renderView("plan/plan.modal.html.twig", [
                 "suitableInitiative" =>  $suitableInitiative, 'quarters' => $quarters,
                 'initiative' => $initiative,
-                'plans' => $plan
+                'plans' => $plan,
+                'operational' => $operationaloffice
             ]);
             return new Response($res);
         }
@@ -285,7 +290,7 @@ class PlanController extends AbstractController
 
                 'placeholder' => 'Choose an principal office',
             ])
-      
+
             ->getForm();
         $filterForm->handleRequest($request);
 
@@ -338,11 +343,33 @@ class PlanController extends AbstractController
 
 
             $planInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
+            $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operationalOffice'));
+
+            $isexist = true;
+            $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
+
+            if (!$operationalSuitable) {
+                $operationalSuitable = new SuitableOperational();
+                $operationalSuitable->setSuitableInitiative($planInitiative);
+                $operationalSuitable->setOperationalOffice($operationaloffice);
+                $isexist = false;
+                 if (!$isexist) {
+                $em->persist($operationalSuitable);
+            }
+            $em->flush();
+            }
+            
+
+          
+            
+            
+
+
 
             if ($request->request->get('denominator')) {
-                $planInitiative->setDenominator($request->request->get('denominator'));
-                $em->persist($planInitiative);
+                $operationalSuitable->setDenimonator($request->request->get('denominator'));
             };
+           
 
             if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
 
@@ -360,18 +387,18 @@ class PlanController extends AbstractController
                 foreach ($planningquarters as $planningquarter) {
                     foreach ($socalAttributes as $key => $socalAttribute) {
 
-                        $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, $socalAttribute, $planningquarter);
+                        $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, $socalAttribute, $planningquarter);
                         $edit = true;
                         if (!$planAcomplishment) {
-                            $planAcomplishment = new PlanningAccomplishment();
+                            $planAcomplishment = new OperationalPlanningAccomplishment();
                             $edit = false;
                         }
 
 
-                        $planAcomplishment->setSuitableInitiative($planInitiative);
+                        $planAcomplishment->setOperationalSuitable($operationalSuitable);
                         $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
                         if (isset($planValues[$i])) {
-                            $planAcomplishment->setPlanValue( $planValues[$i]);
+                            $planAcomplishment->setPlanValue($planValues[$i]);
                         }
                         $planAcomplishment->setQuarter($planningquarter);
                         if ($edit == false) {
@@ -388,14 +415,15 @@ class PlanController extends AbstractController
 
 
                 foreach ($planningquarters as $key => $planningquarter) {
-                    $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, null, $planningquarter);
+                  $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, null, $planningquarter);
                     if (!$planAcomplishment)
-                        $planAcomplishment = new PlanningAccomplishment();
+                        $planAcomplishment = new OperationalPlanningAccomplishment();
 
-                    $planAcomplishment->setSuitableInitiative($planInitiative);
+                    $planAcomplishment->setOperationalSuitable($operationalSuitable);
                     $planAcomplishment->setPlanValue($planValues[$key]);
                     $planAcomplishment->setQuarter($planningquarter);
                     $em->persist($planAcomplishment);
+                    $em->flush();
                 }
 
                 $em->flush();
@@ -499,25 +527,15 @@ class PlanController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="plan_new", methods={"GET","POST"})
+     * @Route("/operationalplan", name="operational_plan", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function operationalplan(Request $request): Response
     {
-        $plan = new Plan();
-        $form = $this->createForm(PlanType::class, $plan);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($plan);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('plan_index');
-        }
-
-        return $this->render('plan/new.html.twig', [
-            'plan' => $plan,
-            'form' => $form->createView(),
+        return $this->render('plan/operational_plan.html.twig', [
+            // 'plan' => $plan,
+            // 'form' => $form->createView(),
         ]);
     }
 
