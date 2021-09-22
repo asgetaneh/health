@@ -152,8 +152,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
         // dd($user);
         return $this->createQueryBuilder('s')
 
-            ->leftJoin('s.PlanAcomplishment', 'pl')
-            ->andWhere('pl.suitableInitiative = :initiative')
+            ->leftJoin('s.operationalPlanningAcc', 'pl')
+            ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableinitiative)
