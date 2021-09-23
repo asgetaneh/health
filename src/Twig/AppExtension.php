@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Facade\General;
+use App\Entity\SuitableInitiative;
+
 
 
 
@@ -46,6 +48,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
             new TwigFunction('getTaskStatusAssigned', [$this, 'getTaskStatusAssigned']),
             new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
+            new TwigFunction('getYearlyPlan', [$this, 'getYearlyPlan']),
 
 
 
@@ -72,5 +75,43 @@ class AppExtension extends AbstractExtension
 
         $req = General::getTaskStatusSend($this->entityManager, $id, $office);
         return ($req);
+    }
+    public  function getYearlyPlan($suitable)
+    {
+
+
+        $yearlplan = 0;
+        if (count($suitable->getPlanningAccomplishments()) > 0) {
+
+            if ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 0) {
+
+                $yearlplan = $suitable->getPlanningAccomplishments()[0]->getPlanValue();
+                return $yearlplan;
+            } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 1) {
+
+                $yearlplan = array_sum($this->getPlanArray($suitable->getPlanningAccomplishments()));
+                return $yearlplan;
+            } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 2) {
+                $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
+                rsort($array);
+
+                return  $array[0];
+            } else {
+                $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
+                sort($array);
+
+                return  $array[0];
+            }
+            return $yearlplan;
+        } else return "-";
+    }
+
+    private  function getPlanArray($plans)
+    {
+        $plansArray = array();
+        foreach ($plans as $key => $plan) {
+            array_push($plansArray, $plan->getPlanValue());
+        }
+        return $plansArray;
     }
 }

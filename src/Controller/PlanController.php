@@ -179,6 +179,7 @@ class PlanController extends AbstractController
         $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findByoffice($principaloffice, $planningyear);
         return $suitableInitiatives;
     }
+
     private function removeSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear, $removableId)
     {
         $removableInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $removableId]);
@@ -212,7 +213,9 @@ class PlanController extends AbstractController
 
             $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operational'));
             $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findwithPlan($request->request->get('id'));
-            $plan = $em->getRepository(PlanningAccomplishment::class)->findBySuitable($suitableInitiative);
+            $planInitiative=$em->getRepository(SuitableInitiative::class)->find($request->request->get('id'));
+             $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
+            $plan = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable'=> $operationalSuitable]);
 
             $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
 
@@ -235,6 +238,7 @@ class PlanController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $planningyear=$em->getRepository(PlanningYear::class)->findLast();
 
         if (!$offices)
             $offices = $em->getRepository(PrincipalOffice::class)->findPrincipalOffice($this->getUser());
@@ -243,7 +247,7 @@ class PlanController extends AbstractController
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
-                'multiple' => true,
+                'multiple' => false,
                 'placeholder' => 'Choose an planning year',
                 'required' => false,
 
@@ -303,11 +307,11 @@ class PlanController extends AbstractController
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
-                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findAll();
+                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findBy(['planningYear'=> $planningyear]);
                 $initiatives = $em->getRepository(Initiative::class)->findAll();
             } else
                 $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
-            $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
+                $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
         }
 
 
@@ -325,6 +329,68 @@ class PlanController extends AbstractController
             'filterform' => $filterForm->createView()
 
         ]);
+    }
+    private function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
+    {
+        $suitableoperationals = $em->getRepository(SuitableOperational::class)->findBy(['suitableInitiative' => $planInitiative]);
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($planInitiative->getId());
+
+
+        if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
+            $socalAttributes = $em->getRepository(InitiativeAttribute::class)->findAll();
+           
+            foreach ($socalAttributes as $socalAttribute) {
+                $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateSocialAttrQuartertPlan($planInitiative, $socalAttribute);
+                    //   if($socalAttribute->getId()==2)
+                    //    dd($plans);
+
+                foreach ($quarters as $key => $quarter) {
+                    $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, $socalAttribute, $quarter);
+                    $isexist = true;
+                    if (!$planAcomplishment) {
+                        $planAcomplishment = new PlanningAccomplishment();
+                        $planAcomplishment->setQuarter($quarter);
+                        $planAcomplishment->setSocialAttribute($socalAttribute);
+                        $planAcomplishment->setSuitableInitiative($suitableInitiative);
+                        $isexist = false;
+                    }
+                    $planAcomplishment->setPlanValue($plans[$key][1]);
+                    if (!$isexist)
+                        $em->persist($planAcomplishment);
+
+
+                    $em->flush();
+                }
+            
+            }
+            
+        } else {
+
+            $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateQuartertPlan($planInitiative);
+
+
+
+            foreach ($quarters as $key => $quarter) {
+                $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, null, $quarter);
+                $isexist = true;
+                if (!$planAcomplishment) {
+                    $planAcomplishment = new PlanningAccomplishment();
+                    $planAcomplishment->setQuarter($quarter);
+                    $planAcomplishment->setSuitableInitiative($suitableInitiative);
+                    $isexist = false;
+                }
+                $planAcomplishment->setPlanValue($plans[$key][1]);
+                if (!$isexist)
+                    $em->persist($planAcomplishment);
+
+
+                $em->flush();
+            }
+            $em->flush();
+            $em->clear();
+        }
+        return;
     }
 
     /**
@@ -349,27 +415,28 @@ class PlanController extends AbstractController
             $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
 
             if (!$operationalSuitable) {
+
                 $operationalSuitable = new SuitableOperational();
                 $operationalSuitable->setSuitableInitiative($planInitiative);
                 $operationalSuitable->setOperationalOffice($operationaloffice);
                 $isexist = false;
-                 if (!$isexist) {
                 $em->persist($operationalSuitable);
+                $em->flush();
             }
-            $em->flush();
-            }
-            
 
-          
-            
-            
+
+
+
+
 
 
 
             if ($request->request->get('denominator')) {
                 $operationalSuitable->setDenimonator($request->request->get('denominator'));
             };
-           
+
+
+
 
             if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
 
@@ -386,11 +453,14 @@ class PlanController extends AbstractController
 
                 foreach ($planningquarters as $planningquarter) {
                     foreach ($socalAttributes as $key => $socalAttribute) {
+                        $edit = true;
+
 
                         $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, $socalAttribute, $planningquarter);
-                        $edit = true;
+                        $isplanexist = true;
                         if (!$planAcomplishment) {
                             $planAcomplishment = new OperationalPlanningAccomplishment();
+                            $isplanexist = false;
                             $edit = false;
                         }
 
@@ -410,25 +480,36 @@ class PlanController extends AbstractController
                     }
                 }
                 $em->flush();
+
+                $em->clear();
             } else {
 
 
 
                 foreach ($planningquarters as $key => $planningquarter) {
-                  $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, null, $planningquarter);
-                    if (!$planAcomplishment)
+                    // $planAcomplishment = null;
+
+                    $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, null, $planningquarter);
+                    $isplanexist = true;
+                    if (!$planAcomplishment) {
                         $planAcomplishment = new OperationalPlanningAccomplishment();
+                        $isplanexist = false;
+                    }
 
                     $planAcomplishment->setOperationalSuitable($operationalSuitable);
                     $planAcomplishment->setPlanValue($planValues[$key]);
                     $planAcomplishment->setQuarter($planningquarter);
-                    $em->persist($planAcomplishment);
+                    if (!$isplanexist) {
+                        $em->persist($planAcomplishment);
+                    }
                     $em->flush();
                 }
 
                 $em->flush();
+                $em->clear();
             }
 
+            $this->calculatePrincipalOfficePlan($em, $planInitiative);
 
             $suitableplan = $this->findSuitableInitiative($em, $planInitiative->getPrincipalOffice(), $planInitiative->getPlanningYear());
             $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);

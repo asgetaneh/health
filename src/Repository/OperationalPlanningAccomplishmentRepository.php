@@ -65,4 +65,39 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+     public function calculateQuartertPlan($operationalSuitable)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        $qb
+            ->select('sum(pa.planValue) ')
+            ->join('pa.operationalSuitable' ,'os')
+            ->andWhere('os.suitableInitiative = :si')
+            ->setParameter('si', $operationalSuitable)
+            // ->setParameter('quarter', $quarter)
+            ;
+        // if ($attrib) {
+        //     $qb->andWhere('pa.socialAttribute = :attrib')
+
+
+        //         ->setParameter('attrib', $attrib);
+        // }
+
+
+        return $qb->GroupBy('pa.quarter')->orderBy('pa.quarter','ASC')->getQuery()->getArrayResult();
+    }
+     public function calculateSocialAttrQuartertPlan($operationalSuitable,$socialAttribute)
+    {
+        $qb = $this->createQueryBuilder('pa');
+        $qb
+            ->select('sum(pa.planValue) ')
+            ->join('pa.operationalSuitable' ,'os')
+            ->andWhere('os.suitableInitiative = :si')
+            ->setParameter('si', $operationalSuitable)
+            ->andWhere('pa.socialAttribute = :attrib')
+            ->setParameter('attrib', $socialAttribute);
+           
+
+
+        return $qb->groupBy('pa.socialAttribute')->addGroupBy('pa.quarter')->orderBy('pa.quarter','ASC')->getQuery()->getArrayResult();
+    }
 }

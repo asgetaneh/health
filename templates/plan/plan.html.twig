@@ -80,7 +80,7 @@
 										{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
 									</div>
 								</div>
-								
+
 								<div class="col-md-3">
 									<div class="form-group" style="margin-top:25px;">
 										<input type="submit" class="btn btn-primary btn-sm " value="Filter">
@@ -137,221 +137,50 @@
 
 
 									<th>plan</th>
-									<th>Accomplishment</th>
+									<th>Accomp.</th>
 									<th>plan</th>
-									<th>Accomplishment</th>
+									<th>Accomp.</th>
 									<th>plan</th>
-									<th>Accomplishment</th>
+									<th>Accomp.</th>
 									<th>plan</th>
-									<th>Accomplishment</th>
+									<th>Accomp.</th>
 									<th>plan</th>
-									<th>Accomplishment</th>
+									<th>Accomp.</th>
 
 
 								</tr>
 							</thead>
 							<tbody>
 								{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+								{% for suitable in suitableplans %}
 
 
-								{% for initiative in initiatives %}
-									{% if is_granted('vw_all_pln') %}
+									{# {% if suitable.initiative.initiativeBehaviour.code == 0 %}
 
-										{% set siz = initiative.suitableInitiatives|length + 1 %}
-									{% else %}
-										{% set office = [] %}
-										{% for item in app.user.principalManagers %}
-											{% set office = office|merge([item.principalOffice])%}
-										{% endfor %}
+										{% set yearlyplan = suitable.planningAccomplishments|filter(plan => plan.quarter.slug==1).planValue %}
+									{% endif %} #}
+									{# {% set yearlyplan = getYearlyPlan(suitable) %} #}
 
-										{% set principaloffices = office %}
-										{% set siz = 0 %}
-										{% for principaloffice in principaloffices %}
-											{% set siz = siz + initiative.suitableInitiatives|filter(suitable => suitable.principalOffice.id == principaloffice.id)|length %}
 
-										{% endfor %}
-										{% set siz = siz+1 %}
-
-									{% endif %}
 									<tr>
-
-										<td rowspan="{{siz}}" style="vertical-align:middle;">{{ loop.index}}</td>
-
-
-										<td rowspan="{{siz}}" style="vertical-align:middle;">{{initiative|title }}</td>
-										<td rowspan="{{siz}}" style="vertical-align:middle;">{{initiative.initiativeBehaviour|title }}</td>
-
-
+										<td>{{loop.index}}</td>
+										<td>{{suitable.initiative}}</td>
+										<td>{{suitable.initiative.initiativeBehaviour}}</td>
+										<td>{{suitable.principalOffice}}</td>
+										<td>{{suitable.planningYear}}</td>
+										<td>{{ getYearlyPlan( suitable,'year')}}</td>
 									</tr>
 
-
-									{% for suitableplan in initiative.suitableInitiatives %}
-										<tr>
-											<td>{{suitableplan.principalOffice}}</td>
-											<td>{{suitableplan.planningYear}}</td>
+								{% endfor %}
 
 
-											{% if initiative.initiativeBehaviour.code == 0 %}
+							</tbody>
+						</table>
+						{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
 
-												{% if suitableplan.initiative.socialAtrribute|length > 0 %}
-
-													<td>
-														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
-
-															{{plan.socialAttribute.name|first|title}}
-															:
-															{{plan.planValue}}
-
-
-														{% endfor %}
-													</td>
-													<td>
-														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
-
-															{{plan.socialAttribute.name|first|title}}
-															:
-															{{plan.accompValue??"_"}}
-
-
-														{% endfor %}
-													</td>
-
-												{% else %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
-														<td>
-
-															{{plan.planValue}}
-
-														</td>
-														<td>
-
-															{{plan.accompValue??"_"}}
-
-														</td>
-													{% endfor %}
-
-												{% endif %}
-											{% elseif  suitableplan.initiative.initiativeBehaviour.code == 1  %}
-
-												{% for attribute in suitableplan.initiative.socialAtrribute %}
-													{% set yearplan = suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
-													{% set accomp = suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.accompValue) %}
-
-													<td>{{attribute.name|first|title}}:{{yearplan ??"___" }}</td>
-													<td>{{attribute.name|first|title}}:{{accomp ??"___" }}</td>
-
-												{% else %}
-													{% set yearplan = suitableplan.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
-													{% set accomp = suitableplan.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.accompValue) %}
-													<td>{{yearplan ??"___" }}</td>
-													<td>{{accomp ??"___" }}</td>
-
-
-												{% endfor %}
-											{% elseif  suitableplan.initiative.initiativeBehaviour.code == 2  %}
-
-
-												{% for attribute in suitableplan.initiative.socialAtrribute %}
-													{% set maxValue = 0 %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
-														{% set maxValue = max(plan.planValue,maxValue) %}
-
-													{% endfor %}
-													<td>{{attribute.name|first|title}}:
-														{{maxValue ??"___" }}</td>
-													<td>{{attribute.name|first|title}}:
-														{{maxValue ??"___" }}</td>
-												{% else %}
-													{% set maxValue = 0 %}
-													{% for plan in suitableplan.planningAccomplishments %}
-														{% set maxValue = max(plan.planValue,maxValue) %}
-
-													{% endfor %}
-													<td>
-														{{maxValue == 0 ?"___" :maxValue}}</td>
-													<td>
-														{{maxValue == 0 ?"___" :maxValue}}</td>
-												{% endfor %}
-											{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3  %}
-
-												{% for attribute in suitableplan.initiative.socialAtrribute %}
-													{% set maxValue = suitableplan.initiative.maximumValue %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
-														{% set maxValue = min(plan.planValue,maxValue) %}
-
-													{% endfor %}
-													<td>{{attribute.name|first|title}}:
-														{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
-													<td>{{attribute.name|first|title}}:
-														{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
-												{% else %}
-													{% set maxValue = suitableplan.initiative.maximumValue %}
-													{% for plan in suitableplan.planningAccomplishments %}
-														{% set maxValue = min(plan.planValue,maxValue) %}
-
-													{% endfor %}
-													<td>{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
-													<td>{{maxValue == suitableplan.initiative.maximumValue ?"___": maxValue }}</td>
-												{% endfor %}
-
-
-											{% endif %}
-											{% for quarter in quarters %}
-
-
-												{% if suitableplan.initiative.socialAtrribute|length > 0 %}
-													<td>
-														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
-
-															{{plan.socialAttribute.name|first|title}}
-															:
-															{{plan.accompValue??"_"}}
-
-
-														{% endfor %}
-													</td>
-													<td>
-														{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
-
-
-															{{plan.socialAttribute.name|first|title}}
-															:
-															{{plan.accompValue??"_"}}
-
-
-														{% endfor %}
-													</td>
-												{% else %}
-													{% for plan in suitableplan.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
-
-
-														<td>{{plan.planValue }}</td>
-														<td>{{plan.accompValue??"_"}}</td>
-
-													{% endfor %}
-												{% endif %}
-
-
-											{% endfor %}
-
-										</tr>
-
-
-									{% endfor %}
-								</tr>
-
-							{% else %}
-								<tr>
-									<td colspan="8">no records found</td>
-								</tr>
-							{% endfor %}
-
-						</tbody>
-					</table>
-					{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
-
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}

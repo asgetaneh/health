@@ -129,7 +129,7 @@
 									<td>{{suitableplan.initiative|title }}</td>
 									<td>{{suitableplan.initiative.weight }}</td>
 									{# <td>{{suitableplan.initiative.baseline }}</td> #}
-
+								
 
 									<td>
 										{# {% for behavior in suitableplan.initiative.initiativeBehaviour %} #}
@@ -237,34 +237,7 @@
 										</td>
 									{% endfor %}
 
-									<td>
-
-										{% if suitableplan.planningAccomplishments|length > 0 %}
-											{% if is_granted('edt_pln') %}
-
-
-												<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="edit plan" class="addPlan btn btn-warning btn-sm">
-
-													<span class="glyphicon glyphicon-edit"></span>
-
-
-												</a>
-											{% endif %}
-										{% else %}
-											{% if is_granted('add_pln') %}
-
-												{# 
-																								<a href="#" data-id="{{suitableplan.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
-												
-												
-																									<span class="glyphicon glyphicon-plus"></span>
-												
-																								</a> #}
-											{% endif %}
-
-										{% endif %}
-
-									</td>
+								
 
 
 								</tr>
@@ -288,25 +261,145 @@
 													{% for operational in pricipaloffice.operationalOffices %}
 														{% set operationsuitablelength = suitableplan.suitableOperationals|filter(ops=> ops.operationalOffice.id == operational.id)|length %}
 
+
 														<tr>
 															<td>{{loop.index}}</td>
 															<td>{{operational}}</td>
-															<td>--</td>
-															{% for operationsuitable in suitableplan.suitableOperationals|filter(ops=> ops.operationalOffice.id == operational.id) %}
+
+															{% for operationsuitable in suitableplan.suitableOperationals|filter( operationsuitable => operationsuitable.operationalOffice.id == operational.id)|slice(0, 1) %}
+																{% set yearlyplan = 0 %}
+
+																{% if suitableplan.initiative.initiativeBehaviour.code == 0 %}
+
+																	{% set yearlyplan = operationsuitable.planValue|filter(plan => plan.quarter.slug==1).planValue %}
 
 
-																{% for plan in operationsuitable.planValue %}
+																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 1 %}
+
+																	{% set yearlyplan = operationsuitable.planValue|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 2 %}
+
+																	{% set yearplan = {} %}
+																	{% for plan in operationsuitable.planValue|filter(plan => plan.planValue > 0) %}
+																		{% set planvalue = plan.planValue %}
+																		{% set yearplan = yearplan|merge({planvalue })  %}
+
+																	{% endfor %}
+																	{% set yearlyplan = max(yearplan) %}
+																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3 %}
+
+																	{% set yearplan = {} %}
+																	{% for plan in operationsuitable.planValue %}
+																		{% set planvalue = plan.planValue %}
+																		{% set yearplan = yearplan|merge({planvalue })  %}
+
+																	{% endfor %}
+																	{% set yearlyplan = min(yearplan) %}
+
+																{% endif %}
+
+																<td>
+																	{% if  suitableplan.initiative.socialAtrribute|length > 0 %}
+
+																		{% if suitableplan.initiative.initiativeBehaviour.code == 0  %}
+
+																			{% for plan in operationsuitable.planValue|filter(plan => plan.quarter.slug == 1) %}
+
+																				<p>{{plan.socialAttribute.name|first|title}}
+																					:
+																					{{plan.planValue}}</p>
 
 
-																	<td>{{plan.planValue}}</td>
-                                                                    {% else %}
-																<td>-</td>
-																<td>-</td>
-																<td>-</td>
-																<td>-</td>
+																			{% endfor %}
 
-																{% endfor %}
+																		{% elseif suitableplan.initiative.initiativeBehaviour.code == 1 %}
+
+																			{% for attribute in suitableplan.initiative.socialAtrribute %}
+
+																				{% set yearplan = operationsuitable.planValue|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+
+																				<p>{{attribute.name|first|title}}:{{yearplan ??"___" }}</p>
+
+																			{% endfor %}
+																		{% elseif suitableplan.initiative.initiativeBehaviour.code == 2 %}
+
+																			{% for attribute in suitableplan.initiative.socialAtrribute %}
+
+																				{% set yearplan = [] %}
+																				{% for plan in operationsuitable.planValue|filter(plan => plan.socialAttribute.id == attribute.id and plan.planValue > 0) %}
+																					{% set planvalue = plan.planValue %}
+																					{% set yearplan = yearplan|merge({planvalue })  %}
+																					
+
+
+																				{% endfor %}
+
+																				<p>{{attribute.name|first|title}}:{{max(yearplan) }}</p>
+
+																			{% endfor %}
+																		{% elseif suitableplan.initiative.initiativeBehaviour.code == 3 %}
+
+																			{% for attribute in suitableplan.initiative.socialAtrribute %}
+
+																				{% set yearplan = { } %}
+																				{% for plan in operationsuitable.planValue|filter(plan => plan.socialAttribute.id == attribute.id) %}
+																					{% set planvalue = plan.planValue %}
+																					{% set yearplan = yearplan|merge({planvalue })  %}
+
+																				{% endfor %}
+
+																				<p>{{attribute.name|first|title}}:{{min(yearplan) }}</p>
+
+																			{% endfor %}
+
+
+																		{% endif %}
+
+																	{% else %}
+																		{{yearlyplan}}
+
+																	{% endif %}
+																</td>
+
+
+																{% if suitableplan.initiative.socialAtrribute|length > 0 %}
+																	{% for quarter in quarters %}
+																		<td>
+																			{% for plan in operationsuitable.planValue|filter(plan => plan.quarter.id == quarter.id) %}
+
+																				<p>{{plan.socialAttribute.name|first|title}}
+																					:
+																					{{plan.planValue}}</p>
+																			{% else %}
+																				<td>-</td>
+																				<td>-</td>
+																				<td>-</td>
+																				<td>-</td>
+
+
+																			{% endfor %}
+																		</td>
+																	{% endfor %}
+
+																{% else %}
+
+
+																	{% for plan in operationsuitable.planValue %}
+
+
+																		<td>{{plan.planValue}}</td>
+																	{% else %}
+																		<td>-</td>
+																		<td>-</td>
+																		<td>-</td>
+																		<td>-</td>
+																		<td>-</td>
+
+																	{% endfor %}
+																{% endif %}
+
 															{% else %}
+																<td>-</td>
 																<td>-</td>
 																<td>-</td>
 																<td>-</td>
@@ -336,22 +429,19 @@
 														</tr>
 													{% endfor %}
 												</tbody>
-											</table>
-										</div>
+											</tbody>
+										</table>
 									</td>
 								</tr>
-							{% else %}
-								<tr>
-									<td colspan="8">no records found</td>
-								</tr>
-							{% endfor %}
-
+							</td>
 						</tbody>
-					</table>
-					<div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitableplans) }}</div>
-
+					</tr>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
+			</tbody>
+		</td>
+	</tr>
+{% else %}
+	<tr>
+		<td colspan="8">no records found</td>
+	</tr>
+{% endfor %}</tbody></table><div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitableplans) }}</div></div></div></div></div></div>

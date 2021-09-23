@@ -21,6 +21,7 @@ class General
     //  dd($count);
         return $count;
     }
+
      public static function getTaskStatusAssigned(EntityManager $entityManager,$id,$office)
     {
 
@@ -38,7 +39,5 @@ class General
         return $count;
     }
     
-    
-   
     
 }

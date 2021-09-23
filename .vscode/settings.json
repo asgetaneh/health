@@ -1,9 +1,8 @@
 {
     "editor.definitionLinkOpensInPeek": true,
-    "editor.detectIndentation": false,
     "editor.codeLens": false,
     "editor.multiCursorPaste": "full",
-    "editor.renderControlCharacters": true,
+    "editor.renderControlCharacters": false,
     "editor.tabCompletion": "on",
     "editor.wrappingIndent": "indent",
     "editor.wrappingStrategy": "advanced",
@@ -22,8 +21,11 @@
     },
     "diffEditor.wordWrap": "off",
     "editor.acceptSuggestionOnEnter": "smart",
-    "editor.autoIndent": "advanced",
+    "editor.autoIndent": "brackets",
     "[html]": {
         "editor.defaultFormatter": "mblode.twig-language"
-    }
+    },
+    "editor.padding.bottom": 3,
+    "editor.padding.top": 3,
+    "editor.suggest.shareSuggestSelections": true
 }
