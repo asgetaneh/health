@@ -39,10 +39,7 @@ class OperationalSuitableInitiative
      */
     private $quarter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=PlanningAccomplishment::class, inversedBy="operationalSuitableInitiatives")
-     */
-    private $PlanningAcomplishment;
+    
 
     /**
      * @ORM\ManyToOne(targetEntity=InitiativeAttribute::class, inversedBy="operationalSuitableInitiatives")
@@ -50,9 +47,16 @@ class OperationalSuitableInitiative
     private $social;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SuitableInitiative::class, inversedBy="operationalSuitableInitiatives")
+     * @ORM\ManyToOne(targetEntity=OperationalPlanningAccomplishment::class, inversedBy="operationalSuitableInitiatives")
      */
-    private $suitableInitiative;
+    private $operationalPlanning;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SuitableOperational::class, inversedBy="operationalSuitableInitiatives")
+     */
+    private $operationalSuitable;
+
+   
 
     public function getId(): ?int
     {
@@ -109,17 +113,6 @@ class OperationalSuitableInitiative
         return $this;
     }
 
-    public function getPlanningAcomplishment(): ?PlanningAccomplishment
-    {
-        return $this->PlanningAcomplishment;
-    }
-
-    public function setPlanningAcomplishment(?PlanningAccomplishment $PlanningAcomplishment): self
-    {
-        $this->PlanningAcomplishment = $PlanningAcomplishment;
-
-        return $this;
-    }
 
     public function getSocial(): ?InitiativeAttribute
     {
@@ -133,15 +126,29 @@ class OperationalSuitableInitiative
         return $this;
     }
 
-    public function getSuitableInitiative(): ?SuitableInitiative
+    public function getOperationalPlanning(): ?OperationalPlanningAccomplishment
     {
-        return $this->suitableInitiative;
+        return $this->operationalPlanning;
     }
 
-    public function setSuitableInitiative(?SuitableInitiative $suitableInitiative): self
+    public function setOperationalPlanning(?OperationalPlanningAccomplishment $operationalPlanning): self
     {
-        $this->suitableInitiative = $suitableInitiative;
+        $this->operationalPlanning = $operationalPlanning;
 
         return $this;
     }
+
+    public function getOperationalSuitable(): ?SuitableOperational
+    {
+        return $this->operationalSuitable;
+    }
+
+    public function setOperationalSuitable(?SuitableOperational $operationalSuitable): self
+    {
+        $this->operationalSuitable = $operationalSuitable;
+
+        return $this;
+    }
+
+    
 }

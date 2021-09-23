@@ -59,10 +59,16 @@ class OperationalPlanningAccomplishment
      */
     private $socialAttribute;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="operationalPlanning")
+     */
+    private $operationalSuitableInitiatives;
+
     public function __construct()
     {
         $this->performerTasks = new ArrayCollection();
         $this->performerTasksSocial = new ArrayCollection();
+        $this->operationalSuitableInitiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +204,36 @@ class OperationalPlanningAccomplishment
     public function setSocialAttribute(?InitiativeAttribute $socialAttribute): self
     {
         $this->socialAttribute = $socialAttribute;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setOperationalPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getOperationalPlanning() === $this) {
+                $operationalSuitableInitiative->setOperationalPlanning(null);
+            }
+        }
 
         return $this;
     }

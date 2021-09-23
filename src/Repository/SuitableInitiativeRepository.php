@@ -153,4 +153,15 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('id', $id);
         return $qb->getQuery()->getOneOrNullResult();
     }
+    public function finds($initiative)
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb
+           
+         ->andwhere('i.initiative = :initiative')
+           
+            ->setParameter('initiative', $initiative);       
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+    
 }

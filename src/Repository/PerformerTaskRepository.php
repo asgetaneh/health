@@ -39,7 +39,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('s')
             ->leftJoin('s.operationalPlanningAcc', 'pa')
-            ->leftJoin('pa. ', 'su')
+            ->leftJoin('pa.operationalSuitable ', 'su')
             ->select('count(s.id)')->andWhere('su.id =  :id')
             ->andWhere('s.status =  0')
             ->andWhere('s.operationalOffice =  :office')

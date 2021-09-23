@@ -209,7 +209,7 @@ class PerformerTaskController extends AbstractController
             $id = $request->request->get('taskAccomplishmentId');
             $taskAccomplishment = $taskAccomplishmentRepository->find($id);
             $taskAccomplishment->setReportedValue($reportValue);
-            if ($reportValue) {
+            if ($reportValueSocial) {
 
                 $taskAccomplishment->setReportedValueSocial($reportValueSocial);
             }
@@ -258,7 +258,7 @@ class PerformerTaskController extends AbstractController
         ]);
     }
     /**
-     * @Route("/list/show", name="performer_task_list_show", methods={"GET","POST"})
+     * @Route("/list_show", name="performer_task_list_show", methods={"GET","POST"})
      */
     public function listShow(Request $request, TaskAssignRepository $taskAssignRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
@@ -273,7 +273,7 @@ class PerformerTaskController extends AbstractController
     }
     
      /**
-     * @Route("/skip/challenge", name="task_challenge_skip")
+     * @Route("/skip_challenge", name="task_challenge_skip")
      */
     public function skipChallenge(Request $request, TaskAssignRepository $taskAssignRepository)
     {
@@ -317,7 +317,7 @@ class PerformerTaskController extends AbstractController
         return $this->redirectToRoute('performer_task_index');
     }
     /**
-     * @Route("/weight/edit", name="performer_task_value_edit")
+     * @Route("/weight_edit", name="performer_task_value_edit")
      */
     public function performerTaskEdit(Request $request, TaskAssignRepository $taskAssignRepository, PerformerTaskRepository $performerTaskRepository)
     {
@@ -371,7 +371,7 @@ class PerformerTaskController extends AbstractController
                 //   dd(( 100-$countWeight)+$weight);
                 if ($total > 100) {
                     $this->addFlash('danger', 'Weight must be less than 100 !');
-                    return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+                    return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getOperationalPlanningAcc()->getOperationalSuitable()->getId()]);
                 }
                 $performerTask->setWeight($weight);
             }
@@ -381,7 +381,7 @@ class PerformerTaskController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Weight Updated successfully !');
 
-            return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+            return $this->redirectToRoute('operational_task_index', ['id' => $performerTask->getOperationalPlanningAcc()->getOperationalSuitable()->getId()]);
         }
         // $id = $request->request->get('consumableGroupId');
         return new JsonResponse($performerTaskRepository->findPerformerTaskEdit($pid));
