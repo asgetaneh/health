@@ -30,6 +30,7 @@ use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,15 +40,38 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 /**
- * @Route("/task/assign")
+ * @Route("/task_assign")
  */
 class TaskAssignController extends AbstractController
 {
+/**
+     * @Route("/excel", name="excel")
+ */
+public function xslx(Request $request)
+{
+   $file = $request->files->get('file'); // get the file from the sent request
+   
+   $fileFolder = __DIR__ . '/../../public/';  //choose the folder in which the uploaded file will be stored
+ dd($file);
+   $filePathName = md5(uniqid()) . $file->getClientOriginalName();
+   dd($filePathName);
+      // apply md5 function to generate an unique identifier for the file and concat it with the file extension  
+            try {
+                $file->move($fileFolder, $filePathName);
+            } catch (FileException $e) {
+                dd($e);
+            }
+    $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file 
+    $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
+    $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
+ dd($sheetData);
 
+}
     //   private $params;
     //     // private $approverRepository;
     //     private $logger;
@@ -244,16 +268,12 @@ class TaskAssignController extends AbstractController
                 'fullName' => $fullName
 
             ]);
-
             $dompdf->loadHtml($res);
             $dompdf->setPaper('A5', 'Landscape');
-
-            // Render the HTML as PDF
             $dompdf->render();
             $dompdf->stream("Evaluation.pdf", [
                 "Attachment" => false
             ]);
-            //  dd($evaluations);
         }
 
         return $this->render(
@@ -262,12 +282,9 @@ class TaskAssignController extends AbstractController
                 'form' => $form->createView(),
                 'visible' => 0,
                 'staffCriterias' => $staffCriterias,
-
             ]
-
         );
     }
-
     /**
      * @Route("/new", name="task_assign_new", methods={"GET","POST"})
      */
@@ -295,7 +312,8 @@ class TaskAssignController extends AbstractController
      */
     public function performerFetch(
         Request $request,
-        PerformerTaskRepository $performerTaskRepository,OperationalPlanningAccomplishmentRepository $operationalPlanningAccomplishmentRepository
+        PerformerTaskRepository $performerTaskRepository,
+        OperationalPlanningAccomplishmentRepository $operationalPlanningAccomplishmentRepository
     ) {
         $em = $this->getDoctrine()->getManager();
 
@@ -322,22 +340,19 @@ class TaskAssignController extends AbstractController
         $measurementDescriptions = $request->request->get("measurementDescription");
 
         foreach ($tasks as $key => $value) {
+        foreach ($users as $keyu => $valueu) {
+
             $taskAssign = new TaskAssign();
 
-            $task = $tasksss[$key];
+            $task = $tasks[$key];       
+           $userId =  $users[$keyu];
             $taskId = $performerTaskRepository->find($task);
             $initibativeId = $taskId->getOperationalPlanningAcc()->getOperationalSuitable()->getId();
             $planId = $taskId->getOperationalPlanningAcc();
             $taskAssign->setPerformerTask($taskId);
-            // if ($startDate > $endDate) {
-            //     $this->addFlash('danger', 'Start Date must be less than from End Date !');
-            //     return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
-            // }
             if ($timeGap > 6) {
                 $this->addFlash('danger', 'Contengency Date be less than 7 !');
                 return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
-                // dd(1);
-                # code...
             }
             $taskAssign->setAssignedAt(new \DateTime());
             $taskAssign->setAssignedBy($user);
@@ -351,20 +366,16 @@ class TaskAssignController extends AbstractController
             //    dd($expectedValues[$key]);
             $taskAssign->setExpectedValue($expectedValue);
             $taskAssign->setStatus(0);
-            $user = $em->getRepository(User::class)->find($users[$key]);
+
+            $user = $em->getRepository(User::class)->find($userId);
             $taskAssign->setAssignedTo($user);
             if ($expectedValueSocial) {
-                # code...
-
                 $taskAssign->setExpectedValueSocial($expectedValueSocial);
             }
             $em->persist($taskAssign);
-            $em->flush();
-
-
-            foreach ($measurementids as  $key => $valuea) {
+            foreach ($measurementids as  $keym => $valuea) {
                 $taskAccoplishment = new TaskAccomplishment();
-                $measurementid = $measurementids[$key];
+                $measurementid = $measurementids[$keym];
                 // $measurementDescription = $measurementDescriptions[$key];
                 $taskmeasurementId = $em->getRepository(TaskMeasurement::class)->find($valuea);
                 $taskAccoplishment->setTaskAssign($taskAssign);
@@ -375,16 +386,15 @@ class TaskAssignController extends AbstractController
                 }
                 $taskAccoplishment->setMeasureDescription($measurementDescriptions);
                 $em->persist($taskAccoplishment);
-                $em->flush();
             }
 
-            $em->persist($taskAssign);
-            $em->flush();
 
             $em->persist($taskAssign);
 
             $em->flush();
         }
+                $em->flush();
+}
         $em->flush();
         // dd($planId);
         $planId = $operationalPlanningAccomplishmentRepository->find($planId->getId());
@@ -393,7 +403,7 @@ class TaskAssignController extends AbstractController
             $planId->setStatus(2);
             $em->flush();
         }
-      
+
 
         $this->addFlash('success', 'Task Assignd successfully !');
         return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);

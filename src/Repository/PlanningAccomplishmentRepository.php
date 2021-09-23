@@ -140,20 +140,7 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    public function findplanAccwithoutSocial($suitable, $principal, $quarter)
-    {
-        $qb = $this->createQueryBuilder('pa')
-            ->leftJoin('pa.suitableInitiative', 'si')
-            ->andwhere('pa.suitableInitiative = :suitin')
-            ->andwhere('si.principalOffice = :principal')
-            ->andwhere('pa.quarter = :quarter')
-            ->setParameter('suitin', $suitable)
-            ->setParameter('quarter', $quarter)
-
-            ->setParameter('principal', $principal);
-
-        return $qb->getQuery()->getResult();
-    }
+   
     public function findByQuarter($suitable, $quarter)
     {
         $qb = $this->createQueryBuilder('pa')

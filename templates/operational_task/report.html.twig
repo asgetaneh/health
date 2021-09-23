@@ -35,6 +35,11 @@
 					<div class="widget-main padding-16">
 						<div class="row">
 							<div class="search-area well col-xs-12">
+								<form action="{{path('principal_office_report')}}" method="post">
+									<button type="submit" name="excel"  value="excel" class="btn btn-default no-border btn-sm">
+                                    Excel
+									</button>
+								</form>
 
 								<div class="row" style="margin-bottom:10px;">
 									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
