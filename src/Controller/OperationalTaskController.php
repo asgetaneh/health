@@ -44,6 +44,7 @@ use App\Entity\TaskAssign;
 use App\Entity\TaskUser;
 use App\Entity\User;
 use App\Helper\AmharicHelper;
+use App\Helper\Helper;
 use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
@@ -255,15 +256,16 @@ class OperationalTaskController extends AbstractController
             $principal = $operation->getOperationalOffice()->getPrincipalOffice();
             $suitPri = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principal]);
             foreach ($sheetData as $keys => $values) {
-                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A']);
-                foreach ($suitPri as $key => $value) {
+                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'],$principal);
+                // dd($su);
+                foreach ($su as $key => $value) {
                     //  dd($value);
-                    if ($su == $value) {
+                    // if ($su[$key] == $value) {
                         $operSuitable = $em->getRepository(SuitableOperational::class)->findBy(['operationalOffice' => $operation->getOperationalOffice(), 'suitableInitiative' => $value]);
-                        if ($operSuitable) {
-                            $this->addFlash('danger', ' Plan Already Done');
-                            return $this->redirectToRoute('suitable_initiative_list');
-                        }
+                        // if ($operSuitable) {
+                        //     $this->addFlash('danger', ' Plan Already Done');
+                        //     return $this->redirectToRoute('suitable_initiative_list');
+                        // }
                         $operationalSui = new SuitableOperational();
                         $operationalSui->setSuitableInitiative($value);
                         $operationalSui->setOperationalOffice($operation->getOperationalOffice());
@@ -287,10 +289,26 @@ class OperationalTaskController extends AbstractController
                             $em->persist($operationalplan);
                             $em->flush();
                         }
-                    }
-                    # code...
+                    // }
                 }
             }
+            // dd($suitPri,$sheetData);
+            foreach ($sheetData as $keys => $values) {
+                // dump($values);
+                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'], $principal);
+                // dump($su);
+                foreach ($su as $key => $value) {
+                    //  dd($value,$su);
+                    // if ($su == $value) {
+                        $help = Helper::calculatePrincipalOfficePlan($em, $value);
+                    // }
+                }
+            }
+                            // dd(1);
+
+
+            // $this->calculatePrincipalOfficePlan($em, $planInitiative);
+
             $this->addFlash('success', ' Plan Uploaded Successfully');
             return $this->redirectToRoute('suitable_initiative_list');
             //$user=$this->getUser()->getUserInfo();
@@ -341,10 +359,14 @@ class OperationalTaskController extends AbstractController
             // dd(1);
             $suitableInitiativesprincipal = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principalOffice]);
             $spreadsheet = new Spreadsheet();
+
             foreach (range('A', 'E') as $columnID) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
             }
             $sheet = $spreadsheet->getActiveSheet();
+            $spreadsheet->getActiveSheet()->getStyle('A1:A3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
+
+
             $sheet->setCellValue('A1', 'Initiative Code');
             $sheet->setCellValue('B1', 'Initiative Name');
             $sheet->setCellValue('C1', 'Q1');
