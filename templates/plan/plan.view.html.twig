@@ -75,7 +75,13 @@
 
 				</div>
 				<div class="table-responsive">
+<form action="{{path('principal_office_report')}}" method="post">
+									<button type="submit" name="excel"  value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
+                                  							<i class=" fa fa-print"></i>
 
+								    Excel
+									</button>
+								</form>
 					<form action="{{path('plan_print')}}" method="post">
 						<input type="hidden" name="planyear" value="{{planyear.id}}">
 						<input type="hidden" name="office" value="{{pricipaloffice.id}}">

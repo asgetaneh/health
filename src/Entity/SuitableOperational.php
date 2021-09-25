@@ -44,6 +44,11 @@ class SuitableOperational
      */
     private $operationalSuitableInitiatives;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->planValue = new ArrayCollection();
@@ -147,6 +152,18 @@ class SuitableOperational
                 $operationalSuitableInitiative->setOperationalSuitable(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
