@@ -62,13 +62,16 @@
 				<tr>
 					<th>#</th>
 					<th>{% trans %}Initiative{% endtrans %}</th>
+										<th>KPI</th>
+										<th>Objective</th>
+										<th>Goal</th>
 					<th>{% trans %}Initiative Behaviour{% endtrans %}</th>
 					<th>{% trans %}Initiative Category{% endtrans %}</th>
 
 
 					{# <th>MinValue</th> #}
 					{# <th>MaxValue</th> #}
-					<th>KPI</th>
+					
 					{# <th>Objective</th> #}
 					<th>{% trans %}Social{% endtrans %}</th>
 					<th>
@@ -95,13 +98,20 @@
 							{{ initiative }}
 						</td>
 						<td>
+							{{ initiative.keyPerformanceIndicator|title }}
+						</td>
+						<td>
+							{{ initiative.keyPerformanceIndicator.strategy.objective|title }}
+						</td>
+						<td>
+							{{ initiative.keyPerformanceIndicator.strategy.objective.goal|title }}
+						</td>
+						<td>
 							{{initiative.initiativeBehaviour }}
 						</td>
 						{# <td>{{ initiative.initiativeBehaviour.code }}</td> #}
 						<td>{{ initiative.category }}</td>
-						<td>
-							{{ initiative.keyPerformanceIndicator|title }}
-						</td>
+						
 
 						<td>
 							{% for item in initiative.socialAtrribute  %}

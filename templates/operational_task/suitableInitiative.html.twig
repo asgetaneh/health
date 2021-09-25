@@ -128,6 +128,7 @@
 												{% endfor %}
 											</td>
 											<td>
+                                			{% if operationalSuitable.status %}
 
 												{% if getTaskStatus(operationalSuitable.id,office) %}
 													{# {{getTaskStatus(suitableInitiative.id,office)}} #}
@@ -139,14 +140,17 @@
 														Create
 													</a>
 												{% endif %}
+												{% endif %}
 											</td>
 
 											<td>
+                                			{% if operationalSuitable.status %}
 
 												<a href="{{ path('acomplishment_task_detail', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-success btn-sm">
 													Report
 												</a>
-												{# {% endif %} #}
+
+												 {% endif %} 
 											</td>
 											<td>
 
@@ -183,7 +187,9 @@
 						</div>
 
 					</div>
-					{% if not operationalSuitables %}
+
+
+					 {% if not data %} 
 
 						{{ form_start(uploadPlan,{'attr': {'role':'form'}}) }}<div class="row">
 							<div class="form-group col-md-3 ">
@@ -193,7 +199,8 @@
 							<button type="submit" name="stock-request" class="btn btn-primary ">Upload Plan</button>
 						</div>
 						{{ form_end(uploadPlan) }}
-					{% endif %}
+
+					 {% endif %} 
 				</div>
 			</div>
 		</div>
