@@ -18,6 +18,20 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
     {
         parent::__construct($registry, OperationalPlanningAccomplishment::class);
     }
+     public function findplanAccwithoutSocial($operationalSuitable, $operational, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            ->leftJoin('pa.operationalSuitable', 'si')
+            ->andwhere('pa.operationalSuitable = :suitin')
+            ->andwhere('si.operationalOffice = :operational')
+            ->andwhere('pa.quarter = :quarter')
+            ->setParameter('suitin', $operationalSuitable)
+            ->setParameter('quarter', $quarter)
+
+            ->setParameter('operational', $operational);
+
+        return $qb->getQuery()->getResult();
+    }
 
     // /**
     //  * @return OperationalPlanningAccomplishment[] Returns an array of OperationalPlanningAccomplishment objects

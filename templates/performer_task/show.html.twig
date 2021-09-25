@@ -115,7 +115,7 @@
 											<th>Weight</th>
 											<th>StartDate</th>
 											<th>EndDate</th>
-											<th>Contingency Days</th>
+											<th>Penality Days</th>
 											<th>Measurement</th>
 											<th>Challenge</th>
 											<th>Narrative</th>
@@ -140,9 +140,10 @@
 													<table class="table table-bordered table-responsive-xg table-hover">
 														<tr>
 															<th></th>
-															<th>Expected Value
-															</th>
+															
 															<th>Measurement Description
+															</th>
+                                                            <th>Expected Value
 															</th>
 															<th>Report Value
 															</th>
@@ -156,7 +157,9 @@
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
-																	<td>
+																	
+																	<td>{{ taskAccomplishment.measureDescription }}</td>
+                                                                    <td>
 																		{% if social == 1 %}
 																			Male=
 																		{% endif %}
@@ -166,7 +169,6 @@
 																			Female={{ taskAccomplishment.expectedValueSocial }}
 																		{% endif %}
 																	</td>
-																	<td>{{ taskAccomplishment.measureDescription }}</td>
 																	{% if taskAccomplishment.reportedValue %}
 																		<td>
 																			{% if social == 1 %}

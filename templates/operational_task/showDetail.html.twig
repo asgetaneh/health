@@ -119,7 +119,7 @@
 											<th>Weight</th>
 											<th>StartDate</th>
 											<th>EndDate</th>
-											<th>TimeGap</th>
+											<th>Penality Days</th>
 											<th>Chalenge</th>
 											<th>Narrative Report</th>
 											<th>Measurement</th>
@@ -186,7 +186,7 @@
 																		{{ taskAccomplishment.reportedValue }}
 																		{% if social == 1 %}
 
-																			Female={{ taskAccomplishment.reportedValue }}
+																			Female={{ taskAccomplishment.reportedValueSocial }}
 																		{% endif %}
 																	</td>
 																	{% if taskAccomplishment.accomplishmentValue %}

@@ -28,24 +28,34 @@
 
 
 				<div class="form-group">
-					{{ form_label(form.name) }}
+					<lable class=" control-label no-padding-right">
+						<b>
+							Task Name
+						</b>
+					</lable>
 					{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
 
 				</div>
 				<div class="form-group">
-					{{ form_label(form.description) }}
+					<lable class=" control-label no-padding-right">
+						<b>
+							Task Description
+						</b>
+					</lable>
 					{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
 
 				</div>
 
 
 				<div class="form-group">
-					{{ form_label(form.weight) }}
+					<lable class=" control-label no-padding-right">
+						<b>
+							Task Weight
+						</b>
+					</lable>
 					{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
 
 				</div>
-
-			
 
 
 			</div>
@@ -133,7 +143,7 @@
 
 							<lable class=" control-label no-padding-right">
 								<b>
-									Contingency Days (Max={{maxContengencyTime}})
+									Penality Days (20% deduction at each ill performance)  (Max={{maxContengencyTime}})
 									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
