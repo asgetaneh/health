@@ -291,8 +291,10 @@ class InitiativeController extends AbstractController
                         <tr >
                             <th width="10">#</th>
                             <th width="20">Initiative</th>
+                            	<th>KPI</th>
+										<th>Objective</th>
+										<th>Goal</th>
                          <th width="15">Initiative Behaviour</th>
-                            <th width="15">KPI</th>
                             <th width="45">Principal Office</th>
                             <th width="15">Weight</th>
                               <th width="5">Initiative Category</th>
@@ -304,8 +306,10 @@ class InitiativeController extends AbstractController
         foreach ($initiativestotal as $initiative) {
 
             $c += 1;
-            $table .= '<tr><td>' . $c . '</td><td> ' . $initiative->getName() . '</td><td>' . $initiative->getInitiativeBehaviour() . '</td>
-            <td> ' . $initiative->getKeyPerformanceIndicator() . '</td><td>';
+            $table .= '<tr><td>' . $c . '</td><td> ' . $initiative->getName() . '</td><td>' . $initiative->getKeyPerformanceIndicator() . '</td>
+            <td>' . $initiative->getKeyPerformanceIndicator()->getStrategy()->getObjective() . '</td>
+            <td>' . $initiative->getKeyPerformanceIndicator()->getStrategy()->getObjective()->getGoal() . '</td>
+            <td> ' . $initiative->getInitiativeBehaviour() . '</td><td>';
             $count=0;
             foreach ($initiative->getPrincipalOffice() as $office) {
                 $count+=1;
