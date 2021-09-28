@@ -233,6 +233,59 @@ class PlanController extends AbstractController
         }
         return new Response("done");
     }
+
+    /**
+     * @Route("/recover", name="plan_recover")
+     */
+    public function Recover(Request $request,PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+           if ($request->query->get('office') && $request->query->get('planyear')) {
+                $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
+            $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
+          $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+           
+            $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
+          if ($request->query->get('nonsuitable')) {
+                    $removableId = $request->query->get('initiative');
+
+                    $this->removeSuitableInitiative($em, $principaloffice, $planningyear,  $removableId);
+                    $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
+                    //  return $this->redirectToRoute('plan_index');
+                } else {
+
+
+                    $selectedInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $request->query->get('initiative')]);
+                    $countinitiative = count($selectedInitiatives);
+
+                    foreach ($selectedInitiatives as  $selectedInitiative) {
+
+                        $existinitiative = $em->getRepository(SuitableInitiative::class)->findDuplication($principaloffice, $selectedInitiative, $planningyear);
+                        if (!$existinitiative) {
+                            $suitableInitiative = new SuitableInitiative();
+                            $suitableInitiative->setPrincipalOffice($principaloffice);
+                            $suitableInitiative->setInitiative($selectedInitiative);
+                            $suitableInitiative->setPlanningYear($planningyear);
+
+                            $em->persist($suitableInitiative);
+                            $em->flush();
+                        }
+                    }
+                    if($request->query->get('initiative'))
+                    $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
+                }
+           }
+             return $this->render('plan/initiative.html.twig', [
+
+              
+               
+               
+                'pricipaloffice' => $principaloffice,
+                'planyear' => $planningyear,
+                'recoverInitiatives' => $recoverData
+
+            ]);
+    }
     /**
      * @Route("/principalplan", name="plan_principal")
      */

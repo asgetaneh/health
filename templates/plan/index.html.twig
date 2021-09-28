@@ -17,12 +17,7 @@
 						</a>
 					</li>
 
-					<li class="">
-						<a data-toggle="tab" href="#messages" aria-expanded="false" class="lead recover">
-							<strong>Recover</strong>
-
-						</a>
-					</li>
+				
 
 
 				</ul>
@@ -182,6 +177,8 @@
 
 													<div>
 														<button type="submit">Print</button>
+														<a  href="{{path('plan_recover',{'planyear':planyear.id,'office':pricipaloffice.id})}}" aria-expanded="false" class="lead recover">
+							<strong>Recover</strong></a>
 													</div>
 													<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 														<thead>
@@ -295,18 +292,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="messages" class="tab-pane fade">
-					<div class="row">
-						{% if recoverInitiatives is defined %}
-
-
-							{{ include('plan/initiative.html.twig') }}
-
-						{% endif %}
-
-
-					</div>
-				</div>
+				
 			</div>
 		</div>
 	</div>
