@@ -564,6 +564,7 @@ class PlanController extends AbstractController
             }
 
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
+            $operationalPlans=$em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableplan = $this->findSuitableInitiative($em, $planInitiative->getPrincipalOffice(), $planInitiative->getPlanningYear());
             $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);
@@ -581,7 +582,8 @@ class PlanController extends AbstractController
                 'pricipaloffice' => $planInitiative->getPrincipalOffice(),
                 'planyear' => $planInitiative->getPlanningYear(),
                 'quarters' => $planningquarters,
-                'recoverInitiatives' => $recoverData
+                'recoverInitiatives' => $recoverData,
+                'operationalPlans'=>$operationalPlans
 
             ]);
         }
