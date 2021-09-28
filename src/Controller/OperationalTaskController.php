@@ -328,8 +328,15 @@ class OperationalTaskController extends AbstractController
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
         $operationalOffice =  $operation->getOperationalOffice()->getId();
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        $currentMonths = AmharicHelper::getCurrentMonth($em);
+        $currentMonths=explode('-', $currentMonths);
+
         if ($currentQuarter == 1) {
             $currentYear = $currentYear + 1;
+            if ($currentMonths[1] == "01") {
+            $currentYear = $currentYear - 1;
+
+            }
         }
         $operationalSuitables = $em->getRepository(SuitableOperational::class)->findSuitableInitiatve($operationalOffice, $currentYear);
         $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findAll();
@@ -349,6 +356,26 @@ class OperationalTaskController extends AbstractController
 
 
         ]);
+    }
+     /**
+     * @Route("/approve_operational_plan", name="approve_operational_plan")
+     */
+    public function approveOperationalPlan(Request $request)
+    {
+        // dd(1);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $suitableInId = $request->request->get('suitableInId');
+        $operationalOfId = $request->request->get('operationalOfId');
+
+        $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOperationalId($suitableInId,$operationalOfId);
+        // dd($operationalSuitable);
+        foreach ($operationalSuitable as  $value) {
+        $value->setStatus(1);
+        }
+        $em->flush();
+        return new JsonResponse($operationalSuitable);
     }
     
       /**
@@ -600,7 +627,7 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/suitableInitiative_principal_list", name="suitable_initiative_principal_list")
      */
-    public function suitableInitiativeprincipal(Request $request, OperationalManagerRepository $operationalManagerRepository, SuitableInitiativeRepository $suitableInitiativeRepository, PrincipalManagerRepository $principalManagerRepository): Response
+    public function suitableInitiativeprincipal(Request $request,   SuitableInitiativeRepository $suitableInitiativeRepository, PrincipalManagerRepository $principalManagerRepository): Response
     {
         $user = $this->getUser();
         $social = 0;
