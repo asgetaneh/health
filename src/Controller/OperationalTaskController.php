@@ -377,23 +377,6 @@ class OperationalTaskController extends AbstractController
         return new JsonResponse($operationalSuitable);
     }
     
-      /**
-     * @Route("/operational_suitable_approve", name="operational_suitable_approve")
-     */
-    public function operationalSuitableapprove(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $operationalSuit = $request->request->get('operationalSui');
-                dd($operationalSuit);
-
-        $operationalSuitable = $em->getRepository(SuitableOperational::class)->find($operationalSuit);
-                        dd($operationalSuitable);
-
-        $operationalSuitable->setStatus(1);
-        $em->flush();
-        return new JsonResponse($operationalSuitable);
-    }
     /**
      * @Route("/principal_report", name="principal_office_report", methods={"GET","POST"})
      */
@@ -406,6 +389,7 @@ class OperationalTaskController extends AbstractController
             // dd(1);
             $suitableInitiativesprincipal = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principalOffice]);
             $spreadsheet = new Spreadsheet();
+            
 
             foreach (range('A', 'E') as $columnID) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
@@ -420,6 +404,8 @@ class OperationalTaskController extends AbstractController
             $Af='A'.'3';
             // dd($Af);
             $sheet = $spreadsheet->getActiveSheet();
+                        $sheet->setTitle("you can not delete any column");
+
 
             $spreadsheet->getActiveSheet()->getStyle('A1:A'.$count.'')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
 
