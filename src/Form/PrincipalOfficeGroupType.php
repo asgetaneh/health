@@ -2,29 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\PrincipalOffice;
+use App\Entity\PrincipalOfficeGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PrincipalOfficeType extends AbstractType
+class PrincipalOfficeGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
-            ->add('officeGroup')
-          
-            
             ->add('description')
-           
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PrincipalOffice::class,
+            'data_class' => PrincipalOfficeGroup::class,
         ]);
     }
 }

@@ -362,8 +362,17 @@ var y = $(event.relatedTarget).text();
 });
 $('.show-details-btn').on('click', function(e) {
 					e.preventDefault();
+						
+					$(this).closest('tr').next('tr').siblings('tr.open').toggleClass('open');
+					
 					$(this).closest('tr').next().toggleClass('open');
+					
+				
+					//$(this).closest('tr').not().next().toggleClass('open');
+					//$('tr.detail-row').not().toggleClass('open');
 					$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+						
+					//$(this).closest('tr').siblings().removeClass('open')
 				});
 
 var myTable = $('#dynamic-table').DataTable({

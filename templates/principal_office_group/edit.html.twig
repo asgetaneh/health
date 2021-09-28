@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PrincipalOfficeGroup{% endblock %}
+
+{% block body %}
+  <div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+        <div class="widget-box widget-color-blue" id="widget-box-8">
+        <div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>Edit Principal Office Group</strong>
+					</h5>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							<a href="{{ path('principal_office_group_index') }}" class="btn btn-warning">back to list</a>
+
+						</span>
+					</div>
+				</div>
+                <div class="widget-body">
+                <div class="widget-main padding-16">
+    {{ include('principal_office_group/_form.html.twig', {'button_label': 'Update'}) }}
+
+   
+
+    {{ include('principal_office_group/_delete_form.html.twig') }}
+     </div>
+     </div>
+     </div>
+     </div>
+      </div>
+{% endblock %}

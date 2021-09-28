@@ -69,6 +69,11 @@ class PrincipalOffice
      */
     private $suitableInitiatives;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PrincipalOfficeGroup::class, inversedBy="principalOffices")
+     */
+    private $officeGroup;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
@@ -289,6 +294,18 @@ class PrincipalOffice
                 $suitableInitiative->setPrincipalOffice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOfficeGroup(): ?PrincipalOfficeGroup
+    {
+        return $this->officeGroup;
+    }
+
+    public function setOfficeGroup(?PrincipalOfficeGroup $officeGroup): self
+    {
+        $this->officeGroup = $officeGroup;
 
         return $this;
     }

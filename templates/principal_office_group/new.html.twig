@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PrincipalOfficeGroup{% endblock %}
+
+{% block body %}
+     <div class="row">
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+        <div class="widget-box widget-color-blue" id="widget-box-8">
+        <div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>New Principal Office Group</strong>
+					</h5>
+					<div class="widget-toolbar">
+						<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							{# <strong>{{principal_offices.getTotalItemCount()}}</strong> #}
+
+						</span>
+					</div>
+				</div>
+                <div class="widget-body">
+                <div class="widget-main padding-16">
+
+    {{ include('principal_office_group/_form.html.twig') }}
+
+    <a href="{{ path('principal_office_group_index') }} " class="btn btn-warning ">back to list</a>
+     </div>
+     </div>
+     </div>
+     </div>
+      </div>
+{% endblock %}

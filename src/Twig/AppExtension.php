@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\PlanningAccomplishment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -49,6 +50,9 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getTaskStatusAssigned', [$this, 'getTaskStatusAssigned']),
             new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
             new TwigFunction('getYearlyPlan', [$this, 'getYearlyPlan']),
+            new TwigFunction('getYearlyPlanAccomp', [$this, 'getYearlyPlanAccomp']),
+             new TwigFunction('getQuarterPlan', [$this, 'getQuarterPlan']),
+             new TwigFunction('getQuarterPlanAccomp', [$this, 'getQuarterPlanAccomp']),
 
 
 
@@ -76,6 +80,48 @@ class AppExtension extends AbstractExtension
         $req = General::getTaskStatusSend($this->entityManager, $id, $office);
         return ($req);
     }
+      public  function getQuarterPlanAccomp($suitable,$quarter)
+    {
+        if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+            
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+
+            return $plan ? $plan : '_';
+        } 
+        else
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, null, $quarter);
+            // dd($plan);
+
+        return $plan ? $plan : '_';
+    }
+    public  function getQuarterPlan($suitable,$quarter)
+    {
+        if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+            
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlan($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+
+            return $plan ? $plan : '_';
+        } 
+        else
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlan($suitable, null, $quarter);
+            // dd($plan);
+
+        return $plan ? $plan : '_';
+    }
+    public  function getYearlyPlanAccomp($suitable)
+    {
+        if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+
+            return $plan ? $plan : '_';
+        } 
+        else
+            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+
+        return $plan ? $plan : '_';
+    }
+
     public  function getYearlyPlan($suitable)
     {
 
@@ -83,26 +129,33 @@ class AppExtension extends AbstractExtension
         $yearlplan = 0;
         if (count($suitable->getPlanningAccomplishments()) > 0) {
 
-            if ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 0) {
-
-                $yearlplan = $suitable->getPlanningAccomplishments()[0]->getPlanValue();
-                return $yearlplan;
-            } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 1) {
-
-                $yearlplan = array_sum($this->getPlanArray($suitable->getPlanningAccomplishments()));
-                return $yearlplan;
-            } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 2) {
-                $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
-                rsort($array);
-
-                return  $array[0];
+            if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
             } else {
-                $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
-                sort($array);
+                $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlan($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+                return $plan;
 
-                return  $array[0];
+                if ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 0) {
+
+
+                    $yearlplan = $suitable->getPlanningAccomplishments()[0]->getPlanValue();
+                    return $yearlplan;
+                } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 1) {
+
+                    $yearlplan = array_sum($this->getPlanArray($suitable->getPlanningAccomplishments()));
+                    return $yearlplan;
+                } elseif ($suitable->getInitiative()->getInitiativeBehaviour()->getCode() == 2) {
+                    $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
+                    rsort($array);
+
+                    return  $array[0];
+                } else {
+                    $array = $this->getPlanArray($suitable->getPlanningAccomplishments());
+                    sort($array);
+
+                    return  $array[0];
+                }
+                return $yearlplan;
             }
-            return $yearlplan;
         } else return "-";
     }
 
