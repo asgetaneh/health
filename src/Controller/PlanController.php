@@ -473,6 +473,7 @@ class PlanController extends AbstractController
                 $operationalSuitable = new SuitableOperational();
                 $operationalSuitable->setSuitableInitiative($planInitiative);
                 $operationalSuitable->setOperationalOffice($operationaloffice);
+                 $operationalSuitable->setStatus(1);
                 $isexist = false;
                 $em->persist($operationalSuitable);
                 $em->flush();
@@ -521,6 +522,8 @@ class PlanController extends AbstractController
 
                         $planAcomplishment->setOperationalSuitable($operationalSuitable);
                         $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
+                        
+
                         if (isset($planValues[$i])) {
                             $planAcomplishment->setPlanValue($planValues[$i]);
                         }
@@ -553,6 +556,7 @@ class PlanController extends AbstractController
                     $planAcomplishment->setOperationalSuitable($operationalSuitable);
                     $planAcomplishment->setPlanValue($planValues[$key]);
                     $planAcomplishment->setQuarter($planningquarter);
+                    
                     if (!$isplanexist) {
                         $em->persist($planAcomplishment);
                     }

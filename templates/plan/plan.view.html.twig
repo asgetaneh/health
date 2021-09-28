@@ -283,7 +283,10 @@
 
 																{% if suitableplan.initiative.initiativeBehaviour.code == 0 %}
 
-																	{% set yearlyplan = operationsuitable.planValue|filter(plan => plan.quarter.slug==1).planValue %}
+
+																	{% for plan in operationsuitable.planValue|filter(plan => plan.quarter.slug==1) %}
+																	{% set yearlyplan = plan.planValue %}
+																	{% endfor %}
 
 
 																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 1 %}
