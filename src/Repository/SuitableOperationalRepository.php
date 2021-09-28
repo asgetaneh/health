@@ -31,6 +31,17 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+      public function findOperationalId($suitableInId, $operationalOfId)
+    {
+        return $this->createQueryBuilder('os')
+            ->andWhere('os.operationalOffice = :operationalOfId')
+            ->andWhere('os.suitableInitiative = :suitableInId')
+            ->setParameter('suitableInId', $suitableInId)
+            ->setParameter('operationalOfId', $operationalOfId)
+            ->orderBy('os.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

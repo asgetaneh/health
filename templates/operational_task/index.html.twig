@@ -289,7 +289,7 @@
 														</table>
 													</td>
 													<td>
-														{% if countWeight < 100 %}
+														{% if not taskAssigns %}
 
 															<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" title="edit" data-target="#edit" type="button">
 																<i class="fa fa-edit"></i>
@@ -345,7 +345,8 @@
 								<tr>
 
 									<th>Task Name</th>
-									<th>Weight</th>
+									<th>Edit Task</th>
+									<th>Task Weight</th>
 
 									<th>Edit Weight</th>
 								</tr>

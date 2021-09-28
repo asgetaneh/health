@@ -102,6 +102,7 @@ class PlanController extends AbstractController
                     $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
                 }
             }
+            $operationalPlans=$em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableInitiatives = $this->findSuitableInitiative($em, $principaloffice, $planningyear);
 
@@ -123,7 +124,9 @@ class PlanController extends AbstractController
                     'planyear' => $planningyear,
                     'isAllActive' => $isallActive,
                     'quarters' => $planningquarters,
-                    'recoverInitiatives' => $recoverData
+                    'recoverInitiatives' => $recoverData,
+                    'operationalPlans' => $operationalPlans
+
 
                 ]);
             }
@@ -213,9 +216,9 @@ class PlanController extends AbstractController
 
             $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operational'));
             $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findwithPlan($request->request->get('id'));
-            $planInitiative=$em->getRepository(SuitableInitiative::class)->find($request->request->get('id'));
-             $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
-            $plan = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable'=> $operationalSuitable]);
+            $planInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('id'));
+            $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
+            $plan = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable' => $operationalSuitable]);
 
             $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
 
@@ -238,7 +241,7 @@ class PlanController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
-        $planningyear=$em->getRepository(PlanningYear::class)->findLast();
+        $planningyear = $em->getRepository(PlanningYear::class)->findLast();
 
         if (!$offices)
             $offices = $em->getRepository(PrincipalOffice::class)->findPrincipalOffice($this->getUser());
@@ -307,11 +310,11 @@ class PlanController extends AbstractController
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
-                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findBy(['planningYear'=> $planningyear]);
+                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->findBy(['planningYear' => $planningyear]);
                 $initiatives = $em->getRepository(Initiative::class)->findAll();
             } else
                 $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
-                $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
+            $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
         }
 
 
@@ -339,11 +342,11 @@ class PlanController extends AbstractController
 
         if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
             $socalAttributes = $em->getRepository(InitiativeAttribute::class)->findAll();
-           
+
             foreach ($socalAttributes as $socalAttribute) {
                 $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateSocialAttrQuartertPlan($planInitiative, $socalAttribute);
-                    //   if($socalAttribute->getId()==2)
-                    //    dd($plans);
+                //   if($socalAttribute->getId()==2)
+                //    dd($plans);
 
                 foreach ($quarters as $key => $quarter) {
                     $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, $socalAttribute, $quarter);
@@ -362,9 +365,7 @@ class PlanController extends AbstractController
 
                     $em->flush();
                 }
-            
             }
-            
         } else {
 
             $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateQuartertPlan($planInitiative);

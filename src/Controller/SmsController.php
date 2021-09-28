@@ -43,7 +43,7 @@ class SmsController extends AbstractController
                 'class' => PrincipalOffice::class,
                 'multiple' => true,
                 // 'placeholder' => 'All',
-                            'placeholder' => "All",
+                'placeholder' => "All",
 
                 'required' => false
             ])
@@ -73,19 +73,26 @@ class SmsController extends AbstractController
 
             //  $mobileNumber[]=null;
             $message = $data["message"];
-            $sms = $userRepository->search($form->getData());
+            $users = $userRepository->search($form->getData());
             // dd($sms,$message);
-            foreach ($sms as $key) {
+            foreach ($users as $key) {
                 $mobileNumber[] = $key->getMobile();
                 // dump($mobileNumber);
             }
             //   dd($mobileNumber,$message);
 
             $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
-
+            foreach ($users as $user) {
+                $sms = new Sms();
+                $sms->setSender($this->getUser());
+                $sms->setReciver($user);
+                $sms->setSendDate(new \DateTime());
+                $sms->setText($message);
+                $em->persist($sms);
+            }
+            $em->flush();
             $this->addFlash('success', "Message successfuly Send");
-                        return $this->redirectToRoute('sms_index');
-
+            return $this->redirectToRoute('sms_index');
         }
         if ($request->request->get("allmessgae")) {
             $mobileNumber = [];
@@ -98,8 +105,7 @@ class SmsController extends AbstractController
             $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
 
             $this->addFlash('success', "Message successfuly Send");
-                                    return $this->redirectToRoute('sms_index');
-
+            return $this->redirectToRoute('sms_index');
         }
 
         // $entityManager = $this->getDoctrine()->getManager();

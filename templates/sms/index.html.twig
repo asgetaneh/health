@@ -24,34 +24,38 @@
 						<div class="row">
 							{{ form_start(form,{'attr': {'role':'form','class':' ' }}) }}
 
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group form-group">
-									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.principalOffice) }}</label>
+									<label class="col-md-6 control-label ">{{ form_label(form.principalOffice) }}</label>
 									{{ form_widget(form.principalOffice,{'attr':{'class':'select2   ' }}) }}
 									<div class="help-block with-errors"></div>
 
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group form-group">
-									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.operationalOffice) }}</label>
+									<label class="col-md-6 control-label ">{{ form_label(form.operationalOffice) }}</label>
 									{{ form_widget(form.operationalOffice,{'attr':{'class':'select2 ' }}) }}
 									<div class="help-block with-errors"></div>
 
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group form-group">
-									<label class="col-sm-5 control-label no-padding-right">{{ form_label(form.performer) }}</label>
+									<label class="col-md-6 control-label ">{{ form_label(form.performer) }}</label>
 									{{ form_widget(form.performer,{'attr':{'class':'select2  ' }}) }}
 									<div class="help-block with-errors"></div>
 
 								</div>
 							</div>
-							<div class="col-md-6">
+						</div>
+						<div class="row">
+
+
+							<div class="col-md-4">
 								<div class="form-group form-group">
 									{{ form_label(form.message,'Message ') }}
-									{{ form_widget(form.message,{'attr':{'class':' principal form-control ','data-placeholder':'Message' }}) }}
+									{{ form_widget(form.message,{'attr':{'class':' principal form-control ','data-placeholder':'Message','required':'true' }}) }}
 								</div>
 							</div>
 
@@ -91,7 +95,7 @@
 					<div class="modal-body">
 						<input type="hidden" name="allmessgae" value="1">
 						<div class="form-group">
-							<textArea name="message" class="form-control"></textArea>
+							<textArea name="message" required class="form-control"></textArea>
 
 						</div>
 					</div>
