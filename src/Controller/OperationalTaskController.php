@@ -281,7 +281,7 @@ class OperationalTaskController extends AbstractController
                             } else if ($i == 1) {
                                 $planf = $values['D'];
                             } else if ($i == 2) {
-                                $planf = $values['D'];
+                                $planf = $values['E'];
                             } else {
                                 $planf = $values['F'];
                             }
@@ -309,8 +309,6 @@ class OperationalTaskController extends AbstractController
             }
            
                             // dd(1);
-
-
             // $this->calculatePrincipalOfficePlan($em, $planInitiative);
 
             $this->addFlash('success', ' Plan Uploaded Successfully');
@@ -339,6 +337,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         $operationalSuitables = $em->getRepository(SuitableOperational::class)->findSuitableInitiatve($operationalOffice, $currentYear);
+        // dd($operationalSuitables);
         $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findAll();
         $data = $paginator->paginate(
             $operationalSuitables,

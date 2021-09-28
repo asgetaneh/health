@@ -13,13 +13,13 @@
 		<b class="arrow fa fa-angle-down"></b>
 	</a>
 	<b class="arrow"></b>
-	<ul class="submenu nav-show" style="background:#3f87a6; color: #f5f6f8">
+	<ul class="submenu nav-show" style="background:#; color: #f5f6f8">
 
 		{% if is_granted('csc_nd_pln') %}
 
 
 			<li>
-				<a href="{{ path('plan_principal') }}" style="background:#3f87a6; color: #f5f6f8" class="bg-primary">
+				<a href="{{ path('plan_principal') }}" style="background:#009933; color: #f5f6f8" class="bg-primary">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Plan{% endtrans %}
 				</a>
@@ -28,7 +28,7 @@
 		{% endif %}
 		{% if is_granted('csc_nd_pln') %}
 			<li>
-				<a href="{{ path('plan_index') }}" style="background:#3f87a6; color: #f5f6f8">
+				<a href="{{ path('plan_index') }}" style="background:#009933; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Cascading Achievement{% endtrans %}
 				</a>
@@ -40,7 +40,7 @@
 		{% if is_granted('pri_off_rep') %}
 
 			<li>
-				<a href="{{ path('principal_office_report') }}" style="background:#3f87a6; color: #f5f6f8">
+				<a href="{{ path('principal_office_report') }}" style="background:#009933; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Principal Office Report{% endtrans %}
 				</a>
@@ -50,7 +50,7 @@
 		{% if is_granted('pri_off_rep') %}
 
 			<li>
-				<a href="{{ path('performer_task_report') }}" style="background:#3f87a6; color: #f5f6f8">
+				<a href="{{ path('performer_task_report') }}" style="background:#009933; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Performer Detail Report {% endtrans %}
 				</a>
@@ -77,7 +77,7 @@
 		{% if is_granted('per_task') %}
 
 			<li>
-				<a href="{{ path('performer_task_index') }}" style="background:#3f87a6; color: #f5f6f8">
+				<a href="{{ path('performer_task_index') }}" style="background:#ff3300; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Performer Task{% endtrans %}
 				</a>
@@ -87,7 +87,7 @@
 		{% if is_granted('per_task_rep') %}
 
 			<li>
-				<a href="{{ path('performer_task_list') }}" style="background:#3f87a6; color: #f5f6f8">
+				<a href="{{ path('performer_task_list') }}" style="background:#ff3300; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
 					{% trans %}Performer’s Reports
 					{% endtrans %}
