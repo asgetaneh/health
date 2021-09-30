@@ -13,6 +13,7 @@ use App\Form\SmsType;
 use App\Helper\SmsHelper;
 use App\Repository\SmsRepository;
 use App\Repository\UserRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -119,25 +120,22 @@ class SmsController extends AbstractController
 
 
     /**
-     * @Route("/new", name="sms_new", methods={"GET","POST"})
+     * @Route("/list", name="sms_list")
      */
-    public function new(Request $request): Response
+    public function new(Request $request,SmsRepository $smsRepository,PaginatorInterface $paginator): Response
     {
         $sms = new Sms();
-        $form = $this->createForm(SmsType::class, $sms);
-        $form->handleRequest($request);
+       $smsList=$smsRepository->findAll();
+         $data = $paginator->paginate(
+            $smsList,
+            $request->query->getInt('page', 1),
+            15
+        );
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($sms);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('sms_index');
-        }
-
-        return $this->render('sms/new.html.twig', [
-            'sms' => $sms,
-            'form' => $form->createView(),
+        return $this->render('sms/list.html.twig', [
+            'smss' => $data,
+            'count'=>$smsList
+            
         ]);
     }
 
