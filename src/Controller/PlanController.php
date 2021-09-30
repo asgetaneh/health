@@ -102,7 +102,7 @@ class PlanController extends AbstractController
                     $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
                 }
             }
-            $operationalPlans=$em->getRepository(SuitableOperational::class)->findAll();
+            $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableInitiatives = $this->findSuitableInitiative($em, $principaloffice, $planningyear);
 
@@ -237,54 +237,54 @@ class PlanController extends AbstractController
     /**
      * @Route("/recover", name="plan_recover")
      */
-    public function Recover(Request $request,PaginatorInterface $paginator)
+    public function Recover(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-           if ($request->query->get('office') && $request->query->get('planyear')) {
-                $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
+        if ($request->query->get('office') && $request->query->get('planyear')) {
+            $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
-          $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
-           
+            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
-          if ($request->query->get('nonsuitable')) {
-                    $removableId = $request->query->get('initiative');
+            if ($request->query->get('nonsuitable')) {
+                $removableId = $request->query->get('initiative');
 
-                    $this->removeSuitableInitiative($em, $principaloffice, $planningyear,  $removableId);
-                    $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
-                    //  return $this->redirectToRoute('plan_index');
-                } else {
+                $this->removeSuitableInitiative($em, $principaloffice, $planningyear,  $removableId);
+                $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
+                //  return $this->redirectToRoute('plan_index');
+            } else {
 
 
-                    $selectedInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $request->query->get('initiative')]);
-                    $countinitiative = count($selectedInitiatives);
+                $selectedInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $request->query->get('initiative')]);
+                $countinitiative = count($selectedInitiatives);
 
-                    foreach ($selectedInitiatives as  $selectedInitiative) {
+                foreach ($selectedInitiatives as  $selectedInitiative) {
 
-                        $existinitiative = $em->getRepository(SuitableInitiative::class)->findDuplication($principaloffice, $selectedInitiative, $planningyear);
-                        if (!$existinitiative) {
-                            $suitableInitiative = new SuitableInitiative();
-                            $suitableInitiative->setPrincipalOffice($principaloffice);
-                            $suitableInitiative->setInitiative($selectedInitiative);
-                            $suitableInitiative->setPlanningYear($planningyear);
+                    $existinitiative = $em->getRepository(SuitableInitiative::class)->findDuplication($principaloffice, $selectedInitiative, $planningyear);
+                    if (!$existinitiative) {
+                        $suitableInitiative = new SuitableInitiative();
+                        $suitableInitiative->setPrincipalOffice($principaloffice);
+                        $suitableInitiative->setInitiative($selectedInitiative);
+                        $suitableInitiative->setPlanningYear($planningyear);
 
-                            $em->persist($suitableInitiative);
-                            $em->flush();
-                        }
+                        $em->persist($suitableInitiative);
+                        $em->flush();
                     }
-                    if($request->query->get('initiative'))
-                    $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
                 }
-           }
-             return $this->render('plan/initiative.html.twig', [
+                if ($request->query->get('initiative'))
+                    $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
+            }
+        }
+        return $this->render('plan/initiative.html.twig', [
 
-              
-               
-               
-                'pricipaloffice' => $principaloffice,
-                'planyear' => $planningyear,
-                'recoverInitiatives' => $recoverData
 
-            ]);
+
+
+            'pricipaloffice' => $principaloffice,
+            'planyear' => $planningyear,
+            'recoverInitiatives' => $recoverData
+
+        ]);
     }
     /**
      * @Route("/principalplan", name="plan_principal")
@@ -301,6 +301,7 @@ class PlanController extends AbstractController
         // dd($offices);
         // dd($em->getRepository(Initiative::class)->findBySuitable( $offices));
         $filterForm = $this->createFormBuilder()
+         ->setMethod('Get')
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
                 'multiple' => false,
@@ -345,7 +346,7 @@ class PlanController extends AbstractController
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
-                'multiple' => true,
+                'multiple' => false,
                 'required' => false,
 
                 'placeholder' => 'Choose an principal office',
@@ -359,7 +360,7 @@ class PlanController extends AbstractController
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
             $suitableInitiative = $suitableInitiativeRepository->search($filterForm->getData());
-            $initiatives = $em->getRepository(Initiative::class)->search($filterForm->getData());
+            // $initiatives = $em->getRepository(Initiative::class)->search($filterForm->getData());
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
@@ -376,12 +377,12 @@ class PlanController extends AbstractController
 
 
 
-
+        $data = $paginator->paginate($suitableInitiative, $request->query->getInt('page', 1), 5);
 
         return $this->render("plan/plan.html.twig", [
-            "suitableplans" =>  $suitableInitiative,
+            "suitableplans" =>  $data,
             'quarters' => $quarters,
-            'initiatives' => $initiatives,
+            // 'initiatives' => $initiatives,
             'filterform' => $filterForm->createView()
 
         ]);
@@ -473,7 +474,7 @@ class PlanController extends AbstractController
                 $operationalSuitable = new SuitableOperational();
                 $operationalSuitable->setSuitableInitiative($planInitiative);
                 $operationalSuitable->setOperationalOffice($operationaloffice);
-                 $operationalSuitable->setStatus(1);
+                $operationalSuitable->setStatus(1);
                 $isexist = false;
                 $em->persist($operationalSuitable);
                 $em->flush();
@@ -522,7 +523,7 @@ class PlanController extends AbstractController
 
                         $planAcomplishment->setOperationalSuitable($operationalSuitable);
                         $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
-                        
+
 
                         if (isset($planValues[$i])) {
                             $planAcomplishment->setPlanValue($planValues[$i]);
@@ -556,7 +557,7 @@ class PlanController extends AbstractController
                     $planAcomplishment->setOperationalSuitable($operationalSuitable);
                     $planAcomplishment->setPlanValue($planValues[$key]);
                     $planAcomplishment->setQuarter($planningquarter);
-                    
+
                     if (!$isplanexist) {
                         $em->persist($planAcomplishment);
                     }
@@ -568,7 +569,7 @@ class PlanController extends AbstractController
             }
 
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
-            $operationalPlans=$em->getRepository(SuitableOperational::class)->findAll();
+            $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableplan = $this->findSuitableInitiative($em, $planInitiative->getPrincipalOffice(), $planInitiative->getPlanningYear());
             $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);
@@ -587,7 +588,7 @@ class PlanController extends AbstractController
                 'planyear' => $planInitiative->getPlanningYear(),
                 'quarters' => $planningquarters,
                 'recoverInitiatives' => $recoverData,
-                'operationalPlans'=>$operationalPlans
+                'operationalPlans' => $operationalPlans
 
             ]);
         }

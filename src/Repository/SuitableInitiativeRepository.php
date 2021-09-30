@@ -116,12 +116,19 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     public function search($search = [])
     {
 
-        $qb = $this->createQueryBuilder('s');
-        if (isset($search['planyear']) && sizeof($search['planyear']) > 0) {
+        $qb = $this->createQueryBuilder('s')
+        ->join('s.initiative','i')
+        ->join('i.keyPerformanceIndicator','k')
+        ->join('k.strategy','st')
+        ->join('st.objective','o')
+        ;
+
+        if (isset($search['planyear'])) {
+           
             $qb->andWhere('s.planningYear in (:planyear)')
                 ->setParameter('planyear', $search['planyear']);
         }
-        if (isset($search['principaloffice']) && sizeof($search['principaloffice']) > 0) {
+        if (isset($search['principaloffice'])) {
             $qb->andWhere('s.principalOffice in (:principalOffice)')
                 ->setParameter('principalOffice', $search['principaloffice']);
         }
@@ -129,7 +136,23 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             $qb->andWhere('s.initiative in (:initiative)')
                 ->setParameter('initiative', $search['initiative']);
         }
-        return $qb->getQuery()->getResult();
+         if (isset($search['kpi']) && sizeof($search['kpi']) > 0) {
+            $qb->andWhere('i.keyPerformanceIndicator in (:kpi)')
+                ->setParameter('kpi', $search['kpi']);
+        }
+          if (isset($search['strategy']) && sizeof($search['strategy']) > 0) {
+            $qb->andWhere('k.strategy in (:strategy)')
+                ->setParameter('strategy', $search['strategy']);
+        }
+        if (isset($search['objective']) && sizeof($search['objective']) > 0) {
+            $qb->andWhere('st.objective in (:objective)')
+                ->setParameter('objective', $search['objective']);
+        }
+         if (isset($search['goal']) && sizeof($search['goal']) > 0) {
+            $qb->andWhere('o.goal in (:goal)')
+                ->setParameter('goal', $search['goal']);
+        }
+        return $qb->getQuery();
     }
     public function findByPrincipalAndOffice($office)
     {

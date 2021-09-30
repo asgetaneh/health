@@ -115,12 +115,16 @@
 					<div class="table-responsive">
 
 
-						<table class="table table-striped table-bordered table-hover" style="empty-cells: hide;">
+						<table class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
 
 									<th rowspan="2">#</th>
+									<th rowspan="2">Details</th>
 									<th rowspan="2">Initiative</th>
+									<th rowspan="2">Kpi</th>
+									<th rowspan="2">Objective</th>
+									<th rowspan="2">Goal</th>
 									<th rowspan="2">{% trans %}behavior{% endtrans %}</th>
 									<th rowspan="2">Principal Office</th>
 									<th rowspan="2">Year</th>
@@ -151,35 +155,100 @@
 								</tr>
 							</thead>
 							<tbody>
-								{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+								{% set count =  suitableplans.getItemNumberPerPage() * (suitableplans.getCurrentPageNumber() -1) %}
 								{% for suitable in suitableplans %}
 
-
-									{# {% if suitable.initiative.initiativeBehaviour.code == 0 %}
-
-										{% set yearlyplan = suitable.planningAccomplishments|filter(plan => plan.quarter.slug==1).planValue %}
-									{% endif %} #}
-									{# {% set yearlyplan = getYearlyPlan(suitable) %} #}
-
-
+                               {% set count = count+1 %}
 									<tr>
-										<td>{{loop.index}}</td>
+										<td>{{count}}
+										</td>
+										<td class="center">
+											<div class="action-buttons">
+												<a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+													<i class="ace-icon fa fa-angle-double-down"></i>
+													<span class="sr-only">Details</span>
+												</a>
+											</div>
+										</td>
 										<td>{{suitable.initiative}}</td>
+										<td>{{suitable.initiative.keyPerformanceIndicator}}</td>
+										<td>{{suitable.initiative.keyPerformanceIndicator.strategy.objective}}</td>
+										<td>{{suitable.initiative.keyPerformanceIndicator.strategy.objective.goal}}</td>
 										<td>{{suitable.initiative.initiativeBehaviour}}</td>
 										<td>{{suitable.principalOffice}}</td>
 										<td>{{suitable.planningYear}}</td>
 										<td>{{ getYearlyPlan( suitable,'year')}}</td>
 										<td>{{ getYearlyPlanAccomp( suitable,'year')}}</td>
-										
-										<td>{{ getQuarterPlan( suitable,1)}}</td>
-										<td>{{ getQuarterPlanAccomp( suitable,1)}}</td>
-										<td>{{ getQuarterPlan( suitable,2)}}</td>
-										<td>{{ getQuarterPlanAccomp( suitable,2)}}</td>
-										<td>{{ getQuarterPlan( suitable,3)}}</td>
-										<td>{{ getQuarterPlanAccomp( suitable,3)}}</td>
-										<td>{{ getQuarterPlan( suitable,4)}}</td>
-										<td>{{ getQuarterPlanAccomp( suitable,4)}}</td>
 
+										<td>{{ getQuarterPlan( suitable,1)}}</td>
+										<td>{{ getQuarterPlanAccomp(suitable,1)}}</td>
+										<td>{{ getQuarterPlan(suitable,2)}}</td>
+										<td>{{ getQuarterPlanAccomp(suitable,2)}}</td>
+										<td>{{ getQuarterPlan(suitable,3)}}</td>
+										<td>{{ getQuarterPlanAccomp(suitable,3)}}</td>
+										<td>{{ getQuarterPlan(suitable,4)}}</td>
+										<td>{{ getQuarterPlanAccomp(suitable,4)}}</td>
+
+									</tr>
+									<tr class="detail-row">
+										<td colspan="16">
+											<div class="table-detail">
+
+												<table class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<th rowspan="2">#</th>
+
+
+															<th rowspan="2">Operational Office</th>
+
+															<th colspan="2">yearly</th>
+															<th colspan="2">1st Quarter</th>
+															<th colspan="2">2nd Quarter</th>
+															<th colspan="2">3rd Quarter</th>
+															<th colspan="2">4th  Quarter</th>
+														</tr>
+														<tr>
+
+
+															<th>plan</th>
+															<th>Accomp.</th>
+															<th>plan</th>
+															<th>Accomp.</th>
+															<th>plan</th>
+															<th>Accomp.</th>
+															<th>plan</th>
+															<th>Accomp.</th>
+															<th>plan</th>
+															<th>Accomp.</th>
+
+
+														</tr>
+													</thead>
+													<tbody>
+														{% for operational in suitable.principalOffice.operationalOffices %}
+
+
+															<tr>
+																<td>{{loop.index}}</td>
+																<td>{{operational}}</td>
+																<td>{{getOperationalYearlyPlan(suitable, operational)}}</td>
+																<td>{{getOperationalYearlyPlanAccomp(suitable, operational)}}</td>
+																	<td>{{getOperationalQuarterPlan(suitable,1, operational)}}</td>
+																<td>{{getOperationalQuarterPlanAccomp(suitable,1, operational)}}</td>
+																	<td>{{getOperationalQuarterPlan(suitable,2, operational)}}</td>
+																<td>{{getOperationalQuarterPlanAccomp(suitable,2, operational)}}</td>
+																	<td>{{getOperationalQuarterPlan(suitable,3, operational)}}</td>
+																<td>{{getOperationalQuarterPlanAccomp(suitable,3, operational)}}</td>
+																	<td>{{getOperationalQuarterPlan(suitable,4, operational)}}</td>
+																<td>{{getOperationalQuarterPlanAccomp(suitable,4, operational)}}</td>
+
+															</tr>
+														{% endfor %}
+													</tbody>
+												</table>
+											</div>
+										</td>
 									</tr>
 
 								{% endfor %}
@@ -187,11 +256,31 @@
 
 							</tbody>
 						</table>
-						{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(objectives) }}</div> #}
+						<div class="float-left" id="custompaginator">{{ knp_pagination_render(suitableplans) }}</div>
 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		$(function () {
+$('.show-details-btn').on('click', function (e) {
+e.preventDefault();
+
+$(this).closest('tr').next('tr').siblings('tr.open').toggleClass('open');
+
+$(this).closest('tr').next().toggleClass('open');
+
+
+// $(this).closest('tr').not().next().toggleClass('open');
+// $('tr.detail-row').not().toggleClass('open');
+$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+
+// $(this).closest('tr').siblings().removeClass('open')
+});
+});
+	</script>
 {% endblock %}

@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Facade\General;
 use App\Entity\SuitableInitiative;
+use App\Entity\OperationalPlanningAccomplishment;
+
 
 
 
@@ -51,8 +53,12 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
             new TwigFunction('getYearlyPlan', [$this, 'getYearlyPlan']),
             new TwigFunction('getYearlyPlanAccomp', [$this, 'getYearlyPlanAccomp']),
-             new TwigFunction('getQuarterPlan', [$this, 'getQuarterPlan']),
-             new TwigFunction('getQuarterPlanAccomp', [$this, 'getQuarterPlanAccomp']),
+            new TwigFunction('getQuarterPlan', [$this, 'getQuarterPlan']),
+            new TwigFunction('getQuarterPlanAccomp', [$this, 'getQuarterPlanAccomp']),
+            new TwigFunction('getOperationalYearlyPlan', [$this, 'getOperationalYearlyPlan']),
+            new TwigFunction('getOperationalYearlyPlanAccomp', [$this, 'getOperationalYearlyPlanAccomp']),
+            new TwigFunction('getOperationalQuarterPlan', [$this, 'getOperationalQuarterPlan']),
+            new TwigFunction('getOperationalQuarterPlanAccomp', [$this, 'getOperationalQuarterPlanAccomp']),
 
 
 
@@ -80,43 +86,71 @@ class AppExtension extends AbstractExtension
         $req = General::getTaskStatusSend($this->entityManager, $id, $office);
         return ($req);
     }
-      public  function getQuarterPlanAccomp($suitable,$quarter)
+    public  function getQuarterPlanAccomp($suitable, $quarter)
     {
         if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
-            
-            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+            $plan = [];
+            foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                $plan[$social->getName()] = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, $social, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+            }
 
-            return $plan ? $plan : '_';
-        } 
-        else
+            $plans =   implode(" ", array_map(function ($key, $val) {
+                if (!$val)
+                    $val = "__";
+                return substr(strtoupper($key), 0, 1) . ":" . $val;
+            }, array_keys($plan), $plan));
+
+
+            return $plans ? $plans : '_';
+        } else
             $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, null, $quarter);
-            // dd($plan);
+        // dd($plan);
 
         return $plan ? $plan : '_';
     }
-    public  function getQuarterPlan($suitable,$quarter)
+    public  function getQuarterPlan($suitable, $quarter)
     {
         if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
-            
-            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlan($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
 
-            return $plan ? $plan : '_';
-        } 
-        else
+            $plan = [];
+            foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                $plan[$social->getName()] = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlan($suitable, $social, $quarter);
+            }
+            $plans =   implode(" ", array_map(function ($key, $val) {
+
+                if (!$val)
+                    $val = "__";
+
+                return substr(strtoupper($key), 0, 1) . ":" . $val;
+            }, array_keys($plan), $plan));
+
+
+            return $plans ? $plans : '_';
+        } else
+
             $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findQuarterPlan($suitable, null, $quarter);
-            // dd($plan);
+
 
         return $plan ? $plan : '_';
     }
     public  function getYearlyPlanAccomp($suitable)
     {
         if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+            $plan = [];
+            foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                $plan[$social->getName()] = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, $social, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+            }
+            $plans =   implode(" ", array_map(function ($key, $val) {
 
-            $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, 1, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+                if (!$val)
+                    $val = "__";
 
-            return $plan ? $plan : '_';
-        } 
-        else
+                return substr(strtoupper($key), 0, 1) . ":" . $val;
+            }, array_keys($plan), $plan));
+
+
+            return $plans ? $plans : '_';
+        } else
             $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
 
         return $plan ? $plan : '_';
@@ -130,6 +164,20 @@ class AppExtension extends AbstractExtension
         if (count($suitable->getPlanningAccomplishments()) > 0) {
 
             if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+                $plan = [];
+                foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                    $plan[$social->getName()] = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlan($suitable, $social, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
+                }
+                $plans =   implode(" ", array_map(function ($key, $val) {
+
+                    if (!$val)
+                        $val = "__";
+
+                    return substr(strtoupper($key), 0, 1) . ":" . $val;
+                }, array_keys($plan), $plan));
+
+
+                return $plans ? $plans : '_';
             } else {
                 $plan = $this->entityManager->getRepository(PlanningAccomplishment::class)->findYearlyPlan($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode());
                 return $plan;
@@ -166,5 +214,107 @@ class AppExtension extends AbstractExtension
             array_push($plansArray, $plan->getPlanValue());
         }
         return $plansArray;
+    }
+
+    function getOperationalYearlyPlan($suitable, $office)
+    {
+
+        $yearlplan = 0;
+        if (count($suitable->getPlanningAccomplishments()) > 0) {
+
+            if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+                $plan = [];
+                foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                    $plan[$social->getName()] = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findYearlyPlan($suitable, $social, $suitable->getInitiative()->getInitiativeBehaviour()->getCode(), $office);
+                }
+                $plans =   implode(" ", array_map(function ($key, $val) {
+
+                    if (!$val)
+                        $val = "__";
+
+                    return substr(strtoupper($key), 0, 1) . ":" . $val;
+                }, array_keys($plan), $plan));
+
+
+                return $plans ? $plans : '_';
+            } else
+                $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findYearlyPlan($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode(), $office);
+            return $plan;
+        } else return "-";
+    }
+    function getOperationalQuarterPlan($suitable,  $quarter,$office)
+    {
+        if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+
+            $plan = [];
+            foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                $plan[$social->getName()] = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlan($suitable, $social, $quarter, $office);
+            }
+            $plans =   implode(" ", array_map(function ($key, $val) {
+
+                if (!$val)
+                    $val = "__";
+
+                return substr(strtoupper($key), 0, 1) . ":" . $val;
+            }, array_keys($plan), $plan));
+
+
+            return $plans ? $plans : '_';
+        } else
+
+            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlan($suitable, null, $quarter,$office);
+
+
+        return $plan ? $plan : '_';
+    }
+   function getOperationalQuarterPlanAccomp($suitable, $office, $quarter)
+    {
+        if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+
+            $plan = [];
+            foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                $plan[$social->getName()] = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, $social, $quarter, $office);
+            }
+            $plans =   implode(" ", array_map(function ($key, $val) {
+
+                if (!$val)
+                    $val = "____";
+
+                return substr(strtoupper($key), 0, 1) . ":" . $val;
+            }, array_keys($plan), $plan));
+
+
+            return $plans ? $plans : '_';
+        } else
+
+            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, null, $quarter,$office);
+
+
+        return $plan ? $plan : '_';
+    }
+    function getOperationalYearlyPlanAccomp($suitable, $office)
+    {
+        $yearlplan = 0;
+        if (count($suitable->getPlanningAccomplishments()) > 0) {
+
+            if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
+                $plan = [];
+                foreach ($suitable->getInitiative()->getSocialAtrribute() as $social) {
+                    $plan[$social->getName()] = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, $social, $suitable->getInitiative()->getInitiativeBehaviour()->getCode(), $office);
+                }
+                $plans =   implode(" ", array_map(function ($key, $val) {
+
+                    if (!$val)
+                        $val = "____";
+
+                    return substr(strtoupper($key), 0, 1) . ":" . $val;
+                }, array_keys($plan), $plan));
+
+
+                return $plans ? $plans : '_';
+            } else
+                $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findYearlyPlanAccomp($suitable, null, $suitable->getInitiative()->getInitiativeBehaviour()->getCode(), $office);
+            return $plan;
+        } else return "-";
     }
 }

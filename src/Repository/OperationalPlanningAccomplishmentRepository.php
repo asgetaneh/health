@@ -114,4 +114,157 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
 
         return $qb->groupBy('pa.socialAttribute')->addGroupBy('pa.quarter')->orderBy('pa.quarter','ASC')->getQuery()->getArrayResult();
     }
+     public function findYearlyPlan($suitable, $social=null,$type,$operationaloffice)
+    {
+       
+        $qb = $this->createQueryBuilder('pa')
+           ->join('pa.operationalSuitable' ,'os');
+           
+        if($type== 0 || $type == 2){
+            $qb->select('max(pa.planValue)');
+        }
+        elseif ($type == 1 ) {
+           $qb->select('sum(pa.planValue)');
+        }
+         elseif ($type == 3 )
+
+        $qb->select('min(pa.planValue)');
+
+        $qb->andwhere('os.suitableInitiative = :suitin')
+        ->andWhere('os.operationalOffice= :office')
+         ->setParameter('office', $operationaloffice)
+           
+            ->setParameter('suitin', $suitable);
+        if($social){
+            $qb
+             ->andwhere('pa.socialAttribute = :name')
+             ->setParameter('name', $social);
+        }
+
+
+           
+            
+            ;
+            // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+     public function findYearlyPlanAccomp($suitable, $social=null,$type,$operationaloffice)
+    {
+       
+         $qb = $this->createQueryBuilder('pa')
+           ->join('pa.operationalSuitable' ,'os');
+        if($type== 0 ){
+            $qb->select('Avg(pa.accompValue)');
+        }
+         elseif ($type == 2 ) {
+           $qb->select('max(pa.accompValue)');
+         }
+        
+
+
+        elseif ($type == 1 ) {
+           $qb->select('sum(pa.accompValue)');
+        }
+         elseif ($type == 3 )
+
+        $qb->select('min(pa.accompValue)');
+
+         $qb->andwhere('os.suitableInitiative = :suitin')
+        ->andWhere('os.operationalOffice= :office')
+         ->setParameter('office', $operationaloffice)
+           
+            ->setParameter('suitin', $suitable);
+        if($social){
+            $qb
+             ->andwhere('pa.socialAttribute = :name')
+             ->setParameter('name', $social);
+        }
+
+
+           
+            
+            ;
+            // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+    public function findQuarterPlan($suitable, $social=null,$quarter,$operationaloffice)
+    {
+       
+        $qb = $this->createQueryBuilder('pa')
+           ->join('pa.operationalSuitable' ,'os');
+       
+ 
+           
+         
+        $qb->select('pa.planValue as plan')
+        ->join('pa.quarter','q')
+        ->andWhere('q.slug = :slg')
+        ->andwhere('os.suitableInitiative = :suitin')
+        ->andWhere('os.operationalOffice= :office')
+         ->setParameter('office', $operationaloffice)
+           
+            ->setParameter('suitin', $suitable)
+             ->setParameter('slg', $quarter);
+        
+
+     
+        if($social){
+            $qb
+             ->andwhere('pa.socialAttribute = :name')
+             ->setParameter('name', $social);
+        }
+
+
+           
+            
+            ;
+            //  dd($qb->getQuery()->getSingleScalarOrNullResult());
+             $result=$qb->getQuery()->getOneOrNullResult();
+            
+             return $result? $result['plan']:null;
+
+
+       
+    }
+      public function findQuarterPlanAccomp($suitable, $social=null,$quarter,$operationaloffice)
+    {
+       
+        $qb = $this->createQueryBuilder('pa')
+           ->join('pa.operationalSuitable' ,'os');
+       
+ 
+           
+         
+        $qb->select('pa.accompValue as acomp')
+        ->join('pa.quarter','q')
+        ->andWhere('q.slug = :slg')
+        ->andwhere('os.suitableInitiative = :suitin')
+        ->andWhere('os.operationalOffice= :office')
+         ->setParameter('office', $operationaloffice)
+           
+            ->setParameter('suitin', $suitable)
+             ->setParameter('slg', $quarter);
+        
+
+     
+        if($social){
+            $qb
+             ->andwhere('pa.socialAttribute = :name')
+             ->setParameter('name', $social);
+        }
+
+
+           
+            
+            ;
+            //  dd($qb->getQuery()->getSingleScalarOrNullResult());
+             $result=$qb->getQuery()->getOneOrNullResult();
+            
+             return $result? $result['acomp']:null;
+
+
+       
+    }
 }
