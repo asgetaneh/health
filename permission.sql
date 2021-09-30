@@ -182,6 +182,9 @@ INSERT IGNORE INTO `permission` (`name`, `code`, `description`) VALUES
 ( 'View KPi Achievement', 'vw_kpi_achv', 'View Kpi Achievement'),
 ( 'View Initiative Achievement', 'vw_initv_achv', 'View Initiative Achievement'),
 
+-- plan Report
+
+( 'View All pricipal plan', 'vw_prcpl_pln', 'View All pricipal plan'),
  
 ;
 

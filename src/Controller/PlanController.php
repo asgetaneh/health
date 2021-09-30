@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\BehavioralPlanningAccomplishment;
+use App\Helper\DomPrint;
 use App\Entity\Delegation;
 use App\Entity\Goal;
 use App\Entity\Initiative;
@@ -23,6 +24,7 @@ use App\Entity\SuitableInitiative;
 use App\Entity\SuitableOperational;
 use App\Form\PlanType;
 use App\Repository\InitiativeRepository;
+use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
 use App\Repository\SuitableInitiativeRepository;
 use DateTime;
@@ -31,10 +33,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -289,7 +294,7 @@ class PlanController extends AbstractController
     /**
      * @Route("/principalplan", name="plan_principal")
      */
-    public function principalOfficePlan(Request $request, PaginatorInterface $paginator, SuitableInitiativeRepository $suitableInitiativeRepository)
+    public function principalOfficePlan(Request $request, PaginatorInterface $paginator, SuitableInitiativeRepository $suitableInitiativeRepository, DomPrint $domPrint, PlanningAccomplishmentRepository $planningAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
@@ -301,7 +306,7 @@ class PlanController extends AbstractController
         // dd($offices);
         // dd($em->getRepository(Initiative::class)->findBySuitable( $offices));
         $filterForm = $this->createFormBuilder()
-         ->setMethod('Get')
+            ->setMethod('Get')
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
                 'multiple' => false,
@@ -346,10 +351,10 @@ class PlanController extends AbstractController
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
+                'placeholder' => "All",
                 'multiple' => false,
                 'required' => false,
 
-                'placeholder' => 'Choose an principal office',
             ])
 
             ->getForm();
@@ -360,7 +365,6 @@ class PlanController extends AbstractController
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
 
             $suitableInitiative = $suitableInitiativeRepository->search($filterForm->getData());
-            // $initiatives = $em->getRepository(Initiative::class)->search($filterForm->getData());
         } else {
             if ($this->isGranted('vw_all_pln')) {
 
@@ -369,6 +373,136 @@ class PlanController extends AbstractController
             } else
                 $suitableInitiative =  $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($offices);
             $initiatives = $em->getRepository(Initiative::class)->findBySuitable($offices);
+        }
+        if ($request->request->get('print')) {
+            $domPrint->print('plan/print_plan.html.twig', [
+                "suitableplans" =>   $suitableInitiative,
+                'quarters' => $quarters,
+
+
+            ], 'plan report', 'landscape');
+        }
+        if ($request->request->get("excel")) {
+            // dd(1);
+
+            $spreadsheet = new Spreadsheet();
+
+
+            foreach (range('A', 'M') as $columnID) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+            }
+            $count = 1;
+            foreach ($suitableInitiative as $result) {
+                $count = $count + 1;
+            }
+
+            $sheet = $spreadsheet->getActiveSheet();
+            // $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(false);
+
+            // $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
+            // $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
+            // $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+            // $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
+
+            // $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+            // $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
+            // $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);
+
+
+
+
+            $sheet->setCellValue('A1', 'Initiative');
+            $sheet->setCellValue('B1', 'Behavior');
+            $sheet->setCellValue('C1', 'PrincipalOffice');
+            $sheet->setCellValue('D1', 'Year');
+            $sheet->setCellValue('E1', 'Yearly Plan');
+            $sheet->setCellValue('F1', 'Yearly Plan Accomp');
+            $sheet->setCellValue('G1', 'Q1 Plan');
+            $sheet->setCellValue('H1', 'Q1 Plan Accomp');
+            $sheet->setCellValue('I1', 'Q2 Plan');
+            $sheet->setCellValue('J1', 'Q2 Plan Accomp');
+            $sheet->setCellValue('K1', 'Q3 Plan');
+            $sheet->setCellValue('L1', 'Q3 Plan Accomp');
+            $sheet->setCellValue('M1', 'Q4 Plan');
+            $sheet->setCellValue('N1', 'Q4 Plan Accomp');
+
+            // $totalResult = $initiativestotal;
+            // dd($totalResult);
+            $x = 2;
+            $soh = 0;
+            foreach ($suitableInitiative as $result) {
+                $plan = "";
+                $planAccomp = "";
+                $quarter1 = "";
+                $quarter2 = "";
+                $quarter3 = "";
+                $quarter4 = "";
+                $quarter1 = "";
+                $quarter1Accomp = "";
+                $quarter2Accomp = "";
+                $quarter3Accomp = "";
+                $quarter4Accomp = "";
+
+                if (count($result->getInitiative()->getSocialAtrribute()) > 0) {
+                    foreach ($result->getInitiative()->getSocialAtrribute() as $social) {
+                        $plan = $plan . strtoupper( substr( $social->getName(),0,1)) . ":" . $planningAccomplishmentRepository->findYearlyPlan($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
+                        $planAccomp = $planAccomp .strtoupper( substr( $social->getName(),0,1)) . ":" . $planningAccomplishmentRepository->findYearlyPlanAccomp($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
+
+
+                        $quarter1 =  $quarter1 . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 1). " ";
+                        $quarter1Accomp = $quarter1Accomp . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 1). " ";
+
+                        $quarter2 =  $quarter2 . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 2). " ";
+                        $quarter2Accomp = $quarter2Accomp . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 2). " ";
+
+                        $quarter3 =  $quarter3 . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 3). " ";
+                        $quarter3Accomp = $quarter3Accomp .strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 3). " ";
+
+                        $quarter4 =  $quarter4 . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 4). " ";
+                        $quarter4Accomp = $quarter4Accomp .strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 4). " ";
+                    }
+                } else {
+                    $plan =  $planningAccomplishmentRepository->findYearlyPlan($result, null, $result->getInitiative()->getInitiativeBehaviour()->getCode());
+
+                    $planAccomp = $planningAccomplishmentRepository->findYearlyPlanAccomp($result, null, $result->getInitiative()->getInitiativeBehaviour()->getCode());
+
+                    $quarter1 =  $planningAccomplishmentRepository->findQuarterPlan($result, null, 1);
+                    $quarter1Accomp = $planningAccomplishmentRepository->findQuarterPlanAccomp($result, null, 1);
+                    $quarter2 =  $planningAccomplishmentRepository->findQuarterPlan($result, null, 2);
+                    $quarter2Accomp = $planningAccomplishmentRepository->findQuarterPlanAccomp($result, null, 2);
+                    $quarter3 =  $planningAccomplishmentRepository->findQuarterPlan($result, null, 3);
+                    $quarter3Accomp = $planningAccomplishmentRepository->findQuarterPlanAccomp($result, null, 3);
+                    $quarter4 =  $planningAccomplishmentRepository->findQuarterPlan($result, null, 4);
+                    $quarter4Accomp = $planningAccomplishmentRepository->findQuarterPlanAccomp($result, null, 4);
+                }
+
+
+
+                $sheet->setCellValue('A' . $x, $result->getInitiative());
+                $sheet->setCellValue('B' . $x, $result->getInitiative()->getInitiativeBehaviour()->getName());
+                $sheet->setCellValue('C' . $x, $result->getPrincipalOffice()->getName());
+                $sheet->setCellValue('D' . $x, $result->getPlanningYear());
+                $sheet->setCellValue('E' . $x, $plan);
+                $sheet->setCellValue('F' . $x, $planAccomp);
+                $sheet->setCellValue('G' . $x,$quarter1);
+                $sheet->setCellValue('H' . $x, $quarter1Accomp);
+                $sheet->setCellValue('I' . $x, $quarter2);
+                $sheet->setCellValue('J' . $x, $quarter2Accomp);
+                $sheet->setCellValue('K' . $x, $quarter3);
+                $sheet->setCellValue('L' . $x, $quarter3Accomp);
+                $sheet->setCellValue('M' . $x, $quarter4);
+                $sheet->setCellValue('N' . $x, $quarter4Accomp);
+
+
+
+                $x++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $fileName =   "Principal Office Plan" . '.xlsx';
+            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+            $writer->save($temp_file);
+            return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
         }
 
 

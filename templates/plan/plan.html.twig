@@ -34,61 +34,65 @@
 						<div class="search-area well col-xs-12">
 
 							<div class="row" style="margin-bottom:10px;">
-								{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.initiative,'Initiative') }}
-										{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.kpi,'Kpi') }}
-										{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.strategy,'Strategy') }}
-										{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.objective,'Objective') }}
-										{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-									</div>
-								</div>
-
-								<div class="clearfix"></div>
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.goal,'Goal') }}
-										{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-									</div>
-								</div>
-
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.planyear,'Planning Year') }}
-										{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="form-group">
-										{{ form_label(filterform.principaloffice,"Principal Office") }}
-										{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
-									</div>
-								</div>
-
-								<div class="col-md-3">
-									<div class="form-group" style="margin-top:25px;">
-										<input type="submit" class="btn btn-primary btn-sm " value="Filter">
-									</div>
-								</div>
+								{% if is_granted('vw_all_pln') %}
 
 
-								{{ form_end(filterform) }}
+									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.initiative,'Initiative') }}
+											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.kpi,'Kpi') }}
+											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.strategy,'Strategy') }}
+											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.objective,'Objective') }}
+											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+
+									<div class="clearfix"></div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.goal,'Goal') }}
+											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.planyear,'Planning Year') }}
+											{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											{{ form_label(filterform.principaloffice,"Principal Office") }}
+											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="form-group" style="margin-top:25px;">
+											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+										</div>
+									</div>
+
+
+									{{ form_end(filterform) }}
+								{% endif %}
 							</div>
 							<div class="pull-left">
 
@@ -113,8 +117,22 @@
 
 					</div>
 					<div class="table-responsive">
+						<form action="" method="post">
+							<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
+								<i class="  fa fa-download"></i>
 
+								Excel
+							</button>
 
+						</form>
+
+						<form action="" method="post">
+							<input type="hidden" name="print" value="true">
+							<button type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right">
+								<i class=" fa fa-download"></i>
+								PDF
+							</button>
+						</form>
 						<table class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
@@ -158,7 +176,7 @@
 								{% set count =  suitableplans.getItemNumberPerPage() * (suitableplans.getCurrentPageNumber() -1) %}
 								{% for suitable in suitableplans %}
 
-                               {% set count = count+1 %}
+									{% set count = count+1 %}
 									<tr>
 										<td>{{count}}
 										</td>
@@ -234,13 +252,13 @@
 																<td>{{operational}}</td>
 																<td>{{getOperationalYearlyPlan(suitable, operational)}}</td>
 																<td>{{getOperationalYearlyPlanAccomp(suitable, operational)}}</td>
-																	<td>{{getOperationalQuarterPlan(suitable,1, operational)}}</td>
+																<td>{{getOperationalQuarterPlan(suitable,1, operational)}}</td>
 																<td>{{getOperationalQuarterPlanAccomp(suitable,1, operational)}}</td>
-																	<td>{{getOperationalQuarterPlan(suitable,2, operational)}}</td>
+																<td>{{getOperationalQuarterPlan(suitable,2, operational)}}</td>
 																<td>{{getOperationalQuarterPlanAccomp(suitable,2, operational)}}</td>
-																	<td>{{getOperationalQuarterPlan(suitable,3, operational)}}</td>
+																<td>{{getOperationalQuarterPlan(suitable,3, operational)}}</td>
 																<td>{{getOperationalQuarterPlanAccomp(suitable,3, operational)}}</td>
-																	<td>{{getOperationalQuarterPlan(suitable,4, operational)}}</td>
+																<td>{{getOperationalQuarterPlan(suitable,4, operational)}}</td>
 																<td>{{getOperationalQuarterPlanAccomp(suitable,4, operational)}}</td>
 
 															</tr>
