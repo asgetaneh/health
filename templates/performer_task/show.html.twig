@@ -48,7 +48,7 @@
 
 					<li data-step="3" class={% if taskAccomplishment.taskAssign.status >= 3 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 2 %} "active" {% else %} {% endif %}>
 						<span class="step">III</span>
-						<span class="title">Chalenge Faced/Solutions</span>
+						<span class="title">Chalenge Faced/ Opportunity</span>
 					</li>
 
 					<li data-step="4" class={% if taskAccomplishment.taskAssign.status >= 4 %} "complete" {% elseif taskAccomplishment.taskAssign.status >= 3 %} "active" {% else %} {% endif %}>
@@ -117,7 +117,7 @@
 											<th>EndDate</th>
 											<th>Penality Days</th>
 											<th>Measurement</th>
-											<th>Challenge</th>
+											<th>Challenge/Opportunity</th>
 											<th>Narrative</th>
 
 
@@ -140,10 +140,10 @@
 													<table class="table table-bordered table-responsive-xg table-hover">
 														<tr>
 															<th></th>
-															
+
 															<th>Measurement Description
 															</th>
-                                                            <th>Expected Value
+															<th>Expected Value
 															</th>
 															<th>Report Value
 															</th>
@@ -157,9 +157,9 @@
 
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
-																	
+
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
-                                                                    <td>
+																	<td>
 																		{% if social == 1 %}
 																			Male=
 																		{% endif %}
@@ -211,9 +211,11 @@
 												<td>{{ taskAssign.challenge}}</td>
 												<td>
 													{% if status >=4  %}
+														{% if taskAssign.narrative %}
 
-														<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
-															Narrative Report</a>
+															<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
+																Narrative Report</a>
+														{% endif %}
 
 													{% endif %}
 												</td>
@@ -228,7 +230,7 @@
 								</tbody>
 							</table>
 							{% if status == 2 %}
-								<button type="button" name="chalenge" data-taskuserid="{{taskAssignId}}" class="btn btn-primary show pull-right">Challenge</button>
+								<button type="button" name="chalenge" data-taskuserid="{{taskAssignId}}" class="btn btn-primary show pull-right">Challenge/Opportunity</button>
 								<div class="pull-left">
 									<button type="button" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skipChallenge  pull-right">Skip</button>
 								</div>
@@ -241,7 +243,7 @@
 							{% endif %}
 						</form>
 						{% if status == 4 %}
-							<form action="{{path('performer_task_send')}}" method="post"><input type="hidden" name="taskAssignIds" value="{{taskAssignId}}"><button type="submit"  class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report ?');">Send Report</button>
+							<form action="{{path('performer_task_send')}}" method="post"><input type="hidden" name="taskAssignIds" value="{{taskAssignId}}"><button type="submit" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report ?');">Send Report</button>
 							</form>
 						{% endif %}
 						{% if status == 3 %}
@@ -260,13 +262,14 @@
 	</div>
 </div>
 <div id="edit" class="modal fade" role="dialog">
-	<divclass="modal-dialog" style="width:400px;"><!-- Modal content--><div class="modal-content">
+	<div class="modal-dialog" style="width:400px;"><!-- Modal content--><div class="modal-content">
 			<div class="modal-header bg-info">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">Edit Report Value</h4>
 			</div>
 			<form method="post" action="{{path('performer_task_show')}}">
-				<div class="modal-body"><input type="hidden" name="taskAcoompId" class="taskAcoompId"><div class="form-group"><input type="number" name="editedReportValue" class="form-control"></div>
+				<div class="modal-body">
+					<input type="hidden" name="taskAcoompId" class="taskAcoompId"><div class="form-group"><input type="number" name="editedReportValue" class="form-control"></div>
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default closes" data-dismiss="modal">Close</button>

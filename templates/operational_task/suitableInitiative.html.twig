@@ -97,84 +97,94 @@
 									{% set create = 0 %}
 									{% set assign = 0 %}
 									{% for operationalSuitable in operationalSuitables %}
-										<tr>
-											{% set count = count + 1 %}
+										{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
+											{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
+												{% if operationalPlanningAccomplishment.quarter.id == quarter %}
+													{% if  operationalPlanningAccomplishment.planValue  != 0 %}
 
-											<td>{{ count}}</td>
-											<td>{{operationalSuitable. suitableInitiative.initiative.name }}</td>
 
-											<td>{{ operationalSuitable.operationalOffice.name  }}</td>
-											<td>
-												{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
-													{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
-														{% if operationalPlanningAccomplishment.quarter.id == quarter %}
-															{% if operationalPlanningAccomplishment.socialAttribute %}
-																{% if operationalPlanningAccomplishment.socialAttribute.code == 1 %}
-																	Male=
-																	{{ operationalPlanningAccomplishment.planValue  }}
-																{% else %}
-																	Female=
-																	{{ operationalPlanningAccomplishment.planValue  }}
+														<tr>
+															{% set count = count + 1 %}
 
+															<td>{{ count}}</td>
+															<td>{{operationalSuitable. suitableInitiative.initiative.name }}</td>
+
+															<td>{{ operationalSuitable.operationalOffice.name  }}</td>
+															<td>
+																{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
+																	{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
+																		{% if operationalPlanningAccomplishment.quarter.id == quarter %}
+																			{% if operationalPlanningAccomplishment.socialAttribute %}
+																				{% if operationalPlanningAccomplishment.socialAttribute.code == 1 %}
+																					Male=
+																					{{ operationalPlanningAccomplishment.planValue  }}
+																				{% else %}
+																					Female=
+																					{{ operationalPlanningAccomplishment.planValue  }}
+
+
+																				{% endif %}
+
+																			{% else %}
+																				{{ operationalPlanningAccomplishment.planValue  }}
+
+																			{% endif %}
+																		{% endif %}
+																	{% endif %}
+																{% endfor %}
+															</td>
+															<td>
+																{% if operationalSuitable.status %}
+
+																	{% if getTaskStatus(operationalSuitable.id,office) %}
+																		{# {{getTaskStatus(suitableInitiative.id,office)}} #}
+																		<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
+																			Assign
+																		</a>
+																	{% else %}
+																		<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
+																			Create
+																		</a>
+																	{% endif %}
+																{% endif %}
+															</td>
+
+															<td>
+																{% if operationalSuitable.status %}
+
+																	<a href="{{ path('acomplishment_task_detail', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-success btn-sm">
+																		Report
+																	</a>
 
 																{% endif %}
+															</td>
+															<td>
 
-															{% else %}
-																{{ operationalPlanningAccomplishment.planValue  }}
+																{% if getTaskStatus(operationalSuitable.id,office) %}
+																	<div class="badge badge-primary">
+																		create
+																	</div>
+																{% endif %}
+																{% if getTaskStatusAssigned(operationalSuitable.id,office) %}
+																	<div class="badge badge-danger">
+																		assign
+																	</div>
+																{% endif %}
+																{% if getTaskStatusSend(operationalSuitable.id,office) %}
+																	<div class="badge badge-success">
+																		send
+																	</div>
+																{% endif %}
 
-															{% endif %}
-														{% endif %}
+
+															</td>
+
+														</tr>
 													{% endif %}
-												{% endfor %}
-											</td>
-											<td>
-                                			{% if operationalSuitable.status %}
-
-												{% if getTaskStatus(operationalSuitable.id,office) %}
-													{# {{getTaskStatus(suitableInitiative.id,office)}} #}
-													<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
-														Assign
-													</a>
-												{% else %}
-													<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
-														Create
-													</a>
 												{% endif %}
-												{% endif %}
-											</td>
+											{% endif %}
 
-											<td>
-                                			{% if operationalSuitable.status %}
-
-												<a href="{{ path('acomplishment_task_detail', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-success btn-sm">
-													Report
-												</a>
-
-												 {% endif %} 
-											</td>
-											<td>
-
-												{% if getTaskStatus(operationalSuitable.id,office) %}
-													<div class="badge badge-primary">
-														create
-													</div>
-												{% endif %}
-												{% if getTaskStatusAssigned(operationalSuitable.id,office) %}
-													<div class="badge badge-danger">
-														assign
-													</div>
-												{% endif %}
-												{% if getTaskStatusSend(operationalSuitable.id,office) %}
-													<div class="badge badge-success">
-														send
-													</div>
-												{% endif %}
-
-
-											</td>
-
-										</tr>
-
+										{% endfor %}
 									{% else %}
 										<tr>
 											<td colspan="8">no records found</td>
@@ -189,7 +199,7 @@
 					</div>
 
 
-					 {% if not data %} 
+					{% if not data %}
 
 						{{ form_start(uploadPlan,{'attr': {'role':'form'}}) }}<div class="row">
 							<div class="form-group col-md-3 ">
@@ -200,7 +210,7 @@
 						</div>
 						{{ form_end(uploadPlan) }}
 
-					 {% endif %} 
+					{% endif %}
 				</div>
 			</div>
 		</div>

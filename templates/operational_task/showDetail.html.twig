@@ -120,7 +120,7 @@
 											<th>StartDate</th>
 											<th>EndDate</th>
 											<th>Penality Days</th>
-											<th>Chalenge</th>
+											<th>Challenge/Opportunity</th>
 											<th>Narrative Report</th>
 											<th>Measurement</th>
 
@@ -141,8 +141,11 @@
 												<td>{{ taskAssign.timeGap}}</td>
 												<td>{{ taskAssign.challenge}}</td>
 												<td>
-													<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
-														Narrative Report</a>
+													{% if taskAssign.narrative %}
+
+															<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
+																Narrative Report</a>
+														{% endif %}
 												</td>
 
 												<td>

@@ -283,6 +283,74 @@ class OperationalTaskController extends AbstractController
                             } else {
                                 $operationalplan->setPlanValue(0);
                             }
+                        } else if ($values['B'] == 2) {
+                            if ($i == 0) {
+                                $planf = $values['F'];
+                            } else if ($i == 1) {
+                                if ($values['G'] <= $values['F']) {
+                                    $values['G'] = $values['F'];
+                                    $planf = $values['F'];
+                                } else {
+                                    $planf = $values['G'];
+                                }
+                            } else if ($i == 2) {
+
+                                if ($values['H'] <= $values['G']) {
+                                    $values['H'] = $values['G'];
+
+                                    $planf = $values['G'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                            } else {
+                                if ($values['I'] <= $values['H']) {
+                                    $values['I'] = $values['H'];
+
+                                    $planf = $values['H'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                                $planf = $values['I'];
+                            }
+                            if ($planf) {
+                                $operationalplan->setPlanValue($planf);
+                            } else {
+                                $operationalplan->setPlanValue(0);
+                            }
+                        } else if ($values['B'] == 3) {
+                            if ($i == 0) {
+                                $planf = $values['F'];
+                            } else if ($i == 1) {
+                                if ($values['G'] >= $values['F']) {
+                                    $values['G'] = $values['F'];
+                                    $planf = $values['F'];
+                                } else {
+                                    $planf = $values['G'];
+                                }
+                            } else if ($i == 2) {
+
+                                if ($values['H'] >= $values['G']) {
+                                    $values['H'] = $values['G'];
+
+                                    $planf = $values['G'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                            } else {
+                                if ($values['I'] >= $values['H']) {
+                                    $values['I'] = $values['H'];
+
+                                    $planf = $values['H'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                                $planf = $values['I'];
+                            }
+                            if ($planf) {
+                                $operationalplan->setPlanValue($planf);
+                            } else {
+                                $operationalplan->setPlanValue(0);
+                            }
                         } else {
                             if ($i == 0) {
                                 $planf = $values['F'];
@@ -413,7 +481,6 @@ class OperationalTaskController extends AbstractController
             $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
             $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
-
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
             $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
             $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);

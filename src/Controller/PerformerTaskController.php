@@ -196,8 +196,8 @@ class PerformerTaskController extends AbstractController
 
             $taskAccomplishment = $taskAccomplishmentRepository->find($taskAcoompId);
             $taskAccomplishment->setReportedValue($editedReportValue);
-            // $taskUser=$taskUserRepository->findOneBy(['id'=>$taskAccomplishment->getTaskUser()->getId()]);
-            // $taskUser->setStatus(2);
+            $taskAssigned=$taskAssignRepository->findOneBy(['id'=>$taskAccomplishment->getTaskAssign()->getId()]);
+            $taskAssigned->setExpectedValue($editedReportValue);
 
             $em->flush();
             $this->addFlash('success', 'Reported Value Edited Successfully !');
