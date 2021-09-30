@@ -256,44 +256,52 @@ class OperationalTaskController extends AbstractController
             $principal = $operation->getOperationalOffice()->getPrincipalOffice();
             $suitPri = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principal]);
             foreach ($sheetData as $keys => $values) {
-                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'],$principal);
+                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'], $principal);
                 // dd($su);
                 foreach ($su as $key => $value) {
                     //  dd($value);
                     // if ($su[$key] == $value) {
-                        $operSuitable = $em->getRepository(SuitableOperational::class)->findBy(['operationalOffice' => $operation->getOperationalOffice(), 'suitableInitiative' => $value]);
-                        // if ($operSuitable) {
-                        //     $this->addFlash('danger', ' Plan Already Done');
-                        //     return $this->redirectToRoute('suitable_initiative_list');
-                        // }
-                        $operationalSui = new SuitableOperational();
-                        $operationalSui->setSuitableInitiative($value);
-                        $operationalSui->setOperationalOffice($operation->getOperationalOffice());
-                        $em->persist($operationalSui);
-                        for ($i = 0; $i < 4; $i++) {
+                    $operSuitable = $em->getRepository(SuitableOperational::class)->findBy(['operationalOffice' => $operation->getOperationalOffice(), 'suitableInitiative' => $value]);
+                    // if ($operSuitable) {
+                    //     $this->addFlash('danger', ' Plan Already Done');
+                    //     return $this->redirectToRoute('suitable_initiative_list');
+                    // }
+                    $operationalSui = new SuitableOperational();
+                    $operationalSui->setSuitableInitiative($value);
+                    $operationalSui->setOperationalOffice($operation->getOperationalOffice());
+                    $em->persist($operationalSui);
+                    for ($i = 0; $i < 4; $i++) {
 
-                            $operationalplan = new OperationalPlanningAccomplishment();
-                            $operationalplan->setOperationalSuitable($operationalSui);
+                        $operationalplan = new OperationalPlanningAccomplishment();
+                        $operationalplan->setOperationalSuitable($operationalSui);
 
-                            $operationalplan->setQuarter($currentQuarter[$i]);
-                            if ($i == 0) {
-                                $planf = $values['C'];
-                            } else if ($i == 1) {
-                                $planf = $values['D'];
-                            } else if ($i == 2) {
-                                $planf = $values['E'];
+                        $operationalplan->setQuarter($currentQuarter[$i]);
+                        if ($values['B'] == 0) {
+                            $planf = $values['F'];
+                            if ($planf) {
+                                $operationalplan->setPlanValue($planf);
                             } else {
+                                $operationalplan->setPlanValue(0);
+                            }
+                        } else {
+                            if ($i == 0) {
                                 $planf = $values['F'];
+                            } else if ($i == 1) {
+                                $planf = $values['G'];
+                            } else if ($i == 2) {
+                                $planf = $values['H'];
+                            } else {
+                                $planf = $values['I'];
                             }
                             if ($planf) {
                                 $operationalplan->setPlanValue($planf);
-                            }
-                            else{
+                            } else {
                                 $operationalplan->setPlanValue(0);
                             }
-                            $em->persist($operationalplan);
-                            $em->flush();
                         }
+                        $em->persist($operationalplan);
+                        $em->flush();
+                    }
                     // }
 
                 }
@@ -304,11 +312,11 @@ class OperationalTaskController extends AbstractController
                 $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'], $principal);
                 // dump($su);
                 foreach ($su as $key => $value) {
-                        $help = Helper::calculatePrincipalOfficePlan($em, $value);
+                    $help = Helper::calculatePrincipalOfficePlan($em, $value);
                 }
             }
-           
-                            // dd(1);
+
+            // dd(1);
             // $this->calculatePrincipalOfficePlan($em, $planInitiative);
 
             $this->addFlash('success', ' Plan Uploaded Successfully');
@@ -327,13 +335,12 @@ class OperationalTaskController extends AbstractController
         $operationalOffice =  $operation->getOperationalOffice()->getId();
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
         $currentMonths = AmharicHelper::getCurrentMonth($em);
-        $currentMonths=explode('-', $currentMonths);
+        $currentMonths = explode('-', $currentMonths);
 
         if ($currentQuarter == 1) {
             $currentYear = $currentYear + 1;
             if ($currentMonths[1] == "01") {
-            $currentYear = $currentYear - 1;
-
+                $currentYear = $currentYear - 1;
             }
         }
         $operationalSuitables = $em->getRepository(SuitableOperational::class)->findSuitableInitiatve($operationalOffice, $currentYear);
@@ -344,10 +351,10 @@ class OperationalTaskController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-       
+
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'operationalSuitables' => $data,
-            'data'=>$operationalSuitables,
+            'data' => $operationalSuitables,
             'uploadPlan' => $uploadPlan->createView(),
             'count' => $operationalSuitables,
             'operationalPlanningAccomplishments' => $operationalPlanningAccomplishments,
@@ -356,7 +363,7 @@ class OperationalTaskController extends AbstractController
 
         ]);
     }
-     /**
+    /**
      * @Route("/approve_operational_plan", name="approve_operational_plan")
      */
     public function approveOperationalPlan(Request $request)
@@ -368,32 +375,15 @@ class OperationalTaskController extends AbstractController
         $suitableInId = $request->request->get('suitableInId');
         $operationalOfId = $request->request->get('operationalOfId');
 
-        $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOperationalId($suitableInId,$operationalOfId);
+        $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOperationalId($suitableInId, $operationalOfId);
         // dd($operationalSuitable);
         foreach ($operationalSuitable as  $value) {
-        $value->setStatus(1);
+            $value->setStatus(1);
         }
         $em->flush();
         return new JsonResponse($operationalSuitable);
     }
-    
-      /**
-     * @Route("/operational_suitable_approve", name="operational_suitable_approve")
-     */
-    public function operationalSuitableapprove(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
 
-        $operationalSuit = $request->request->get('operationalSui');
-                dd($operationalSuit);
-
-        $operationalSuitable = $em->getRepository(SuitableOperational::class)->find($operationalSuit);
-                        dd($operationalSuitable);
-
-        $operationalSuitable->setStatus(1);
-        $em->flush();
-        return new JsonResponse($operationalSuitable);
-    }
     /**
      * @Route("/principal_report", name="principal_office_report", methods={"GET","POST"})
      */
@@ -407,45 +397,62 @@ class OperationalTaskController extends AbstractController
             $suitableInitiativesprincipal = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principalOffice]);
             $spreadsheet = new Spreadsheet();
 
-            foreach (range('A', 'E') as $columnID) {
+
+            foreach (range('A', 'I') as $columnID) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
             }
-            $count=1;
+            $count = 1;
             foreach ($suitableInitiativesprincipal as $result) {
-                $count=$count+1;
-
+                $count = $count + 1;
             }
-            // dd($count);
-            $A1="A1";
-            $Af='A'.'3';
-            // dd($Af);
-            $sheet = $spreadsheet->getActiveSheet();
 
-            $spreadsheet->getActiveSheet()->getStyle('A1:A'.$count.'')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
+            $sheet = $spreadsheet->getActiveSheet();
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(false);
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);
+            $sheet->setTitle("you can not delete any column");
+
+
+            $spreadsheet->getActiveSheet()->getStyle('A1:A' . $count . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
+            $spreadsheet->getActiveSheet()->getStyle('B1:B' . $count . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
 
 
             $sheet->setCellValue('A1', 'Initiative Code');
-            $sheet->setCellValue('B1', 'Initiative Name');
-            $sheet->setCellValue('C1', 'Q1');
-            $sheet->setCellValue('D1', 'Q2');
-            $sheet->setCellValue('E1', 'Q3');
-            $sheet->setCellValue('F1', 'Q4');
+            $sheet->setCellValue('B1', 'IBC');
+            $sheet->setCellValue('C1', 'KPI');
+            $sheet->setCellValue('D1', 'Initiative Name');
+            $sheet->setCellValue('E1', 'Initiative Behaviour');
+            $sheet->setCellValue('F1', 'Q1');
+            $sheet->setCellValue('G1', 'Q2');
+            $sheet->setCellValue('H1', 'Q3');
+            $sheet->setCellValue('I1', 'Q4');
             // $totalResult = $initiativestotal;
             // dd($totalResult);
             $x = 2;
             $soh = 0;
             foreach ($suitableInitiativesprincipal as $result) {
-              if (!count($result->getInitiative()->getSocialAtrribute()) > 0) {
-                $sheet->setCellValue('A' . $x, $result->getInitiative()->getId());
-                $sheet->setCellValue('B' . $x, $result->getInitiative()->getName());
-                $sheet->setCellValue('C' . $x, "");
-                $sheet->setCellValue('D' . $x, "");
-                $sheet->setCellValue('E' . $x, "");
-                $sheet->setCellValue('F' . $x, "");
+                if (!count($result->getInitiative()->getSocialAtrribute()) > 0) {
+                    $sheet->setCellValue('A' . $x, $result->getInitiative()->getId());
+                    $sheet->setCellValue('B' . $x, $result->getInitiative()->getInitiativeBehaviour()->getCode());
+                    $sheet->setCellValue('C' . $x, $result->getInitiative()->getKeyPerformanceIndicator()->getName());
+                    $sheet->setCellValue('D' . $x, $result->getInitiative()->getName());
+                    $sheet->setCellValue('E' . $x, $result->getInitiative()->getInitiativeBehaviour()->getName());
+                    $sheet->setCellValue('F' . $x, "");
+                    $sheet->setCellValue('G' . $x, "");
+                    $sheet->setCellValue('H' . $x, "");
+                    $sheet->setCellValue('I' . $x, "");
 
 
-                $x++;
-                        }
+
+                    $x++;
+                }
             }
             $writer = new Xlsx($spreadsheet);
             $fileName = $principalOfficeName . "Suitable Initiative" . '.xlsx';

@@ -438,6 +438,18 @@
 
 																	</a>
 																{% endif %}
+																	{% for operationalPlan in operationalPlans %}
+																	{% if  operationalPlan.suitableInitiative.id == suitableplan.id and operationalPlan.operationalOffice.id == operational.id %}
+																		{% if  operationalPlan.status == 0 %}
+																			<button="button"  data-suitableinid="{{suitableplan.id}}" data-operational="{{operational.id}}" class="btn btn-sm  btn-success approve ">
+																				<i class="fa fa-check"></i>
+																			</button>
+
+
+
+																		{% endif %}
+																	{% endif %}
+																{% endfor %}
 															</td>
 
 
