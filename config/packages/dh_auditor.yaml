@@ -20,7 +20,12 @@ dh_auditor:
                 App\Entity\OperationalPlanningAccomplishment: ~
                 App\Entity\UserInfo: ~
                 App\Entity\Initiative: ~
-                App\Entity\Sms: ~
+                App\Entity\PrincipalManager: ~
+                App\Entity\PrincipalOffice: ~
+                App\Entity\OperationalManager: ~
+                App\Entity\OperationalOffice: ~
+                App\Entity\Performer: ~
+
 
                 
 
