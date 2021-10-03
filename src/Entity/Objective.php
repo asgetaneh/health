@@ -71,12 +71,18 @@ class Objective implements TranslatableInterface
      */
     private $objectiveNumber;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ObjectiveAchievement::class, mappedBy="objective")
+     */
+    private $objectiveAchievements;
+
    
 
     public function __construct()
     {
         $this->strategies = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+        $this->objectiveAchievements = new ArrayCollection();
       
     }
 
@@ -235,6 +241,36 @@ class Objective implements TranslatableInterface
     public function setObjectiveNumber(?int $objectiveNumber): self
     {
         $this->objectiveNumber = $objectiveNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ObjectiveAchievement[]
+     */
+    public function getObjectiveAchievements(): Collection
+    {
+        return $this->objectiveAchievements;
+    }
+
+    public function addObjectiveAchievement(ObjectiveAchievement $objectiveAchievement): self
+    {
+        if (!$this->objectiveAchievements->contains($objectiveAchievement)) {
+            $this->objectiveAchievements[] = $objectiveAchievement;
+            $objectiveAchievement->setObjective($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObjectiveAchievement(ObjectiveAchievement $objectiveAchievement): self
+    {
+        if ($this->objectiveAchievements->removeElement($objectiveAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($objectiveAchievement->getObjective() === $this) {
+                $objectiveAchievement->setObjective(null);
+            }
+        }
 
         return $this;
     }

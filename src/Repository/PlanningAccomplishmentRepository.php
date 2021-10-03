@@ -299,4 +299,23 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+      public function calulateSumByInitiativeAndYear($initiative, $year, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+        ->select('sum(pa.planValue) as plan')
+            // ->leftjoin('pa.socialAttribute', 'sa')
+            ->Join('pa.suitableInitiative', 'si')
+            // ->andwhere('pa.suitableInitiative = :suitin')
+            ->andwhere('pa.quarter = :quarter')
+            ->andwhere('si.initiative = :initiative')
+            ->andwhere('si.planningYear = :year')
+            // ->andwhere('sa.id = :name')
+            ->setParameter('year',  $year)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('initiative', $initiative)
+            // ->setParameter('name', $social)
+            ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

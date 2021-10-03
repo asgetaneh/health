@@ -1,22 +1,33 @@
 <?php
+
 namespace App\Helper;
 
+use App\Entity\Goal;
+use App\Entity\GoalAchievement;
+use App\Entity\Initiative;
+use App\Entity\InitiativeAchievement;
 use App\Entity\InitiativeAttribute;
+use App\Entity\KeyPerformanceIndicator;
+use App\Entity\KPiAchievement;
+use App\Entity\Objective;
+use App\Entity\ObjectiveAchievement;
 use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
+use App\Entity\PlanningYear;
+use App\Entity\QuarterPlanAchievement;
 use App\Entity\SuitableInitiative;
 use App\Entity\SuitableOperational;
 use Doctrine\ORM\EntityManagerInterface;
 
-class Helper 
+class Helper
 {
-     public static function locales()
+    public static function locales()
     {
-        return ["English"=>'en',"Afaan Oromo"=>'or',"Amharic"=>'am'];
+        return ["English" => 'en', "Afaan Oromo" => 'or', "Amharic" => 'am'];
         //"Tigr"=>'tg'
     }
-      public static function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
+    public static function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
     {
 
 
@@ -28,7 +39,7 @@ class Helper
 
         // if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
         //     $socalAttributes = $em->getRepository(InitiativeAttribute::class)->findAll();
-           
+
         //     foreach ($socalAttributes as $socalAttribute) {
         //         $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateSocialAttrQuartertPlan($planInitiative, $socalAttribute);
         //             //   if($socalAttribute->getId()==2)
@@ -51,34 +62,234 @@ class Helper
 
         //             $em->flush();
         //         }
-            
+
         //     }
-            
+
         // } else {
 
-            $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateQuartertPlan($planInitiative);
+        $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateQuartertPlan($planInitiative);
 
 
 
-            foreach ($quarters as $key => $quarter) {
-                $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, null, $quarter);
-                $isexist = true;
-                if (!$planAcomplishment) {
-                    $planAcomplishment = new PlanningAccomplishment();
-                    $planAcomplishment->setQuarter($quarter);
-                    $planAcomplishment->setSuitableInitiative($suitableInitiative);
-                    $isexist = false;
-                }
-                $planAcomplishment->setPlanValue($plans[$key][1]);
-                if (!$isexist)
-                    $em->persist($planAcomplishment);
-
-
-                $em->flush();
+        foreach ($quarters as $key => $quarter) {
+            $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, null, $quarter);
+            $isexist = true;
+            if (!$planAcomplishment) {
+                $planAcomplishment = new PlanningAccomplishment();
+                $planAcomplishment->setQuarter($quarter);
+                $planAcomplishment->setSuitableInitiative($suitableInitiative);
+                $isexist = false;
             }
+            $planAcomplishment->setPlanValue($plans[$key][1]);
+            if (!$isexist)
+                $em->persist($planAcomplishment);
+
+
             $em->flush();
-            $em->clear();
-        
+        }
+        $em->flush();
+        $em->clear();
+
         return true;
+    }
+    public static function calculateInitiativePlan(EntityManagerInterface $em, $suitableInitiative)
+    {
+        $em->clear();
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $year = $em->getRepository(PlanningYear::class)->find($suitableInitiative->getPlanningYear()->getId());
+        $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
+        $initiativeAchievement = $em->getRepository(InitiativeAchievement::class)->getByInitiativeAndYear($initiative, $year);
+        $isinitiativeAchievement = true;
+        if (!$initiativeAchievement) {
+
+            $initiativeAchievement = new InitiativeAchievement();
+            $initiativeAchievement->setYear($year);
+            $initiativeAchievement->setInitiative($initiative);
+             $em->persist($initiativeAchievement);
+
+            $isinitiativeAchievement = false;
+        }
+        //  $em->flush();
+        foreach ($quarters as  $quarter) {
+
+            $plan = $em->getRepository(PlanningAccomplishment::class)->calulateSumByInitiativeAndYear($suitableInitiative->getInitiative(), $suitableInitiative->getPlanningYear(), $quarter);
+            $quarterPlanAchievement = null;
+            if ($isinitiativeAchievement)
+                $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->findByInitiativeAchievementAndQuarter($initiativeAchievement, $quarter);
+            $isexist = true;
+            if (!$quarterPlanAchievement) {
+                $quarterPlanAchievement = new QuarterPlanAchievement();
+                $quarterPlanAchievement->setQuarter($quarter);
+                 $quarterPlanAchievement->setInitiativeAchievement($initiativeAchievement);
+                $isexist = false;
+            }
+            $quarterPlanAchievement->setPlan($plan);
+
+
+            if (!$isexist) {
+                //$initiativeAchievement->addQuarterAchievement($quarterPlanAchievement);
+                 $em->persist($quarterPlanAchievement);
+            }
+        }
+        // if (!$isinitiativeAchievement)
+        //     $em->persist($initiativeAchievement);
+
+
+        $em->flush();
+        $em->clear();
+        self::calculateKpiPlan($em,$suitableInitiative);
+         self::setObjectivePlan($em,$suitableInitiative);
+          self::setGoalPlan($em,$suitableInitiative);
+
+
+        return;
+    }
+     public static function calculateKpiPlan(EntityManagerInterface $em, $suitableInitiative)
+    {
+     
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $year = $em->getRepository(PlanningYear::class)->find($suitableInitiative->getPlanningYear()->getId());
+        $kpi = $em->getRepository(KeyPerformanceIndicator::class)->find($suitableInitiative->getInitiative()->getKeyPerformanceIndicator()->getId());
+        $kpiAchievement = $em->getRepository(KpiAchievement::class)->getByKpiAndYear($kpi, $year);
+        $iskpiAchievement = true;
+        if (!$kpiAchievement) {
+
+            $kpiAchievement = new KPiAchievement();
+            $kpiAchievement->setYear($year);
+            $kpiAchievement->setKpi($kpi);
+            // $em->persist($kpiAchievement);
+
+            $iskpiAchievement = false;
+        }
+        //  $em->flush();
+        foreach ($quarters as  $quarter) {
+
+            $plan = $em->getRepository(QuarterPlanAchievement::class)->getSumByKpiAndYear($kpi, $year, $quarter);
+            $quarterPlanAchievement = null;
+            if ($iskpiAchievement)
+                $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->getByKpiAchievementAndQuarter($kpiAchievement,$quarter);
+            $isexist = true;
+            if (!$quarterPlanAchievement) {
+                $quarterPlanAchievement = new QuarterPlanAchievement();
+                $quarterPlanAchievement->setQuarter($quarter);
+                $quarterPlanAchievement->setKPiAchievement($kpiAchievement);
+                $isexist = false;
+            }
+              $quarterPlanAchievement->setPlan($plan);
+
+
+            if (!$isexist) {
+               $kpiAchievement->addQuarterAchievement($quarterPlanAchievement);
+                $em->persist($quarterPlanAchievement);
+            }
+        }
+        if (!$iskpiAchievement)
+            $em->persist($kpiAchievement);
+
+
+        $em->flush();
+        
+
+
+        return;
+    }
+     public static function setObjectivePlan(EntityManagerInterface $em, $suitableInitiative)
+    {
+     
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $year = $em->getRepository(PlanningYear::class)->find($suitableInitiative->getPlanningYear()->getId());
+          $kpi = $em->getRepository(KeyPerformanceIndicator::class)->find($suitableInitiative->getInitiative()->getKeyPerformanceIndicator()->getId());
+      
+        $objective = $em->getRepository(Objective::class)->find($kpi->getStrategy()->getObjective()->getId());
+        $objectiveAchievement = $em->getRepository(ObjectiveAchievement::class)->getByObjectiveAndYear($objective, $year);
+        $isObjective = true;
+        if (!$objectiveAchievement) {
+
+            $objectiveAchievement = new ObjectiveAchievement();
+            $objectiveAchievement->setYear($year);
+            $objectiveAchievement->setObjective($objective);
+            // $em->persist($objectiveAchievement);
+
+            $isObjective = false;
+        }
+        //  $em->flush();
+        foreach ($quarters as  $quarter) {
+
+            $plan = $em->getRepository(QuarterPlanAchievement::class)->getSumByObjectiveAndYear($objective, $year, $quarter);
+            $quarterPlanAchievement = null;
+            if ($isObjective)
+                $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->getByObjectiveAchievementAndQuarter($objectiveAchievement,$quarter);
+            $isexist = true;
+            if (!$quarterPlanAchievement) {
+                $quarterPlanAchievement = new QuarterPlanAchievement();
+                $quarterPlanAchievement->setQuarter($quarter);
+                $quarterPlanAchievement-> setObjectiveAchievement($objectiveAchievement);
+                $isexist = false;
+            }
+              $quarterPlanAchievement->setPlan($plan);
+
+
+            if (!$isexist) {
+               $objectiveAchievement->addQuarterAchievement($quarterPlanAchievement);
+                $em->persist($quarterPlanAchievement);
+            }
+        }
+        if (!$isObjective)
+            $em->persist($objectiveAchievement);
+
+
+        $em->flush();
+
+        return;
+    }
+     public static function setGoalPlan(EntityManagerInterface $em, $suitableInitiative)
+    {
+     
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $year = $em->getRepository(PlanningYear::class)->find($suitableInitiative->getPlanningYear()->getId());
+        $kpi = $em->getRepository(KeyPerformanceIndicator::class)->find($suitableInitiative->getInitiative()->getKeyPerformanceIndicator()->getId());
+      
+        $objective = $em->getRepository(Objective::class)->find($kpi->getStrategy()->getObjective()->getId());
+        $goal = $em->getRepository(Goal::class)->find($objective->getGoal()->getId());
+        $goalAchievement = $em->getRepository(GoalAchievement::class)->getByGoalAndYear($goal, $year);
+        $isGoal = true;
+        if (!$goalAchievement) {
+
+            $goalAchievement = new GoalAchievement();
+            $goalAchievement->setYear($year);
+            $goalAchievement->setGoal($goal);
+            // $em->persist($goalAchievement);
+
+            $isGoal = false;
+        }
+        //  $em->flush();
+        foreach ($quarters as  $quarter) {
+
+            $plan = $em->getRepository(QuarterPlanAchievement::class)->getSumByGoalAndYear($goal, $year, $quarter);
+            $quarterPlanAchievement = null;
+            if ($isGoal)
+                $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->getByGoalAchievementAndQuarter($goalAchievement,$quarter);
+            $isexist = true;
+            if (!$quarterPlanAchievement) {
+                $quarterPlanAchievement = new QuarterPlanAchievement();
+                $quarterPlanAchievement->setQuarter($quarter);
+                $quarterPlanAchievement-> setGoalAchievement($goalAchievement);
+                $isexist = false;
+            }
+              $quarterPlanAchievement->setPlan($plan);
+
+
+            if (!$isexist) {
+               $goalAchievement->addQuarterAchievement($quarterPlanAchievement);
+                $em->persist($quarterPlanAchievement);
+            }
+        }
+        if (!$isGoal)
+            $em->persist($goalAchievement);
+
+
+        $em->flush();
+
+        return;
     }
 }

@@ -119,6 +119,11 @@ class PlanningQuarter
      */
     private $operationalPlanningAccomplishments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=QuarterPlanAchievement::class, mappedBy="quarter")
+     */
+    private $quarterPlanAchievements;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -130,6 +135,7 @@ class PlanningQuarter
         $this->operationalSuitableInitiatives = new ArrayCollection();
         $this->quarterAccomplishments = new ArrayCollection();
         $this->operationalPlanningAccomplishments = new ArrayCollection();
+        $this->quarterPlanAchievements = new ArrayCollection();
     }
     public function __toString()
     {
@@ -534,6 +540,36 @@ class PlanningQuarter
             // set the owning side to null (unless already changed)
             if ($operationalPlanningAccomplishment->getQuarter() === $this) {
                 $operationalPlanningAccomplishment->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuarterPlanAchievement[]
+     */
+    public function getQuarterPlanAchievements(): Collection
+    {
+        return $this->quarterPlanAchievements;
+    }
+
+    public function addQuarterPlanAchievement(QuarterPlanAchievement $quarterPlanAchievement): self
+    {
+        if (!$this->quarterPlanAchievements->contains($quarterPlanAchievement)) {
+            $this->quarterPlanAchievements[] = $quarterPlanAchievement;
+            $quarterPlanAchievement->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuarterPlanAchievement(QuarterPlanAchievement $quarterPlanAchievement): self
+    {
+        if ($this->quarterPlanAchievements->removeElement($quarterPlanAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($quarterPlanAchievement->getQuarter() === $this) {
+                $quarterPlanAchievement->setQuarter(null);
             }
         }
 

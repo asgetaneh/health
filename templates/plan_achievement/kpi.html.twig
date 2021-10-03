@@ -19,8 +19,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																											<i class="ace-icon fa fa-refresh"></i>
-																										</a> #}
+																															<i class="ace-icon fa fa-refresh"></i>
+																														</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -50,20 +50,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																							<h5 class="widget-title">
-																								<strong>Initiative Achievement</strong>
-																							</h5>
-														
-																							<div class="widget-toolbar">
-														
-														
-																								<a href="#" id="reload" data-action="reload">
-																									<i class="ace-icon fa fa-refresh"></i>
-																								</a>
-														
-														
-																							</div>
-																						</div> #}
+																																					<h5 class="widget-title">
+																																						<strong>Initiative Achievement</strong>
+																																					</h5>
+																												
+																																					<div class="widget-toolbar">
+																												
+																												
+																																						<a href="#" id="reload" data-action="reload">
+																																							<i class="ace-icon fa fa-refresh"></i>
+																																						</a>
+																												
+																												
+																																					</div>
+																																				</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
@@ -98,6 +98,12 @@
 														{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
 													</div>
 												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+														{{ form_label(filterform.year,'Year') }}
+														{{ form_widget(filterform.year,{'attr':{'class':'select2 form-control','data-placeholder':'chose year' }}) }}
+													</div>
+												</div>
 
 												<div class="col-md-3">
 													<div class="form-group" style="margin-top:25px;">
@@ -122,93 +128,113 @@
 										<table class="table table-striped table-bordered table-hover">
 											<thead>
 												<tr>
-													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">#</th>
 
-													<th rowspan="2" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Kpi{% endtrans %}</th>
+													<th rowspan="2">#</th>
 
-													<th rowspan="2" style="text-align:left;background-color:#778899;color: white;">{% trans %}Wieght{% endtrans %}</th>
-													<th colspan="7" class="center" style="text-align:left;background-color:#808080;color: white;">{% trans %}Achievement{% endtrans %}</th>
+													<th rowspan="2">Kpi</th>
+													<th rowspan="2">Objective</th>
+													<th rowspan="2">Goal</th>
+													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
+
+													<th rowspan="2">Year</th>
+													<th colspan="2">yearly</th>
+													<th colspan="2">1st Quarter</th>
+													<th colspan="2">2nd Quarter</th>
+													<th colspan="2">3rd Quarter</th>
+													<th colspan="2">4th  Quarter</th>
+
 
 												</tr>
+
 												<tr>
 
-													<th style="text-align:left;background-color:#808080;color: white;">Year</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Year Total</th>
 
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 1</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 2</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 3</th>
-													<th style="text-align:left;background-color:#808080;color: white;">Quarter 4</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+
+
 												</tr>
 											</thead>
 											<tbody>
 												{% set count =  plan_achievements.getItemNumberPerPage() * (plan_achievements.getCurrentPageNumber() -1) %}
 												{% for plan_achievement in plan_achievements %}
-													{% set count = count +1 %}
-													{% set total = plan_achievement.planAchievements|length + 1 %}
+
+													{% set count = count+1 %}
 													<tr>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ count }}</td>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ plan_achievement.name }}</td>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ plan_achievement.weight }}</td>
+														<td>{{count}}
+														</td>
+
+
+														<td>{{plan_achievement.kpi}}</td>
+														<td>{{plan_achievement.kpi.strategy.objective}}</td>
+														<td>{{plan_achievement.kpi.strategy.objective.goal}}</td>
+														{# <td>{{plan_achievement.initiative.initiativeBehaviour}}</td> #}
+
+														<td>{{plan_achievement.year}}</td>
+														<td></td>
+														<td></td>
+														{% for quarterplan in plan_achievement.quarterAchievement %}
+															<td>{{quarterplan.plan }}</td>
+															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
+														{% endfor %}
+
+
 													</tr>
-													{% for achievement in plan_achievement.planAchievements %}
 
-														<tr>
-															<td>{{ achievement.year}}</td>
-															<td>{{ achievement.accomplishmentValue??"0"}}</td>
-															{% for quartAccomp in achievement.quarterAccomplishments %}
 
-																<td>{{ quartAccomp.achievementValue??"0" }}</td>
-															{% endfor %}
-														</tr>
-													{% endfor %}
+												{% endfor %}
 
-												</tr>
-											{% else %}
-												<tr>
-													<td colspan="3">no records found</td>
-												</tr>
-											{% endfor %}
-										</tbody>
-									</table>
-									<div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div>
+
+											</tbody>
+										</table>
+										<div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div>
+									</div>
 								</div>
+								{# </div> #}
 							</div>
-							{# </div> #}
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div id="messages" class="tab-pane fade">
-				<div class="well">
-					<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
-						<div class="form-group form-group-lg">
-							<select name="kpi" id="" class="select2 form-control">
+				<div id="messages" class="tab-pane fade">
+					<div class="well">
+						<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+							<div class="form-group form-group-lg">
+								<select name="kpi" id="" class="select2 form-control">
 
-								{% for kpi in kpis %}
-									<option value="{{kpi.id}}">{{kpi}}</option>
-								{% endfor %}
-							</select>
-						</div>
+									{% for kpi in kpis %}
+										<option value="{{kpi.id}}">{{kpi}}</option>
+									{% endfor %}
+								</select>
+							</div>
 
-						<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
-					</form>
+							<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
+						</form>
+					</div>
+					<div id="chartdiv">
+						<canvas id="myChart" width="400" height="400"></canvas>
+					</div>
+
 				</div>
-				<div id="chartdiv">
-					<canvas id="myChart" width="400" height="400"></canvas>
-				</div>
+
 
 			</div>
-
-
 		</div>
 	</div>
-</div>{% endblock %}{% block javascripts %}
-<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
-<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
-<script>
-	$(function () {
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script>
+		$(function () {
 $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 
@@ -230,4 +256,5 @@ error: function (error) {}
 
 
 })
-</script>{% endblock %}
+	</script>
+{% endblock %}

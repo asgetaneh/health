@@ -53,6 +53,11 @@ class Goal implements TranslatableInterface
       */
      private $planAchievements;
 
+     /**
+      * @ORM\OneToMany(targetEntity=GoalAchievement::class, mappedBy="goal")
+      */
+     private $goalAchievements;
+
     
 
     
@@ -73,6 +78,7 @@ class Goal implements TranslatableInterface
     {
         $this->objectives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+        $this->goalAchievements = new ArrayCollection();
        
        
     }
@@ -174,6 +180,36 @@ class Goal implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($planAchievement->getGoal() === $this) {
                 $planAchievement->setGoal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GoalAchievement[]
+     */
+    public function getGoalAchievements(): Collection
+    {
+        return $this->goalAchievements;
+    }
+
+    public function addGoalAchievement(GoalAchievement $goalAchievement): self
+    {
+        if (!$this->goalAchievements->contains($goalAchievement)) {
+            $this->goalAchievements[] = $goalAchievement;
+            $goalAchievement->setGoal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoalAchievement(GoalAchievement $goalAchievement): self
+    {
+        if ($this->goalAchievements->removeElement($goalAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($goalAchievement->getGoal() === $this) {
+                $goalAchievement->setGoal(null);
             }
         }
 

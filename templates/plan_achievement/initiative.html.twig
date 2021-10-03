@@ -19,8 +19,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																									<i class="ace-icon fa fa-refresh"></i>
-																								</a> #}
+																													<i class="ace-icon fa fa-refresh"></i>
+																												</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -50,88 +50,88 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																<h5 class="widget-title">
-																	<strong>Initiative Achievement</strong>
-																</h5>
-							
-																<div class="widget-toolbar">
-							
-							
-																	<a href="#" id="reload" data-action="reload">
-																		<i class="ace-icon fa fa-refresh"></i>
-																	</a>
-							
-							
-																</div>
-															</div> #}
+																														<h5 class="widget-title">
+																															<strong>Initiative Achievement</strong>
+																														</h5>
+																					
+																														<div class="widget-toolbar">
+																					
+																					
+																															<a href="#" id="reload" data-action="reload">
+																																<i class="ace-icon fa fa-refresh"></i>
+																															</a>
+																					
+																					
+																														</div>
+																													</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
-                                <div class="row">
-							<div class="search-area well col-md-12">
+									<div class="row">
+										<div class="search-area well col-md-12">
 
-								<div class="row">
-									{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-									<div class="col-md-4">
-										<div class="form-group form-group-sm">
-											{{ form_label(filterform.goal,'Goal') }}
-											{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+											<div class="row">
+												{{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+												<div class="col-md-4">
+													<div class="form-group form-group-sm">
+														{{ form_label(filterform.goal,'Goal') }}
+														{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+													</div>
+												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.perspective,'Perspective') }}
+														{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+													</div>
+												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.objective,'Objective') }}
+														{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
+													</div>
+												</div>
+
+												<div class="clearfix "></div>
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.strategy,'Strategy') }}
+														{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.kpi,'KPI') }}
+														{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+														{{ form_label(filterform.initiative,'Initiative') }}
+														{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose Initiative' }}) }}
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+														{{ form_label(filterform.year,'Planning Year') }}
+														{{ form_widget(filterform.year,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
+													</div>
+												</div>
+
+												<div class="col-md-1">
+													<div class="form-group" style="margin-top:25px;">
+														<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+													</div>
+												</div>
+
+
+												{{ form_end(filterform) }}
+											</div>
+
+
 										</div>
+
 									</div>
-
-									<div class="col-md-4">
-										<div class="form-group">
-											{{ form_label(filterform.perspective,'Perspective') }}
-											{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
-										</div>
-									</div>
-
-									<div class="col-md-4">
-										<div class="form-group">
-											{{ form_label(filterform.objective,'Objective') }}
-											{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
-										</div>
-									</div>
-
-									<div class="clearfix "></div>
-									<div class="col-md-4">
-										<div class="form-group">
-											{{ form_label(filterform.strategy,'Strategy') }}
-											{{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
-										</div>
-									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											{{ form_label(filterform.kpi,'KPI') }}
-											{{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'chose strategy' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.principaloffice,'Responsible Office') }}
-											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
-										</div>
-									</div>
-                                    	<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.year,'Planning Year') }}
-											{{ form_widget(filterform.year,{'attr':{'class':'select2 form-control','data-placeholder':'chose responsible office' }}) }}
-										</div>
-									</div>
-
-									<div class="col-md-1">
-										<div class="form-group" style="margin-top:25px;">
-											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
-										</div>
-									</div>
-
-
-									{{ form_end(filterform) }}
-								</div>
-
-
-							</div>
-
-						</div>
 									<div class="table-responsive">
 										<span class="badge badge-info pull-right">
 											{% trans %}Total{% endtrans %}
@@ -141,129 +141,109 @@
 										<table class="table table-striped table-bordered table-hover">
 											<thead>
 												<tr>
-													<th rowspan="3" style="text-align:left;background-color:#778899;color: white;">#</th>
-																													   
-													<th rowspan="3" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Initiative{% endtrans %}</th>
 
-													<th rowspan="3" style="text-align:left;background-color:#778899;color: white;">{% trans %}Wieght{% endtrans %}</th>
-													<th colspan="12" class="center" style="text-align:left;background-color:#778899;color: white;">{% trans %}Achievement{% endtrans %}</th>
+													<th rowspan="2">#</th>
+													
+													<th rowspan="2">Initiative</th>
+													<th rowspan="2">Kpi</th>
+													<th rowspan="2">Objective</th>
+													<th rowspan="2">Goal</th>
+													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
+
+													<th rowspan="2">Year</th>
+													<th colspan="2">yearly</th>
+													<th colspan="2">1st Quarter</th>
+													<th colspan="2">2nd Quarter</th>
+													<th colspan="2">3rd Quarter</th>
+													<th colspan="2">4th  Quarter</th>
+
 
 												</tr>
+
 												<tr>
 
-													<th rowspan="2"  style="text-align:left;background-color:#808080;color: white;">Year</th>
-													<th style="text-align:left;background-color:#808080;color: white;" colspan="2">Year Total</th>
 
-													<th style="text-align:left;background-color:#808080;color: white;"  colspan="2">Quarter 1</th>
-													<th style="text-align:left;background-color:#808080;color: white;" colspan="2">Quarter 2</th>
-													<th style="text-align:left;background-color:#808080;color: white;" colspan="2" >Quarter 3</th>
-													<th style="text-align:left;background-color:#808080;color: white;" colspan="2" >Quarter 4</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+													<th>plan</th>
+													<th>Accomp.</th>
+
+
 												</tr>
-                                                <tr>
-                                                	<th style="text-align:left;background-color:#808080;color: white;">plan</th>
-
-													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
-													<th style="text-align:left;background-color:#808080;color: white;">plan</th>
-
-													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
-                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
-
-													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
-                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
-
-													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
-                                                    <th style="text-align:left;background-color:#808080;color: white;">plan</th>
-
-													<th style="text-align:left;background-color:#808080;color: white;"  >Accomp</th>
-                                                </tr>
 											</thead>
 											<tbody>
 												{% set count =  plan_achievements.getItemNumberPerPage() * (plan_achievements.getCurrentPageNumber() -1) %}
 												{% for plan_achievement in plan_achievements %}
-													{% set count = count +1 %}
-													{% set total = plan_achievement.planAchievements|length + 1 %}
+
+													{% set count = count+1 %}
 													<tr>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ count }}</td>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ plan_achievement.name }}</td>
-														<td rowspan="{{total}}" style="vertical-align:middle;">{{ plan_achievement.weight }}</td>
+														<td>{{count}}
+														</td>
+
+														<td>{{plan_achievement.initiative}}</td>
+														<td>{{plan_achievement.initiative.keyPerformanceIndicator}}</td>
+														<td>{{plan_achievement.initiative.keyPerformanceIndicator.strategy.objective}}</td>
+														<td>{{plan_achievement.initiative.keyPerformanceIndicator.strategy.objective.goal}}</td>
+														{# <td>{{plan_achievement.initiative.initiativeBehaviour}}</td> #}
+
+														<td>{{plan_achievement.year}}</td>
+														<td></td>
+														<td></td>
+														{% for quarterplan in plan_achievement.quarterAchievement %}
+															<td>{{quarterplan.plan }}</td>
+															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
+														{% endfor %}
+
+
 													</tr>
-													{% for achievement in plan_achievement.planAchievements %}
 
-														<tr>
-															<td>{{ achievement.year}}</td>
-                                                            <td>{{ achievement.plan}}</td>
-															<td>{{ achievement.accomplishmentValue??"0"}}</td>
-															{% for quartAccomp in achievement.quarterAccomplishments %}
-                                                                <td>{{ quartAccomp.quarterplan??"0" }}</td>
-																<td>{{ quartAccomp.achievementValue??"0" }}</td>
-															{% endfor %}
-														</tr>
-													{% endfor %}
 
-												</tr>
-											{% else %}
-												<tr>
-													<td colspan="3">no records found</td>
-												</tr>
-											{% endfor %}
-										</tbody>
-									</table>
-									<div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div>
+												{% endfor %}
+
+
+											</tbody>
+										</table>
+
+										<div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div>
+									</div>
 								</div>
+								{# </div> #}
 							</div>
-							{# </div> #}
 						</div>
 					</div>
 				</div>
+
+				<div id="messages" class="tab-pane fade">
+					<div>
+						<canvas id="myChart" width="400" height="400"></canvas>
+
+					</div>
+				</div>
+
+
 			</div>
-
-			<div id="messages" class="tab-pane fade">
-           <div>
-                       <canvas id="myChart" width="400" height="400"></canvas>
-
-           </div>
-            </div>
-
-
 		</div>
 	</div>
-</div>{% endblock %}{% block javascripts %}
-<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
-<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
-<script>
-	$(function () {
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script>
+		$(function () {
 $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
 var ctx = document.getElementById("myChart").getContext('2d');
 
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ["Tokyo",	"Mumbai",	"Mexico City",	"Shanghai",	"Sao Paulo",	"New York",	"Karachi","Buenos Aires",	"Delhi","Moscow"],
-        datasets: [{
-            label: 'Series 1', // Name the series
-            data: [500,	50,	2424,	14040,	14141,	4111,	4544,	47,	5555, 6811], // Specify the data values array
-            fill: false,
-            borderColor: '#2196f3', // Add custom color border (Line)
-            backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
-            borderWidth: 1 // Specify bar border width
-        },
-                  {
-            label: 'Series 2', // Name the series
-            data: [1288,	88942,	44545,	7588,	99,	242,	1417,	5504,	75, 457], // Specify the data values array
-            fill: false,
-            borderColor: '#4CAF50', // Add custom color border (Line)
-            backgroundColor: '#4CAF50', // Add custom color background (Points and Fill)
-            borderWidth: 1 // Specify bar border width
-        }]
-    },
-    options: {
-      responsive: true, // Instruct chart js to respond nicely.
-      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
-    }
-});
+
 
 })
-</script>{% endblock %}
+	</script>
+{% endblock %}

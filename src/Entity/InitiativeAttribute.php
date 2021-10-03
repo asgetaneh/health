@@ -73,6 +73,16 @@ class InitiativeAttribute
      */
     private $operationalPlanningAccomplishments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SocialAttributeAchievement::class, mappedBy="attribute")
+     */
+    private $socialAttributeAchievements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=QuarterPlanAchievement::class, mappedBy="socialAttribute")
+     */
+    private $quarterPlanAchievements;
+
  
     public function getName(): ?string
     {
@@ -104,6 +114,8 @@ class InitiativeAttribute
         $this->planningAccomplishments = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
         $this->operationalPlanningAccomplishments = new ArrayCollection();
+        $this->socialAttributeAchievements = new ArrayCollection();
+        $this->quarterPlanAchievements = new ArrayCollection();
     }
     public function __call($method, $arguments)
     {
@@ -299,6 +311,66 @@ class InitiativeAttribute
             // set the owning side to null (unless already changed)
             if ($operationalPlanningAccomplishment->getSocialAttribute() === $this) {
                 $operationalPlanningAccomplishment->setSocialAttribute(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialAttributeAchievement[]
+     */
+    public function getSocialAttributeAchievements(): Collection
+    {
+        return $this->socialAttributeAchievements;
+    }
+
+    public function addSocialAttributeAchievement(SocialAttributeAchievement $socialAttributeAchievement): self
+    {
+        if (!$this->socialAttributeAchievements->contains($socialAttributeAchievement)) {
+            $this->socialAttributeAchievements[] = $socialAttributeAchievement;
+            $socialAttributeAchievement->setAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialAttributeAchievement(SocialAttributeAchievement $socialAttributeAchievement): self
+    {
+        if ($this->socialAttributeAchievements->removeElement($socialAttributeAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($socialAttributeAchievement->getAttribute() === $this) {
+                $socialAttributeAchievement->setAttribute(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuarterPlanAchievement[]
+     */
+    public function getQuarterPlanAchievements(): Collection
+    {
+        return $this->quarterPlanAchievements;
+    }
+
+    public function addQuarterPlanAchievement(QuarterPlanAchievement $quarterPlanAchievement): self
+    {
+        if (!$this->quarterPlanAchievements->contains($quarterPlanAchievement)) {
+            $this->quarterPlanAchievements[] = $quarterPlanAchievement;
+            $quarterPlanAchievement->setSocialAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuarterPlanAchievement(QuarterPlanAchievement $quarterPlanAchievement): self
+    {
+        if ($this->quarterPlanAchievements->removeElement($quarterPlanAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($quarterPlanAchievement->getSocialAttribute() === $this) {
+                $quarterPlanAchievement->setSocialAttribute(null);
             }
         }
 

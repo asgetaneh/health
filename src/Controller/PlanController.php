@@ -23,6 +23,7 @@ use App\Entity\Strategy;
 use App\Entity\SuitableInitiative;
 use App\Entity\SuitableOperational;
 use App\Form\PlanType;
+use App\Helper\Helper;
 use App\Repository\InitiativeRepository;
 use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
@@ -579,6 +580,7 @@ class PlanController extends AbstractController
             $em->flush();
             $em->clear();
         }
+        $em->clear();
         return;
     }
 
@@ -613,6 +615,8 @@ class PlanController extends AbstractController
                 $em->persist($operationalSuitable);
                 $em->flush();
             }
+            else
+             $operationalSuitable->setStatus(1);
 
 
 
@@ -702,7 +706,10 @@ class PlanController extends AbstractController
                 $em->clear();
             }
 
+           
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
+             Helper::calculateInitiativePlan($em, $planInitiative);
+
             $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableplan = $this->findSuitableInitiative($em, $planInitiative->getPrincipalOffice(), $planInitiative->getPlanningYear());

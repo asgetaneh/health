@@ -35,7 +35,7 @@ class PlanningYear
     private $isActive=1;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="planningYears")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="planningYears",cascade={"persist"})
      */
     private $createdBy;
 
@@ -81,6 +81,26 @@ class PlanningYear
      */
     private $ethYear;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InitiativeAchievement::class, mappedBy="year")
+     */
+    private $initiativeAchievements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=KPiAchievement::class, mappedBy="year")
+     */
+    private $kPiAchievements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ObjectiveAchievement::class, mappedBy="year")
+     */
+    private $objectiveAchievements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GoalAchievement::class, mappedBy="year")
+     */
+    private $goalAchievements;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -88,6 +108,10 @@ class PlanningYear
         $this->suitableInitiatives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
         $this->quarterAccomplishments = new ArrayCollection();
+        $this->initiativeAchievements = new ArrayCollection();
+        $this->kPiAchievements = new ArrayCollection();
+        $this->objectiveAchievements = new ArrayCollection();
+        $this->goalAchievements = new ArrayCollection();
     }
     public function __toString()
     {
@@ -320,6 +344,126 @@ class PlanningYear
     public function setEthYear(string $ethYear): self
     {
         $this->ethYear = $ethYear;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeAchievement[]
+     */
+    public function getInitiativeAchievements(): Collection
+    {
+        return $this->initiativeAchievements;
+    }
+
+    public function addInitiativeAchievement(InitiativeAchievement $initiativeAchievement): self
+    {
+        if (!$this->initiativeAchievements->contains($initiativeAchievement)) {
+            $this->initiativeAchievements[] = $initiativeAchievement;
+            $initiativeAchievement->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeAchievement(InitiativeAchievement $initiativeAchievement): self
+    {
+        if ($this->initiativeAchievements->removeElement($initiativeAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($initiativeAchievement->getYear() === $this) {
+                $initiativeAchievement->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|KPiAchievement[]
+     */
+    public function getKPiAchievements(): Collection
+    {
+        return $this->kPiAchievements;
+    }
+
+    public function addKPiAchievement(KPiAchievement $kPiAchievement): self
+    {
+        if (!$this->kPiAchievements->contains($kPiAchievement)) {
+            $this->kPiAchievements[] = $kPiAchievement;
+            $kPiAchievement->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKPiAchievement(KPiAchievement $kPiAchievement): self
+    {
+        if ($this->kPiAchievements->removeElement($kPiAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($kPiAchievement->getYear() === $this) {
+                $kPiAchievement->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ObjectiveAchievement[]
+     */
+    public function getObjectiveAchievements(): Collection
+    {
+        return $this->objectiveAchievements;
+    }
+
+    public function addObjectiveAchievement(ObjectiveAchievement $objectiveAchievement): self
+    {
+        if (!$this->objectiveAchievements->contains($objectiveAchievement)) {
+            $this->objectiveAchievements[] = $objectiveAchievement;
+            $objectiveAchievement->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObjectiveAchievement(ObjectiveAchievement $objectiveAchievement): self
+    {
+        if ($this->objectiveAchievements->removeElement($objectiveAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($objectiveAchievement->getYear() === $this) {
+                $objectiveAchievement->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GoalAchievement[]
+     */
+    public function getGoalAchievements(): Collection
+    {
+        return $this->goalAchievements;
+    }
+
+    public function addGoalAchievement(GoalAchievement $goalAchievement): self
+    {
+        if (!$this->goalAchievements->contains($goalAchievement)) {
+            $this->goalAchievements[] = $goalAchievement;
+            $goalAchievement->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoalAchievement(GoalAchievement $goalAchievement): self
+    {
+        if ($this->goalAchievements->removeElement($goalAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($goalAchievement->getYear() === $this) {
+                $goalAchievement->setYear(null);
+            }
+        }
 
         return $this;
     }

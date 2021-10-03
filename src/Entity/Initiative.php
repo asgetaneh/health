@@ -118,6 +118,11 @@ class Initiative implements TranslatableInterface
      */
     private $category;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InitiativeAchievement::class, mappedBy="initiative")
+     */
+    private $initiativeAchievements;
+
    
      
      const NUMERICAL=0;
@@ -136,6 +141,7 @@ class Initiative implements TranslatableInterface
         $this->socialAtrribute = new ArrayCollection();
         // $this->initiativeBehaviour = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
+        $this->initiativeAchievements = new ArrayCollection();
        
     }
     public function __toString()
@@ -430,6 +436,36 @@ class Initiative implements TranslatableInterface
     public function setCategory(?InitiativeCategory $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitiativeAchievement[]
+     */
+    public function getInitiativeAchievements(): Collection
+    {
+        return $this->initiativeAchievements;
+    }
+
+    public function addInitiativeAchievement(InitiativeAchievement $initiativeAchievement): self
+    {
+        if (!$this->initiativeAchievements->contains($initiativeAchievement)) {
+            $this->initiativeAchievements[] = $initiativeAchievement;
+            $initiativeAchievement->setInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInitiativeAchievement(InitiativeAchievement $initiativeAchievement): self
+    {
+        if ($this->initiativeAchievements->removeElement($initiativeAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($initiativeAchievement->getInitiative() === $this) {
+                $initiativeAchievement->setInitiative(null);
+            }
+        }
 
         return $this;
     }
