@@ -16,7 +16,7 @@ dh_auditor:
                 App\Entity\UserGroup: ~
                 App\Entity\PlanningAccomplishment: ~
                 App\Entity\SuitableInitiative: ~
-                App\Entity\OperationalSuitable: ~
+                App\Entity\SuitableOperational: ~
                 App\Entity\OperationalPlanningAccomplishment: ~
                 App\Entity\UserInfo: ~
                 App\Entity\Initiative: ~
