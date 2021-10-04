@@ -23,6 +23,7 @@ use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
+use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
 use App\Repository\TaskUserRepository;
@@ -49,29 +50,28 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class TaskAssignController extends AbstractController
 {
-/**
+    /**
      * @Route("/excel", name="excel")
- */
-public function xslx(Request $request)
-{
-   $file = $request->files->get('file'); // get the file from the sent request
-   
-   $fileFolder = __DIR__ . '/../../public/';  //choose the folder in which the uploaded file will be stored
- dd($file);
-   $filePathName = md5(uniqid()) . $file->getClientOriginalName();
-   dd($filePathName);
-      // apply md5 function to generate an unique identifier for the file and concat it with the file extension  
-            try {
-                $file->move($fileFolder, $filePathName);
-            } catch (FileException $e) {
-                dd($e);
-            }
-    $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file 
-    $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
-    $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
- dd($sheetData);
+     */
+    public function xslx(Request $request)
+    {
+        $file = $request->files->get('file'); // get the file from the sent request
 
-}
+        $fileFolder = __DIR__ . '/../../public/';  //choose the folder in which the uploaded file will be stored
+        dd($file);
+        $filePathName = md5(uniqid()) . $file->getClientOriginalName();
+        dd($filePathName);
+        // apply md5 function to generate an unique identifier for the file and concat it with the file extension  
+        try {
+            $file->move($fileFolder, $filePathName);
+        } catch (FileException $e) {
+            dd($e);
+        }
+        $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file 
+        $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
+        dd($sheetData);
+    }
     //   private $params;
     //     // private $approverRepository;
     //     private $logger;
@@ -133,7 +133,7 @@ public function xslx(Request $request)
     /**
      * @Route("/pdf", name="task_assign_pdf")
      */
-    public function taskPdf(Request $request, DomPrint $domPrint, TaskUserRepository $taskUserRepository)
+    public function taskPdf(Request $request, DomPrint $domPrint, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $taskUserId = $request->request->get("user");
@@ -146,26 +146,29 @@ public function xslx(Request $request)
         $currentYear = "";
 
 
-        $taskUsers = $taskUserRepository->findBy(['assignedTo' => $taskUserId, 'status' => 0]);
+        $taskAccomplishments = $taskAccomplishmentRepository->findPrintTasks($taskUserId);
+        // dd($taskAccomplishments);
+        foreach ($taskAccomplishments as $taskAccomplishment) {
 
-        foreach ($taskUsers as $taskUser) {
-
-            $fullName = $taskUser->getAssignedTo()->getUserInfo()->getFullName();
-            $quarter = $taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
-            $principalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
-            $operationalOffice = $taskUser->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
-            $operationalManager = $taskUser->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
+            $fullName = $taskAccomplishment->getTaskAssign()->getAssignedTo()->getUserInfo()->getFullName();
+            $quarter = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
+            $principalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getPrincipalOffice()->getName();
+            $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
+            $operationalManager = $taskAccomplishment->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
         }
         // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
         // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
         $currentYear = AmharicHelper::getCurrentYear();
-        foreach ($taskUsers as $value) {
-            $value->setStatus(5);
+        foreach ($taskAccomplishments as $value) {
+            $taskAssign = $em->getRepository(TaskAssign::class)->find($value->getTaskAssign()->getId());
+            // dd($taskAssign);
+            $taskAssign->setStatus(5);
+            $taskAssign->setPrint(1);
         }
         $em->flush();
         //  $evaluations=$em->getRepository(Evaluation::class)->findEvaluationTasks($userId,$quarter,$year);
         $domPrint->print('task_assign/taskAssign_print.html.twig', [
-            'taskUsers' => $taskUsers,
+            'taskAccomplishments' => $taskAccomplishments,
             'date' => (new \DateTime())->format('y-m-d'),
             'fullName' => $fullName,
             'quarter' => $quarter,
@@ -340,61 +343,61 @@ public function xslx(Request $request)
         $measurementDescriptions = $request->request->get("measurementDescription");
 
         foreach ($tasks as $key => $value) {
-        foreach ($users as $keyu => $valueu) {
+            foreach ($users as $keyu => $valueu) {
 
-            $taskAssign = new TaskAssign();
+                $taskAssign = new TaskAssign();
 
-            $task = $tasks[$key];       
-           $userId =  $users[$keyu];
-            $taskId = $performerTaskRepository->find($task);
-            $initibativeId = $taskId->getOperationalPlanningAcc()->getOperationalSuitable()->getId();
-            $planId = $taskId->getOperationalPlanningAcc();
-            $taskAssign->setPerformerTask($taskId);
-            if ($timeGap > 6) {
-                $this->addFlash('danger', 'Contengency Date be less than 7 !');
-                return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
-            }
-            $taskAssign->setAssignedAt(new \DateTime());
-            $taskAssign->setAssignedBy($user);
-            if ($delegatedUser) {
-                $taskAssign->setDelegate($delegatedUser->getDelegatedUser());
-            }
-            $taskAssign->setType(1);
-            $taskAssign->setStartDate($startDate);
-            $taskAssign->setEndDate($endDate);
-            $taskAssign->setTimeGap($timeGap);
-            //    dd($expectedValues[$key]);
-            $taskAssign->setExpectedValue($expectedValue);
-            $taskAssign->setStatus(0);
-
-            $user = $em->getRepository(User::class)->find($userId);
-            $taskAssign->setAssignedTo($user);
-            if ($expectedValueSocial) {
-                $taskAssign->setExpectedValueSocial($expectedValueSocial);
-            }
-            $em->persist($taskAssign);
-            foreach ($measurementids as  $keym => $valuea) {
-                $taskAccoplishment = new TaskAccomplishment();
-                $measurementid = $measurementids[$keym];
-                // $measurementDescription = $measurementDescriptions[$key];
-                $taskmeasurementId = $em->getRepository(TaskMeasurement::class)->find($valuea);
-                $taskAccoplishment->setTaskAssign($taskAssign);
-                $taskAccoplishment->setMeasurement($taskmeasurementId);
-                $taskAccoplishment->setExpectedValue($expectedValue);
-                if ($expectedValueSocial) {
-                    $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
+                $task = $tasks[$key];
+                $userId =  $users[$keyu];
+                $taskId = $performerTaskRepository->find($task);
+                $initibativeId = $taskId->getOperationalPlanningAcc()->getOperationalSuitable()->getId();
+                $planId = $taskId->getOperationalPlanningAcc();
+                $taskAssign->setPerformerTask($taskId);
+                if ($timeGap > 6) {
+                    $this->addFlash('danger', 'Contengency Date be less than 7 !');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
                 }
-                $taskAccoplishment->setMeasureDescription($measurementDescriptions);
-                $em->persist($taskAccoplishment);
+                $taskAssign->setAssignedAt(new \DateTime());
+                $taskAssign->setAssignedBy($user);
+                if ($delegatedUser) {
+                    $taskAssign->setDelegate($delegatedUser->getDelegatedUser());
+                }
+                $taskAssign->setType(1);
+                $taskAssign->setStartDate($startDate);
+                $taskAssign->setEndDate($endDate);
+                $taskAssign->setTimeGap($timeGap);
+                //    dd($expectedValues[$key]);
+                $taskAssign->setExpectedValue($expectedValue);
+                $taskAssign->setStatus(0);
+
+                $user = $em->getRepository(User::class)->find($userId);
+                $taskAssign->setAssignedTo($user);
+                if ($expectedValueSocial) {
+                    $taskAssign->setExpectedValueSocial($expectedValueSocial);
+                }
+                $em->persist($taskAssign);
+                foreach ($measurementids as  $keym => $valuea) {
+                    $taskAccoplishment = new TaskAccomplishment();
+                    $measurementid = $measurementids[$keym];
+                    // $measurementDescription = $measurementDescriptions[$key];
+                    $taskmeasurementId = $em->getRepository(TaskMeasurement::class)->find($valuea);
+                    $taskAccoplishment->setTaskAssign($taskAssign);
+                    $taskAccoplishment->setMeasurement($taskmeasurementId);
+                    $taskAccoplishment->setExpectedValue($expectedValue);
+                    if ($expectedValueSocial) {
+                        $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
+                    }
+                    $taskAccoplishment->setMeasureDescription($measurementDescriptions);
+                    $em->persist($taskAccoplishment);
+                }
+
+
+                $em->persist($taskAssign);
+
+                $em->flush();
             }
-
-
-            $em->persist($taskAssign);
-
             $em->flush();
         }
-                $em->flush();
-}
         $em->flush();
         // dd($planId);
         $planId = $operationalPlanningAccomplishmentRepository->find($planId->getId());

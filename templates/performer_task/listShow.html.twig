@@ -163,7 +163,7 @@
 																	<td>{{ taskAccomplishment.reportedValue }}</td>
 
 																	{% set percent = 0 %}
-																	{% set percent =  (taskAccomplishment.accomplishmentValue * 100) /  taskAccomplishment.accomplishmentValue %}
+																	{% set percent =  (taskAccomplishment.accomplishmentValue * 100) /  100 %}
 																	{% if percent > 100  %}
 																		<td class="badge badge-primary">{{ taskAccomplishment.accomplishmentValue }}</td>
 																	{% elseif percent <= 100  and percent >= 75 %}

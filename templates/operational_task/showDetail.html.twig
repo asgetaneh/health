@@ -143,9 +143,9 @@
 												<td>
 													{% if taskAssign.narrative %}
 
-															<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
-																Narrative Report</a>
-														{% endif %}
+														<a href="{{ asset('narrative/') }}{{taskAssign.narrative}}" width="1300" target="_blank" height="600">
+															Narrative Report</a>
+													{% endif %}
 												</td>
 
 												<td>
@@ -183,13 +183,27 @@
 																		{% endif %}
 																	</td>
 																	<td>
-																		{% if social == 1 %}
-																			Male=
-																		{% endif %}
-																		{{ taskAccomplishment.reportedValue }}
-																		{% if social == 1 %}
+																		{% if taskAccomplishment.taskAssign.print %}
+																			{% if social == 1  %}
 
-																			Female={{ taskAccomplishment.reportedValueSocial }}
+																				Male
+																			{% endif %}
+																			<input type="number" name="reportValue" class="form-conrol" required>
+																			{% if social == 1  %}
+																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
+
+
+																			{% endif %}
+																		{% else %}
+
+																			{% if social == 1 %}
+																				Male=
+																			{% endif %}
+																			{{ taskAccomplishment.reportedValue }}
+																			{% if social == 1 %}
+
+																				Female={{ taskAccomplishment.reportedValueSocial }}
+																			{% endif %}
 																		{% endif %}
 																	</td>
 																	{% if taskAccomplishment.accomplishmentValue %}
@@ -202,9 +216,9 @@
 
 																				Male
 																			{% endif %}
-																			<input type="number" name="reportValue" class="form-conrol" required>
+																			<input type="number" name="accompValue" class="form-conrol" required>
 																			{% if social == 1  %}
-																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
+																				Female<input type="number" name="accompValueSocial" class="form-conrol" required>
 
 
 																			{% endif %}

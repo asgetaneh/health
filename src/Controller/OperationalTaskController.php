@@ -856,17 +856,22 @@ class OperationalTaskController extends AbstractController
         if ($request->request->get('reportValue')) {
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
+            $accompValue = $request->request->get('accompValue');
+            // dd($accompValue);
             $reportValueSocial = $request->request->get('reportValueSocial');
+            $accompValueSocial = $request->request->get('accompValueSocial');
             $quality = $request->request->get('quality');
             $ids = $request->request->get('taskAccomplishmentId');
             //   foreach ($ids as $key => $value) {
             $evaluation = new Evaluation();
             $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
-            $percent = (($reportValue * 100) / $taskAccomplishment->getExpectedValue());
+            $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
-            $taskAccomplishment->setAccomplishmentValue($reportValue);
+            $taskAccomplishment->setAccomplishmentValue($accompValue);
+            $taskAccomplishment->setReportedValue($reportValue);
             if ($reportValueSocial) {
-                $taskAccomplishment->setAccomplishmentValueSocial($reportValueSocial);
+                $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                $taskAccomplishment->setReportedValueSocial($reportValueSocial);
             }
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);

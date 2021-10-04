@@ -154,20 +154,24 @@
 								{% if countWeight >= 100 %}
 
 									<div class="row ">
+										{% if  taskAssigns %}
 
-										<form action="{{path('task_assign_pdf')}}" method="post">
-											<div class="col-md-4 ">
-												<select autocomplete="off" name="user" class="form-control userlist   "></select>
-											</div>
-											<div class="col-md-3 ">
 
-												<button class="btn btn-sm btn-danger t" type="submit">
-													<i class="fa fa-file-pdf-o "></i>
+											<form action="{{path('task_assign_pdf')}}" method="post">
+												<div class="col-md-4 ">
+													<select autocomplete="off" name="user" class="form-control userlist   "></select>
+												</div>
+												<div class="col-md-3 ">
 
-												</button>
-											</div>
+													<button class="btn btn-sm btn-danger t" type="submit">
+														<i class="fa fa-file-pdf-o "></i>
 
-										</form>
+													</button>
+												</div>
+
+											</form>
+
+										{% endif %}
 
 									</div>
 								{% endif %}
@@ -498,21 +502,21 @@ $('.social').show();
 })
 		</script>
 		{# <script>
-					$('.timeGap').keyup(function () {
-		var timeGap = $('.timeGap').val()
-		if (timeGap > 6) {
-		$('.error').text("maximum time gap is 6")
-		$('.assign').prop('disabled', true);
-		} else {
-		$('.error').text("")
-		$('.assign').prop('disabled', false);
-		
-		
-		}
-		
-		
-		})
-				</script> #}
+							$('.timeGap').keyup(function () {
+				var timeGap = $('.timeGap').val()
+				if (timeGap > 6) {
+				$('.error').text("maximum time gap is 6")
+				$('.assign').prop('disabled', true);
+				} else {
+				$('.error').text("")
+				$('.assign').prop('disabled', false);
+				
+				
+				}
+				
+				
+				})
+						</script> #}
 		<link
 		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
 
