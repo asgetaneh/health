@@ -853,7 +853,7 @@ class OperationalTaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
 
-        if ($request->request->get('reportValue')) {
+        if ($request->request->get('accompValue')) {
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
             $accompValue = $request->request->get('accompValue');
@@ -886,7 +886,7 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('operational_task_show');
         }
         $taskAssign = $request->request->get('taskAssign');
-        //    dd($taskUser);
+        //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
         $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
         foreach ($taskAssigns as $value) {
@@ -895,6 +895,7 @@ class OperationalTaskController extends AbstractController
             $date = new DateTime();
         }
         $task = $taskAssignRepository->find($taskAssign);
+        // dd($task);
         if ($task->getType() < 2) {
             $task->setType(2);
             $em->flush();
