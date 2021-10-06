@@ -75,15 +75,15 @@
 
 				</div>
 				<div class="table-responsive">
-				
-<form action="{{path('principal_office_report')}}" method="post">
-									<button type="submit" name="excel"  value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
-                                  							<i class=" fa fa-print"></i>
 
-								    Excel
-									</button>
-									
-								</form>
+					<form action="{{path('principal_office_report')}}" method="post">
+						<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
+							<i class=" fa fa-print"></i>
+
+							Excel
+						</button>
+
+					</form>
 					<form action="{{path('plan_print')}}" method="post">
 						<input type="hidden" name="planyear" value="{{planyear.id}}">
 						<input type="hidden" name="office" value="{{pricipaloffice.id}}">
@@ -92,9 +92,10 @@
 							Print
 						</button>
 					</form>
-					<a  href="{{path('plan_recover',{'planyear':planyear.id,'office':pricipaloffice.id})}}" aria-expanded="false" class="lead recover btn btn-app btn-warning btn-sm" >
-					<i class="ace-icon fa fa-undo bigger-230"></i>
-							<strong>Recover</strong></a>
+					<a href="{{path('plan_recover',{'planyear':planyear.id,'office':pricipaloffice.id})}}" aria-expanded="false" class="lead recover btn btn-app btn-warning btn-sm">
+						<i class="ace-icon fa fa-undo bigger-230"></i>
+						<strong>Recover</strong>
+					</a>
 
 					<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 						<thead>
@@ -141,7 +142,7 @@
 									<td>{{suitableplan.initiative|title }}</td>
 									<td>{{suitableplan.initiative.weight }}</td>
 									{# <td>{{suitableplan.initiative.baseline }}</td> #}
-								
+
 
 									<td>
 										{# {% for behavior in suitableplan.initiative.initiativeBehaviour %} #}
@@ -249,8 +250,6 @@
 										</td>
 									{% endfor %}
 
-								
-
 
 								</tr>
 								<tr class="detail-row">
@@ -285,7 +284,7 @@
 
 
 																	{% for plan in operationsuitable.planValue|filter(plan => plan.quarter.slug==1) %}
-																	{% set yearlyplan = plan.planValue %}
+																		{% set yearlyplan = plan.planValue %}
 																	{% endfor %}
 
 
@@ -344,7 +343,6 @@
 																				{% for plan in operationsuitable.planValue|filter(plan => plan.socialAttribute.id == attribute.id and plan.planValue > 0) %}
 																					{% set planvalue = plan.planValue %}
 																					{% set yearplan = yearplan|merge({planvalue })  %}
-																					
 
 
 																				{% endfor %}
@@ -422,6 +420,7 @@
 															{% endfor %}
 
 															<td>
+																<input type="hidden" name"currentpa" class="currentpa" value="{{suitableplans.getCurrentPageNumber() }}">
 
 																{% if operationsuitablelength >0 %}
 																	<a href="#" data-id="{{suitableplan.id}}" data-operational="{{operational.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
@@ -438,13 +437,12 @@
 
 																	</a>
 																{% endif %}
-																	{% for operationalPlan in operationalPlans %}
+																{% for operationalPlan in operationalPlans %}
 																	{% if  operationalPlan.suitableInitiative.id == suitableplan.id and operationalPlan.operationalOffice.id == operational.id %}
 																		{% if  operationalPlan.status == 0 %}
-																			<button="button"  data-suitableinid="{{suitableplan.id}}" data-operational="{{operational.id}}" class="btn btn-sm  btn-success approve ">
+																			<button="button" data-suitableinid="{{suitableplan.id}}" data-operational="{{operational.id}}" class="btn btn-sm  btn-success approve ">
 																				<i class="fa fa-check"></i>
 																			</button>
-
 
 
 																		{% endif %}

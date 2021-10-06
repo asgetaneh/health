@@ -109,15 +109,15 @@
 											</tr>
 										</thead>
 										<tbody>
-											{% set count = 0 %}
+											{% set countmain = 0 %}
 											{% for performerTask in performerTasks %}
 												{% set total_expected_value = 0 %}
 												{% set total_expected_valueSocial = 0 %}
 												{% set total_accomplish_valueSocial = 0 %}
 												{% set total_accomplish_value = 0 %}
 												<tr>
-													{% set count = count + 1 %}
-													<td>{{ count}}</td>
+													{% set countmain = countmain + 1 %}
+													<td>{{ countmain}}</td>
 													<td>{{ performerTask.name }}</td>
 													<td>{{ performerTask.weight }}</td>
 													<td>{{ performerTask.quarter }}</td>
@@ -125,13 +125,7 @@
 
 
 													<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
-													{# {% if social %}
-
-														<input type="hidden" name="social[]" value="{{performerTask.social.id}}">
-													{% else %}
-														<input type="hidden" name="social" value="0">
-
-													{% endif %} #}
+						
 													<td colspan="2">
 														<table class="table table-bordered  table-responsive-xl table-hover">
 															<tr>

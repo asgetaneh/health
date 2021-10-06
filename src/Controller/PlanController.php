@@ -597,7 +597,8 @@ class PlanController extends AbstractController
         if ($request->request->get('planvalue')) {
 
             $planValues = $request->request->get('planvalue');
-
+            $currentPage =$request->request->get("currentPage");
+// dd($planValues);
 
             $planInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
             $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operationalOffice'));
@@ -713,7 +714,7 @@ class PlanController extends AbstractController
             $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 
             $suitableplan = $this->findSuitableInitiative($em, $planInitiative->getPrincipalOffice(), $planInitiative->getPlanningYear());
-            $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', 1), 10);
+            $suitableData = $paginator->paginate($suitableplan, $request->query->getInt('page', $currentPage), 10);
             $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($planInitiative->getPrincipalOffice());
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             $isallActive = $this->getActivePlan($suitableplan);

@@ -19,6 +19,7 @@
 								{% set attr = suitableInitiative.initiative %}
 								{% set  atr = attr.socialAtrribute %}
 								{# {% for behavior in initiative.initiativeBehaviour %} #}
+                                <input type="hidden" name="currentPage" class="currentPage">
 									<input type="hidden" name="behav[]" value="{{initiative.initiativeBehaviour.code}}">
 									{% if initiative.initiativeBehaviour.code == 0 %}
 										{% set constant = true %}

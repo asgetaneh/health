@@ -122,6 +122,20 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
         return $qb->orderBy('taa.id', 'ASC')->getQuery();
     }
 
+ public function findPrintTasks($taskAssignedTo)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.taskAssign', 'ta')
+           
+            ->andWhere('ta.assignedTo = :taskAssignedTo')
+            ->setParameter('taskAssignedTo', $taskAssignedTo)
+
+            ->getQuery()
+
+            ->getResult();
+    }
 
 
     // /**

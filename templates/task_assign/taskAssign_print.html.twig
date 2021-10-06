@@ -118,7 +118,7 @@
 			<h4>ትምህርት ክፍል/ ፋካልቲ/ ቡድን:<u>{{operationalOffice}}</u>
 				<h4>ዓመት:<u>{{currentYear}}</u>
 					ሩብ
-																				:<u>{{quarter}}</u>
+																									:<u>{{quarter}}</u>
 				</h4>
 				<h4>የስራ ተረካቢ ስም
 					<u>
@@ -145,34 +145,49 @@
 					</thead>
 					<tbody>
 						{% set count = 0 %}
-						{% for taskUser in taskUsers %}
+						{% for taskAccomplishment in taskAccomplishments %}
 							<tr>
 								{% set count = count + 1 %}
 								<td>{{count}}</td>
-								<td>{{ taskUser.taskAssign.performerTask.name}}</td>
-								<td>{{ taskUser.taskAssign.performerTask.description}}</td>
-								<td>{{ taskUser.taskAssign.performerTask.weight}}</td>
-								<td>{{ taskUser.taskAssign.startDate }}</td>
-								<td>{{ taskUser.taskAssign.endDate }}</td>
-								<td>{{ taskUser.taskAssign.timeGap }}</td>
+								<td>{{ taskAccomplishment.taskAssign.performerTask.name}}</td>
+								<td>{{ taskAccomplishment.taskAssign.performerTask.description}}</td>
+								<td>{{ taskAccomplishment.taskAssign.performerTask.weight}}</td>
+								<td>{{ taskAccomplishment.taskAssign.startDate }}</td>
+								<td>{{ taskAccomplishment.taskAssign.endDate }}</td>
+								<td>{{ taskAccomplishment.taskAssign.timeGap }}</td>
 								<td>
-									{% if taskUser.taskAssign.expectedValueSocial %}
+									{% if taskAccomplishment.taskAssign.expectedValueSocial %}
 										Male=
 									{% endif %}
-									{{ taskUser.taskAssign.expectedValue }}
-									{% if taskUser.taskAssign.expectedValueSocial %}
+									{{ taskAccomplishment.taskAssign.expectedValue }}
+									{% if taskAccomplishment.taskAssign.expectedValueSocial %}
 										Female=
-										{{ taskUser.taskAssign.expectedValueSocial }}
+										{{ taskAccomplishment.taskAssign.expectedValueSocial }}
 									{% endif %}
 								</td>
 
 								<td>
-									{% if taskUser.taskAssign.expectedValueSocial %}
-										Male=
-									{% endif %}
-									_______
-									{% if taskUser.taskAssign.expectedValueSocial %}
-										Female=_______
+									{% if taskAccomplishment.accomplishmentValue   %}
+										{% if taskAccomplishment.taskAssign.expectedValueSocial %}
+											Male={{taskAccomplishment.accomplishmentValue }}
+										{% else %}
+											{{taskAccomplishment.accomplishmentValue }}
+
+										{% endif %}
+										{% if taskAccomplishment.taskAssign.expectedValueSocial %}
+											Female={{taskAccomplishment.accomplishmentValueSocial }}
+										{% endif %}
+
+									{% else %}
+
+
+										{% if taskAccomplishment.taskAssign.expectedValueSocial %}
+											Male=
+										{% endif %}
+										_______
+										{% if taskAccomplishment.taskAssign.expectedValueSocial %}
+											Female=_______
+										{% endif %}
 									{% endif %}
 								</td>
 

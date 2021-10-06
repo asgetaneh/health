@@ -283,6 +283,74 @@ class OperationalTaskController extends AbstractController
                             } else {
                                 $operationalplan->setPlanValue(0);
                             }
+                        } else if ($values['B'] == 2) {
+                            if ($i == 0) {
+                                $planf = $values['F'];
+                            } else if ($i == 1) {
+                                if ($values['G'] <= $values['F']) {
+                                    $values['G'] = $values['F'];
+                                    $planf = $values['F'];
+                                } else {
+                                    $planf = $values['G'];
+                                }
+                            } else if ($i == 2) {
+
+                                if ($values['H'] <= $values['G']) {
+                                    $values['H'] = $values['G'];
+
+                                    $planf = $values['G'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                            } else {
+                                if ($values['I'] <= $values['H']) {
+                                    $values['I'] = $values['H'];
+
+                                    $planf = $values['H'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                                $planf = $values['I'];
+                            }
+                            if ($planf) {
+                                $operationalplan->setPlanValue($planf);
+                            } else {
+                                $operationalplan->setPlanValue(0);
+                            }
+                        } else if ($values['B'] == 3) {
+                            if ($i == 0) {
+                                $planf = $values['F'];
+                            } else if ($i == 1) {
+                                if ($values['G'] >= $values['F']) {
+                                    $values['G'] = $values['F'];
+                                    $planf = $values['F'];
+                                } else {
+                                    $planf = $values['G'];
+                                }
+                            } else if ($i == 2) {
+
+                                if ($values['H'] >= $values['G']) {
+                                    $values['H'] = $values['G'];
+
+                                    $planf = $values['G'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                            } else {
+                                if ($values['I'] >= $values['H']) {
+                                    $values['I'] = $values['H'];
+
+                                    $planf = $values['H'];
+                                } else {
+                                    $planf = $values['H'];
+                                }
+                                $planf = $values['I'];
+                            }
+                            if ($planf) {
+                                $operationalplan->setPlanValue($planf);
+                            } else {
+                                $operationalplan->setPlanValue(0);
+                            }
                         } else {
                             if ($i == 0) {
                                 $planf = $values['F'];
@@ -413,7 +481,6 @@ class OperationalTaskController extends AbstractController
             $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
             $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
-
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
             $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
             $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);
@@ -786,20 +853,25 @@ class OperationalTaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
 
-        if ($request->request->get('reportValue')) {
+        if ($request->request->get('accompValue')) {
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
+            $accompValue = $request->request->get('accompValue');
+            // dd($accompValue);
             $reportValueSocial = $request->request->get('reportValueSocial');
+            $accompValueSocial = $request->request->get('accompValueSocial');
             $quality = $request->request->get('quality');
             $ids = $request->request->get('taskAccomplishmentId');
             //   foreach ($ids as $key => $value) {
             $evaluation = new Evaluation();
             $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
-            $percent = (($reportValue * 100) / $taskAccomplishment->getExpectedValue());
+            $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
-            $taskAccomplishment->setAccomplishmentValue($reportValue);
+            $taskAccomplishment->setAccomplishmentValue($accompValue);
+            $taskAccomplishment->setReportedValue($reportValue);
             if ($reportValueSocial) {
-                $taskAccomplishment->setAccomplishmentValueSocial($reportValueSocial);
+                $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                $taskAccomplishment->setReportedValueSocial($reportValueSocial);
             }
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
@@ -814,7 +886,7 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('operational_task_show');
         }
         $taskAssign = $request->request->get('taskAssign');
-        //    dd($taskUser);
+        //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
         $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
         foreach ($taskAssigns as $value) {
@@ -823,6 +895,7 @@ class OperationalTaskController extends AbstractController
             $date = new DateTime();
         }
         $task = $taskAssignRepository->find($taskAssign);
+        // dd($task);
         if ($task->getType() < 2) {
             $task->setType(2);
             $em->flush();

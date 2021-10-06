@@ -27,6 +27,8 @@ class ViewerController extends AbstractController
      */
     public function listAuditsAction(Reader $reader): Response
     {
+                        $this->denyAccessUnlessGranted("vw_usr_lst");
+
         $schemaManager = new SchemaManager($reader->getProvider());
 
         /** @var AuditingService[] $auditingServices */

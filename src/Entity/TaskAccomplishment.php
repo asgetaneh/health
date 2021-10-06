@@ -89,6 +89,7 @@ class TaskAccomplishment
      */
     private $taskAssign;
 
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -271,4 +272,6 @@ class TaskAccomplishment
 
         return $this;
     }
+
+  
 }
