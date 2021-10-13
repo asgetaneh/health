@@ -75,9 +75,8 @@ class ObjectiveAchievementRepository extends ServiceEntityRepository
     public function search($search=[]){
 
         $qb=$this->createQueryBuilder('ka')
-        ->join('ka.kpi','k')
-        ->join('k.strategy','s')
-        ->join('s.objective','o')
+        
+        ->join('ka.objective','o')
         ;
          if (isset($search['year']) && sizeof($search['year']) > 0) {
             $qb->andWhere('ka.year in (:year)')
@@ -94,15 +93,11 @@ class ObjectiveAchievementRepository extends ServiceEntityRepository
             
         }
          if(isset($search['objective']) && sizeof($search['objective'])>0 ){
-            $qb->andWhere('s.objective in (:objective)')
+            $qb->andWhere('ka.objective in (:objective)')
             ->setParameter('objective',$search['objective']);
             
         }
-         if(isset($search['strategy']) && sizeof($search['strategy'])>0 ){
-            $qb->andWhere('k.strategy in (:strategy)')
-            ->setParameter('sstrategy',$search['strategy']);
-            
-        }
+       
         if(isset($search['name']) ){
               
             $qb
@@ -113,7 +108,7 @@ class ObjectiveAchievementRepository extends ServiceEntityRepository
             
         }
 
-        return $qb->orderBy('k.id','ASC')->getQuery();
+        return $qb->orderBy('o.id','ASC')->getQuery();
     }
 
 

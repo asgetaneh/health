@@ -152,5 +152,45 @@ class QuarterPlanAchievementRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+     public function getYearlyPlanByInitiative($initiative, $year)
+    {
+        $qb = $this->createQueryBuilder('pa')
+        ->select('sum(pa.plan) as plan')
+         
+            ->Join('pa.initiativeAchievement', 'ic')
+           
+            ->andwhere('ic.initiative = :initiative')
+            ->andwhere('ic.year = :year')
+         
+            ->setParameter('year',  $year)
+           
+            ->setParameter('initiative', $initiative)
+            // ->setParameter('name', $social)
+            ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+      public function getYearlyPlanAccompByInitiative($initiative, $year)
+    {
+        $qb = $this->createQueryBuilder('pa')
+        ->select('sum(pa.accomp) as accomp')
+         
+            ->Join('pa.initiativeAchievement', 'ic')
+             
+           
+           
+            ->andwhere('ic.initiative = :initiative')
+            ->andwhere('ic.year = :year')
+         
+            ->setParameter('year',  $year)
+           
+            ->setParameter('initiative', $initiative)
+            // ->setParameter('name', $social)
+            ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
 
 }

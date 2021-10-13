@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Goal;
+use App\Entity\GoalAchievement;
 use App\Entity\Initiative;
 use App\Entity\InitiativeAchievement;
 use App\Entity\KeyPerformanceIndicator;
@@ -100,6 +101,23 @@ class PlanAchievementController extends AbstractController
 
 
         $em = $this->getDoctrine()->getManager();
+        $filterform = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add('goal', EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'required' => false
+            ])
+
+
+            ->add('year', EntityType::class, [
+                'class' => PlanningYear::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->getForm();
+        $filterform->handleRequest($request);
         if ($request->request->get('reload')) {
 
             InitiativeHelper::goalSync($em);
@@ -107,7 +125,10 @@ class PlanAchievementController extends AbstractController
             return $this->redirectToRoute('plan_achievement_goal');
         }
         $datas = VisualizationHelper::goal($em);
-        $query = $goalRepository->findAlls();
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $query = $em->getRepository(GoalAchievement::class)->search($filterform->getData());
+        } else
+            $query = $em->getRepository(GoalAchievement::class)->findAlls();;
         $data = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -116,7 +137,8 @@ class PlanAchievementController extends AbstractController
         return $this->render('plan_achievement/goal.html.twig', [
             'plan_achievements' => $data,
 
-            'data' => $datas
+            'data' => $datas,
+            'filterform' => $filterform->createView(),
         ]);
     }
 
@@ -162,6 +184,34 @@ class PlanAchievementController extends AbstractController
     public function objective(PlanAchievementRepository $planAchievementRepository, ObjectiveRepository $objectiveRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
+        $filterform = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add('goal', EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'required' => false
+            ])
+            ->add('objective', EntityType::class, [
+                'class' => Objective::class,
+                'multiple' => true,
+                'required' => false
+
+            ])
+            ->add('perspective', EntityType::class, [
+                'class' => Perspective::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+
+            ->add('year', EntityType::class, [
+                'class' => PlanningYear::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+            ->getForm();
+        $filterform->handleRequest($request);
         if ($request->request->get('reload')) {
 
             InitiativeHelper::objectiveSync($em);
@@ -169,8 +219,10 @@ class PlanAchievementController extends AbstractController
             return $this->redirectToRoute('plan_achievement_objective');
         }
         $datas = VisualizationHelper::objective($em);
-
-        $query =$em->getRepository(ObjectiveAchievement::class)->findAlls();
+        if ($filterform->isSubmitted() && $filterform->isValid()) {
+            $query = $em->getRepository(ObjectiveAchievement::class)->search($filterform->getData());
+        } else
+            $query = $em->getRepository(ObjectiveAchievement::class)->findAlls();
         $data = $data = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -178,7 +230,8 @@ class PlanAchievementController extends AbstractController
         );
         return $this->render('plan_achievement/objective.html.twig', [
             'plan_achievements' => $data,
-            'data' => $datas
+            'data' => $datas,
+            'filterform' => $filterform->createView(),
         ]);
     }
 
@@ -213,7 +266,7 @@ class PlanAchievementController extends AbstractController
                 'required' => false,
 
             ])
-              ->add('year', EntityType::class, [
+            ->add('year', EntityType::class, [
                 'class' => PlanningYear::class,
                 'multiple' => true,
                 'required' => false,
@@ -304,7 +357,7 @@ class PlanAchievementController extends AbstractController
 
     ): Response {
         $em = $this->getDoctrine()->getManager();
-       
+
         $filterform = $this->createFormBuilder()
             ->setMethod('Get')
             ->add('goal', EntityType::class, [
@@ -360,20 +413,21 @@ class PlanAchievementController extends AbstractController
 
 
         if ($filterform->isSubmitted()) {
-           
-            $query = $em->getRepository(InitiativeAchievement::class)->search($filterform->getData());
 
+            $query = $em->getRepository(InitiativeAchievement::class)->search($filterform->getData());
         } else
             $query = $em->getRepository(InitiativeAchievement::class)->findAlls();
-           $data = $paginator->paginate(
+        $data = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
         );
-      
+        $datas=VisualizationHelper::Initiative($em, []);
+
         return $this->render('plan_achievement/initiative.html.twig', [
             'plan_achievements' =>  $data,
             'filterform' => $filterform->createView(),
+            'data'=>$datas
         ]);
     }
     /**

@@ -25,7 +25,6 @@
 {% endblock %}
 
 {% block body %}
-
 	<div class="col-sm-12 col-md-12 col-lg-12">
 		<div class="tabbable">
 			<ul class="nav nav-tabs nav-justified  tab-color-blue" id="myTab">
@@ -45,16 +44,79 @@
 
 
 			</ul>
-
+			{# <div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='{{asset('image/loading.gif')}}' width="64" height="64"/><br>Loading..</div> #}
 
 			<div class="tab-content">
 				<div id="home" class="tab-pane fade active in">
 					<div class="row">
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
+							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
+							{# <div class="widget-header">
+																																												<h5 class="widget-title">
+																																													<strong>Initiative Achievement</strong>
+																																												</h5>
+																																			
+																																												<div class="widget-toolbar">
+																																			
+																																			
+																																													<a href="#" id="reload" data-action="reload">
+																																														<i class="ace-icon fa fa-refresh"></i>
+																																													</a>
+																																			
+																																			
+																																												</div>
+																																											</div> #}
+
+								<div class="widget-body"> <div class="widget-main">
+									<div class="row">
+										<div class="search-area well col-md-12">
+
+											<div class="row">
+												{{ form_start(filterform,{'attr': {'role':'form','class':' ' },'method':'GET'}) }}
+												<div class="col-md-4">
+													<div class="form-group form-group-sm">
+														{{ form_label(filterform.goal,'Goal') }}
+														{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'chose goal' }}) }}
+													</div>
+												</div>
+												{# <div class="clearfix "></div> #}
+
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.perspective,'Perspective') }}
+														{{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'chose perspective' }}) }}
+													</div>
+												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form_label(filterform.objective,'Objective') }}
+														{{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'chose objective' }}) }}
+													</div>
+												</div>
 
 
-							<div class="widget-body">
-								<div class="widget-main">
+												<div class="col-md-3">
+													<div class="form-group">
+														{{ form_label(filterform.year,'Year') }}
+														{{ form_widget(filterform.year,{'attr':{'class':'select2 form-control','data-placeholder':'chose year' }}) }}
+													</div>
+												</div>
+
+												<div class="col-md-3">
+													<div class="form-group" style="margin-top:25px;">
+														<input type="submit" class="btn btn-primary btn-sm " value="{% trans %}Filter{% endtrans %}">
+													</div>
+												</div>
+
+
+												{{ form_end(filterform) }}
+											</div>
+
+
+										</div>
+
+									</div>
 									<div class="table-responsive">
 										<span class="badge badge-info pull-right">
 											{% trans %}Total{% endtrans %}
@@ -70,7 +132,7 @@
 
 													<th rowspan="2">Objective</th>
 													<th rowspan="2">Goal</th>
-													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
+
 
 													<th rowspan="2">Year</th>
 													<th colspan="2">yearly</th>
@@ -111,7 +173,7 @@
 
 														<td>{{plan_achievement.objective}}</td>
 														<td>{{plan_achievement.objective.goal}}</td>
-														{# <td>{{plan_achievement.initiative.initiativeBehaviour}}</td> #}
+
 
 														<td>{{plan_achievement.year}}</td>
 														<td></td>
@@ -133,20 +195,37 @@
 										<div class="pull-right" style="" id="custompaginator">{{ knp_pagination_render(plan_achievements) }}</div>
 									</div>
 								</div>
+								{# </div> #}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div id="messages">
-					<canvas id="myChart" width="400" height="400"></canvas>
-					{# <div id="legend"></div> #}
+
+				<div
+					id="messages" class="tab-pane fade">
+					{# <div class="well">
+											<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+												<div class="form-group form-group-lg">
+													<select name="kpi" id="" class="select2 form-control">
+					
+														{% for kpi in kpis %}
+															<option value="{{kpi.id}}">{{kpi}}</option>
+														{% endfor %}
+													</select>
+												</div>
+					
+												<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
+											</form>
+										</div> #}
+					<div id="chartdiv">
+						<canvas id="myChart" width="400" height="400"></canvas>
+					</div>
+
 				</div>
+
+
 			</div>
-
-
 		</div>
-
-
 	</div>
 {% endblock %}
 {% block javascripts %}

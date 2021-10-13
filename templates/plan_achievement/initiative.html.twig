@@ -19,8 +19,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																													<i class="ace-icon fa fa-refresh"></i>
-																												</a> #}
+																															<i class="ace-icon fa fa-refresh"></i>
+																														</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -50,20 +50,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																														<h5 class="widget-title">
-																															<strong>Initiative Achievement</strong>
-																														</h5>
-																					
-																														<div class="widget-toolbar">
-																					
-																					
-																															<a href="#" id="reload" data-action="reload">
-																																<i class="ace-icon fa fa-refresh"></i>
-																															</a>
-																					
-																					
-																														</div>
-																													</div> #}
+																																					<h5 class="widget-title">
+																																						<strong>Initiative Achievement</strong>
+																																					</h5>
+																												
+																																					<div class="widget-toolbar">
+																												
+																												
+																																						<a href="#" id="reload" data-action="reload">
+																																							<i class="ace-icon fa fa-refresh"></i>
+																																						</a>
+																												
+																												
+																																					</div>
+																																				</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
@@ -143,7 +143,7 @@
 												<tr>
 
 													<th rowspan="2">#</th>
-													
+
 													<th rowspan="2">Initiative</th>
 													<th rowspan="2">Kpi</th>
 													<th rowspan="2">Objective</th>
@@ -230,6 +230,7 @@
 			</div>
 		</div>
 	</div>
+	
 {% endblock %}
 {% block javascripts %}
 	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
@@ -240,10 +241,82 @@ $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var year = [{{ data.year|join(',') }}];
+var bgcolor = [];
+
+var fillColor = [];
+{% for year in data.year %}bgcolor.push(getRandomColor());
+fillColor.push(getRandomColor());{% endfor %}
 var ctx = document.getElementById("myChart").getContext('2d');
 
+var dat = {
+//labels: [{{ data.datalabels|join(',') }}],
+xLabels: ["{{ data.datalabels|join(',') }}"],
+datasets: [
+{% for initiative in data.initiative %}
+{
+	
+	
+	
+label: {{ initiative.year }},
+fillColor: fillColor[year.indexOf("{{initiative.year}}")],
+strokeColor: fillColor[year.indexOf("{{initiative.year}}")],
+highlightFill: fillColor[year.indexOf("{{initiative.year}}")],
+highlightStroke: fillColor[year.indexOf("{{initiative.year}}")],
+data: [{{ initiative.plan|join(',') }}],
+backgroundColor: bgcolor[year.indexOf({{initiative.year}})],
+borderColor: fillColor[year.indexOf({{initiative.year}})],
+borderWidth : 1
+}
+{% if loop.last != true %},{% endif %}
+{% endfor %}
+]
+};
 
 
-})
+var myChart = new Chart(ctx, {
+ type: "bar",
+data: dat,
+options: {
+responsive: true, // Instruct chart js to respond nicely.
+maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+
+scaleFontStyle: "bold",
+
+scaleFontSize: 16,
+
+scales: {
+        xAxes: [
+     {
+         weight: 10,
+         labels: [ "{{ data.datalabels|join(',') }} "],
+         ticks: {
+             fontColor: 'black'
+         }
+     },{
+         weight: 20,
+         labels: [" {{ data.labels|join(',') }}" ],
+         ticks: {
+             fontColor: 'purple'
+         },
+         offset: true,
+     },
+ ],
+     },
+
+
+}
+});
+
+});
 	</script>
 {% endblock %}

@@ -442,13 +442,15 @@ class OperationalTaskController extends AbstractController
 
         $suitableInId = $request->request->get('suitableInId');
         $operationalOfId = $request->request->get('operationalOfId');
-
+        $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitableInId);
         $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOperationalId($suitableInId, $operationalOfId);
         // dd($operationalSuitable);
         foreach ($operationalSuitable as  $value) {
             $value->setStatus(1);
         }
         $em->flush();
+        Helper::calculateInitiativePlan($em, $suitableInitiative);
+
         return new JsonResponse($operationalSuitable);
     }
 

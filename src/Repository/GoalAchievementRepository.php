@@ -58,4 +58,44 @@ class GoalAchievementRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+     public function findAlls()
+    {
+        return $this->createQueryBuilder('g')
+         
+            ->orderBy('g.id', 'ASC')
+
+
+
+
+
+
+            ->getQuery();
+    }
+      public function search($search = [])
+    {
+            
+        $qb = $this->createQueryBuilder('a');
+    
+         if (isset($search['year']) && sizeof($search['year']) > 0) {
+            $qb->andWhere('a.year in (:year)')
+                ->setParameter('year', $search['year']);
+        }
+        if (isset($search['goal']) && sizeof($search['goal']) > 0) {
+            $qb
+                
+                ->andWhere('a.goal in (:goal)')
+                ->setParameter('goal', $search['goal']);
+        }
+        
+        if (isset($search['name'])) {
+
+            $qb
+                ->leftJoin('i.translations', 't')
+                ->andWhere("t.name  LIKE '%" . $search['name'] . "%' ");
+        }
+
+
+        return $qb->getQuery();
+
+    }
 }
