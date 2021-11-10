@@ -101,6 +101,11 @@ class PlanningYear
      */
     private $goalAchievements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InistuitionSuitableInitiative::class, mappedBy="year")
+     */
+    private $inistuitionSuitableInitiatives;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -112,6 +117,7 @@ class PlanningYear
         $this->kPiAchievements = new ArrayCollection();
         $this->objectiveAchievements = new ArrayCollection();
         $this->goalAchievements = new ArrayCollection();
+        $this->inistuitionSuitableInitiatives = new ArrayCollection();
     }
     public function __toString()
     {
@@ -462,6 +468,36 @@ class PlanningYear
             // set the owning side to null (unless already changed)
             if ($goalAchievement->getYear() === $this) {
                 $goalAchievement->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InistuitionSuitableInitiative[]
+     */
+    public function getInistuitionSuitableInitiatives(): Collection
+    {
+        return $this->inistuitionSuitableInitiatives;
+    }
+
+    public function addInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if (!$this->inistuitionSuitableInitiatives->contains($inistuitionSuitableInitiative)) {
+            $this->inistuitionSuitableInitiatives[] = $inistuitionSuitableInitiative;
+            $inistuitionSuitableInitiative->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if ($this->inistuitionSuitableInitiatives->removeElement($inistuitionSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($inistuitionSuitableInitiative->getYear() === $this) {
+                $inistuitionSuitableInitiative->setYear(null);
             }
         }
 

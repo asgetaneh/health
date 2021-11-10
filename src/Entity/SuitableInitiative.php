@@ -85,6 +85,11 @@ class SuitableInitiative
      */
     private $suitableOperationals;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=InistuitionSuitableInitiative::class, inversedBy="principalSuitableInitiative")
+     */
+    private $inistuitionSuitableInitiative;
+
    
     
 
@@ -368,6 +373,18 @@ class SuitableInitiative
                 $suitableOperational->setSuitableInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInistuitionSuitableInitiative(): ?InistuitionSuitableInitiative
+    {
+        return $this->inistuitionSuitableInitiative;
+    }
+
+    public function setInistuitionSuitableInitiative(?InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        $this->inistuitionSuitableInitiative = $inistuitionSuitableInitiative;
 
         return $this;
     }

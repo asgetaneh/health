@@ -123,6 +123,11 @@ class Initiative implements TranslatableInterface
      */
     private $initiativeAchievements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InistuitionSuitableInitiative::class, mappedBy="initiative")
+     */
+    private $inistuitionSuitableInitiatives;
+
    
      
      const NUMERICAL=0;
@@ -142,6 +147,7 @@ class Initiative implements TranslatableInterface
         // $this->initiativeBehaviour = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
         $this->initiativeAchievements = new ArrayCollection();
+        $this->inistuitionSuitableInitiatives = new ArrayCollection();
        
     }
     public function __toString()
@@ -464,6 +470,36 @@ class Initiative implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($initiativeAchievement->getInitiative() === $this) {
                 $initiativeAchievement->setInitiative(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InistuitionSuitableInitiative[]
+     */
+    public function getInistuitionSuitableInitiatives(): Collection
+    {
+        return $this->inistuitionSuitableInitiatives;
+    }
+
+    public function addInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if (!$this->inistuitionSuitableInitiatives->contains($inistuitionSuitableInitiative)) {
+            $this->inistuitionSuitableInitiatives[] = $inistuitionSuitableInitiative;
+            $inistuitionSuitableInitiative->setInitiative($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if ($this->inistuitionSuitableInitiatives->removeElement($inistuitionSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($inistuitionSuitableInitiative->getInitiative() === $this) {
+                $inistuitionSuitableInitiative->setInitiative(null);
             }
         }
 

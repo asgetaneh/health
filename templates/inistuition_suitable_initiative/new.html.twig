@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New InistuitionSuitableInitiative{% endblock %}
+
+{% block body %}
+    <h1>Create new InistuitionSuitableInitiative</h1>
+
+    {{ include('inistuition_suitable_initiative/_form.html.twig') }}
+
+    <a href="{{ path('inistuition_suitable_initiative_index') }}">back to list</a>
+{% endblock %}

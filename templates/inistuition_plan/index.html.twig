@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InistuitionPlan index{% endblock %}
+
+{% block body %}
+    <h1>InistuitionPlan index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Plan</th>
+                <th>Accomp</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for inistuition_plan in inistuition_plans %}
+            <tr>
+                <td>{{ inistuition_plan.id }}</td>
+                <td>{{ inistuition_plan.plan }}</td>
+                <td>{{ inistuition_plan.accomp }}</td>
+                <td>
+                    <a href="{{ path('inistuition_plan_show', {'id': inistuition_plan.id}) }}">show</a>
+                    <a href="{{ path('inistuition_plan_edit', {'id': inistuition_plan.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('inistuition_plan_new') }}">Create new</a>
+{% endblock %}

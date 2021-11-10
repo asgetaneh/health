@@ -70,7 +70,7 @@ class PlanController extends AbstractController
             //  $recoverData=$recoverInitiatives;
             //  dd($recoverData);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
-            //  dd( $principaloffice);
+          
             $plancount = 0;
             $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
             $numberOfYearQuarter = $planningyear->getNumberOfQuarter();
@@ -593,12 +593,12 @@ class PlanController extends AbstractController
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
-        //  dd($request->request->get('planvalue'));
+        
         if ($request->request->get('planvalue')) {
 
             $planValues = $request->request->get('planvalue');
             $currentPage =$request->request->get("currentPage");
-// dd($planValues);
+
 
             $planInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
             $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->request->get('operationalOffice'));
@@ -710,6 +710,10 @@ class PlanController extends AbstractController
            
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
              Helper::calculateInitiativePlan($em, $planInitiative);
+            if($operationaloffice->getPrincipalOffice()->getOfficeGroup()){
+             Helper::setOrganizationalInitiativePlan($em,$planInitiative,$operationaloffice->getPrincipalOffice()->getOfficeGroup());
+            }
+            
 
             $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 

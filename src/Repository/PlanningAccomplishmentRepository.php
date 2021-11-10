@@ -318,4 +318,72 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+    public function SumByInitiativeAndYear()
+    {
+        $conn=$this->getEntityManager()->getConnection();
+        $sql='SELECT year(p.year) as year from planning_year p';
+         $fraud_stmt = $conn->prepare($sql);
+        $fraud_stmt->execute();
+        $result=$fraud_stmt->fetchAllAssociative();
+     dd($result);
+        $qb = $this->createQueryBuilder('pa')
+        ->select('sum(pa.planValue) as plan,i.id as initiative, y.ethYear as year')
+        // ->addSelect('extract(YEAR FROM y.year) years')
+        
+            // ->leftjoin('pa.socialAttribute', 'sa')
+            ->Join('pa.suitableInitiative', 'si')
+              ->Join('si.initiative', 'i')
+               ->Join('si.planningYear', 'y')
+            // ->andwhere('pa.suitableInitiative = :suitin')
+            // ->andwhere('pa.quarter = :quarter')
+            // ->andwhere('si.initiative = :initiative')
+            // ->andwhere('si.planningYear = :year')
+            // // ->andwhere('sa.id = :name')
+            // ->setParameter('year',  $year)
+            // ->setParameter('quarter', $quarter)
+            // ->setParameter('initiative', $initiative)
+            // ->setParameter('name', $social)
+             
+           
+            ->groupBy('i.id')
+             ->addGroupBy('y.id')
+             
+            
+             ->orderBy('y.id','ASC')
+              ->addOrderBy('i.id','ASC')
+            // ->addGroupBy('si.planningYear')
+          
+           
+            ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+      public function getOrganizationPlanByInitiativeAndYear($initiative, $year, $quarter,$org,$attrib=null)
+    {
+        $qb = $this->createQueryBuilder('pa')
+        ->select('sum(pa.planValue) as plan')
+            // ->leftjoin('pa.socialAttribute', 'sa')
+            ->Join('pa.suitableInitiative', 'si')
+              ->Join('si.principalOffice', 'po')
+             ->andwhere('po.officeGroup = :og')
+            ->andwhere('pa.quarter = :quarter')
+            ->andwhere('si.initiative = :initiative')
+            ->andwhere('si.planningYear = :year')
+            // ->andwhere('sa.id = :name')
+            ->setParameter('year',  $year)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('initiative', $initiative)
+             ->setParameter('og', $org)
+            ;
+            if($attrib){
+                $qb->andWhere('pa.socialAttribute= :attr')
+                 ->setParameter('attr', $attrib)
+            ;
+            }
+
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

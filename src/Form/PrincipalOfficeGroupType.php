@@ -13,6 +13,7 @@ class PrincipalOfficeGroupType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('director')
             ->add('description')
         ;
     }

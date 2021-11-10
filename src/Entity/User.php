@@ -222,6 +222,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Sms::class, mappedBy="sender")
      */
     private $sms;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrincipalOfficeGroup::class, mappedBy="director")
+     */
+    private $principalOfficeGroups;
     public function __construct()
     {
       
@@ -259,6 +264,7 @@ class User implements UserInterface
         $this->taskAssignsDelegate = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
         $this->sms = new ArrayCollection();
+        $this->principalOfficeGroups = new ArrayCollection();
 
     }
     public function __toString()
@@ -1374,6 +1380,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($sms->getSender() === $this) {
                 $sms->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrincipalOfficeGroup[]
+     */
+    public function getPrincipalOfficeGroups(): Collection
+    {
+        return $this->principalOfficeGroups;
+    }
+
+    public function addPrincipalOfficeGroup(PrincipalOfficeGroup $principalOfficeGroup): self
+    {
+        if (!$this->principalOfficeGroups->contains($principalOfficeGroup)) {
+            $this->principalOfficeGroups[] = $principalOfficeGroup;
+            $principalOfficeGroup->setDirector($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrincipalOfficeGroup(PrincipalOfficeGroup $principalOfficeGroup): self
+    {
+        if ($this->principalOfficeGroups->removeElement($principalOfficeGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($principalOfficeGroup->getDirector() === $this) {
+                $principalOfficeGroup->setDirector(null);
             }
         }
 

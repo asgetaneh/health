@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InistuitionPlan{% endblock %}
+
+{% block body %}
+    <h1>InistuitionPlan</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ inistuition_plan.id }}</td>
+            </tr>
+            <tr>
+                <th>Plan</th>
+                <td>{{ inistuition_plan.plan }}</td>
+            </tr>
+            <tr>
+                <th>Accomp</th>
+                <td>{{ inistuition_plan.accomp }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('inistuition_plan_index') }}">back to list</a>
+
+    <a href="{{ path('inistuition_plan_edit', {'id': inistuition_plan.id}) }}">edit</a>
+
+    {{ include('inistuition_plan/_delete_form.html.twig') }}
+{% endblock %}

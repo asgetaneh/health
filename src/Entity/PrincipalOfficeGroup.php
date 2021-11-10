@@ -34,9 +34,20 @@ class PrincipalOfficeGroup
      */
     private $principalOffices;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="principalOfficeGroups")
+     */
+    private $director;
+
+    /**
+     * @ORM\OneToMany(targetEntity=InistuitionSuitableInitiative::class, mappedBy="inistuition")
+     */
+    private $inistuitionSuitableInitiatives;
+
     public function __construct()
     {
         $this->principalOffices = new ArrayCollection();
+        $this->inistuitionSuitableInitiatives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,9 +55,9 @@ class PrincipalOfficeGroup
         return $this->id;
     }
  public function __toString()
-  {
-      return $this->name;
-  }
+                          {
+                              return $this->name;
+                          }
     public function getName(): ?string
     {
         return $this->name;
@@ -95,6 +106,48 @@ class PrincipalOfficeGroup
             // set the owning side to null (unless already changed)
             if ($principalOffice->getOfficeGroup() === $this) {
                 $principalOffice->setOfficeGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDirector(): ?User
+    {
+        return $this->director;
+    }
+
+    public function setDirector(?User $director): self
+    {
+        $this->director = $director;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InistuitionSuitableInitiative[]
+     */
+    public function getInistuitionSuitableInitiatives(): Collection
+    {
+        return $this->inistuitionSuitableInitiatives;
+    }
+
+    public function addInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if (!$this->inistuitionSuitableInitiatives->contains($inistuitionSuitableInitiative)) {
+            $this->inistuitionSuitableInitiatives[] = $inistuitionSuitableInitiative;
+            $inistuitionSuitableInitiative->setInistuition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInistuitionSuitableInitiative(InistuitionSuitableInitiative $inistuitionSuitableInitiative): self
+    {
+        if ($this->inistuitionSuitableInitiatives->removeElement($inistuitionSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($inistuitionSuitableInitiative->getInistuition() === $this) {
+                $inistuitionSuitableInitiative->setInistuition(null);
             }
         }
 

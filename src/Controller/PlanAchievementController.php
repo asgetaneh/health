@@ -10,8 +10,10 @@ use App\Entity\KeyPerformanceIndicator;
 use App\Entity\KPiAchievement;
 use App\Entity\Objective;
 use App\Entity\ObjectiveAchievement;
+use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\Perspective;
 use App\Entity\PlanAchievement;
+use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Entity\QuarterAccomplishment;
@@ -445,9 +447,12 @@ class PlanAchievementController extends AbstractController
     ): Response {
 
         $em = $this->getDoctrine()->getManager();
+        $data=$em->getRepository(PlanningAccomplishment::class)->SumByInitiativeAndYear();
+
+dd($data);
 
         dd(VisualizationHelper::Initiative($em, []));
-
+   
         return $this->render('plan_achievement/initiative.html.twig', [
             'plan_achievements' => $planAchievementRepository->findAll(),
         ]);

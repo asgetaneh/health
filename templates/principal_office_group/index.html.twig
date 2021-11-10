@@ -12,12 +12,12 @@
 	</li>
 {% endblock %}
 {% block body %}
-  <div class="row">
+	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-        <div class="widget-box widget-color-blue" id="widget-box-8">
-        <div class="widget-header">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
-						<strong>Principal Office Category</strong>
+						<strong>Principal Office Organization</strong>
 					</h5>
 					<div class="widget-toolbar">
 						<span class="badge badge-info">
@@ -28,42 +28,44 @@
 						</span>
 					</div>
 				</div>
-                <div class="widget-body">
-                <div class="widget-main padding-16">
+				<div class="widget-body">
+					<div class="widget-main padding-16">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for principal_office_group in principal_office_groups %}
-            <tr>
-                <td>{{ loop.index}}</td>
-                <td>{{ principal_office_group.name }}</td>
-                <td>{{ principal_office_group.description }}</td>
-                <td>
-                    <a href="{{ path('principal_office_group_show', {'id': principal_office_group.id}) }}">show</a>
-                    <a href="{{ path('principal_office_group_edit', {'id': principal_office_group.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Name</th>
+									<th>Director</th>
+									<th>Description</th>
+									<th>actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for principal_office_group in principal_office_groups %}
+									<tr>
+										<td>{{ loop.index}}</td>
+										<td>{{ principal_office_group.name }}</td>
+										<td>{{ principal_office_group.director?principal_office_group.director.userInfo:""}}</td>
+										<td>{{ principal_office_group.description }}</td>
+										<td>
+											<a href="{{ path('principal_office_group_show', {'id': principal_office_group.id}) }}">show</a>
+											<a href="{{ path('principal_office_group_edit', {'id': principal_office_group.id}) }}">edit</a>
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="4">no records found</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
 
-    <a href="{{ path('principal_office_group_new') }}" class="btn btn-info">Create new</a>
-    </div>
-     </div>
-     </div>
-     </div>
-      </div>
+						<a href="{{ path('principal_office_group_new') }}" class="btn btn-info">Create new</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}

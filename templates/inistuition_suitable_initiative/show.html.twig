@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InistuitionSuitableInitiative{% endblock %}
+
+{% block body %}
+    <h1>InistuitionSuitableInitiative</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ inistuition_suitable_initiative.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('inistuition_suitable_initiative_index') }}">back to list</a>
+
+    <a href="{{ path('inistuition_suitable_initiative_edit', {'id': inistuition_suitable_initiative.id}) }}">edit</a>
+
+    {{ include('inistuition_suitable_initiative/_delete_form.html.twig') }}
+{% endblock %}

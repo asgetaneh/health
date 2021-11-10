@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit InistuitionPlan{% endblock %}
+
+{% block body %}
+    <h1>Edit InistuitionPlan</h1>
+
+    {{ include('inistuition_plan/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('inistuition_plan_index') }}">back to list</a>
+
+    {{ include('inistuition_plan/_delete_form.html.twig') }}
+{% endblock %}

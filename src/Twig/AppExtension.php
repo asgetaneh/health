@@ -242,7 +242,7 @@ class AppExtension extends AbstractExtension
             return $plan;
         } else return "-";
     }
-    function getOperationalQuarterPlan($suitable,  $quarter,$office)
+    function getOperationalQuarterPlan($suitable,  $quarter, $office)
     {
         if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
 
@@ -262,12 +262,12 @@ class AppExtension extends AbstractExtension
             return $plans ? $plans : '_';
         } else
 
-            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlan($suitable, null, $quarter,$office);
+            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlan($suitable, null, $quarter, $office);
 
 
         return $plan ? $plan : '_';
     }
-   function getOperationalQuarterPlanAccomp($suitable, $office, $quarter)
+    function getOperationalQuarterPlanAccomp($suitable, $office, $quarter)
     {
         if (count($suitable->getInitiative()->getSocialAtrribute()) > 0) {
 
@@ -287,7 +287,7 @@ class AppExtension extends AbstractExtension
             return $plans ? $plans : '_';
         } else
 
-            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, null, $quarter,$office);
+            $plan = $this->entityManager->getRepository(OperationalPlanningAccomplishment::class)->findQuarterPlanAccomp($suitable, null, $quarter, $office);
 
 
         return $plan ? $plan : '_';
