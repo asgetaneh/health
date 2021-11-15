@@ -65,12 +65,13 @@ class PlanController extends AbstractController
 
             $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
-            $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
-            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+            $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
+            $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
+            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
             //  $recoverData=$recoverInitiatives;
             //  dd($recoverData);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
-          
+
             $plancount = 0;
             $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
             $numberOfYearQuarter = $planningyear->getNumberOfQuarter();
@@ -249,7 +250,9 @@ class PlanController extends AbstractController
         if ($request->query->get('office') && $request->query->get('planyear')) {
             $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
-            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+
+            $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
+            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
 
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             if ($request->query->get('nonsuitable')) {
@@ -446,21 +449,21 @@ class PlanController extends AbstractController
 
                 if (count($result->getInitiative()->getSocialAtrribute()) > 0) {
                     foreach ($result->getInitiative()->getSocialAtrribute() as $social) {
-                        $plan = $plan . strtoupper( substr( $social->getName(),0,1)) . ":" . $planningAccomplishmentRepository->findYearlyPlan($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
-                        $planAccomp = $planAccomp .strtoupper( substr( $social->getName(),0,1)) . ":" . $planningAccomplishmentRepository->findYearlyPlanAccomp($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
+                        $plan = $plan . strtoupper(substr($social->getName(), 0, 1)) . ":" . $planningAccomplishmentRepository->findYearlyPlan($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
+                        $planAccomp = $planAccomp . strtoupper(substr($social->getName(), 0, 1)) . ":" . $planningAccomplishmentRepository->findYearlyPlanAccomp($result, $social, $result->getInitiative()->getInitiativeBehaviour()->getCode()) . " ";
 
 
-                        $quarter1 =  $quarter1 . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 1). " ";
-                        $quarter1Accomp = $quarter1Accomp . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 1). " ";
+                        $quarter1 =  $quarter1 . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 1) . " ";
+                        $quarter1Accomp = $quarter1Accomp . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 1) . " ";
 
-                        $quarter2 =  $quarter2 . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 2). " ";
-                        $quarter2Accomp = $quarter2Accomp . strtoupper( substr( $social->getName(),0,1)). ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 2). " ";
+                        $quarter2 =  $quarter2 . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 2) . " ";
+                        $quarter2Accomp = $quarter2Accomp . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 2) . " ";
 
-                        $quarter3 =  $quarter3 . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 3). " ";
-                        $quarter3Accomp = $quarter3Accomp .strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 3). " ";
+                        $quarter3 =  $quarter3 . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 3) . " ";
+                        $quarter3Accomp = $quarter3Accomp . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 3) . " ";
 
-                        $quarter4 =  $quarter4 . strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 4). " ";
-                        $quarter4Accomp = $quarter4Accomp .strtoupper( substr( $social->getName(),0,1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 4). " ";
+                        $quarter4 =  $quarter4 . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlan($result, $social, 4) . " ";
+                        $quarter4Accomp = $quarter4Accomp . strtoupper(substr($social->getName(), 0, 1)) . ":"  . $planningAccomplishmentRepository->findQuarterPlanAccomp($result, $social, 4) . " ";
                     }
                 } else {
                     $plan =  $planningAccomplishmentRepository->findYearlyPlan($result, null, $result->getInitiative()->getInitiativeBehaviour()->getCode());
@@ -485,7 +488,7 @@ class PlanController extends AbstractController
                 $sheet->setCellValue('D' . $x, $result->getPlanningYear());
                 $sheet->setCellValue('E' . $x, $plan);
                 $sheet->setCellValue('F' . $x, $planAccomp);
-                $sheet->setCellValue('G' . $x,$quarter1);
+                $sheet->setCellValue('G' . $x, $quarter1);
                 $sheet->setCellValue('H' . $x, $quarter1Accomp);
                 $sheet->setCellValue('I' . $x, $quarter2);
                 $sheet->setCellValue('J' . $x, $quarter2Accomp);
@@ -593,11 +596,11 @@ class PlanController extends AbstractController
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
         $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
-        
+
         if ($request->request->get('planvalue')) {
 
             $planValues = $request->request->get('planvalue');
-            $currentPage =$request->request->get("currentPage");
+            $currentPage = $request->request->get("currentPage");
 
 
             $planInitiative = $em->getRepository(SuitableInitiative::class)->find($request->request->get('suitableInitiative'));
@@ -615,9 +618,8 @@ class PlanController extends AbstractController
                 $isexist = false;
                 $em->persist($operationalSuitable);
                 $em->flush();
-            }
-            else
-             $operationalSuitable->setStatus(1);
+            } else
+                $operationalSuitable->setStatus(1);
 
 
 
@@ -707,13 +709,13 @@ class PlanController extends AbstractController
                 $em->clear();
             }
 
-           
+
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
-             Helper::calculateInitiativePlan($em, $planInitiative);
-            if($operationaloffice->getPrincipalOffice()->getOfficeGroup()){
-             Helper::setOrganizationalInitiativePlan($em,$planInitiative,$operationaloffice->getPrincipalOffice()->getOfficeGroup());
+            Helper::calculateInitiativePlan($em, $planInitiative);
+            if ($operationaloffice->getPrincipalOffice()->getOfficeGroup()) {
+                Helper::setOrganizationalInitiativePlan($em, $planInitiative, $operationaloffice->getPrincipalOffice()->getOfficeGroup());
             }
-            
+
 
             $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
 
