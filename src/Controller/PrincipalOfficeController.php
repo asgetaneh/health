@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Initiative;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Form\PrincipalOfficeType;
+use App\Helper\Helper;
 use App\Repository\PrincipalOfficeRepository;
 use DateTime;
 use Dompdf\Dompdf;
@@ -85,6 +87,9 @@ class PrincipalOfficeController extends AbstractController
             10
 
         );
+        $em = $this->getDoctrine()->getManager();
+
+        // dd($initiatives);
         return $this->render('principal_office/index.html.twig', [
             'principal_offices' => $data,
             'principal_officestotal' => $principal_officestotal,
@@ -116,17 +121,16 @@ class PrincipalOfficeController extends AbstractController
                 'class' => PlanningYear::class
             ])
             ->getForm();
-              $session=new Session();
-             $session->remove('query');
+        $session = new Session();
+        $session->remove('query');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $year = $form->getData()['year'];
-          
-         
-            
+
+
+
             $plan = $principalOfficeRepository->findPlannedOffice($form->getData());
-              $session->set('query',$form->getData());
-           
+            $session->set('query', $form->getData());
         } else
             $plan = $principalOfficeRepository->findPlannedOffice(['year' => $year]);
 
@@ -150,32 +154,31 @@ class PrincipalOfficeController extends AbstractController
      */
 
     public function print(Request $request, PaginatorInterface $paginator, PrincipalOfficeRepository $principalOfficeRepository)
-    { 
-        $session=new Session();
+    {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
         $year = $entityManager->getRepository(PlanningYear::class)->findLast();
 
-        
-        if($session->get('query')){
 
-        
-         $year = $session->get('query')['year'];
-          
-            
-            
+        if ($session->get('query')) {
+
+
+            $year = $session->get('query')['year'];
+
+
+
             $plan = $principalOfficeRepository->findPrintPlannedOffice($session->get('query'));
-           
         } else
             $plan = $principalOfficeRepository->findPrintPlannedOffice(['year' => $year]);
 
-        
+
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $pdfOptions->set('isRemoteEnabled', true);
         $pdfOptions->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($pdfOptions);
-          
+
         $res = $this->renderView('principal_office/print.html.twig', [
             'principal_offices' => $plan,
             'year' => $year

@@ -74,6 +74,16 @@ class PrincipalOffice
      */
     private $officeGroup;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PrincipalOffice::class, inversedBy="principalOffices")
+     */
+    private $managedBy;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrincipalOffice::class, mappedBy="managedBy")
+     */
+    private $principalOffices;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
@@ -81,6 +91,7 @@ class PrincipalOffice
         $this->initiatives = new ArrayCollection();
         $this->plans = new ArrayCollection();
         $this->suitableInitiatives = new ArrayCollection();
+        $this->principalOffices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -306,6 +317,48 @@ class PrincipalOffice
     public function setOfficeGroup(?PrincipalOfficeGroup $officeGroup): self
     {
         $this->officeGroup = $officeGroup;
+
+        return $this;
+    }
+
+    public function getManagedBy(): ?self
+    {
+        return $this->managedBy;
+    }
+
+    public function setManagedBy(?self $managedBy): self
+    {
+        $this->managedBy = $managedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getPrincipalOffices(): Collection
+    {
+        return $this->principalOffices;
+    }
+
+    public function addPrincipalOffice(self $principalOffice): self
+    {
+        if (!$this->principalOffices->contains($principalOffice)) {
+            $this->principalOffices[] = $principalOffice;
+            $principalOffice->setManagedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrincipalOffice(self $principalOffice): self
+    {
+        if ($this->principalOffices->removeElement($principalOffice)) {
+            // set the owning side to null (unless already changed)
+            if ($principalOffice->getManagedBy() === $this) {
+                $principalOffice->setManagedBy(null);
+            }
+        }
 
         return $this;
     }

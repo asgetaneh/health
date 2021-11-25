@@ -17,6 +17,7 @@ use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
+use App\Entity\PrincipalOffice;
 use App\Entity\PrincipalOfficeGroup;
 use App\Entity\QuarterPlanAchievement;
 use App\Entity\SuitableInitiative;
@@ -24,11 +25,14 @@ use App\Entity\SuitableOperational;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Helper
+
 {
+    private  EntityManagerInterface $em;
+
     public static function locales()
     {
         return ["English" => 'en', "Afaan Oromo" => 'or', "Amharic" => 'am'];
-        //"Tigr"=>'tg'
+        //"Tigr"=>$pr->getManagedBy()->getManagedBy()'tg'
     }
     public static function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
     {
@@ -324,35 +328,32 @@ class Helper
         foreach ($quarters as  $quarter) {
             if (count($initiative->getSocialAtrribute()) > 0) {
                 foreach ($initiative->getSocialAtrribute() as $attrib) {
-                     
 
 
 
-                $plan = $em->getRepository(PlanningAccomplishment::class)->calulateSumByInitiativeAndYear($suitableInitiative->getInitiative(), $suitableInitiative->getPlanningYear(), $quarter, $organization, $attrib);
-                $instuitionPlan = null;
-                if ($isinitiativeAchievement)
-                    $instuitionPlan = $em->getRepository(InistuitionPlan::class)->getByOrganizationSuitableAndQuarter($organizationSuitable, $quarter,$attrib);
-                $isexist = true;
-                if (!$instuitionPlan) {
-                    $instuitionPlan = new InistuitionPlan();
-                    $instuitionPlan->setQuarter($quarter);
-                    $instuitionPlan->setInstuitionSuitable($organizationSuitable);
-                    $instuitionPlan->setSocialAttribute($attrib);
-                    $isexist = false;
+
+                    $plan = $em->getRepository(PlanningAccomplishment::class)->calulateSumByInitiativeAndYear($suitableInitiative->getInitiative(), $suitableInitiative->getPlanningYear(), $quarter, $organization, $attrib);
+                    $instuitionPlan = null;
+                    if ($isinitiativeAchievement)
+                        $instuitionPlan = $em->getRepository(InistuitionPlan::class)->getByOrganizationSuitableAndQuarter($organizationSuitable, $quarter, $attrib);
+                    $isexist = true;
+                    if (!$instuitionPlan) {
+                        $instuitionPlan = new InistuitionPlan();
+                        $instuitionPlan->setQuarter($quarter);
+                        $instuitionPlan->setInstuitionSuitable($organizationSuitable);
+                        $instuitionPlan->setSocialAttribute($attrib);
+                        $isexist = false;
+                    }
+                    $instuitionPlan->setPlan($plan);
+
+
+                    if (!$isexist) {
+                        //$organizationSuitable->addQuarterAchievement($instuitionPlan);
+                        $em->persist($instuitionPlan);
+                        $em->flush();
+                    }
                 }
-                $instuitionPlan->setPlan($plan);
-
-
-                if (!$isexist) {
-                    //$organizationSuitable->addQuarterAchievement($instuitionPlan);
-                    $em->persist($instuitionPlan);
-                    $em->flush();
-                }
-            
-                }
-            } 
-            else 
-            {
+            } else {
 
 
 
@@ -386,5 +387,25 @@ class Helper
 
 
         return;
+    }
+
+
+
+    public static function getParentOffice($principalOffice, EntityManagerInterface  $em)
+    {
+        $principalOffice = $em->getRepository(PrincipalOffice::class)->find($principalOffice);
+        // if(
+        $parent = $principalOffice->getManagedBy();
+
+        if (!$parent)
+         return $principalOffice;
+
+        while ($parent->getManagedBy()) {
+
+            $parent = $parent->getManagedBy();
+        }
+
+
+        return $parent;
     }
 }

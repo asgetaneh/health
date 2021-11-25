@@ -14,6 +14,7 @@ class PrincipalOfficeType extends AbstractType
         $builder
             ->add('name')
             ->add('officeGroup')
+             ->add('managedBy')
           
             
             ->add('description')

@@ -17,7 +17,7 @@ class OperationalOfficeType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('college')
+           
             ->add('principalOffice', EntityType::class, [
                   'attr' => [
         'class' => 'select2',
