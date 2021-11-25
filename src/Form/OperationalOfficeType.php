@@ -19,6 +19,9 @@ class OperationalOfficeType extends AbstractType
             ->add('description')
             ->add('college')
             ->add('principalOffice', EntityType::class, [
+                  'attr' => [
+        'class' => 'select2',
+    ],
                 'class' => PrincipalOffice::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
