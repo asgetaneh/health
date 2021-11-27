@@ -76,8 +76,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new InvalidCsrfTokenException();
         }
         //  dd($credentials['username']);
+        if ($credentials['username']=="admin") {
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-//    $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+            # code...
+        }
+        else{
+   $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+        }
 
         $this->user = $user;
         //  dd($user);
