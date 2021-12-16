@@ -197,6 +197,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($keyPerformanceIndicator);
             $entityManager->flush();
+              $this->addFlash('danger', 'KPI Delete Successifull  !');
         }
 
         return $this->redirectToRoute('key_performance_indicator_index');

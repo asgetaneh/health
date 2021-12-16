@@ -29,10 +29,6 @@ class StaffEvaluationBehaviorCriteria
 
    
 
-    /**
-     * @ORM\ManyToOne(targetEntity=TaskUser::class, inversedBy="staffEvaluationBehaviorCriterias")
-     */
-    private $taskUser;
 
     public function getId(): ?int
     {
@@ -65,15 +61,5 @@ class StaffEvaluationBehaviorCriteria
 
    
 
-    public function getTaskUser(): ?TaskUser
-    {
-        return $this->taskUser;
-    }
-
-    public function setTaskUser(?TaskUser $taskUser): self
-    {
-        $this->taskUser = $taskUser;
-
-        return $this;
-    }
+   
 }

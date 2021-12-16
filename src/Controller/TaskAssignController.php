@@ -26,8 +26,6 @@ use App\Repository\PlanRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
-use App\Repository\TaskUserRepository;
-use App\Repository\UserInfoRepository;
 use App\Repository\UserRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
