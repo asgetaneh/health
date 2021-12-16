@@ -20,38 +20,38 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     }
 
   
-    public function findTask($user)
-    {
+    // public function findTask($user)
+    // {
 
-        //dd($productNmae);
-        return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
+    //     //dd($productNmae);
+    //     return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
 
-            ->andWhere('ts.assignedTo = :val')
-            ->setParameter('val', $user)
-            ->orderBy('s.id', 'ASC')
+    //         ->andWhere('ts.assignedTo = :val')
+    //         ->setParameter('val', $user)
+    //         ->orderBy('s.id', 'ASC')
 
-            ->getQuery()
+    //         ->getQuery()
 
-            ->getResult();
-    }
-    public function findDetailAccomplish($suitableInitiative, $user)
-    {
+    //         ->getResult();
+    // }
+    // public function findDetailAccomplish($suitableInitiative, $user)
+    // {
 
-        //dd($productNmae);
-        return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
-            ->leftJoin('ts.taskAssign', 'ta')
-            ->leftJoin('ta.PerformerTask', 'ps')
-            ->leftJoin('ps.PlanAcomplishment', 'pa')
-            ->andWhere('pa.suitableInitiative = :val')
-            ->andWhere('ps.createdBy = :user')
-            ->setParameter('user', $user)
-            ->setParameter('val', $suitableInitiative)
-            ->orderBy('ps.name', 'ASC')
+    //     //dd($productNmae);
+    //     return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
+    //         ->leftJoin('ts.taskAssign', 'ta')
+    //         ->leftJoin('ta.PerformerTask', 'ps')
+    //         ->leftJoin('ps.PlanAcomplishment', 'pa')
+    //         ->andWhere('pa.suitableInitiative = :val')
+    //         ->andWhere('ps.createdBy = :user')
+    //         ->setParameter('user', $user)
+    //         ->setParameter('val', $suitableInitiative)
+    //         ->orderBy('ps.name', 'ASC')
 
-            ->getQuery()
+    //         ->getQuery()
 
-            ->getResult();
-    }
+    //         ->getResult();
+    // }
     public function findDetailAccomplishSocial($suitableInitiative, $user)
     {
 
@@ -71,56 +71,56 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function search($search = [])
-    {
-        //   $user=$this->getUser();
-        $qb = $this->createQueryBuilder('taa')
-            ->innerJoin('taa.taskUser', 'tu')
-            ->innerJoin('tu.taskAssign', 'ta')
-            ->innerJoin('ta.PerformerTask', 'p');
+    // public function search($search = [])
+    // {
+    //     //   $user=$this->getUser();
+    //     $qb = $this->createQueryBuilder('taa')
+    //         ->innerJoin('taa.taskUser', 'tu')
+    //         ->innerJoin('tu.taskAssign', 'ta')
+    //         ->innerJoin('ta.PerformerTask', 'p');
 
-        if (isset($search['performerName'])) {
-            $qb
-                ->innerJoin('tu.assignedTo', 'u')
-                ->innerJoin('u.userInfo', 'ui')
-                   ->andWhere('ui.id = :performerName')
-                ->setParameter('performerName', $search['performerName']);
-        }
-          if(isset($search['taskName']) ){
-            $qb->andWhere('p.id = :taskName')
-            ->setParameter('taskName',$search['taskName']);
+    //     if (isset($search['performerName'])) {
+    //         $qb
+    //             ->innerJoin('tu.assignedTo', 'u')
+    //             ->innerJoin('u.userInfo', 'ui')
+    //                ->andWhere('ui.id = :performerName')
+    //             ->setParameter('performerName', $search['performerName']);
+    //     }
+    //       if(isset($search['taskName']) ){
+    //         $qb->andWhere('p.id = :taskName')
+    //         ->setParameter('taskName',$search['taskName']);
 
-        }
+    //     }
       
-         if(isset($search['initiative']) ){
+    //      if(isset($search['initiative']) ){
 
-            $qb 
-            ->Join('p.PlanAcomplishment','pl')
-            ->Join('pl.suitableInitiative','si')
-            ->Join('si.initiative','i')
-            // ->Join('i.translations','t')
-            ->andWhere('i.id = :initiative')
-            ->setParameter('initiative',$search['initiative']);
+    //         $qb 
+    //         ->Join('p.PlanAcomplishment','pl')
+    //         ->Join('pl.suitableInitiative','si')
+    //         ->Join('si.initiative','i')
+    //         // ->Join('i.translations','t')
+    //         ->andWhere('i.id = :initiative')
+    //         ->setParameter('initiative',$search['initiative']);
 
-        }
-          if(isset($search['quarter'])){
-            $qb->Join('p.quarter','q')
-            ->andWhere('q.id = :quarter')
-            ->setParameter('quarter',$search['quarter']);
+    //     }
+    //       if(isset($search['quarter'])){
+    //         $qb->Join('p.quarter','q')
+    //         ->andWhere('q.id = :quarter')
+    //         ->setParameter('quarter',$search['quarter']);
 
-        }
-         if(isset($search['planningYear']) ){
-            $qb->Join('p.PlanAcomplishment','pl')
-            ->Join('pl.suitableInitiative','si')
-              ->leftJoin('si.planningYear','py')
-            ->andWhere('py.id = :planningYear')
-            ->setParameter('planningYear',$search['planningYear']);
+    //     }
+    //      if(isset($search['planningYear']) ){
+    //         $qb->Join('p.PlanAcomplishment','pl')
+    //         ->Join('pl.suitableInitiative','si')
+    //           ->leftJoin('si.planningYear','py')
+    //         ->andWhere('py.id = :planningYear')
+    //         ->setParameter('planningYear',$search['planningYear']);
 
-        }
+    //     }
 
 
-        return $qb->orderBy('taa.id', 'ASC')->getQuery();
-    }
+    //     return $qb->orderBy('taa.id', 'ASC')->getQuery();
+    // }
 
  public function findPrintTasks($taskAssignedTo)
     {

@@ -26,7 +26,6 @@ use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
-use App\Repository\TaskUserRepository;
 use App\Repository\UserInfoRepository;
 use DateTime;
 use Andegna\DateTime as AD;
@@ -917,38 +916,38 @@ class OperationalTaskController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/approve", name="task_operarional_approve")
-     */
-    public function approve(Request $request, PlanRepository $planRepository, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/approve", name="task_operarional_approve")
+    //  */
+    // public function approve(Request $request, PlanRepository $planRepository, TaskUserRepository $taskUserRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $taskId = $request->request->get('taskUserId');
-        $taskUser = $taskUserRepository->find($taskId);
-        $planId = $taskUser->getTaskAssign()->getPerformerTask()->getPlan()->getId();
-        $plans = $planRepository->find($planId);
-        $plans->setStatus(3);
+    //     $taskId = $request->request->get('taskUserId');
+    //     $taskUser = $taskUserRepository->find($taskId);
+    //     $planId = $taskUser->getTaskAssign()->getPerformerTask()->getPlan()->getId();
+    //     $plans = $planRepository->find($planId);
+    //     $plans->setStatus(3);
 
-        $em->flush();
-        $this->addFlash('success', 'Approved Successfully !');
-        $taskUser = $request->request->get('taskUser');
-        //  dd($taskUser);
-        $taskUserId = 0;
-        $taskUsers = $taskUserRepository->findPerformerTask($taskUser);
-        foreach ($taskUsers as  $value) {
-            $taskUserId = $value->getId();
-        }
-        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskUser' => $taskUserId]);
+    //     $em->flush();
+    //     $this->addFlash('success', 'Approved Successfully !');
+    //     $taskUser = $request->request->get('taskUser');
+    //     //  dd($taskUser);
+    //     $taskUserId = 0;
+    //     $taskUsers = $taskUserRepository->findPerformerTask($taskUser);
+    //     foreach ($taskUsers as  $value) {
+    //         $taskUserId = $value->getId();
+    //     }
+    //     $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskUser' => $taskUserId]);
 
 
-        return $this->render('operational_task/show.html.twig', [
-            'taskAccomplishments' => $taskAccomplishments,
-            'taskUsers' => $taskUsers,
-        ]);
-        // return new JsonResponse($taskUser);
+    //     return $this->render('operational_task/show.html.twig', [
+    //         'taskAccomplishments' => $taskAccomplishments,
+    //         'taskUsers' => $taskUsers,
+    //     ]);
+    //     // return new JsonResponse($taskUser);
 
-    }
+    // }
     /**
      * @Route("/{id}/edit", name="operational_task_edit", methods={"GET","POST"})
      */
