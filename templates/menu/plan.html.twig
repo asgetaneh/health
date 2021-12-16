@@ -59,11 +59,23 @@
 			<li>
 				<a href="{{ path('performer_task_report') }}" style="background:#009933; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>
-					{% trans %}Performer Detail Report {% endtrans %}
+					{% trans %}Performer Detail Report
+					{% endtrans %}
 				</a>
 			</li>
 		{% endif %}
 		{% if is_granted('opr_task') %}
+
+			<li>
+				<a href="{{ path('operational_office_plan') }}" style="background:#3f87a6; color: #f5f6f8">
+
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Operational Cascading{% endtrans %}
+				</a>
+				<b class="arrow"></b>
+			</li>
+
+
 			<li>
 				<a href="{{ path('suitable_initiative_list') }}" style="background:#3f87a6; color: #f5f6f8">
 					<b class="fa fa-caret-right"></b>

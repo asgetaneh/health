@@ -162,8 +162,8 @@
 
 														<input type="hidden" name="{{key_performance_indicator.isActive ?"deactive":"active"}}" value="{{ key_performance_indicator.id}}">
 														<button title="{{key_performance_indicator.isActive?"deactivate":"activate"}}" type="submit" style="display:inline;" class="btn btn-sm {{ key_performance_indicator.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{key_performance_indicator.isActive?" deactivate":" activate"}}')">
-                                                        <i class="{{key_performance_indicator.isActive?"fa fa-times":"fa fa-check"}}"></i>
-                                                        </button>
+															<i class="{{key_performance_indicator.isActive?"fa fa-times":"fa fa-check"}}"></i>
+														</button>
 
 													</form>
 												{% endif %}
@@ -201,7 +201,7 @@
 
 						{% for f in form  %}
 							{% if f != form._token %}
-								<div class="form-group col-md-6">
+								<div class="form-group col-md-4">
 									<label>{{ form_label(f) }}</label>
 									{{ form_widget(f) }}
 								</div>
@@ -213,24 +213,24 @@
 					</div>
 
 
+				</div>
+<div class="modal-footer">
+	<input class="btn btn-primary pull-right" type="submit" value="{% trans %}Create{% endtrans %}"/>
+	<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+	{{ form_end(form) }}</div>
 
-						</div>
 
-				
 
 			</div>
 
-			<div class="modal-footer"><input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/><button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-				{{ form_end(form) }}</div>
+			
 		</div>
 
 
-
-	
-	<div class="modal-footer">
-		<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-		{{ form_end(form) }}
+		{# <div class="modal-footer">
+			<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+			<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+			{{ form_end(form) }}
+		</div> #}
 	</div>
-    </div>
 </div></div></div>{% endblock %}

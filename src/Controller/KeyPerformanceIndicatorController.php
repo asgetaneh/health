@@ -62,7 +62,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             ->getForm();
         $filterform->handleRequest($request);
         $locales = Helper::locales();
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() ) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);

@@ -1,24 +1,329 @@
 {% extends 'base.html.twig' %}
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('plan_index')}}">{% trans %}Cascading{% endtrans %}</a>
+	</li>
+{% endblock %}
+
 {% block body %}
-<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
-<div class="widget-box widget-color-blue">
-	<div class="widget-header">
-			<h5 class="widget-title bigger lighter">
-				<strong>Operational Office plan
-                </strong>
-			</h5>
-			<div class="widget-toolbar"></div>
-			<div class="widget-toolbar">
-				<span class="badge badge-info">
-					
-					<strong></strong>
-				</span>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="well text-white">
+				<ul class="steps">
+					<li data-step="1" class={% if operationalSuitables is defined %} "complete" {% else %} " active" {% endif %}>
+
+
+						<span class="step">1</span>
+						<span class="title text-primary">{% trans %}Select Operational Office Suitable
+							{% endtrans %}</span>
+					</li>
+
+					<li data-step="2" class={% if operationalSuitables is defined %} "active" {% else %} " " {% endif %}>
+
+
+						<span class="step">2</span>
+						<span class="title">
+							{% trans %}Add Plan To Operational Suitable Initiative{% endtrans %}
+						</span>
+					</li>
+
+
+				</ul>
+			</div>
+<div class="">
+
+	<div class="pull-right" style="margin-bottom:20px;">
+		{% if pricipaloffice is defined %}
+			<span class="badge badge-info">
+				<b class="text-white">
+					Principal Office:
+					{{pricipaloffice}}
+				</b>
+			</br>
+			<b class="text-white">
+				Planning Year:
+				{{planyear}}
+			</b>
+		</br>
+		<b class="text-white">
+			Operational Office:
+			{{operationaloffice}}
+
+		</b>
+
+	</span>
+
+{% endif %}</div></div>
+
+		</div>
+		
+		
+
+
+	<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+		<div class="widget-box widget-color-blue">
+			<div class="widget-header">
+				<h5 class="widget-title bigger lighter">
+					<strong>{{operationaloffice}}
+						Operational Office plan
+
+					</strong>
+				</h5>
+
+				<div class="widget-toolbar">
+					<span class="badge badge-info">
+
+						<strong></strong>
+					</span>
+				</div>
+			</div>
+			<div class="widget-body">
+
+
+				<div class="widget-main padding-16">
+					{% if suitableInitiatives is defined %}
+
+						<div class="row">
+							<div class="pull-right">
+								<div class="widget-toolbar no-border">
+
+
+									<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown">
+										<b class="text-primary">Action</b>
+										<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+									</button>
+
+									<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret">
+										<li>
+											<a href="#" id="suitablebutton">
+												<i class="ace-icon fa fa-stop green"></i>
+												Select As Suitable</a>
+
+										</li>
+
+
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						<div class="">
+
+							<div class="table-responsive" style="margin-top:20px;">
+
+
+								<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+
+
+									<thead>
+										<tr>
+											<th class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace"/>
+													<span class="lbl"></span>
+												</label>
+											</th>
+											{# <th>#</th> #}
+											<th>{% trans %}Name{% endtrans %}</th>
+
+											<th>{% trans %}Weight{% endtrans %}</th>
+
+											<th>{% trans %}Description{% endtrans %}</th>
+											<th>{% trans %}actions{% endtrans %}</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										{# {% set count =  initiatives.getItemNumberPerPage() * (initiatives.getCurrentPageNumber() -1) %} #}
+										{% set count = 0 %}
+										<form id="initiative_form" method="POST"></form>
+
+
+										{% for suitableInitiative in suitableInitiatives %}
+
+											<tr>
+												{% set count = count+1 %}
+
+
+												<td class="center">
+													<label class="pos-rel">
+														<input type="checkbox" name="suitableId[]" value="{{suitableInitiative.id}}" form="initiative_form" class="ace"/>
+
+														<span class="lbl"></span>
+													</label>
+												</td>
+												{# <td>{{count}}
+																																																																																																																															
+																																																																																																																																											</td> #}
+												<td>{{ suitableInitiative.initiative }}</td>
+
+												<td>{{ suitableInitiative.initiative.weight }}</td>
+
+
+												<td>{{suitableInitiative.initiative.description|raw}}</td>
+
+												<td>
+													<a href="{{ path('initiative_show', {'id':suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
+
+														<i class="fa fa-eye"></i>
+													</a>
+
+
+												</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="8">no records found</td>
+											</tr>
+										{% endfor %}
+
+
+									</tbody>
+
+								</table>
+								{# <div class="pull-right" id="">{{ knp_pagination_render(initiatives) }}</div> #}
+							</div>
+
+						</div>
+					{% endif %}
+
+					{% if operationalSuitables is defined %}
+
+
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th rowspan="2">#</th>
+										<th rowspan="2">Suitable Initiative</th>
+										<th rowspan="2">Behavior</th>
+
+
+										<th colspan="2">yearly</th>
+										<th colspan="2">1st Quarter</th>
+										<th colspan="2">2nd Quarter</th>
+										<th colspan="2">3rd Quarter</th>
+										<th colspan="2">4th  Quarter</th>
+
+										<th rowspan="2">Action</th>
+
+
+									</tr>
+									<tr>
+
+
+										<th>plan</th>
+										<th>Accomp.</th>
+										<th>plan</th>
+										<th>Accomp.</th>
+										<th>plan</th>
+										<th>Accomp.</th>
+										<th>plan</th>
+										<th>Accomp.</th>
+										<th>plan</th>
+										<th>Accomp.</th>
+
+
+									</tr>
+
+								</thead>
+								<tbody>
+									{% set i = 1 %}
+									{% for operationalSuitable in operationalSuitables %}
+
+
+										{% set operationsuitablelength = operationalSuitable.planValue|length %}
+
+
+										<tr>
+											<td>{{i}}</td>
+											<td>{{operationalSuitable.suitableInitiative.initiative}}</td>
+											<td>{{operationalSuitable.suitableInitiative.initiative.initiativeBehaviour}}</td>
+
+											<td>{{getOperationalYearlyPlan(operationalSuitable.suitableInitiative, operationaloffice)}}</td>
+											<td>{{getOperationalYearlyPlanAccomp(operationalSuitable.suitableInitiative, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlan(operationalSuitable.suitableInitiative,1, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlanAccomp(operationalSuitable.suitableInitiative,1, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlan(operationalSuitable.suitableInitiative,2, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlanAccomp(operationalSuitable.suitableInitiative,2, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlan(operationalSuitable.suitableInitiative,3, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlanAccomp(operationalSuitable.suitableInitiative,3, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlan(operationalSuitable.suitableInitiative,4, operationaloffice)}}</td>
+											<td>{{getOperationalQuarterPlanAccomp(operationalSuitable.suitableInitiative,4, operationaloffice)}}</td>
+
+
+											<td>
+												{% if operationsuitablelength > 0 %}
+													<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
+
+
+														<span class="glyphicon glyphicon-edit"></span>
+
+													</a>
+												{% else %}
+													<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
+
+
+														<span class="glyphicon glyphicon-plus"></span>
+
+													</a>
+
+												{% endif %}
+
+
+											</td>
+
+
+										</tr>
+										{% set i = i+1 %}
+
+
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+
 			</div>
 		</div>
-        <div class="widget-body">
-        
-        </div>
-</div>
 
-</div>
-{% endblock %}
+	</div>
+</div></div><div id="plandiv"></div>{% endblock %}{% block javascripts %}<script>
+$('.addPlan').click(function () {
+
+var $initiativeId = $(this).attr('data-id');
+var $operationalOffice = $(this).attr('data-operational');
+$.ajax({
+url: "{{ path('plan_add') }}",
+method: "post",
+data: {
+
+id: $initiativeId,
+operational: $operationalOffice,
+isOperational: true
+
+
+},
+success: function (data) {
+
+$("#plandiv").html(data)
+$('.planmodal').modal('toggle');
+var currentpa = $('.currentpa').val();
+$('.currentPage').val(currentpa);
+},
+error: function (data) {
+
+$("#plandiv").html(data)
+$('.planmodal').modal('toggle');
+var currentpa = $('.currentpa').val();
+$('.currentPage').val(currentpa);
+}
+});
+})
+
+$('#suitablebutton').click(function () {
+$('#initiative_form').submit();
+
+})</script>{% endblock %}

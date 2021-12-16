@@ -17,14 +17,12 @@
 						</a>
 					</li>
 
-				
-
 
 				</ul>
 				<div class="tab-content">
 					<div id="home" class="tab-pane fade active in">
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-12 col-lg-12 col-sm-12">
 								<div class="jumbotron text-white">
 									<ul class="steps">
 										<li data-step="1" class={% if initiatives is defined or suitableInitiatives is defined or suitableplans is defined %} "complete" {% else %} " active" {% endif %}>
@@ -47,19 +45,19 @@
 											</span>
 										</li>
 
-										<li data-step="4" class={% if (operational_office_report is defined and operational_office_report== true) %} "active" {% endif %}>
-											<span class="step">4</span>
-											<span class="title">
-												{% trans %}Accept Operational Managers’ report{% endtrans %}
-											</span>
-										</li>
-										<li data-step="5">
-											<span class="step">5</span>
-											<span class="title">
-												{% trans %}
-												Send report to JU{% endtrans %}
-											</span>
-										</li>
+										{# <li data-step="4" class={% if (operational_office_report is defined and operational_office_report== true) %} "active" {% endif %}>
+																					<span class="step">4</span>
+																					<span class="title">
+																						{% trans %}Accept Operational Managers’ report{% endtrans %}
+																					</span>
+																				</li>
+																				<li data-step="5">
+																					<span class="step">5</span>
+																					<span class="title">
+																						{% trans %}
+																						Send report to JU{% endtrans %}
+																					</span>
+																				</li> #}
 									</ul>
 								</div>
 								<div class="well well-sm">
@@ -123,62 +121,63 @@
 											<div class="widget-main padding-16">
 												<div
 													class="row">{# <div class="search-area well col-xs-12">
-																																																																																																															<div></div>
-																																																																																																															<div class="pull-left">
-																																																																																																								
-																																																																																																								
-																																																																																																																<form class="form-inline" method="post" style="display:inline;">
-																																																																																																								
-																																																																																																																	<div class="input-group">
-																																																																																																																		<input type="text" class="form-control" name="search" placeholder="search"/>
-																																																																																																																		<div class="input-group-btn">
-																																																																																																																			<button type="submit" class="btn btn-default no-border btn-sm">
-																																																																																																																				<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-																																																																																																																			</button>
-																																																																																																																		</div>
-																																																																																																																	</div>
-																																																																																																																</form>
-																																																																																																								
-																																																																																																															</div>
-																																																																																																								
-																																																																																																								
-																																																																																																															<div class="pull-right">
-																																																																																																																<div class="widget-toolbar no-border">
-																																																																																																								
-																																																																																																								
-																																																																																																																	<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-																																																																																																																		<b class="text-primary">Action</b>
-																																																																																																																		<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
-																																																																																																																	</button>
-																																																																																																								
-																																																																																																																	<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																																																																																																																		<li>
-																																																																																																																			<a href="#" id="suitablebutton">
-																																																																																																																				<i class="ace-icon fa fa-stop green"></i>
-																																																																																																																				Select As Suitable</a>
-																																																																																																																		</li>
-																																																																																																								
-																																																																																																																		<li>
-																																																																																																								
-																																																																																																																			<a href="#">
-																																																																																																																				<i class="ace-icon fa fa-stop pink2"></i>
-																																																																																																																				Select As Non Suitable</a>
-																																																																																																																		</li>
-																																																																																																								
-																																																																																																								
-																																																																																																																	</ul>
-																																																																																																																</div>
-																																																																																																								
-																																																																																																															</div>
-																																																																																																														</div> #}
+																																																																																																																																											<div></div>
+																																																																																																																																											<div class="pull-left">
+																																																																																																																																				
+																																																																																																																																				
+																																																																																																																																												<form class="form-inline" method="post" style="display:inline;">
+																																																																																																																																				
+																																																																																																																																													<div class="input-group">
+																																																																																																																																														<input type="text" class="form-control" name="search" placeholder="search"/>
+																																																																																																																																														<div class="input-group-btn">
+																																																																																																																																															<button type="submit" class="btn btn-default no-border btn-sm">
+																																																																																																																																																<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+																																																																																																																																															</button>
+																																																																																																																																														</div>
+																																																																																																																																													</div>
+																																																																																																																																												</form>
+																																																																																																																																				
+																																																																																																																																											</div>
+																																																																																																																																				
+																																																																																																																																				
+																																																																																																																																											<div class="pull-right">
+																																																																																																																																												<div class="widget-toolbar no-border">
+																																																																																																																																				
+																																																																																																																																				
+																																																																																																																																													<button class="btn btn-sm btn-round btn-bold btn-white bigger btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+																																																																																																																																														<b class="text-primary">Action</b>
+																																																																																																																																														<i class="ace-icon fa fa-chevron-down icon-on-right"></i>
+																																																																																																																																													</button>
+																																																																																																																																				
+																																																																																																																																													<ul class="dropdown-menu dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																																																																																																																																														<li>
+																																																																																																																																															<a href="#" id="suitablebutton">
+																																																																																																																																																<i class="ace-icon fa fa-stop green"></i>
+																																																																																																																																																Select As Suitable</a>
+																																																																																																																																														</li>
+																																																																																																																																				
+																																																																																																																																														<li>
+																																																																																																																																				
+																																																																																																																																															<a href="#">
+																																																																																																																																																<i class="ace-icon fa fa-stop pink2"></i>
+																																																																																																																																																Select As Non Suitable</a>
+																																																																																																																																														</li>
+																																																																																																																																				
+																																																																																																																																				
+																																																																																																																																													</ul>
+																																																																																																																																												</div>
+																																																																																																																																				
+																																																																																																																																											</div>
+																																																																																																																																										</div> #}
 
 												</div>
 												<div class="table-responsive">
 
 													<div>
 														<button type="submit">Print</button>
-														<a  href="{{path('plan_recover',{'planyear':planyear.id,'office':pricipaloffice.id})}}" aria-expanded="false" class="lead recover">
-							<strong>Recover</strong></a>
+														<a href="{{path('plan_recover',{'planyear':planyear.id,'office':pricipaloffice.id})}}" aria-expanded="false" class="lead recover">
+															<strong>Recover</strong>
+														</a>
 													</div>
 													<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 														<thead>
@@ -252,8 +251,8 @@
 																	</td>
 																	<td>
 																		{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																																																																																												<i class="fa fa-eye"></i>
-																																																																																																																																																																																											</a> #}
+																																																																																																																																																																																																																																<i class="fa fa-eye"></i>
+																																																																																																																																																																																																																															</a> #}
 
 																		<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
 																			<span class="glyphicon glyphicon-plus"></span>
@@ -292,7 +291,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
@@ -300,11 +299,13 @@
 </div>
 <!-- /.col -->
 <div class="plandiv" id="plandiv"></div>
-{{ include('plan/modal.html.twig') }}{% endblock %}{% block javascripts %}
+{{ include('plan/modal.html.twig') }}
+{% endblock %}
+{% block javascripts %}
 
 <script>
 	$('.approve').click(function () {
-var btn=this;
+var btn = this;
 var operationalOfId = $(this).attr('data-operational');
 var suitableInId = $(this).attr('data-suitableInId');
 
@@ -313,17 +314,18 @@ url:"{{ path('approve_operational_plan') }}",
 method: "POST",
 data: {
 operationalOfId: operationalOfId,
-suitableInId: suitableInId,
+suitableInId: suitableInId
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
-	btn.remove();
+btn.remove();
 
- toastr["success"]("Successfully approved!!!")
+toastr["success"]("Successfully approved!!!")
 
 }
+z
 });
-//location.reload(true);
+// location.reload(true);
 
 })
 </script>
@@ -341,9 +343,9 @@ $('.select2').css('width', '90%').select2({allowClear: false})
 
 
 $('.addPlan').click(function () {
-	
+
 var $initiativeId = $(this).attr('data-id');
-var $operationalOffice= $(this).attr('data-operational');
+var $operationalOffice = $(this).attr('data-operational');
 $.ajax({
 url: "{{ path('plan_add') }}",
 method: "post",
@@ -358,15 +360,15 @@ success: function (data) {
 
 $("#plandiv").html(data)
 $('.planmodal').modal('toggle');
-var currentpa=$('.currentpa').val();
-	$('.currentPage').val(currentpa);
+var currentpa = $('.currentpa').val();
+$('.currentPage').val(currentpa);
 },
 error: function (data) {
 
 $("#plandiv").html(data)
 $('.planmodal').modal('toggle');
-var currentpa=$('.currentpa').val();
-	$('.currentPage').val(currentpa);
+var currentpa = $('.currentpa').val();
+$('.currentPage').val(currentpa);
 }
 });
 })
@@ -376,20 +378,20 @@ var y = $(event.relatedTarget).text();
 // previous tab
 
 });
-$('.show-details-btn').on('click', function(e) {
-					e.preventDefault();
-						
-					$(this).closest('tr').next('tr').siblings('tr.open').toggleClass('open');
-					
-					$(this).closest('tr').next().toggleClass('open');
-					
-				
-					//$(this).closest('tr').not().next().toggleClass('open');
-					//$('tr.detail-row').not().toggleClass('open');
-					$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-						
-					//$(this).closest('tr').siblings().removeClass('open')
-				});
+$('.show-details-btn').on('click', function (e) {
+e.preventDefault();
+
+$(this).closest('tr').next('tr').siblings('tr.open').toggleClass('open');
+
+$(this).closest('tr').next().toggleClass('open');
+
+
+// $(this).closest('tr').not().next().toggleClass('open');
+// $('tr.detail-row').not().toggleClass('open');
+$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+
+// $(this).closest('tr').siblings().removeClass('open')
+});
 
 var myTable = $('#dynamic-table').DataTable({
 bAutoWidth: false,
@@ -452,6 +454,7 @@ myTable.row(row).select();
 myTable.row(row).deselect();
 
 
+
 });
 });
 $('#dynamic-table').on('click', 'td input[type=checkbox]', function () {
@@ -460,6 +463,7 @@ if (this.checked)
 myTable.row(row).deselect();
  else 
 myTable.row(row).select();
+
 
 
 });
@@ -482,25 +486,25 @@ $('#initiative_form').submit();
 
 <script>
 	$(document).ready(function () {
-        $('#tabHome').click(function(){
-            location.hash="";
-            var newUrl = location.href.replace("page="+{{ app.request.query.get('page') }}, "page=1");
-            window.location.replace(newUrl);
-        })
-     $('#home .page-link').each(function(){
-         var href = $(this).attr('href');
-         $(this).attr('href',href+"#home")
-              })
-             $('#messages .page-link').each(function(){
-         var href = $(this).attr('href');
-         $(this).attr('href',href+"#messages")
-              })
-             
+$('#tabHome').click(function () {
+location.hash = "";
+var newUrl = location.href.replace("page=" + {{ app.request.query.get('page') }}, "page=1");
+window.location.replace(newUrl);
+})
+$('#home .page-link').each(function () {
+var href = $(this).attr('href');
+$(this).attr('href', href + "#home")
+})
+$('#messages .page-link').each(function () {
+var href = $(this).attr('href');
+$(this).attr('href', href + "#messages")
+})
+
 
 });
-		$(document).ready(function () {
-            
-           
+$(document).ready(function () {
+
+
 if (location.hash) {
 $("a[href='" + location.hash + "']").tab("show");
 }
@@ -510,6 +514,4 @@ $(window).on("popstate", function () {
 var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
 $("a[href='" + anchor + "']").tab("show");
 });
-
-</script>
-{% endblock %} 
+</script>{% endblock %}

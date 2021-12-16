@@ -11,6 +11,7 @@ use App\Entity\InitiativeAttribute;
 use App\Entity\InitiativeBehaviour;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\Objective;
+use App\Entity\OperationalManager;
 use App\Entity\OperationalOffice;
 use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\Plan;
@@ -218,6 +219,7 @@ class PlanController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $isOperationalManager = false;
 
         if ($request->request->get('id')) {
 
@@ -229,12 +231,16 @@ class PlanController extends AbstractController
 
             $initiative = $em->getRepository(Initiative::class)->find($suitableInitiative->getInitiative()->getId());
 
-            // dd( count($initiative->getInitiativeBehaviour()),count($initiative->getSocialAtrribute()));
+            if ($request->request->get('isOperational')) {
+                $isOperationalManager = true;
+            }
+
             $res = $this->renderView("plan/plan.modal.html.twig", [
                 "suitableInitiative" =>  $suitableInitiative, 'quarters' => $quarters,
                 'initiative' => $initiative,
                 'plans' => $plan,
-                'operational' => $operationaloffice
+                'operational' => $operationaloffice,
+                'isOperationalManager' => $isOperationalManager
             ]);
             return new Response($res);
         }
@@ -401,16 +407,6 @@ class PlanController extends AbstractController
             }
 
             $sheet = $spreadsheet->getActiveSheet();
-            // $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(false);
-
-            // $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
-            // $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
-            // $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
-            // $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
-
-            // $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
-            // $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
-            // $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);
 
 
 
@@ -751,6 +747,209 @@ class PlanController extends AbstractController
 
         return $this->redirectToRoute('plan_index');
     }
+
+    /**
+     * @Route("/operationalplan", name="operational_office_plan", methods={"GET","POST"})
+     */
+    public function  operationalOfficePlan(Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $isOperationalSuitableSelected = false;
+        $activePlanningYear = $em->getRepository(PlanningYear::class)->findOneBy(['isActive' => 1]);
+        $operationalManager = $em->getRepository(OperationalManager::class)->findOneBy(['manager' => $this->getUser(), 'isActive' => 1]);
+
+        $operationaloffice = $operationalManager->getOperationalOffice();
+        $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findBy(['planningYear' => $activePlanningYear, 'principalOffice' => $operationaloffice->getPrincipalOffice()]);
+
+        if ($request->request->get('suitableId')) {
+            $selectedSuitables = $em->getRepository(SuitableInitiative::class)->findBy(['id' => $request->request->get('suitableId')]);
+            foreach ($selectedSuitables as $selectedSuitable) {
+                $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $selectedSuitable, 'operationalOffice' => $operationaloffice]);
+
+                if (!$operationalSuitable) {
+
+                    $operationalSuitable = new SuitableOperational();
+                    $operationalSuitable->setSuitableInitiative($selectedSuitable);
+                    $operationalSuitable->setOperationalOffice($operationaloffice);
+                    $operationalSuitable->setStatus(1);
+
+                    $em->persist($operationalSuitable);
+                    $em->flush();
+                }
+            }
+            $operationalSuitables = $em->getRepository(SuitableOperational::class)->findBy(['suitableInitiative' => $selectedSuitables, 'operationalOffice' => $operationaloffice]);
+            $isOperationalSuitableSelected = true;
+            $this->addFlash('success', 'successfuly selected operational suitable');
+        }
+        if ($request->request->get('planvalue')) {
+            $plans = $request->request->get('planvalue');
+            $currentPage = $request->request->get("currentPage");
+            $suitableInitiativeId = $request->request->get('suitableInitiative');
+            $operationalofficeId = $request->request->get('operationalOffice');
+            $denominator = null;
+            if ($request->request->get('denominator')) {
+                $denominator = $request->request->get('denominator');
+            }
+            $this->addplans($plans, $currentPage, $operationalofficeId, $suitableInitiativeId, $denominator);
+            $this->addFlash('success', 'Success');
+            return $this->redirectToRoute('operational_office_plan');
+        }
+        $operationalSuitables = $em->getRepository(SuitableOperational::class)->getBySuitableInitiatve($operationaloffice, $suitableInitiatives);
+        if ($operationalSuitables) {
+            $isOperationalSuitableSelected = true;
+            return $this->render('plan/operational_plan.html.twig', [
+
+                'operationaloffice' => $operationaloffice,
+                'pricipaloffice' => $operationaloffice->getPrincipalOffice(),
+                'planyear' => $activePlanningYear,
+                'isOperationalSuitableSelected' => $isOperationalSuitableSelected,
+                'operationalSuitables' => $operationalSuitables
+
+            ]);
+        }
+
+
+
+
+        return $this->render('plan/operational_plan.html.twig', [
+            'suitableInitiatives' => $suitableInitiatives,
+            'operationaloffice' => $operationaloffice,
+            'pricipaloffice' => $operationaloffice->getPrincipalOffice(),
+            'planyear' => $activePlanningYear,
+            'isOperationalSuitableSelected' => $isOperationalSuitableSelected
+
+        ]);
+    }
+
+    private function addplans($planValue, $currentpage, $operationaloffice, $suitableInitiative, $denominator = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser());
+        $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
+        $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
+
+        if ($planValue) {
+
+            $planValues = $planValue;
+            $currentPage = $currentpage;
+
+
+            $planInitiative = $em->getRepository(SuitableInitiative::class)->find($suitableInitiative);
+            $operationaloffice = $em->getRepository(OperationalOffice::class)->find($operationaloffice);
+
+            $isexist = true;
+            $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOneBy(['suitableInitiative' => $planInitiative, 'operationalOffice' => $operationaloffice]);
+
+            if (!$operationalSuitable) {
+
+                $operationalSuitable = new SuitableOperational();
+                $operationalSuitable->setSuitableInitiative($planInitiative);
+                $operationalSuitable->setOperationalOffice($operationaloffice);
+                $operationalSuitable->setStatus(1);
+                $isexist = false;
+                $em->persist($operationalSuitable);
+                $em->flush();
+            } else
+                $operationalSuitable->setStatus(1);
+
+
+
+
+
+
+
+
+            if ($denominator) {
+                $operationalSuitable->setDenimonator($denominator);
+            };
+
+
+
+
+            if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
+
+                $socalAttributes = $planInitiative->getInitiative()->getSocialAtrribute();
+
+
+
+                $numberOfQuarter = count($planningquarters);
+                $numberOfAttributes = count($socalAttributes);
+                $numberOfPlan = $numberOfAttributes * $numberOfQuarter;
+
+                $i = 0;
+
+
+                foreach ($planningquarters as $planningquarter) {
+                    foreach ($socalAttributes as $key => $socalAttribute) {
+                        $edit = true;
+
+
+                        $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, $socalAttribute, $planningquarter);
+                        $isplanexist = true;
+                        if (!$planAcomplishment) {
+                            $planAcomplishment = new OperationalPlanningAccomplishment();
+                            $isplanexist = false;
+                            $edit = false;
+                        }
+
+
+                        $planAcomplishment->setOperationalSuitable($operationalSuitable);
+                        $planAcomplishment->setSocialAttribute($socalAttributes[$i % $numberOfAttributes]);
+
+
+                        if (isset($planValues[$i])) {
+                            $planAcomplishment->setPlanValue($planValues[$i]);
+                        }
+                        $planAcomplishment->setQuarter($planningquarter);
+                        if ($edit == false) {
+                            $em->persist($planAcomplishment);
+                        }
+
+
+                        $i++;
+                    }
+                }
+                $em->flush();
+
+                $em->clear();
+            } else {
+
+
+
+                foreach ($planningquarters as $key => $planningquarter) {
+                    // $planAcomplishment = null;
+
+                    $planAcomplishment = $em->getRepository(OperationalPlanningAccomplishment::class)->findDuplication($operationalSuitable, null, $planningquarter);
+                    $isplanexist = true;
+                    if (!$planAcomplishment) {
+                        $planAcomplishment = new OperationalPlanningAccomplishment();
+                        $isplanexist = false;
+                    }
+
+                    $planAcomplishment->setOperationalSuitable($operationalSuitable);
+                    $planAcomplishment->setPlanValue($planValues[$key]);
+                    $planAcomplishment->setQuarter($planningquarter);
+
+                    if (!$isplanexist) {
+                        $em->persist($planAcomplishment);
+                    }
+                    $em->flush();
+                }
+
+                $em->flush();
+                $em->clear();
+            }
+
+
+            $this->calculatePrincipalOfficePlan($em, $planInitiative);
+            Helper::calculateInitiativePlan($em, $planInitiative);
+            if ($operationaloffice->getPrincipalOffice()->getOfficeGroup()) {
+                Helper::setOrganizationalInitiativePlan($em, $planInitiative, $operationaloffice->getPrincipalOffice()->getOfficeGroup());
+            }
+            return true;
+        }
+        return false;
+    }
     /**
      * @Route("/initiative", name="plan_initiative", methods={"GET","POST"})
      */
@@ -767,6 +966,7 @@ class PlanController extends AbstractController
             'pricipaloffice' =>   $office,
         ]);
     }
+
     /**
      * @Route("/print", name="plan_print", methods={"GET","POST"})
      */
@@ -816,18 +1016,7 @@ class PlanController extends AbstractController
         return $this->redirectToRoute('plan_index');
     }
 
-    /**
-     * @Route("/operationalplan", name="operational_plan", methods={"GET","POST"})
-     */
-    public function operationalplan(Request $request): Response
-    {
 
-
-        return $this->render('plan/operational_plan.html.twig', [
-            // 'plan' => $plan,
-            // 'form' => $form->createView(),
-        ]);
-    }
 
     /**
      * @Route("/{id}", name="plan_show", methods={"GET"})
