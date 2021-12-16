@@ -158,7 +158,7 @@ class OperationalOfficeController extends AbstractController
     public function delete(Request $request, OperationalOffice $operationalOffice): Response
     {
         $this->denyAccessUnlessGranted('dlt_opof');
-
+        // dd($operationalOffice);
         if ($this->isCsrfTokenValid('delete' . $operationalOffice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($operationalOffice);

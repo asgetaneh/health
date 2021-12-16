@@ -88,16 +88,6 @@ class PrincipalOfficeController extends AbstractController
 
         );
         $em = $this->getDoctrine()->getManager();
-        $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice(Helper::getParentOffice(81, $em));
-       $pr= Helper::getParentOffice(12, $em);
-    //    dd(count($pr->getPrincipalOffices()));
-    //    foreach($pr->getPrincipalOffices() as $children){
-    //        if(count($children->getPrincipalOffices())<1)
-    //          dd($children);
-    //          else{
-    //           dd($children->getPrincipalOffices());
-    //          }
-    //    }
 
         // dd($initiatives);
         return $this->render('principal_office/index.html.twig', [

@@ -81,7 +81,7 @@
 									<tr>
 										<th>#</th>
 										<th>Principal Office</th>
-										<th>ManagedBy</th>
+										<th>Chief Principal Office</th>
 										<th>Operational Office</th>
 										<th>Director</th>
 
@@ -100,7 +100,7 @@
 									{% set count = count + 1 %}
 									<td>{{ count }}</td>
 									<td>{{ principal_office.name }}</td>
-									<td>{{ principal_office.officeGroup }}</td>
+									<td>{{ principal_office.managedBy }}</td>
 
 
 									<td>

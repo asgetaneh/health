@@ -393,8 +393,8 @@ class Helper
 
     public static function getParentOffice($principalOffice, EntityManagerInterface  $em)
     {
-
         $principalOffice = $em->getRepository(PrincipalOffice::class)->find($principalOffice);
+        // if(
         $parent = $principalOffice->getManagedBy();
 
         if (!$parent)
