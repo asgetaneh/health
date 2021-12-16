@@ -158,11 +158,7 @@ class User implements UserInterface
      */
     private $taskAssignsTo;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TaskUser::class, mappedBy="assignedTo")
-     */
-    private $taskUsers;
-
+  
     /**
      * @ORM\OneToMany(targetEntity=OperationalTask::class, mappedBy="createdBy")
      */
@@ -256,7 +252,6 @@ class User implements UserInterface
         $this->planningQuarters = new ArrayCollection();
 
         $this->taskAssignsTo = new ArrayCollection();
-        $this->taskUsers = new ArrayCollection();
         $this->operationalTasks = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
         $this->delegations = new ArrayCollection();
@@ -1063,35 +1058,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|TaskUser[]
-     */
-    public function getTaskUsers(): Collection
-    {
-        return $this->taskUsers;
-    }
-
-    public function addTaskUser(TaskUser $taskUser): self
-    {
-        if (!$this->taskUsers->contains($taskUser)) {
-            $this->taskUsers[] = $taskUser;
-            $taskUser->setAssignedTo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTaskUser(TaskUser $taskUser): self
-    {
-        if ($this->taskUsers->removeElement($taskUser)) {
-            // set the owning side to null (unless already changed)
-            if ($taskUser->getAssignedTo() === $this) {
-                $taskUser->setAssignedTo(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection|OperationalTask[]

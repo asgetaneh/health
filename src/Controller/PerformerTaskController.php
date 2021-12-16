@@ -18,7 +18,6 @@ use App\Repository\PerformerTaskRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\TaskMeasurementRepository;
-use App\Repository\TaskUserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -340,15 +339,15 @@ class PerformerTaskController extends AbstractController
             $id = $request->request->get('id');
             $timeGap = $request->request->get('timeGap');
             $taskAssigns = $taskAssignRepository->find($id);
-            $taskUsers = $em->getRepository(TaskUser::class)->findOneBy(['taskAssign' => $id]);
-            $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskUser' => $taskUsers->getId()]);
+            // $taskUsers = $em->getRepository(TaskUser::class)->findOneBy(['taskAssign' => $id]);
+            // $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskUser' => $taskUsers->getId()]);
             $taskAssigns->setStartDate($startDate);
             $taskAssigns->setEndDate($endDate);
             $taskAssigns->setTimeGap($timeGap);
             $taskAssigns->setExpectedValue($expectedValue);
-            $taskUsers->setStatus(0);
-            $taskUsers->setRejectReason(null);
-            $taskAccomplishment->setExpectedValue($expectedValue);
+            // $taskUsers->setStatus(0);
+            // $taskUsers->setRejectReason(null);
+            // $taskAccomplishment->setExpectedValue($expectedValue);
             $em->flush();
 
             $this->addFlash('success', 'Performer Task Updated and Resendsuccessfully !');
