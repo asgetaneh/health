@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaskCategory index{% endblock %}
+
+{% block body %}
+    <h1>TaskCategory index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>IsCore</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task_category in task_categories %}
+            <tr>
+                <td>{{ task_category.id }}</td>
+                <td>{{ task_category.name }}</td>
+                <td>{{ task_category.description }}</td>
+                <td>{{ task_category.quantity }}</td>
+                <td>{{ task_category.status }}</td>
+                <td>{{ task_category.isCore ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('task_category_show', {'id': task_category.id}) }}">show</a>
+                    <a href="{{ path('task_category_edit', {'id': task_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('task_category_new') }}">Create new</a>
+{% endblock %}

@@ -76,6 +76,11 @@ class Objective implements TranslatableInterface
      */
     private $objectiveAchievements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=KeyPerformanceIndicator::class, mappedBy="objective")
+     */
+    private $keyPerformanceIndicators;
+
    
 
     public function __construct()
@@ -83,6 +88,7 @@ class Objective implements TranslatableInterface
         $this->strategies = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
         $this->objectiveAchievements = new ArrayCollection();
+        $this->keyPerformanceIndicators = new ArrayCollection();
       
     }
 
@@ -269,6 +275,36 @@ class Objective implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($objectiveAchievement->getObjective() === $this) {
                 $objectiveAchievement->setObjective(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|KeyPerformanceIndicator[]
+     */
+    public function getKeyPerformanceIndicators(): Collection
+    {
+        return $this->keyPerformanceIndicators;
+    }
+
+    public function addKeyPerformanceIndicator(KeyPerformanceIndicator $keyPerformanceIndicator): self
+    {
+        if (!$this->keyPerformanceIndicators->contains($keyPerformanceIndicator)) {
+            $this->keyPerformanceIndicators[] = $keyPerformanceIndicator;
+            $keyPerformanceIndicator->setObjective($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKeyPerformanceIndicator(KeyPerformanceIndicator $keyPerformanceIndicator): self
+    {
+        if ($this->keyPerformanceIndicators->removeElement($keyPerformanceIndicator)) {
+            // set the owning side to null (unless already changed)
+            if ($keyPerformanceIndicator->getObjective() === $this) {
+                $keyPerformanceIndicator->setObjective(null);
             }
         }
 

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Initiative;
 use App\Entity\OperationalOffice;
-use App\Entity\OperationalTask;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;

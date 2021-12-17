@@ -2,32 +2,28 @@
 
 namespace App\Form;
 
-use App\Entity\PerformerTask;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Entity\TaskCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PerformerTaskType extends AbstractType
+class TaskCategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
-             ->add('description')
-            ->add('weight',TextType::class,['required' => false])
-        //    ->add('quarter')
-            //  ->add('social')
-
-
-           
+            ->add('description')
+            ->add('quantity')
+            ->add('status')
+            ->add('isCore')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PerformerTask::class,
+            'data_class' => TaskCategory::class,
         ]);
     }
 }

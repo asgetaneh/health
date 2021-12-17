@@ -117,29 +117,43 @@
 					<div class="widget-body">
 						<div class="widget-toolbox" id="widget-toolbox-1">
 							<div class="btn-toolbar">
-								<div
-									class="btn-group" style="margin-top:10px;margin-left:10px;">
-									{# {% if is_granted('CREATE_PERSPECTIVE') %} #}
+								<div class="btn-group" style="margin-top:10px;margin-left:10px;">
 
-									{% if countWeight < 100 %}
-										{% if social == 1 %}
-											<a class="btn btn-primary  btn-white btn-round socialbtn" data-toggle="modal" data-target="#myModal">
+									{% for taskCategory in taskCategorys %}
+
+										{% if countCore < 100  %}
+											<a class="btn btn-primary   btn-white btn-round socialbtn" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
 												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-												{% trans %}
-												Create{% endtrans %}</a>
-										{% else  %}
-											<a class="btn btn-primary  btn-white btn-round social" data-toggle="modal" data-target="#myModal">
-												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-												{% trans %}
-												Create Task{% endtrans %}</a>
+												Create
+												{{taskCategory.name}}
+												Task</a>
+
 										{% endif %}
+										{% if countCore >= 100 %}
+											<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}>
+												<i class="ace-icon fa fa-0check bigger-110 blue"></i>
+
+												Assign
+												{{taskCategory.name}}
+												Task</a>
+
+										{% endif %}
+
+
+									{% endfor %}
+									{% if countWeight < 100  %}
+										<a class="btn btn-primary   btn-white btn-round socialbtn" data-toggle="modal" data-category="">
+											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+											Create
+																																														Task</a>
 
 									{% endif %}
 									{% if countWeight >= 100 %}
 										<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
-											<i class="ace-icon fa fa-check bigger-110 blue"></i>
+											<i class="ace-icon fa fa-0check bigger-110 blue"></i>
 											{% trans %}
 											Assign Task{% endtrans %}</a>
+
 									{% endif %}
 
 
@@ -209,6 +223,7 @@
 												{% if social == 1 %}
 													<th>Social</th>
 												{% endif %}
+												<th>Task Category</th>
 
 												<th>Task Description</th>
 												<th>Task Weight</th>
@@ -230,6 +245,13 @@
 
 														<td>{{ performerTask.social }}</td>
 													{% endif %}
+													{% if performerTask.taskCategory  %}
+														<td>{{ performerTask.taskCategory.name}}</td>
+														{% else %}
+															<td>Other</td>
+													{% endif %}
+
+
 													<td>{{ performerTask.description }}</td>
 													<td>{{ performerTask.weight }}</td>
 													<td>{{ performerTask.quarter }}</td>
@@ -372,6 +394,7 @@
 	{% endblock %}
 	{% block javascripts %}
 		<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+
 		<script>
 			$('.edit').click(function () {
 $('#edit').modal('show');
@@ -406,7 +429,6 @@ $('#resend').modal('show');
 
 var perTaskId = $(this).attr('data-performId');
 var performerId = 1;
-console.log(perTaskId)
 $.ajax({
 url:"{{ path('performer_task_value_edit') }}",
 method: "POST",
@@ -423,7 +445,6 @@ data = data.data;
 $.each(data, function (i, item) {
 
 trHTML += '<tr><td>' + '<input class="form-control popupDatepicker" type="text" name="startDate" autocomplete="off"  placeholder="StartDate" ></td><td> <input class="form-control popupDatepicker"  type="text" name="endDate" autocomplete="off"  placeholder="endDate" required></td><td> <input class="form-control form-group" type="number" name="timeGap" max="6" placeholder="ContingencyDays	" required></td><td> <input class="form-control form-group" type="number" name="expectedValue"  placeholder="Quantity" required> <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td>' + '</td> </tr>';
-
 
 });
 $('#records_table2').append(trHTML);
@@ -456,11 +477,7 @@ userprincipal: userprincipal
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
-
-
 select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
-
-
 }
 }
 });
@@ -471,9 +488,7 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 var task = $('.task').val();
 var user = $('.user').val();
 var quartertask = $('.quartertask').val();
-
 var select = $('.crtask')
-
 $.ajax({
 url:"{{ path('task_fetch') }}",
 method: "POST",
@@ -485,11 +500,7 @@ quartertask: quartertask
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
-
-
 select.append('<option value="' + value.id + '">' + value.name + ' </option>');
-
-
 }
 }
 });
@@ -497,26 +508,33 @@ select.append('<option value="' + value.id + '">' + value.name + ' </option>');
 		</script>
 		<script>
 			$('.socialbtn').click(function () {
-$('.social').show();
+$('.createModal').modal('show');
+var isCore = $(this).attr('data-category');
+var categoryId = $(this).attr('data-category-id');
+categoryId
+$('.isCore').val(isCore);
+$('.categoryId').val(categoryId);
+
+if (isCore == 1) {
+
+
+$('.isCores').addClass("hidden -xs-up");
+}
+
 
 })
 		</script>
-		{# <script>
-							$('.timeGap').keyup(function () {
-				var timeGap = $('.timeGap').val()
-				if (timeGap > 6) {
-				$('.error').text("maximum time gap is 6")
-				$('.assign').prop('disabled', true);
-				} else {
-				$('.error').text("")
-				$('.assign').prop('disabled', false);
-				
-				
-				}
-				
-				
-				})
-						</script> #}
+		<script>
+			$('.close').click(function () {
+location.reload(true);
+
+})
+$('.closes').click(function () {
+location.reload(true);
+
+})
+		</script>
+
 		<link
 		rel="stylesheet" href="{{ asset('amharic/css/redmond.calendars.picker.css')}}">
 
@@ -538,7 +556,6 @@ var minDate = $('.minDate').val();
 var maxDate = $('.maxDate').val();
 minDate = minDate.split(",")
 maxDate = maxDate.split(",")
-console.log(minDate, maxDate)
 
 $('.popupDatepicker').calendarsPicker({
 calendar: calendar,
