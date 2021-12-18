@@ -224,6 +224,15 @@
 						<canvas id="myChart" width="400" height="400"></canvas>
 
 					</div>
+					<div>
+<canvas id="myChart2" width="400" height="400"></canvas>
+
+					</div>
+<div>
+	
+
+</div>
+
 				</div>
 
 
@@ -256,7 +265,9 @@ var bgcolor = [];
 var fillColor = [];
 {% for year in data.year %}bgcolor.push(getRandomColor());
 fillColor.push(getRandomColor());{% endfor %}
-var ctx = document.getElementById("myChart").getContext('2d');
+var ctx = document.getElementById("myChart2").getContext('2d');
+var ctx2 = document.getElementById("myChart").getContext('2d');
+
 
 var dat = {
 //labels: [{{ data.datalabels|join(',') }}],
@@ -283,7 +294,7 @@ borderWidth : 1
 };
 
 
-var myChart = new Chart(ctx, {
+/*var myChart = new Chart(ctx, {
  type: "bar",
 data: dat,
 options: {
@@ -318,5 +329,99 @@ scales: {
 });
 
 });
+*/
+var myChart2 = new Chart(ctx2, {
+
+	type: 'bar',
+	data:{
+		labels: ["1.2021","2.2021"],
+		 datasets: [
+			 {
+				 label: 'first time visitor England',
+				 data:[10,3],
+				 //stack: "first_time_visitors_england",
+                 backgroundColor:"#f5a0a7",
+				 categoryPercentage:1
+ 
+
+			 },
+			  {
+				 label: 'repeating visitor England',
+				 data:[20,6],
+				 stack: "repeat_visitors_england",
+                 backgroundColor:"#e75177",
+				 categoryPercentage:1
+ 
+
+			 },
+			  {
+				 label: 'first time visitor sweeden',
+				 data:[7,5],
+				 stack: "first_time_visitors",
+                 backgroundColor:"#924565",
+				 categoryPercentage:1
+ 
+
+			 },
+			  {
+				 label: 'repeating visitor sweeden',
+				 data:[9,16],
+                 stack: "repeat_visitors",
+
+                 backgroundColor:"#2979a7",
+				 categoryPercentage:1
+ 
+
+			 }
+		 ]
+	},
+	options: {
+		tooltips: {
+			mode: 'x'
+		},
+		scales: {
+			scaleShowValues:true,
+			xAxes:[{
+				stacked:true,
+				ticks: {
+					display:false,
+					//autoSkip:false
+				},
+				scaleLabel: {
+					display:false,
+				}
+			},
+			{
+				type:'category',
+				//offset:false,
+              // labels:['first_time_visitors','repeat_visitors','first_time_visitors','repeat_visitors'],
+			   gridLines:{
+				   display:false
+			   }
+
+
+
+
+			}
+			/*{
+				offset:true,
+				gridLines:{
+					display:false
+				}
+			}*/
+		],
+			yAxes: [{
+stacked:true,
+
+				ticks: {
+					beginAtZero:true
+				}
+			}]
+		}
+
+	}
+});
+});
+
 	</script>
 {% endblock %}

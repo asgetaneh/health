@@ -67,8 +67,8 @@ class PlanController extends AbstractController
             $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
             $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
-            $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
-            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
+            $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
+            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
             //  $recoverData=$recoverInitiatives;
             //  dd($recoverData);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
@@ -258,7 +258,7 @@ class PlanController extends AbstractController
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
 
             $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
-            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($parentOffice);
+            $recoverInitiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($principaloffice);
 
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             if ($request->query->get('nonsuitable')) {

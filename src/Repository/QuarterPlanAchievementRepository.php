@@ -58,6 +58,20 @@ class QuarterPlanAchievementRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+    public function getByInitiativeAndQuarter($initiative, $quarter,$year)
+    {
+        return $this->createQueryBuilder('q')
+            ->select('sum(q.accomp) as accomp')
+           ->join('q.initiativeAchievement','a')
+            ->andWhere('a.initiative = :val')
+            ->andWhere('a.year = :year')
+            ->andWhere('q.quarter = :val2')
+            ->setParameter('val', $initiative)
+            ->setParameter('val2', $quarter)
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
      public function getByKpiAchievementAndQuarter($kpiAchievement,$quarter)
     {
         return $this->createQueryBuilder('q')
