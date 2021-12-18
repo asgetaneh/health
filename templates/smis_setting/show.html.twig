@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SmisSetting{% endblock %}
+
+{% block body %}
+    <h1>SmisSetting</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ smis_setting.id }}</td>
+            </tr>
+            <tr>
+                <th>SendToPrincipal</th>
+                <td>{{ smis_setting.sendToPrincipal }}</td>
+            </tr>
+            <tr>
+                <th>SendToPlan</th>
+                <td>{{ smis_setting.sendToPlan }}</td>
+            </tr>
+            <tr>
+                <th>MaxPenalityDays</th>
+                <td>{{ smis_setting.maxPenalityDays }}</td>
+            </tr>
+            <tr>
+                <th>MaxAllowedTasks</th>
+                <td>{{ smis_setting.maxAllowedTasks }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('smis_setting_index') }}">back to list</a>
+
+    <a href="{{ path('smis_setting_edit', {'id': smis_setting.id}) }}">edit</a>
+
+    {{ include('smis_setting/_delete_form.html.twig') }}
+{% endblock %}

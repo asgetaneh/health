@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PlanningYear;
+use App\Entity\PrincipalManager;
 use App\Form\PlanningYearType;
 use App\Repository\PlanningYearRepository;
 use DateTime;
@@ -21,7 +22,7 @@ class PlanningYearController extends AbstractController
     /**
      * @Route("/", name="planning_year_index", methods={"GET","POST"})
      */
-    public function index(PlanningYearRepository $planningYearRepository,Request $request): Response
+    public function index(PlanningYearRepository $planningYearRepository,SmsHelper $smsHelper, Request $request): Response
     {
         $this->denyAccessUnlessGranted('vw_pln_yr');
         $planningYear = new PlanningYear();
@@ -29,22 +30,39 @@ class PlanningYearController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             $this->denyAccessUnlessGranted('ad_pln_yr');
+            $this->denyAccessUnlessGranted('ad_pln_yr');
             $entityManager = $this->getDoctrine()->getManager();
+            $ethYear=$form->getData()->getEthYear();
+            $year = date_format($form->getData()->getYear(), "Y-m-d");
+            $year = date('Y-m-d', strtotime($year . ' -7 year'));
+            $date=new DateTime($year);
+            // dd($date);
+            $planningYear->setYear($date);
             $planningYear->setCreatedAt(new DateTime('now'));
             $planningYear->setCreatedBy($this->getUser());
             // $planningYear->setIsActive(0);
             $entityManager->persist($planningYear);
 
             $entityManager->flush();
-            $this->addFlash('success',"planning year is added successfuly");
+            $message="MIS  ".$ethYear. " Plan Announce";
+              $users = $entityManager->getRepository(PrincipalManager::class)->findAll();
+            // dd($sms,$message);
+            // foreach ($users as $key) {
+                $mobileNumber[] = "0923707888";
+
+                // dd($mobileNumber);
+            // }
+            //   dd($mobileNumber,$message);
+
+            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+            $this->addFlash('success', "planning year is added successfuly");
 
             return $this->redirectToRoute('planning_year_index');
         }
 
         return $this->render('planning_year/index.html.twig', [
             'planning_years' => $planningYearRepository->findAll(),
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
     /**
@@ -52,49 +70,42 @@ class PlanningYearController extends AbstractController
      */
     public function smsSend(Request $request, SmsHelper $smsHelper)
     {
-                //   dd(1);
+        //   dd(1);
 
         // $this->denyAccessUnlessGranted('vw_pln_yr');
-       
-            // $entityManager = $this->getDoctrine()->getManager();
-          $message="2014 Plan Created ";
-          $userInfo="0923707888";
+
+        // $entityManager = $this->getDoctrine()->getManager();
+        $message = "2014 Plan Created ";
+        $userInfo = "0923707888";
         //   dd(1);
-  $smsHelper->sendSms("Account Update ", $message, '["' . $userInfo . '"]');
+        $smsHelper->sendSms("Account Update ", $message, '["' . $userInfo . '"]');
 
-            $this->addFlash('success',"planning year is created successfuly");
+        $this->addFlash('success', "planning year is created successfuly");
 
-            return $this->redirectToRoute('planning_year_index');
-        
-
-     
+        return $this->redirectToRoute('planning_year_index');
     }
-    
+
     /**
      * @Route("/{id}/activate", name="planning_year_activate", methods={"GET","POST"})
      */
-    public function activatePlanningYear(Request $request,PlanningYear $planningYear): Response
+    public function activatePlanningYear(Request $request, PlanningYear $planningYear): Response
     {
-         $this->denyAccessUnlessGranted('act_pln_yr');
+        $this->denyAccessUnlessGranted('act_pln_yr');
         $entityManager = $this->getDoctrine()->getManager();
-        
-        if($request->request->get('active')){
+
+        if ($request->request->get('active')) {
             $planningYear->setIsActive(1);
             $entityManager->persist($planningYear);
-            $this->addFlash('success',"planning year is Activated successfuly");
-
-
+            $this->addFlash('success', "planning year is Activated successfuly");
         }
-        if($request->request->get('deactive')){
-             $this->denyAccessUnlessGranted('deact_pln_yr');
+        if ($request->request->get('deactive')) {
+            $this->denyAccessUnlessGranted('deact_pln_yr');
             $planningYear->setIsActive(0);
             $entityManager->persist($planningYear);
-            $this->addFlash('success',"planning year is deactivated successfuly");
+            $this->addFlash('success', "planning year is deactivated successfuly");
         }
         $entityManager->flush();
-      return   $this->redirectToRoute('planning_year_index');
-
-        
+        return   $this->redirectToRoute('planning_year_index');
     }
 
 
@@ -104,7 +115,7 @@ class PlanningYearController extends AbstractController
      */
     public function new(Request $request): Response
     {
-         $this->denyAccessUnlessGranted('ad_pln_yr');
+        $this->denyAccessUnlessGranted('ad_pln_yr');
         $planningYear = new PlanningYear();
         $form = $this->createForm(PlanningYearType::class, $planningYear);
         $form->handleRequest($request);
@@ -128,7 +139,7 @@ class PlanningYearController extends AbstractController
      */
     public function show(PlanningYear $planningYear): Response
     {
-         $this->denyAccessUnlessGranted('vw_pln_yr_dtl');
+        $this->denyAccessUnlessGranted('vw_pln_yr_dtl');
         return $this->render('planning_year/show.html.twig', [
             'planning_year' => $planningYear,
         ]);
@@ -139,7 +150,7 @@ class PlanningYearController extends AbstractController
      */
     public function edit(Request $request, PlanningYear $planningYear): Response
     {
-         $this->denyAccessUnlessGranted('edt_pln_yr');
+        $this->denyAccessUnlessGranted('edt_pln_yr');
         $form = $this->createForm(PlanningYearType::class, $planningYear);
         $form->handleRequest($request);
 
@@ -160,8 +171,8 @@ class PlanningYearController extends AbstractController
      */
     public function delete(Request $request, PlanningYear $planningYear): Response
     {
-         $this->denyAccessUnlessGranted('dlt_pln_yr');
-        if ($this->isCsrfTokenValid('delete'.$planningYear->getId(), $request->request->get('_token'))) {
+        $this->denyAccessUnlessGranted('dlt_pln_yr');
+        if ($this->isCsrfTokenValid('delete' . $planningYear->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($planningYear);
             $entityManager->flush();

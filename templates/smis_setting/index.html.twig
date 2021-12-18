@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SmisSetting index{% endblock %}
+
+{% block body %}
+    <h1>SmisSetting index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>SendToPrincipal</th>
+                <th>SendToPlan</th>
+                <th>MaxPenalityDays</th>
+                <th>MaxAllowedTasks</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for smis_setting in smis_settings %}
+            <tr>
+                <td>{{ smis_setting.id }}</td>
+                <td>{{ smis_setting.sendToPrincipal }}</td>
+                <td>{{ smis_setting.sendToPlan }}</td>
+                <td>{{ smis_setting.maxPenalityDays }}</td>
+                <td>{{ smis_setting.maxAllowedTasks }}</td>
+                <td>
+                    <a href="{{ path('smis_setting_show', {'id': smis_setting.id}) }}">show</a>
+                    <a href="{{ path('smis_setting_edit', {'id': smis_setting.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('smis_setting_new') }}">Create new</a>
+{% endblock %}
