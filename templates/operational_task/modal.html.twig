@@ -40,7 +40,7 @@
 					</lable>
 					{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
 				</div>
-				
+
 				<div class="form-group">
 					<lable class=" control-label no-padding-right isCores">
 						<b>
@@ -62,7 +62,7 @@
 		</div>
 	</div>
 </div>
-<div id="assign" class="modal fade" role="dialog">
+<div class="modal fade assignModal" role="dialog">
 	<div class="modal-dialog">
 		<form
 			method="post" action="{{path('task_assign')}}">
@@ -87,10 +87,7 @@
 									Select Task
 								</b>
 							</lable>
-							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true" required>
-
-							</select>
-
+							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true" required></select>
 
 
 						</div>
@@ -101,11 +98,8 @@
 									Select Performer
 								</b>
 							</lable>
-							<select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true" required>
+							<select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true" required></select>
 
-
-							</select>
-							
 
 						</div>
 						<div class="col-md-6">
@@ -138,9 +132,11 @@
 									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
+
 							<input type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
 
-
+							<input type="hidden" class="categoryId" name="categoryId">
+							<input type="hidden" class="isCoreAssign"  name="isCore">
 						</div>
 
 

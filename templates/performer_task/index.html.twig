@@ -107,28 +107,31 @@
 											</td>
 
 											<td>
-												<form action="{{path('performer_task_show')}}" method="post" class="d-inline-block">
-													<input type="hidden" name="taskUser" value="{{taskAssign.id}}">
-													{% if taskAssign.status  %}
-														<button class="btn btn-primary btn-sm">
-															Show
-														</button>
-													{% else %}
-														<button class="btn btn-primary btn-sm accept" onclick="return confirm('Are you sure you want to Accept this Task?');">
+												<div class="row">
+													<div class="col-md-4">
+														<form action="{{path('performer_task_show')}}" method="post" class="d-inline-block">
+															<input type="hidden" name="taskUser" value="{{taskAssign.id}}">
+															{% if taskAssign.status  %}
+																<button class="btn btn-primary btn-sm">
+																	Show
+																</button>
+															{% else %}
+																<button class="btn btn-primary btn-sm accept" onclick="return confirm('Are you sure you want to Accept this Task?');">
 
-															Accept
-														</button>
-													{% endif %}
-												</form>
-												{% if taskAssign.status == 0 %}
-													<button type="button" name="reject" data-performertask="{{taskAssign.id}}" class="btn btn-sm btn-danger show ">
-														Reject</button>
+																	Accept
+																</button>
+															{% endif %}
+														</form>
+													</div>
+													<div class="col-md-6">
+														{% if taskAssign.status == 0 %}
+															<button type="button" name="reject" data-performertask="{{taskAssign.id}}" class="btn btn-sm btn-danger d-inline show ">
+																Reject</button>
 
-												{% endif %}
-
-
+														{% endif %}
+													</div>
+												</td>
 											</td>
-
 										</tr>
 									{% else %}
 										<tr>

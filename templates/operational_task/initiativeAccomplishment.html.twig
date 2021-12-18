@@ -40,7 +40,7 @@
 
 						<div class="widget-toolbar">
 
-							{% if remainingdays <= 10 %}
+							{% if remainingdays <= 25 %}
 								Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
 								<button type="submit" class="btn btn-success">
 									Send To Plan Office
@@ -146,11 +146,11 @@
 												{% if total %}
 
 													{% if social ==1 %}
-														<input type="hidden" name="acompAvareage[]" value="{{(total / count) | number_format}}">
+														<input type="hidden" name="acompAvareage[]" value="{{total }}">
 
 														{{ (total ) | number_format}}
 													{% else %}
-														<input type="hidden" name="acompAvareage[]" value="{{ (total / count) | number_format(2, '.',',') }}">
+														<input type="hidden" name="acompAvareage[]" value="{{ total  }}">
 
 														{{ (total ) | number_format(2, '.',',')}}
 

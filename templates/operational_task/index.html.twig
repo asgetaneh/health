@@ -122,7 +122,7 @@
 									{% for taskCategory in taskCategorys %}
 
 										{% if countCore < 100  %}
-											<a class="btn btn-primary   btn-white btn-round socialbtn" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
+											<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
 												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 												Create
 												{{taskCategory.name}}
@@ -130,9 +130,9 @@
 
 										{% endif %}
 										{% if countCore >= 100 %}
-											<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}>
-												<i class="ace-icon fa fa-0check bigger-110 blue"></i>
 
+											<a class="btn btn-primary btn-sm  btn-white btn-round assign" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
+												<i class="ace-icon fa fa-0check bigger-110 blue"></i>
 												Assign
 												{{taskCategory.name}}
 												Task</a>
@@ -142,17 +142,17 @@
 
 									{% endfor %}
 									{% if countWeight < 100  %}
-										<a class="btn btn-primary   btn-white btn-round socialbtn" data-toggle="modal" data-category="">
-											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-											Create
-																																														Task</a>
 
+										<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category="">
+											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+											Create																																																															Task</a>
 									{% endif %}
 									{% if countWeight >= 100 %}
-										<a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#assign">
-											<i class="ace-icon fa fa-0check bigger-110 blue"></i>
+										<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
+											<i class="ace-icon fa fa-0check bigger-110 blue "></i>
 											{% trans %}
 											Assign Task{% endtrans %}</a>
+
 
 									{% endif %}
 
@@ -173,7 +173,7 @@
 
 											<form action="{{path('task_assign_pdf')}}" method="post">
 												<div class="col-md-4 ">
-													<select autocomplete="off" name="user" class="form-control userlist   "></select>
+													<select autocomplete="off" name="user" class="form-control performerList  select2 " required></select>
 												</div>
 												<div class="col-md-3 ">
 
@@ -247,8 +247,8 @@
 													{% endif %}
 													{% if performerTask.taskCategory  %}
 														<td>{{ performerTask.taskCategory.name}}</td>
-														{% else %}
-															<td>Other</td>
+													{% else %}
+														<td>Other</td>
 													{% endif %}
 
 
@@ -414,8 +414,6 @@ success: function (data) {
 var trHTML = '';
 $.each(data, function (i, item) {
 trHTML += '<tr><td>' + item.name + '</td><td>' + '<input class="form-control" type="text" name="task" class="form-group " placeholder="Task"> ' + '</td><td>' + item.weight + '</td><td>' + '<input class="form-control" type="number" name="weight" class="form-group " placeholder="Weight" > <input type="hidden" name="id" value="' + item.id + '" class="form-group">' + '</td> </tr>';
-
-
 });
 $('#records_table1').append(trHTML);
 
@@ -465,74 +463,95 @@ minDate: calendar.newDate(parseInt(minDate[0]), parseInt(minDate[1]), parseInt(m
 
 		<script>
 			$(document).ready(function () {
+})
+		</script>
+		<script>
+			$(document).ready(function () {
+var select = $('.performerList')
+var userprincipal = $('.office').val();
+$.ajax({
+url:"{{ path('performer_fetch') }}",
+method: "POST",
+data: {
+userprincipal: userprincipal,
+},
+dataType: "json",
+success: function (data) { // $('.department').children().remove()
+select.append('<option value=""> Select Performer  </option>');
+for (let [key, value] of Object.entries(data)) {
+select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
+}}}
+)
+})
+		</script>
+		<script>
+			$('.create').click(function () {
+$('.createModal').modal('show');
+var isCore = $(this).attr('data-category');
+var categoryId = $(this).attr('data-category-id');
 
+$('.isCore').val(isCore);
+$('.categoryId').val(categoryId);
+if (isCore == 1) {
+$('.isCores').addClass("hidden -xs-up");
+}})
+		</script>
+		<script>
+			$('.assign').click(function () {
+$('.assignModal').modal('show');
+var isCore = $(this).attr('data-category');
+var categoryId = $(this).attr('data-category-id');
+
+$('.isCoreAssign2').val(isCore);
+$('.categoryId').val(categoryId);
+if (isCore == 1) {
+$('.isCores').addClass("hidden -xs-up");
+}
 var select = $('.userlist')
 var userprincipal = $('.office').val();
+console.log(isCore, userprincipal)
 $.ajax({
 url:"{{ path('user_fetch') }}",
 method: "POST",
 data: {
-userprincipal: userprincipal
+userprincipal: userprincipal,
+isCore: isCore
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
 select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
-}
-}
-});
-})
-		</script>
-		<script>
-			$(document).ready(function () {
+}}}
+)
+var isCore = $(this).attr('data-category');
+var categoryId = $(this).attr('data-category-id');
 var task = $('.task').val();
 var user = $('.user').val();
 var quartertask = $('.quartertask').val();
-var select = $('.crtask')
+var selectTask = $('.crtask')
 $.ajax({
 url:"{{ path('task_fetch') }}",
 method: "POST",
 data: {
 task: task,
 user: user,
-quartertask: quartertask
+quartertask: quartertask,
+isCore: isCore
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
-select.append('<option value="' + value.id + '">' + value.name + ' </option>');
+selectTask.append('<option value="' + value.id + '">' + value.name + ' </option>');
 }
 }
 });
-})
-		</script>
-		<script>
-			$('.socialbtn').click(function () {
-$('.createModal').modal('show');
-var isCore = $(this).attr('data-category');
-var categoryId = $(this).attr('data-category-id');
-categoryId
-$('.isCore').val(isCore);
-$('.categoryId').val(categoryId);
-
-if (isCore == 1) {
-
-
-$('.isCores').addClass("hidden -xs-up");
-}
-
-
-})
+});
 		</script>
 		<script>
 			$('.close').click(function () {
-location.reload(true);
-
-})
+location.reload(true);})
 $('.closes').click(function () {
-location.reload(true);
-
-})
+location.reload(true);})
 		</script>
 
 		<link
@@ -556,7 +575,6 @@ var minDate = $('.minDate').val();
 var maxDate = $('.maxDate').val();
 minDate = minDate.split(",")
 maxDate = maxDate.split(",")
-
 $('.popupDatepicker').calendarsPicker({
 calendar: calendar,
 maxDate: calendar.newDate(parseInt(maxDate[0]), parseInt(maxDate[1]), parseInt(maxDate[2])),

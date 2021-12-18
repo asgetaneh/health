@@ -32,6 +32,7 @@ use Andegna\DateTimeFactory;
 use App\Entity\Delegation;
 use App\Entity\Evaluation;
 use App\Entity\Initiative;
+use App\Entity\OperationalManager;
 use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningYear;
@@ -50,6 +51,7 @@ use App\Repository\PrincipalManagerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
+use Proxies\__CG__\App\Entity\OperationalSuitableInitiative as EntityOperationalSuitableInitiative;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
 use Proxies\__CG__\App\Entity\SuitableOperational as EntitySuitableOperational;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -396,18 +398,16 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/send_principal", name="send_to_principal")
      */
-    public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningQuarterRepository $planningQuarterRepository, OperationalManagerRepository $operationalManagerRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, PerformerTaskRepository $performerTaskRepository)
+    public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("planOffice")) {
             $planAcomplismentId = $request->request->get("planId");
-            //   $planAcomplismentIdSocial=$request->request->get("planIdSocial");
+            
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
 
             $quarter = $request->request->get("quarter");
-            // dd($acompAverages,$planAcomplismentId);
-
             if ($social[0]) {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -418,20 +418,23 @@ class OperationalTaskController extends AbstractController
                     $value->setStatus(2);
                 }
                 foreach ($acompAverages as $key => $value) {
+                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
+                      $suitId=$planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();   
+                    // $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[$key]);
+                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitId,'quarter'=>$quarter]);
 
-                    $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[$key]);
                     $planAcomplishments->setAccompValue($value);
                 }
 
                 $em->flush();
             } else {
-                $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
+                $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
                     $value->setStatus(2);
                 }
-
-
-                $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[0]);
+                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
+                    $suitId=$planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();   
+                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitId,'quarter'=>$quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
                 $em->flush();
             }
@@ -440,25 +443,26 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('principal_office_report');
         }
         $user = $this->getUser();
-        $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
+        $operation = $em->getRepository(OperationalManager::class)->findOneBy(['manager' => $user]);
         $opOffice = $operation->getOperationalOffice();
         $principal = $opOffice->getPrincipalOffice();
         $accomp = $request->request->get('accomp');
         $suitiniId = $request->request->get('suitableinitiative');
+        // dd($accomp[0]);
         $quarterId = $request->request->get('quarterId');
-        $quarter = $planningQuarterRepository->find($quarterId);
+        $quarter = $em->getRepository(PlanningQuarter::class)->find($quarterId);
         $socialAttribute = $em->getRepository(InitiativeAttribute::class)->findAll();
-        $performerTasks1 = $performerTaskRepository->findsendToprincipalSocial($user, $suitiniId);
+        $performerTasks1 = $em->getRepository(PerformerTask::class)->findsendToprincipalSocial($user, $suitiniId);
         foreach ($performerTasks1 as $value) {
             $value->setStatus(0);
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-        // dd($plannings);
-        //  $plannings1=$planningAccomplishmentRepository->findplanAcc($suitiniId,$socialAttribute2,$principal,$quarter); 
+       
         foreach ($plannings as $key => $value) {
             # code...
-
+              $value->setAccompValue($accomp[$key]);
+            //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($value);
             $operationalSuitableInitiative->setOperationalOffice($opOffice);
@@ -468,6 +472,7 @@ class OperationalTaskController extends AbstractController
 
             $operationalSuitableInitiative->setStatus(1);
             $em->persist($operationalSuitableInitiative);
+
         }
         $em->flush();
 
@@ -558,13 +563,25 @@ class OperationalTaskController extends AbstractController
         }
     }
     /**
-     * @Route("/userFetch", name="user_fetch")
+     * @Route("/user_fetch", name="user_fetch")
      */
-    public function OperationalFetch(Request $request, PerformerRepository $performerRepository, UserInfoRepository $userInfoRepository)
+    public function OperationalFetch(Request $request, PerformerRepository $performerRepository, OperationalManagerRepository $operationalManagerRepository)
     {
-        $office = $request->request->get('userprincipal');
-        $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
+        if ($office = $request->request->get('isCore')) {
+            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
+        } else {
+            $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
+        }
+        // dd($units);
         return new JsonResponse($units);
+    }
+     /**
+     * @Route("/performer_fetch", name="performer_fetch")
+     */
+    public function performerFetch(Request $request, PerformerRepository $performerRepository )
+    {
+            $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
+                return new JsonResponse($units);
     }
     /**
      * @Route("/taskFetch", name="task_fetch")
@@ -580,7 +597,13 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
-        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
+        // dd($request->request->get('isCore'));
+        if ($request->request->get('isCore')) {
+
+            $units = $performerTaskRepository->filterDeliverByIsCore($request->request->get('task'), $user, $request->request->get('quartertask'));
+        } else {
+            $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
+        }
         // dd($units);
 
         return new JsonResponse($units);
