@@ -140,10 +140,10 @@ class OperationalTaskController extends AbstractController
                 $minDateEdit = $startYear . ',' . $quarterStartMonth1 . ',' . $quarterStartDate1;
             }
         }
-        $maxContengencyTimes = $em->getRepository(SmisSetting::class)->findOneBy(['code' => 1]);
-        $maxTasks = $em->getRepository(SmisSetting::class)->findOneBy(['code' => 2]);
-        $maxTask = $maxTasks->getValue();
-        $maxContengencyTime = $maxContengencyTimes->getValue();
+        $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+                $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTask = $maxTasks->getMaxAllowedTasks();
+        $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
                 $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable' => $suitableOperational, 'quarter' => $quarterId]);
@@ -207,8 +207,10 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
         }
 
-        $maxContengencyTimes = $em->getRepository(SmisSetting::class)->findOneBy(['code' => 1]);
-        $maxContengencyTime = $maxContengencyTimes->getValue();
+         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTask = $maxTasks->getMaxAllowedTasks();
+        $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational),
             'countWeight' => $count,
@@ -217,7 +219,7 @@ class OperationalTaskController extends AbstractController
             'taskAssigns' => $taskAssigns,
             'form' => $form->createView(),
             'maxDate' => $maxDate,
-            'maxContengencyTime' => $maxContengencyTime,
+            'maxContengencyTime' => $maxPenalityDay,
             'minDate' => $minDate,
             'minDateEdit' => $minDateEdit,
             'measurements' => $em->getRepository(TaskMeasurement::class)->findAll(),
@@ -383,7 +385,10 @@ class OperationalTaskController extends AbstractController
         } else {
             $remainingdays = $diff->m * 30 + $diff->d;
         }
-        // dd($performerTasksmale);
+           $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $sendToPrincipal = $maxTasks->getSendToPrincipal();
+        $sendToPlan = $maxPenalityDays->getSendToPlan();
         return $this->render('operational_task/accomplishmentDetail.html.twig', [
             'taskAcomolishs' => $taskAcomolishs,
             'initiativeName' => $initiativeName,
@@ -391,6 +396,8 @@ class OperationalTaskController extends AbstractController
             'performerTasks' => $performerTasks,
             'social' => $social,
             'remainingdays' => $remainingdays,
+            'sendToPrincipal'=>$sendToPrincipal,
+            'sendToPlan'=>$sendToPlan
 
         ]);
     }

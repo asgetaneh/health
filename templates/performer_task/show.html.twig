@@ -230,10 +230,15 @@
 								</tbody>
 							</table>
 							{% if status == 2 %}
+							<div class="row">
+							<div class="col-md-12">
 								<button type="button" name="chalenge" data-taskuserid="{{taskAssignId}}" class="btn btn-primary show pull-right">Challenge/Opportunity</button>
-								<div class="pull-left">
-									<button type="button" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skipChallenge  pull-right">Skip</button>
 								</div>
+								</div>
+								<div class="pull-right ">
+									<button type="button" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skipChallenge  ">Skip</button>
+								</div>
+								
 							{% elseif status == 3 %}
 								<button type="button" name="narrative" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skip  pull-right">Skip</button>
 							{% elseif status == 4 %}

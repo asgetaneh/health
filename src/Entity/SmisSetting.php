@@ -17,62 +17,75 @@ class SmisSetting
      */
     private $id;
 
-    
-
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $name;
+    private $sendToPrincipal;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $value;
+    private $sendToPlan;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $code;
+    private $maxPenalityDays;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $maxAllowedTasks;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-   
-
-    public function getName(): ?string
+    public function getSendToPrincipal(): ?int
     {
-        return $this->name;
+        return $this->sendToPrincipal;
     }
 
-    public function setName(string $name): self
+    public function setSendToPrincipal(?int $sendToPrincipal): self
     {
-        $this->name = $name;
+        $this->sendToPrincipal = $sendToPrincipal;
 
         return $this;
     }
 
-    public function getValue(): ?int
+    public function getSendToPlan(): ?int
     {
-        return $this->value;
+        return $this->sendToPlan;
     }
 
-    public function setValue(?int $value): self
+    public function setSendToPlan(?int $sendToPlan): self
     {
-        $this->value = $value;
+        $this->sendToPlan = $sendToPlan;
 
         return $this;
     }
 
-    public function getCode(): ?int
+    public function getMaxPenalityDays(): ?int
     {
-        return $this->code;
+        return $this->maxPenalityDays;
     }
 
-    public function setCode(?int $code): self
+    public function setMaxPenalityDays(?int $maxPenalityDays): self
     {
-        $this->code = $code;
+        $this->maxPenalityDays = $maxPenalityDays;
+
+        return $this;
+    }
+
+    public function getMaxAllowedTasks(): ?int
+    {
+        return $this->maxAllowedTasks;
+    }
+
+    public function setMaxAllowedTasks(?int $maxAllowedTasks): self
+    {
+        $this->maxAllowedTasks = $maxAllowedTasks;
 
         return $this;
     }

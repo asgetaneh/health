@@ -14,6 +14,7 @@ use App\Entity\ProgramType;
 use App\Entity\Region;
 use App\Entity\Sposnsorship;
 use App\Entity\StudentStatus;
+use App\Helper\SISHelper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -123,6 +124,30 @@ class StudentController extends AbstractController
         return $this->render('student/index.html.twig', [
             'controller_name' => 'StudentController',
             'form'=>$form->createView()
+        ]);
+    }
+     /**
+     * @Route("/student-report", name="student-report")
+     */
+    public function student(Request $request,SISHelper $sISHelper): Response
+    {
+        // dd($sISHelper->getStudent());
+        $arr=[];
+        foreach ($sISHelper->getStudent() as $value) {
+            // dump($value);
+            $arr[]=$value;
+            # code...
+        }
+        // dd($arr[1]);
+        
+       
+
+        return $this->render('student/dashboard.html.twig', [
+            'controller_name' => 'StudentController',
+            'totalStudent'=>$arr[0],
+            'studentSex'=>$arr[1],
+             'studentEnrollment'=>$arr[2]
+            // 'form'=>$form->createView()
         ]);
     }
 }

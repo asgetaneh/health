@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SmisSetting{% endblock %}
+
+{% block body %}
+    <h1>Edit SmisSetting</h1>
+
+    {{ include('smis_setting/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('smis_setting_index') }}">back to list</a>
+
+    {{ include('smis_setting/_delete_form.html.twig') }}
+{% endblock %}
