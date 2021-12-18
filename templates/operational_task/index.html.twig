@@ -120,41 +120,62 @@
 								<div class="btn-group" style="margin-top:10px;margin-left:10px;">
 
 									{% for taskCategory in taskCategorys %}
+										{% if taskCategory.isCore == 1 %}
 
-										{% if countCore < 100  %}
-											<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
-												<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-												Create
-												{{taskCategory.name}}
-												Task</a>
+											{% if countCore < 100  %}
+												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
+													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+													Create
+													{{taskCategory.name}}
+													Task</a>
+
+											{% endif %}
+											{% if countCore >= 100 %}
+
+												<a class="btn btn-primary btn-sm  btn-white btn-round assign" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
+													<i class="ace-icon fa fa-0check bigger-110 blue"></i>
+													Assign
+													{{taskCategory.name}}
+													Task</a>
+
+											{% endif %}
+										{% else %}
+
+											{% if countWeight < 100  %}
+
+												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal"data-category-id="{{taskCategory.id}}" data-category="">
+													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+													Create
+													{{taskCategory.name}}
+													Task</a>
+											{% endif %}
+											{% if countWeight >= 100 %}
+												<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
+													<i class="ace-icon fa fa-0check bigger-110 blue "></i>
+
+													Assign
+													{{taskCategory.name}}
+													Task</a>
+
+
+											{% endif %}
 
 										{% endif %}
-										{% if countCore >= 100 %}
-
-											<a class="btn btn-primary btn-sm  btn-white btn-round assign" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
-												<i class="ace-icon fa fa-0check bigger-110 blue"></i>
-												Assign
-												{{taskCategory.name}}
-												Task</a>
-
-										{% endif %}
-
-
 									{% endfor %}
-									{% if countWeight < 100  %}
-
-										<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category="">
-											<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-											Create																																																															Task</a>
-									{% endif %}
-									{% if countWeight >= 100 %}
-										<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
-											<i class="ace-icon fa fa-0check bigger-110 blue "></i>
-											{% trans %}
-											Assign Task{% endtrans %}</a>
-
-
-									{% endif %}
+									{# {% if countWeight < 100  %}
+									
+																			<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category="">
+																				<i class="ace-icon fa fa-plus bigger-110 blue"></i>
+																				Create Task</a>
+																		{% endif %}
+																		{% if countWeight >= 100 %}
+																			<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
+																				<i class="ace-icon fa fa-0check bigger-110 blue "></i>
+																				{% trans %}
+																				Assign Task{% endtrans %}</a>
+									
+									
+																		{% endif %} #}
 
 
 								</div>
@@ -248,7 +269,7 @@
 													{% if performerTask.taskCategory  %}
 														<td>{{ performerTask.taskCategory.name}}</td>
 													{% else %}
-														<td>Other</td>
+														<td>{{ performerTask.taskCategory.name}}</td>
 													{% endif %}
 
 
@@ -462,8 +483,7 @@ minDate: calendar.newDate(parseInt(minDate[0]), parseInt(minDate[1]), parseInt(m
 		</script>
 
 		<script>
-			$(document).ready(function () {
-})
+			$(document).ready(function () {})
 		</script>
 		<script>
 			$(document).ready(function () {
@@ -473,15 +493,16 @@ $.ajax({
 url:"{{ path('performer_fetch') }}",
 method: "POST",
 data: {
-userprincipal: userprincipal,
+userprincipal: userprincipal
 },
 dataType: "json",
 success: function (data) { // $('.department').children().remove()
 select.append('<option value=""> Select Performer  </option>');
 for (let [key, value] of Object.entries(data)) {
 select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
-}}}
-)
+}
+}
+})
 })
 		</script>
 		<script>
@@ -494,7 +515,8 @@ $('.isCore').val(isCore);
 $('.categoryId').val(categoryId);
 if (isCore == 1) {
 $('.isCores').addClass("hidden -xs-up");
-}})
+}
+})
 		</script>
 		<script>
 			$('.assign').click(function () {
@@ -521,8 +543,9 @@ dataType: "json",
 success: function (data) { // $('.department').children().remove()
 for (let [key, value] of Object.entries(data)) {
 select.append('<option value="' + value.id + '">' + value.fullName + ' </option>');
-}}}
-)
+}
+}
+})
 var isCore = $(this).attr('data-category');
 var categoryId = $(this).attr('data-category-id');
 var task = $('.task').val();
@@ -549,9 +572,11 @@ selectTask.append('<option value="' + value.id + '">' + value.name + ' </option>
 		</script>
 		<script>
 			$('.close').click(function () {
-location.reload(true);})
+location.reload(true);
+})
 $('.closes').click(function () {
-location.reload(true);})
+location.reload(true);
+})
 		</script>
 
 		<link

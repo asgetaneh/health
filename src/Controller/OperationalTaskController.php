@@ -403,7 +403,7 @@ class OperationalTaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("planOffice")) {
             $planAcomplismentId = $request->request->get("planId");
-            
+
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
 
@@ -418,10 +418,10 @@ class OperationalTaskController extends AbstractController
                     $value->setStatus(2);
                 }
                 foreach ($acompAverages as $key => $value) {
-                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
-                      $suitId=$planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();   
+                    $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
+                    $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
                     // $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[$key]);
-                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitId,'quarter'=>$quarter]);
+                    $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
 
                     $planAcomplishments->setAccompValue($value);
                 }
@@ -433,8 +433,8 @@ class OperationalTaskController extends AbstractController
                     $value->setStatus(2);
                 }
                 $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
-                    $suitId=$planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();   
-                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative'=>$suitId,'quarter'=>$quarter]);
+                $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
+                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
                 $em->flush();
             }
@@ -458,10 +458,10 @@ class OperationalTaskController extends AbstractController
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-       
+
         foreach ($plannings as $key => $value) {
             # code...
-              $value->setAccompValue($accomp[$key]);
+            $value->setAccompValue($accomp[$key]);
             //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($value);
@@ -472,7 +472,6 @@ class OperationalTaskController extends AbstractController
 
             $operationalSuitableInitiative->setStatus(1);
             $em->persist($operationalSuitableInitiative);
-
         }
         $em->flush();
 
@@ -575,13 +574,13 @@ class OperationalTaskController extends AbstractController
         // dd($units);
         return new JsonResponse($units);
     }
-     /**
+    /**
      * @Route("/performer_fetch", name="performer_fetch")
      */
-    public function performerFetch(Request $request, PerformerRepository $performerRepository )
+    public function performerFetch(Request $request, PerformerRepository $performerRepository)
     {
-            $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
-                return new JsonResponse($units);
+        $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
+        return new JsonResponse($units);
     }
     /**
      * @Route("/taskFetch", name="task_fetch")
@@ -625,6 +624,28 @@ class OperationalTaskController extends AbstractController
         $taskAssigns = $taskAssignRepository->findTaskUsersList($user);
         return $this->render('operational_task/show.html.twig', [
             'taskAssigns' => $taskAssigns,
+            'principal' => false
+        ]);
+    }
+    /**
+     * @Route("/principal_show", name="operational_task_principal_show")
+     */
+    public function principalShow(Request $request, TaskAssignRepository $taskAssignRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
+        if ($delegatedUser) {
+            $delegatedBy = $delegatedUser->getDelegatedBy();
+            $user = $delegatedBy;
+            // dd($delegatedUser->getDelegatedtaskUserUser());
+        }
+        $principalOfficeId = $user->getOperationalManagers()[0]->getOperationaloffice()->getPrincipalOffice()->getId();
+        // dd($principalOfficeId);
+        $taskAssigns = $taskAssignRepository->findTaskOperattionalList($principalOfficeId);
+        return $this->render('operational_task/show.html.twig', [
+            'taskAssigns' => $taskAssigns,
+            'principal' => true
         ]);
     }
     /**
@@ -633,9 +654,11 @@ class OperationalTaskController extends AbstractController
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
-
+         
+            $principal = $request->request->get('principal');
 
         if ($request->request->get('accompValue')) {
+            $principal = $request->request->get('principal');
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
             $accompValue = $request->request->get('accompValue');
@@ -665,8 +688,15 @@ class OperationalTaskController extends AbstractController
             //   }
             $em->flush();
             $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
-            return $this->redirectToRoute('operational_task_show');
+            if($principal){
+           return $this->redirectToRoute('operational_task_principal_show');
+            }   
+            else{
+           return $this->redirectToRoute('operational_task_show');
+
+            }
         }
+            // dd($principal);
         $taskAssign = $request->request->get('taskAssign');
         //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
@@ -693,7 +723,8 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
-            'social' => $social
+            'social' => $social,
+            'principal'=>$principal
         ]);
     }
 

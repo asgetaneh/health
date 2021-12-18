@@ -14,7 +14,7 @@ class TaskCategoryType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('quantity')
+            ->add('numberOfTask')
             ->add('status')
             ->add('isCore')
         ;

@@ -38,6 +38,19 @@
 			</a>
 		</li>
          {% endif %}
+		  {% if is_granted('vw_intv_bvr') %}
+        
+       
+		
+		<li role="treeitem">
+			<a href="{{ path('task_category_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Task Category
+				{% endtrans %}
+			</a>
+		</li>
+         {% endif %}
+		 
          
         {# {% if is_granted('vw_intv_atr') %}
         
