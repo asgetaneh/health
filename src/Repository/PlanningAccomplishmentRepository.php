@@ -411,4 +411,25 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    public function getPlanByKpiAndYear($kpi, $year,$office, $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            ->select('sum(pa.planValue) as accomp')
+          
+            ->Join('pa.suitableInitiative', 'si')
+            ->Join('si.initiative', 'i')
+             ->andwhere('i.keyPerformanceIndicator = :kpi')
+            ->andwhere('pa.quarter = :quarter')
+            ->andwhere('si.principalOffice = :office')
+            ->andwhere('si.planningYear = :year')
+          
+            ->setParameter('year',  $year)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('office', $office)
+            ->setParameter('kpi', $kpi)
+        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

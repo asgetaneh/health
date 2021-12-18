@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OfficeKpiPlan{% endblock %}
+
+{% block body %}
+    <h1>OfficeKpiPlan</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ office_kpi_plan.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('office_kpi_plan_index') }}">back to list</a>
+
+    <a href="{{ path('office_kpi_plan_edit', {'id': office_kpi_plan.id}) }}">edit</a>
+
+    {{ include('office_kpi_plan/_delete_form.html.twig') }}
+{% endblock %}

@@ -44,6 +44,7 @@ use App\Entity\TaskCategory;
 use App\Entity\User;
 use App\Helper\AmharicHelper;
 use App\Helper\Helper;
+use App\Helper\PlanAchievementHelper;
 use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
@@ -434,6 +435,9 @@ class OperationalTaskController extends AbstractController
                 }
 
                 $em->flush();
+                $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitId);
+
+                PlanAchievementHelper::setInitiativeAchievement($em,$suitableInitiative);
             } else {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {

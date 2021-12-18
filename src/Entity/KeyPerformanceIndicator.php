@@ -78,6 +78,11 @@ class KeyPerformanceIndicator implements TranslatableInterface
     */
    private $objective;
 
+   /**
+    * @ORM\OneToMany(targetEntity=OfficeKpiPlan::class, mappedBy="kpi")
+    */
+   private $officeKpiPlans;
+
    
     public function __toString()
     {
@@ -94,6 +99,7 @@ class KeyPerformanceIndicator implements TranslatableInterface
         $this->initiatives = new ArrayCollection();
         $this->planAchievements = new ArrayCollection();
         $this->kPiAchievements = new ArrayCollection();
+        $this->officeKpiPlans = new ArrayCollection();
        
     }
 
@@ -275,6 +281,36 @@ class KeyPerformanceIndicator implements TranslatableInterface
     public function setObjective(?Objective $objective): self
     {
         $this->objective = $objective;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OfficeKpiPlan[]
+     */
+    public function getOfficeKpiPlans(): Collection
+    {
+        return $this->officeKpiPlans;
+    }
+
+    public function addOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if (!$this->officeKpiPlans->contains($officeKpiPlan)) {
+            $this->officeKpiPlans[] = $officeKpiPlan;
+            $officeKpiPlan->setKpi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if ($this->officeKpiPlans->removeElement($officeKpiPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($officeKpiPlan->getKpi() === $this) {
+                $officeKpiPlan->setKpi(null);
+            }
+        }
 
         return $this;
     }

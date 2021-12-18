@@ -84,6 +84,11 @@ class PrincipalOffice
      */
     private $principalOffices;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OfficeKpiPlan::class, mappedBy="office")
+     */
+    private $officeKpiPlans;
+
     public function __construct()
     {
         $this->operationalOffices = new ArrayCollection();
@@ -92,6 +97,7 @@ class PrincipalOffice
         $this->plans = new ArrayCollection();
         $this->suitableInitiatives = new ArrayCollection();
         $this->principalOffices = new ArrayCollection();
+        $this->officeKpiPlans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -357,6 +363,36 @@ class PrincipalOffice
             // set the owning side to null (unless already changed)
             if ($principalOffice->getManagedBy() === $this) {
                 $principalOffice->setManagedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OfficeKpiPlan[]
+     */
+    public function getOfficeKpiPlans(): Collection
+    {
+        return $this->officeKpiPlans;
+    }
+
+    public function addOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if (!$this->officeKpiPlans->contains($officeKpiPlan)) {
+            $this->officeKpiPlans[] = $officeKpiPlan;
+            $officeKpiPlan->setOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if ($this->officeKpiPlans->removeElement($officeKpiPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($officeKpiPlan->getOffice() === $this) {
+                $officeKpiPlan->setOffice(null);
             }
         }
 

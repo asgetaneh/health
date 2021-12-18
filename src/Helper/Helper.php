@@ -96,6 +96,7 @@ class Helper
         }
         $em->flush();
         $em->clear();
+        KpiHelper::setOfficeKpiPlan($em, $suitableInitiative);
 
         return true;
     }

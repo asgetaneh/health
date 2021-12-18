@@ -126,6 +126,11 @@ class PlanningQuarter
      */
     private $inistuitionPlans;
 
+    /**
+     * @ORM\OneToMany(targetEntity=KpiQuarterPlan::class, mappedBy="quarter")
+     */
+    private $kpiQuarterPlans;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -138,6 +143,7 @@ class PlanningQuarter
         $this->operationalPlanningAccomplishments = new ArrayCollection();
         $this->quarterPlanAchievements = new ArrayCollection();
         $this->inistuitionPlans = new ArrayCollection();
+        $this->kpiQuarterPlans = new ArrayCollection();
     }
     public function __toString()
     {
@@ -574,6 +580,36 @@ class PlanningQuarter
             // set the owning side to null (unless already changed)
             if ($inistuitionPlan->getQuarter() === $this) {
                 $inistuitionPlan->setQuarter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|KpiQuarterPlan[]
+     */
+    public function getKpiQuarterPlans(): Collection
+    {
+        return $this->kpiQuarterPlans;
+    }
+
+    public function addKpiQuarterPlan(KpiQuarterPlan $kpiQuarterPlan): self
+    {
+        if (!$this->kpiQuarterPlans->contains($kpiQuarterPlan)) {
+            $this->kpiQuarterPlans[] = $kpiQuarterPlan;
+            $kpiQuarterPlan->setQuarter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKpiQuarterPlan(KpiQuarterPlan $kpiQuarterPlan): self
+    {
+        if ($this->kpiQuarterPlans->removeElement($kpiQuarterPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($kpiQuarterPlan->getQuarter() === $this) {
+                $kpiQuarterPlan->setQuarter(null);
             }
         }
 

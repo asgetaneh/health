@@ -61,12 +61,40 @@ class QuarterPlanAchievementRepository extends ServiceEntityRepository
     public function getByInitiativeAndQuarter($initiative, $quarter,$year)
     {
         return $this->createQueryBuilder('q')
-            ->select('sum(q.accomp) as accomp')
+            
            ->join('q.initiativeAchievement','a')
             ->andWhere('a.initiative = :val')
             ->andWhere('a.year = :year')
             ->andWhere('q.quarter = :val2')
             ->setParameter('val', $initiative)
+            ->setParameter('val2', $quarter)
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    public function getByKpiAndQuarter($kpi, $quarter, $year)
+    {
+        return $this->createQueryBuilder('q')
+           
+            ->join('q.kPiAchievement', 'k')
+            ->andWhere('k.kpi = :val')
+            ->andWhere('k.year = :year')
+            ->andWhere('q.quarter = :val2')
+            ->setParameter('val', $kpi)
+            ->setParameter('val2', $quarter)
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    public function getByObjectiveAndQuarter($objective, $quarter, $year)
+    {
+        return $this->createQueryBuilder('q')
+
+            ->join('q.objectiveAchievement', 'o')
+            ->andWhere('o.objective = :val')
+            ->andWhere('o.year = :year')
+            ->andWhere('q.quarter = :val2')
+            ->setParameter('val', $objective)
             ->setParameter('val2', $quarter)
             ->setParameter('year', $year)
             ->getQuery()

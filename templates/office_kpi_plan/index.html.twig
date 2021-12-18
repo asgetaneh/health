@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OfficeKpiPlan index{% endblock %}
+
+{% block body %}
+    <h1>OfficeKpiPlan index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+<th>Principal Office</th>
+<th>Kpi</th>
+
+
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for office_kpi_plan in office_kpi_plans %}
+            <tr>
+                <td>{{ office_kpi_plan.id }}</td>
+<td>{{ office_kpi_plan.office }}</td>
+<td>{{ office_kpi_plan.kpi }}</td>
+
+
+                <td>
+                    <a href="{{ path('office_kpi_plan_show', {'id': office_kpi_plan.id}) }}">show</a>
+                    <a href="{{ path('office_kpi_plan_edit', {'id': office_kpi_plan.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('office_kpi_plan_new') }}">Create new</a>
+{% endblock %}

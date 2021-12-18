@@ -106,6 +106,11 @@ class PlanningYear
      */
     private $inistuitionSuitableInitiatives;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OfficeKpiPlan::class, mappedBy="year")
+     */
+    private $officeKpiPlans;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -118,6 +123,7 @@ class PlanningYear
         $this->objectiveAchievements = new ArrayCollection();
         $this->goalAchievements = new ArrayCollection();
         $this->inistuitionSuitableInitiatives = new ArrayCollection();
+        $this->officeKpiPlans = new ArrayCollection();
     }
     public function __toString()
     {
@@ -498,6 +504,36 @@ class PlanningYear
             // set the owning side to null (unless already changed)
             if ($inistuitionSuitableInitiative->getYear() === $this) {
                 $inistuitionSuitableInitiative->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OfficeKpiPlan[]
+     */
+    public function getOfficeKpiPlans(): Collection
+    {
+        return $this->officeKpiPlans;
+    }
+
+    public function addOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if (!$this->officeKpiPlans->contains($officeKpiPlan)) {
+            $this->officeKpiPlans[] = $officeKpiPlan;
+            $officeKpiPlan->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOfficeKpiPlan(OfficeKpiPlan $officeKpiPlan): self
+    {
+        if ($this->officeKpiPlans->removeElement($officeKpiPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($officeKpiPlan->getYear() === $this) {
+                $officeKpiPlan->setYear(null);
             }
         }
 

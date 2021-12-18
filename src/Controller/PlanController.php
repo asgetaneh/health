@@ -25,6 +25,8 @@ use App\Entity\SuitableInitiative;
 use App\Entity\SuitableOperational;
 use App\Form\PlanType;
 use App\Helper\Helper;
+use App\Helper\KpiHelper;
+use App\Helper\PlanAchievementHelper;
 use App\Repository\InitiativeRepository;
 use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\PlanRepository;
@@ -580,6 +582,8 @@ class PlanController extends AbstractController
             $em->clear();
         }
         $em->clear();
+        KpiHelper::setOfficeKpiPlan($em, $suitableInitiative);
+
         return;
     }
 
@@ -708,6 +712,7 @@ class PlanController extends AbstractController
 
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
             Helper::calculateInitiativePlan($em, $planInitiative);
+            // PlanAchievementHelper::setInitiativeAchievement($em,$planInitiative);
             if ($operationaloffice->getPrincipalOffice()->getOfficeGroup()) {
                 Helper::setOrganizationalInitiativePlan($em, $planInitiative, $operationaloffice->getPrincipalOffice()->getOfficeGroup());
             }
