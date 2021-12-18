@@ -41,10 +41,7 @@ class Plan
      */
     private $createdBy;
 
-    /**
-     * @ORM\OneToMany(targetEntity=OperationalTask::class, mappedBy="plan")
-     */
-    private $operationalTasks;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=BehavioralPlanningAccomplishment::class, mappedBy="plan")
@@ -84,7 +81,6 @@ class Plan
 
     public function __construct()
     {
-        $this->operationalTasks = new ArrayCollection();
         $this->behavioralPlanningAccomplishments = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
     }
@@ -144,36 +140,7 @@ class Plan
         return $this;
     }
 
-    /**
-     * @return Collection|OperationalTask[]
-     */
-    public function getOperationalTasks(): Collection
-    {
-        return $this->operationalTasks;
-    }
-
-    public function addOperationalTask(OperationalTask $operationalTask): self
-    {
-        if (!$this->operationalTasks->contains($operationalTask)) {
-            $this->operationalTasks[] = $operationalTask;
-            $operationalTask->setPlan($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOperationalTask(OperationalTask $operationalTask): self
-    {
-        if ($this->operationalTasks->removeElement($operationalTask)) {
-            // set the owning side to null (unless already changed)
-            if ($operationalTask->getPlan() === $this) {
-                $operationalTask->setPlan(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection|BehavioralPlanningAccomplishment[]
      */

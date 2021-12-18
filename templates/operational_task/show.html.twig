@@ -99,6 +99,9 @@
 											<td>{{ taskAssign.performerTask.weight }}</td>
 											<td>
 												<form action="{{path('operational_task_show_detail')}}" method="post">
+												
+													<input type="hidden" name="principal" value="{{principal}}">
+
 													<input type="hidden" name="taskAssign" value="{{taskAssign.id}}">
 													{% if taskAssign.type == 1 %}
 														<button class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to Accept this Report?');">
@@ -117,8 +120,8 @@
 
 
 											{# <td>
-																																																																																																																																																																																												<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																																																																																		</td> #}
+																																																																																																																																																																																																																		<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																																																																																																								</td> #}
 
 										</tr>
 									{% else %}

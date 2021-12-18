@@ -37,18 +37,17 @@ class TaskAssignRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-     public function findTaskUsers($value)
+    public function findTaskUsers($value)
     {
         return $this->createQueryBuilder('t')
-         ->leftJoin('t.PerformerTask','p')
+            ->leftJoin('t.PerformerTask', 'p')
             ->andWhere('p.createdBy = :val')
-        //  ->andWhere('t.type = 1 or t.type = 2 ')
+            //  ->andWhere('t.type = 1 or t.type = 2 ')
             ->setParameter('val', $value)
             ->orderBy('t.id', 'ASC')
             // ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
     public function getTaskStatusAssigned($id, $office)
     {
@@ -65,35 +64,51 @@ class TaskAssignRepository extends ServiceEntityRepository
 
             ->getQuery()->getSingleScalarResult();
     }
-      public function findPerformerTaskUsers($value)
+    public function findPerformerTaskUsers($value)
     {
         return $this->createQueryBuilder('t')
-        // ->leftJoin('ta.performerTask','p')
+            // ->leftJoin('ta.performerTask','p')
             ->andWhere('t.assignedTo = :val')
             ->andWhere('t.status < 5  ')
             ->setParameter('val', $value)
-        //  ->setParameter('status', 5)
+            //  ->setParameter('status', 5)
             ->orderBy('t.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-     public function findTaskUsersList($value)
+    public function findTaskUsersList($value)
     {
         return $this->createQueryBuilder('t')
-         ->leftJoin('t.PerformerTask','p')
+            ->leftJoin('t.PerformerTask', 'p')
+            ->leftJoin('p.taskCategory', 'ta')
             ->andWhere('p.createdBy = :val')
-        ->andWhere('t.type < 3 ')
-                ->andWhere('t.status > 4 ')
+            ->andWhere('t.type < 3 ')
+            ->andWhere('t.status > 4 ')
+            ->andWhere('ta.isCore is NULL')
             ->setParameter('val', $value)
             ->orderBy('t.id', 'ASC')
             // ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-
+    public function findTaskOperattionalList($principalOfficeId)
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.PerformerTask', 'p')
+            ->leftJoin('p.taskCategory', 'ta')
+            ->leftJoin('p.operationalOffice', 'of')
+            ->leftJoin('of.principalOffice', 'pf')
+            ->andWhere('pf.id = :val')
+            ->andWhere('t.type < 3 ')
+            ->andWhere('t.status > 4 ')
+            ->andWhere('ta.isCore  = 1 ')
+            ->setParameter('val', $principalOfficeId)
+            ->orderBy('t.id', 'ASC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 
     // /**
     //  * @return TaskAssign[] Returns an array of TaskAssign objects

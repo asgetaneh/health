@@ -73,6 +73,11 @@ class KeyPerformanceIndicator implements TranslatableInterface
     */
    private $kPiAchievements;
 
+   /**
+    * @ORM\ManyToOne(targetEntity=Objective::class, inversedBy="keyPerformanceIndicators")
+    */
+   private $objective;
+
    
     public function __toString()
     {
@@ -258,6 +263,18 @@ class KeyPerformanceIndicator implements TranslatableInterface
                 $kPiAchievement->setKpi(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getObjective(): ?Objective
+    {
+        return $this->objective;
+    }
+
+    public function setObjective(?Objective $objective): self
+    {
+        $this->objective = $objective;
 
         return $this;
     }

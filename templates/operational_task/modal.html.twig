@@ -1,4 +1,4 @@
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModal" class="modal fade createModal" role="dialog">
 	<div
 		class="modal-dialog">
 
@@ -21,12 +21,9 @@
 					{% endif %}
 
 				</h4>
-
 			</div>
 			<div class="modal-body">
 				{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-
-
 				<div class="form-group">
 					<lable class=" control-label no-padding-right">
 						<b>
@@ -34,7 +31,6 @@
 						</b>
 					</lable>
 					{{ form_widget(form.name,{'attr':{ 'class': 'form-control'}}) }}
-
 				</div>
 				<div class="form-group">
 					<lable class=" control-label no-padding-right">
@@ -43,33 +39,30 @@
 						</b>
 					</lable>
 					{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
-
 				</div>
 
-
 				<div class="form-group">
-					<lable class=" control-label no-padding-right">
+					<lable class=" control-label no-padding-right isCores">
 						<b>
 							Task Weight
 						</b>
 					</lable>
-					{{ form_widget(form.weight,{'attr':{ 'class': 'form-control'}}) }}
-
+					{{ form_widget(form.weight,{'attr':{ 'class': 'form-control isCores '}}) }}
 				</div>
-
-
+				<input type="hidden" class="categoryId" name="categoryId">
+				<input type="hidden" class="isCore" name="isCore">
 			</div>
 
 
 		</div>
 		<div class="modal-footer">
 			<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-			<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-default pull-left closes" data-dismiss="modal">Close</button>
 			{{ form_end(form) }}
 		</div>
 	</div>
 </div>
-<div id="assign" class="modal fade" role="dialog">
+<div class="modal fade assignModal" role="dialog">
 	<div class="modal-dialog">
 		<form
 			method="post" action="{{path('task_assign')}}">
@@ -87,33 +80,25 @@
 				<div class="modal-body">
 
 					<div class="row">
-						<div class="col-md-6">
-
-							<lable class=" control-label no-padding-right">
-								<b>
-									Select Performer
-								</b>
-							</lable>
-							<select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true">
-
-
-								<option></option>
-							</select>
-
-
-						</div>
-						<div class="col-md-6">
+						<div class="col-md-12">
 
 							<lable class=" control-label no-padding-right">
 								<b>
 									Select Task
 								</b>
 							</lable>
-							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true">
+							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true" required></select>
 
 
-								<option></option>
-							</select>
+						</div>
+						<div class="col-md-12">
+
+							<lable class=" control-label no-padding-right">
+								<b>
+									Select Performer
+								</b>
+							</lable>
+							<select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true" required></select>
 
 
 						</div>
@@ -147,9 +132,11 @@
 									<h5 class="error text-danger"></h5>
 								</b>
 							</lable>
+
 							<input type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
 
-
+							<input type="hidden" class="categoryId" name="categoryId">
+							<input type="hidden" class="isCoreAssign"  name="isCore">
 						</div>
 
 
@@ -183,7 +170,7 @@
 									<td>{{ count}}</td>
 									<td>{{ measurement.name }}</td>
 									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
-									<td><input type="number" name="expectedValue" class="form-control"></td>
+									<td><input type="number" name="expectedValue" class="form-control" required></td>
 									{% if social == 1 %}
 
 										<td><input type="number" name="expectedValueSocial" class="form-control"></td>

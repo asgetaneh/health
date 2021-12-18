@@ -53,6 +53,15 @@
 				</a>
 			</li>
 		{% endif %}
+		{% if is_granted('pri_off_rep') %}
+
+			<li>
+				<a href="{{ path('operational_task_principal_show') }}" style="background:#009933; color: #f5f6f8">
+					<b class="fa fa-caret-right"></b>
+					{% trans %}Operational Task List{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
 
 		{% if is_granted('pri_off_rep') %}
 

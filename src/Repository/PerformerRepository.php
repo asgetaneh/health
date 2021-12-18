@@ -18,7 +18,7 @@ class PerformerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Performer::class);
     }
-    public function findAllsUser($user)
+    public function findAllsUser($principalOffice)
     {
 
         //dd($productNmae);
@@ -31,7 +31,7 @@ class PerformerRepository extends ServiceEntityRepository
 
             ->addSelect('u.id')
             ->andWhere('po.id = :val')
-            ->setParameter('val', $user)
+            ->setParameter('val', $principalOffice)
             ->orderBy('s.id', 'ASC')
 
             ->getQuery()

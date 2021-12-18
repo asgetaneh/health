@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 
-use App\Entity\OperationalTask;
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningAccomplishment;
@@ -33,6 +32,7 @@ use Andegna\DateTimeFactory;
 use App\Entity\Delegation;
 use App\Entity\Evaluation;
 use App\Entity\Initiative;
+use App\Entity\OperationalManager;
 use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningYear;
@@ -40,7 +40,7 @@ use App\Entity\PrincipalOffice;
 use App\Entity\SmisSetting;
 use App\Entity\SuitableOperational;
 use App\Entity\TaskAssign;
-use App\Entity\TaskUser;
+use App\Entity\TaskCategory;
 use App\Entity\User;
 use App\Helper\AmharicHelper;
 use App\Helper\Helper;
@@ -48,25 +48,19 @@ use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
-use Container5yVdKyl\getOperationalPlanningAccomplishmentRepositoryService;
-use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\PaginatorInterface;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
+use Proxies\__CG__\App\Entity\OperationalSuitableInitiative as EntityOperationalSuitableInitiative;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
 use Proxies\__CG__\App\Entity\SuitableOperational as EntitySuitableOperational;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Mailer\MailerInterface;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -78,7 +72,7 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/index/{id}", name="operational_task_index")
      */
-    public function index(Request $request, SuitableOperational $suitableOperational, OperationalPlanningAccomplishmentRepository $operationalPlanningAccomplishmentRepository,  PerformerTaskRepository $performerTaskRepository): Response
+    public function index(Request $request, SuitableOperational $suitableOperational,    PerformerTaskRepository $performerTaskRepository): Response
     {
         $this->denyAccessUnlessGranted('opr_task');
         //create task 
@@ -95,6 +89,7 @@ class OperationalTaskController extends AbstractController
                 $social = 1;
             }
         }
+        $taskCategorys = $em->getRepository(TaskCategory::class)->findAll();
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -105,11 +100,20 @@ class OperationalTaskController extends AbstractController
         $maxcount = 0;
         $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
         $taskAssigns = $em->getRepository(TaskAssign::class)->findTaskUsers($user);
-        foreach ($operationalTasks as $operationals) {
-            $count = $count +
-                $operationals->getWeight();
-            $maxcount++;
+        $countCore = 0;
+        $count = 0;
+        $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
+        foreach ($performerTasksList as $operational) {
+            // dd($operational);
+            if ($operational?->getTaskCategory()?->getIsCore()) {
+                $countCore = $countCore + $operational->getWeight();
+            } else {
+
+                $count = $count +
+                    $operational->getWeight();
+            }
         }
+
         $time = new DateTime('now');
         $quarterId = 0;
         $quarterName = 0;
@@ -142,10 +146,11 @@ class OperationalTaskController extends AbstractController
         $maxContengencyTime = $maxContengencyTimes->getValue();
         if ($form->isSubmitted() && $form->isValid()) {
             if ($social == 1) {
-                $plans = $operationalPlanningAccomplishmentRepository->findBy(['operationalSuitable' => $suitableOperational, 'quarter' => $quarterId]);
+                $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable' => $suitableOperational, 'quarter' => $quarterId]);
             } else {
-                $plans = $operationalPlanningAccomplishmentRepository->findBy(['operationalSuitable' => $suitableOperational, 'quarter' => $quarterId]);
+                $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->findBy(['operationalSuitable' => $suitableOperational, 'quarter' => $quarterId]);
             }
+
             if (!$plans) {
                 $this->addFlash('danger', 'Plan Not Set for this Initiative');
                 return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
@@ -155,6 +160,10 @@ class OperationalTaskController extends AbstractController
             if ($social == 1) {
                 $performerTask->setOperationalPlanningAccSocial($plans[1]);
             }
+            $isCore = $request->request->get("isCore");
+            $categoryId = $request->request->get("categoryId");
+            $taskCategory = $em->getRepository(TaskCategory::class)->find($categoryId);
+            $performerTask->setTaskCategory($taskCategory);
             $performerTask->setStatus(1);
             if ($delegatedUser) {
                 $delegatedBy = $delegatedUser->getDelegatedUser();
@@ -170,27 +179,40 @@ class OperationalTaskController extends AbstractController
             }
             $performerTask->setOperationalOffice($opOff);
             $performerTask->setCreatedBy($user);
+            $weight = 0;
             $weight = $form->getData()->getWeight();
-            if ($count + $weight > 100) {
-                $this->addFlash('danger', 'Weight must be less than 100 !');
-                return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+            if (!$weight) {
+                $weight = 100;
+                # code...
+            }
+            $performerTask->setWeight($weight);
+
+            // dd($count, $weight, $isCore);
+            if (!$isCore) {
+                # code...
+                if ($count + $weight > 100) {
+                    $this->addFlash('danger', 'Weight must be less than 100 !');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+                }
+            } else {
+
+                if ($countCore + $weight > 100) {
+                    $this->addFlash('danger', 'Weight must be less than 100 !');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+                }
             }
             $em->persist($performerTask);
             $em->flush();
             $this->addFlash('success', ' Task Created Successfully!');
             return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
         }
-        $count = 0;
-        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
-        foreach ($operationalTasks as $operationals) {
-            $count = $count +
-                $operationals->getWeight();
-        }
+
         $maxContengencyTimes = $em->getRepository(SmisSetting::class)->findOneBy(['code' => 1]);
         $maxContengencyTime = $maxContengencyTimes->getValue();
         return $this->render('operational_task/index.html.twig', [
             'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational),
             'countWeight' => $count,
+            'countCore' => $countCore,
             'quarterName' => $quarterName,
             'taskAssigns' => $taskAssigns,
             'form' => $form->createView(),
@@ -202,6 +224,7 @@ class OperationalTaskController extends AbstractController
             'social' => $social,
             'formtask' => $formtask->createView(),
             'initiativeName' => $suitableOperational->getSuitableInitiative()->getInitiative()->getName(),
+            'taskCategorys' => $taskCategorys
         ]);
     }
     /**
@@ -211,184 +234,7 @@ class OperationalTaskController extends AbstractController
     {
         $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
-        $uploadPlan = $this->createFormBuilder()
-            ->add('uploadPlan', FileType::class, array(
-                'attr' => array(
-                    'id' => 'filePhoto',
-                    // 'class' => 'sr-only',
-                    //  'accept' => 'image/jpeg,image/png,image/jpg'
-                ),
-                'label' => '',
 
-
-            ))
-            ->getForm();
-
-
-        $uploadPlan->handleRequest($request);
-
-        if ($uploadPlan->isSubmitted() && $uploadPlan->isValid()) {
-
-            $file = $uploadPlan['uploadPlan']->getData();
-            // dd($uploadedFile);
-
-            // $newFilename = $taskAc->getId() . uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
-            // $uploadedFile->move($destination, $newFilename);
-
-            $fileFolder = __DIR__ . '/../../public/plan/';  //choose the folder in which the uploaded file will be stored
-            //  dd($file);
-            $filePathName = md5(uniqid()) . $file->getClientOriginalName();
-            //    dd($filePathName);
-            // apply md5 function to generate an unique identifier for the file and concat it with the file extension  
-            try {
-                $file->move($fileFolder, $filePathName);
-            } catch (FileException $e) {
-                dd($e);
-            }
-            // dd($currentQuarter);
-            $currentQuarter = $em->getRepository(PlanningQuarter::class)->findAll();
-            $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file 
-            $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
-            $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
-            //  dd($sheetData);    
-            $operation = $operationalManagerRepository->findOneBy(['manager' => $this->getUser()]);
-            $principal = $operation->getOperationalOffice()->getPrincipalOffice();
-            $suitPri = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principal]);
-            foreach ($sheetData as $keys => $values) {
-                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'], $principal);
-                // dd($su);
-                foreach ($su as $key => $value) {
-                    //  dd($value);
-                    // if ($su[$key] == $value) {
-                    $operSuitable = $em->getRepository(SuitableOperational::class)->findBy(['operationalOffice' => $operation->getOperationalOffice(), 'suitableInitiative' => $value]);
-                    // if ($operSuitable) {
-                    //     $this->addFlash('danger', ' Plan Already Done');
-                    //     return $this->redirectToRoute('suitable_initiative_list');
-                    // }
-                    $operationalSui = new SuitableOperational();
-                    $operationalSui->setSuitableInitiative($value);
-                    $operationalSui->setOperationalOffice($operation->getOperationalOffice());
-                    $em->persist($operationalSui);
-                    for ($i = 0; $i < 4; $i++) {
-
-                        $operationalplan = new OperationalPlanningAccomplishment();
-                        $operationalplan->setOperationalSuitable($operationalSui);
-
-                        $operationalplan->setQuarter($currentQuarter[$i]);
-                        if ($values['B'] == 0) {
-                            $planf = $values['F'];
-                            if ($planf) {
-                                $operationalplan->setPlanValue($planf);
-                            } else {
-                                $operationalplan->setPlanValue(0);
-                            }
-                        } else if ($values['B'] == 2) {
-                            if ($i == 0) {
-                                $planf = $values['F'];
-                            } else if ($i == 1) {
-                                if ($values['G'] <= $values['F']) {
-                                    $values['G'] = $values['F'];
-                                    $planf = $values['F'];
-                                } else {
-                                    $planf = $values['G'];
-                                }
-                            } else if ($i == 2) {
-
-                                if ($values['H'] <= $values['G']) {
-                                    $values['H'] = $values['G'];
-
-                                    $planf = $values['G'];
-                                } else {
-                                    $planf = $values['H'];
-                                }
-                            } else {
-                                if ($values['I'] <= $values['H']) {
-                                    $values['I'] = $values['H'];
-
-                                    $planf = $values['H'];
-                                } else {
-                                    $planf = $values['H'];
-                                }
-                                $planf = $values['I'];
-                            }
-                            if ($planf) {
-                                $operationalplan->setPlanValue($planf);
-                            } else {
-                                $operationalplan->setPlanValue(0);
-                            }
-                        } else if ($values['B'] == 3) {
-                            if ($i == 0) {
-                                $planf = $values['F'];
-                            } else if ($i == 1) {
-                                if ($values['G'] >= $values['F']) {
-                                    $values['G'] = $values['F'];
-                                    $planf = $values['F'];
-                                } else {
-                                    $planf = $values['G'];
-                                }
-                            } else if ($i == 2) {
-
-                                if ($values['H'] >= $values['G']) {
-                                    $values['H'] = $values['G'];
-
-                                    $planf = $values['G'];
-                                } else {
-                                    $planf = $values['H'];
-                                }
-                            } else {
-                                if ($values['I'] >= $values['H']) {
-                                    $values['I'] = $values['H'];
-
-                                    $planf = $values['H'];
-                                } else {
-                                    $planf = $values['H'];
-                                }
-                                $planf = $values['I'];
-                            }
-                            if ($planf) {
-                                $operationalplan->setPlanValue($planf);
-                            } else {
-                                $operationalplan->setPlanValue(0);
-                            }
-                        } else {
-                            if ($i == 0) {
-                                $planf = $values['F'];
-                            } else if ($i == 1) {
-                                $planf = $values['G'];
-                            } else if ($i == 2) {
-                                $planf = $values['H'];
-                            } else {
-                                $planf = $values['I'];
-                            }
-                            if ($planf) {
-                                $operationalplan->setPlanValue($planf);
-                            } else {
-                                $operationalplan->setPlanValue(0);
-                            }
-                        }
-                        $em->persist($operationalplan);
-                        $em->flush();
-                    }
-                    // }
-
-                }
-            }
-            // dd($suitPri,$sheetData);
-            foreach ($sheetData as $keys => $values) {
-                // dump($values);
-                $su = $em->getRepository(SuitableInitiative::class)->finds($values['A'], $principal);
-                // dump($su);
-                foreach ($su as $key => $value) {
-                    $help = Helper::calculatePrincipalOfficePlan($em, $value);
-                }
-            }
-
-            // dd(1);
-            // $this->calculatePrincipalOfficePlan($em, $planInitiative);
-
-            $this->addFlash('success', ' Plan Uploaded Successfully');
-            return $this->redirectToRoute('suitable_initiative_list');
-        }
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -422,7 +268,6 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'operationalSuitables' => $data,
             'data' => $operationalSuitables,
-            'uploadPlan' => $uploadPlan->createView(),
             'count' => $operationalSuitables,
             'operationalPlanningAccomplishments' => $operationalPlanningAccomplishments,
             'quarter' => $currentQuarter = AmharicHelper::getCurrentQuarter($em)
@@ -441,7 +286,7 @@ class OperationalTaskController extends AbstractController
 
         $suitableInId = $request->request->get('suitableInId');
         $operationalOfId = $request->request->get('operationalOfId');
-        $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitableInId);
+        $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitableInId);
         $operationalSuitable = $em->getRepository(SuitableOperational::class)->findOperationalId($suitableInId, $operationalOfId);
         // dd($operationalSuitable);
         foreach ($operationalSuitable as  $value) {
@@ -461,73 +306,7 @@ class OperationalTaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
-        if ($request->request->get("excel")) {
-            // dd(1);
-            $suitableInitiativesprincipal = $em->getRepository(SuitableInitiative::class)->findBy(['principalOffice' => $principalOffice]);
-            $spreadsheet = new Spreadsheet();
 
-
-            foreach (range('A', 'I') as $columnID) {
-                $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
-            }
-            $count = 1;
-            foreach ($suitableInitiativesprincipal as $result) {
-                $count = $count + 1;
-            }
-
-            $sheet = $spreadsheet->getActiveSheet();
-            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(false);
-
-            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
-            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(false);
-            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
-            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
-            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
-            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(false);
-            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(50);
-            $sheet->setTitle("you can not delete any column");
-
-
-            $spreadsheet->getActiveSheet()->getStyle('A1:A' . $count . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
-            $spreadsheet->getActiveSheet()->getStyle('B1:B' . $count . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('00000000');
-
-
-            $sheet->setCellValue('A1', 'Initiative Code');
-            $sheet->setCellValue('B1', 'IBC');
-            $sheet->setCellValue('C1', 'KPI');
-            $sheet->setCellValue('D1', 'Initiative Name');
-            $sheet->setCellValue('E1', 'Initiative Behaviour');
-            $sheet->setCellValue('F1', 'Q1');
-            $sheet->setCellValue('G1', 'Q2');
-            $sheet->setCellValue('H1', 'Q3');
-            $sheet->setCellValue('I1', 'Q4');
-            // $totalResult = $initiativestotal;
-            // dd($totalResult);
-            $x = 2;
-            $soh = 0;
-            foreach ($suitableInitiativesprincipal as $result) {
-                if (!count($result->getInitiative()->getSocialAtrribute()) > 0) {
-                    $sheet->setCellValue('A' . $x, $result->getInitiative()->getId());
-                    $sheet->setCellValue('B' . $x, $result->getInitiative()->getInitiativeBehaviour()->getCode());
-                    $sheet->setCellValue('C' . $x, $result->getInitiative()->getKeyPerformanceIndicator()->getName());
-                    $sheet->setCellValue('D' . $x, $result->getInitiative()->getName());
-                    $sheet->setCellValue('E' . $x, $result->getInitiative()->getInitiativeBehaviour()->getName());
-                    $sheet->setCellValue('F' . $x, "");
-                    $sheet->setCellValue('G' . $x, "");
-                    $sheet->setCellValue('H' . $x, "");
-                    $sheet->setCellValue('I' . $x, "");
-
-
-
-                    $x++;
-                }
-            }
-            $writer = new Xlsx($spreadsheet);
-            $fileName = $principalOfficeName . "Suitable Initiative" . '.xlsx';
-            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-            $writer->save($temp_file);
-            return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
-        }
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
@@ -619,18 +398,16 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/send_principal", name="send_to_principal")
      */
-    public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningQuarterRepository $planningQuarterRepository, OperationalManagerRepository $operationalManagerRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository, PerformerTaskRepository $performerTaskRepository)
+    public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("planOffice")) {
             $planAcomplismentId = $request->request->get("planId");
-            //   $planAcomplismentIdSocial=$request->request->get("planIdSocial");
+
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
 
             $quarter = $request->request->get("quarter");
-            // dd($acompAverages,$planAcomplismentId);
-
             if ($social[0]) {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -641,20 +418,23 @@ class OperationalTaskController extends AbstractController
                     $value->setStatus(2);
                 }
                 foreach ($acompAverages as $key => $value) {
+                    $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
+                    $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
+                    // $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[$key]);
+                    $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
 
-                    $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[$key]);
                     $planAcomplishments->setAccompValue($value);
                 }
 
                 $em->flush();
             } else {
-                $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
+                $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
                     $value->setStatus(2);
                 }
-
-
-                $planAcomplishments = $planningAccomplishmentRepository->find($planAcomplismentId[0]);
+                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
+                $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
+                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
                 $em->flush();
             }
@@ -663,25 +443,26 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('principal_office_report');
         }
         $user = $this->getUser();
-        $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
+        $operation = $em->getRepository(OperationalManager::class)->findOneBy(['manager' => $user]);
         $opOffice = $operation->getOperationalOffice();
         $principal = $opOffice->getPrincipalOffice();
         $accomp = $request->request->get('accomp');
         $suitiniId = $request->request->get('suitableinitiative');
+        // dd($accomp[0]);
         $quarterId = $request->request->get('quarterId');
-        $quarter = $planningQuarterRepository->find($quarterId);
+        $quarter = $em->getRepository(PlanningQuarter::class)->find($quarterId);
         $socialAttribute = $em->getRepository(InitiativeAttribute::class)->findAll();
-        $performerTasks1 = $performerTaskRepository->findsendToprincipalSocial($user, $suitiniId);
+        $performerTasks1 = $em->getRepository(PerformerTask::class)->findsendToprincipalSocial($user, $suitiniId);
         foreach ($performerTasks1 as $value) {
             $value->setStatus(0);
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-        // dd($plannings);
-        //  $plannings1=$planningAccomplishmentRepository->findplanAcc($suitiniId,$socialAttribute2,$principal,$quarter); 
+
         foreach ($plannings as $key => $value) {
             # code...
-
+            $value->setAccompValue($accomp[$key]);
+            //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($value);
             $operationalSuitableInitiative->setOperationalOffice($opOffice);
@@ -781,11 +562,23 @@ class OperationalTaskController extends AbstractController
         }
     }
     /**
-     * @Route("/userFetch", name="user_fetch")
+     * @Route("/user_fetch", name="user_fetch")
      */
-    public function OperationalFetch(Request $request, PerformerRepository $performerRepository, UserInfoRepository $userInfoRepository)
+    public function OperationalFetch(Request $request, PerformerRepository $performerRepository, OperationalManagerRepository $operationalManagerRepository)
     {
-        $office = $request->request->get('userprincipal');
+        if ($office = $request->request->get('isCore')) {
+            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
+        } else {
+            $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
+        }
+        // dd($units);
+        return new JsonResponse($units);
+    }
+    /**
+     * @Route("/performer_fetch", name="performer_fetch")
+     */
+    public function performerFetch(Request $request, PerformerRepository $performerRepository)
+    {
         $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
         return new JsonResponse($units);
     }
@@ -803,31 +596,18 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
-        $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
+        // dd($request->request->get('isCore'));
+        if ($request->request->get('isCore')) {
+
+            $units = $performerTaskRepository->filterDeliverByIsCore($request->request->get('task'), $user, $request->request->get('quartertask'));
+        } else {
+            $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
+        }
         // dd($units);
 
         return new JsonResponse($units);
     }
-    /**
-     * @Route("/new", name="operational_task_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $operationalTask = new OperationalTask();
-        $form = $this->createForm(OperationalTaskType::class, $operationalTask);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($operationalTask);
-            $entityManager->flush();
-            return $this->redirectToRoute('operational_task_index');
-        }
-        return $this->render('operational_task/new.html.twig', [
-            'operational_task' => $operationalTask,
-            'form' => $form->createView(),
-        ]);
-    }
     /**
      * @Route("/show", name="operational_task_show")
      */
@@ -844,6 +624,28 @@ class OperationalTaskController extends AbstractController
         $taskAssigns = $taskAssignRepository->findTaskUsersList($user);
         return $this->render('operational_task/show.html.twig', [
             'taskAssigns' => $taskAssigns,
+            'principal' => false
+        ]);
+    }
+    /**
+     * @Route("/principal_show", name="operational_task_principal_show")
+     */
+    public function principalShow(Request $request, TaskAssignRepository $taskAssignRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
+        if ($delegatedUser) {
+            $delegatedBy = $delegatedUser->getDelegatedBy();
+            $user = $delegatedBy;
+            // dd($delegatedUser->getDelegatedtaskUserUser());
+        }
+        $principalOfficeId = $user->getOperationalManagers()[0]->getOperationaloffice()->getPrincipalOffice()->getId();
+        // dd($principalOfficeId);
+        $taskAssigns = $taskAssignRepository->findTaskOperattionalList($principalOfficeId);
+        return $this->render('operational_task/show.html.twig', [
+            'taskAssigns' => $taskAssigns,
+            'principal' => true
         ]);
     }
     /**
@@ -852,9 +654,11 @@ class OperationalTaskController extends AbstractController
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
-
+         
+            $principal = $request->request->get('principal');
 
         if ($request->request->get('accompValue')) {
+            $principal = $request->request->get('principal');
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
             $accompValue = $request->request->get('accompValue');
@@ -884,8 +688,15 @@ class OperationalTaskController extends AbstractController
             //   }
             $em->flush();
             $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
-            return $this->redirectToRoute('operational_task_show');
+            if($principal){
+           return $this->redirectToRoute('operational_task_principal_show');
+            }   
+            else{
+           return $this->redirectToRoute('operational_task_show');
+
+            }
         }
+            // dd($principal);
         $taskAssign = $request->request->get('taskAssign');
         //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
@@ -912,7 +723,8 @@ class OperationalTaskController extends AbstractController
         return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
-            'social' => $social
+            'social' => $social,
+            'principal'=>$principal
         ]);
     }
 
@@ -951,34 +763,4 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/{id}/edit", name="operational_task_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, OperationalTask $operationalTask): Response
-    {
-        $form = $this->createForm(OperationalTaskType::class, $operationalTask);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('operational_task_index');
-        }
-
-        return $this->render('operational_task/edit.html.twig', [
-            'operational_task' => $operationalTask,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="operational_task_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, OperationalTask $operationalTask): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $operationalTask->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($operationalTask);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('operational_task_index');
-    }
 }

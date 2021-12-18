@@ -90,6 +90,11 @@ class PerformerTask
      */
     private $operationalPlanningAccSocial;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=TaskCategory::class, inversedBy="performerTasks")
+     */
+    private $taskCategory;
+
    
 
     public function __toString()
@@ -285,6 +290,18 @@ class PerformerTask
     public function setOperationalPlanningAccSocial(?OperationalPlanningAccomplishment $operationalPlanningAccSocial): self
     {
         $this->operationalPlanningAccSocial = $operationalPlanningAccSocial;
+
+        return $this;
+    }
+
+    public function getTaskCategory(): ?TaskCategory
+    {
+        return $this->taskCategory;
+    }
+
+    public function setTaskCategory(?TaskCategory $taskCategory): self
+    {
+        $this->taskCategory = $taskCategory;
 
         return $this;
     }

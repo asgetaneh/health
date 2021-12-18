@@ -51,7 +51,7 @@
 							{% endfor %}
 							{% if value == 1 %}
 
-								{% if remainingdays <= 10 %}
+								{% if remainingdays <= 25 %}
 									Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
 
 									<button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to Send this Report To Principla Office?');">
@@ -94,13 +94,14 @@
 								{% if performerTasks %}
 
 
-								
 									<table class="table table-striped table-hover" style="margin-top:10px; wi height:100px;">
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>TaskName</th>
-												<th>Weight</th>
+												<th>Task Name</th>
+												<th>Task Category</th>
+
+												<th>Task Weight</th>
 												<th>Quarter</th>
 
 												<th>Accomplishment</th>
@@ -119,13 +120,14 @@
 													{% set countmain = countmain + 1 %}
 													<td>{{ countmain}}</td>
 													<td>{{ performerTask.name }}</td>
+													<td>{{ performerTask.taskCategory.name }}</td>
 													<td>{{ performerTask.weight }}</td>
 													<td>{{ performerTask.quarter }}</td>
 													{% set weight_total  =  weight_total + performerTask.weight  %}
 
 
 													<input type="hidden" name="quarterId" value="{{performerTask.quarter}}">
-						
+
 													<td colspan="2">
 														<table class="table table-bordered  table-responsive-xl table-hover">
 															<tr>

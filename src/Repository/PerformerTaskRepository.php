@@ -26,7 +26,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->leftJoin('s.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'su')
-            ->select('count(s.id)')->andWhere('su.id =  :id')
+            ->select('count(s.id)')
+            ->andWhere('su.id =  :id')
             ->andWhere('s.operationalOffice =  :office')
             ->setParameter('office', $office)
             ->setParameter('id', $id)
@@ -49,13 +50,15 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function filterDeliverBy($plan, $user, $quarter)
+    public function filterDeliverByIsCore($plan, $user, $quarter)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
             ->leftJoin('s.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'su')
+            ->leftJoin('s.taskCategory', 'ta')
+
 
 
             ->Select('s.name')
@@ -68,6 +71,35 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->andWhere('s.quarter = :quarter')
             ->setParameter('quarter', $quarter)
             ->andWhere('s.createdBy = :user')
+            ->andWhere('ta.isCore = 1')
+            ->andWhere('s.status = 1')
+            ->setParameter('user', $user)
+            ->getQuery()
+
+            ->getResult();
+    }
+    public function filterDeliverBy($plan, $user, $quarter)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'su')
+            ->leftJoin('s.taskCategory', 'ta')
+
+
+
+            ->Select('s.name')
+
+            ->addSelect('s.id')
+            // ->addSelect('s.user')
+
+            ->orderBy('s.id', 'ASC')->andWhere('su.id = :plan')
+            ->setParameter('plan', $plan)
+            ->andWhere('s.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
+            ->andWhere('s.createdBy = :user')
+            ->andWhere('ta.isCore is NULL')
             ->andWhere('s.status = 1')
             ->setParameter('user', $user)
             ->getQuery()
@@ -119,8 +151,10 @@ class PerformerTaskRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
 
             ->leftJoin('s.operationalPlanningAcc', 'pl')
+            ->leftJoin('s.taskCategory', 'tc')
             ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
+            ->andWhere('tc.isCore = 1')
             ->setParameter('user', $user)
             ->setParameter('initiative', $suitableOperational)
 

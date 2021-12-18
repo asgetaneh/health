@@ -75,19 +75,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        //  dd($credentials['username']);
-        if ($credentials['username']=="admin") {
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-            # code...
-        }
-        else{
-   $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
-        }
 
-        $this->user = $user;
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+    //    $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+     $this->user = $user;
         //  dd($user);
         if (!$user) {
-          
+
 
             throw new CustomUserMessageAuthenticationException('Invalid Credentials.');
             // throw new CustomUserMessageAuthenticationException('Username could not be found.');
@@ -95,7 +89,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
             $this->is_ldap_user = true;
         }
-       
+
         return $user;
     }
     public function getUserlist($username)
@@ -105,13 +99,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        
-          $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-      //$user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+        //$user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
         $this->user = $user;
         //  dd($user);
         if (!$user) {
-          
+
 
             throw new CustomUserMessageAuthenticationException('Invalid Credentials.');
             // throw new CustomUserMessageAuthenticationException('Username could not be found.');
@@ -175,9 +169,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         // else if (in_array("Approve", $user->getRoles()))
         //     return new RedirectResponse($this->urlGenerator->generate('choose_office'));
         // else
-        
+
         // return new RedirectResponse($this->urlGenerator->generate('under_maintenance'));
-         return new RedirectResponse($this->urlGenerator->generate('choose_office'));
+        return new RedirectResponse($this->urlGenerator->generate('choose_office'));
         throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
     protected function getLoginUrl()

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\KeyPerformanceIndicator;
+use App\Entity\Objective;
 use App\Entity\Strategy;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
@@ -38,7 +39,15 @@ class KeyPerformanceIndicatorType extends AbstractType
                 //    'required' => false,
 
                 ])
-                 
+                  ->add('objective', EntityType::class, [
+                    'class' => Objective::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('g')
+                            ->where('g.isActive = 1')
+                            ->orderBy('g.id', 'ASC');
+                    },
+                    'attr' => ['class' => 'select2 form-control']
+                ])
                 ->add('strategy', EntityType::class, [
                     'class' => Strategy::class,
                     'query_builder' => function (EntityRepository $er) {

@@ -12,7 +12,6 @@ use App\Entity\StaffEvaluationBehaviorCriteria;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
 use App\Entity\TaskMeasurement;
-use App\Entity\TaskUser;
 use App\Entity\User;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
@@ -145,7 +144,6 @@ class TaskAssignController extends AbstractController
 
 
         $taskAccomplishments = $taskAccomplishmentRepository->findPrintTasks($taskUserId);
-        // dd($taskAccomplishments);
         foreach ($taskAccomplishments as $taskAccomplishment) {
 
             $fullName = $taskAccomplishment->getTaskAssign()->getAssignedTo()->getUserInfo()->getFullName();
@@ -154,6 +152,7 @@ class TaskAssignController extends AbstractController
             $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
             $operationalManager = $taskAccomplishment->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
         }
+        // dd($fullName);
         // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
         // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
         $currentYear = AmharicHelper::getCurrentYear();
