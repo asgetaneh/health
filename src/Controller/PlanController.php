@@ -1005,6 +1005,42 @@ class PlanController extends AbstractController
             "Attachment" => false
         ]);
     }
+     /**
+     * @Route("/operational_print", name="operational_print", methods={"GET","POST"})
+     */
+    public function operationalPrint(InitiativeRepository $initiativeRepository, Request $request, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        // dd(1);
+        $planningquarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        $planyear = $em->getRepository(PlanningYear::class)->findOneBy(['ethYear'=>$request->request->get('planyear')])->getId();
+        $office = $em->getRepository(OperationalOffice::class)->findOneBy(['name'=>$request->request->get('office')])->getId();
+        // $initiatives = $em->getRepository(Initiative::class)->findByPrincipalAndOffice($office->getId());
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('isRemoteEnabled', true);
+        $pdfOptions->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($pdfOptions);
+        // dd($planyear);
+        $operationalSuitables = $em->getRepository(SuitableOperational::class)->findByoffice($office, $planyear);
+        // dd($suitableInitiatives);
+        $res = $this->renderView('plan/operational_plan_print.html.twig', [
+            'operationalSuitables' => $operationalSuitables,
+            'quarters' => $planningquarters,
+            'year' => $planyear,
+            'office' => $office
+
+        ]);
+
+        $dompdf->loadHtml($res);
+        $dompdf->setPaper('A4', 'Landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream("plan.pdf", [
+            "Attachment" => false
+        ]);
+    }
 
     /**
      * @Route("/achievement", name="plan_achievement", methods={"GET","POST"})

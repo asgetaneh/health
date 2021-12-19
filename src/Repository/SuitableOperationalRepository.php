@@ -56,6 +56,22 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByoffice($operationalOffice, $planyear)
+    {
+        $qb = $this->createQueryBuilder('s')
+         ->leftJoin('s.suitableInitiative', 'si')
+            ->leftJoin('si.initiative', 'i')
+            ->leftJoin('i.keyPerformanceIndicator', 'k')
+            ->leftJoin('k.strategy', 'st')
+            ->leftJoin('st.objective', 'o')
+            ->leftJoin('o.goal', 'g')
+            ->andWhere('s.operationalOffice = :office')
+            ->andwhere('si.planningYear = :planyear')
+            ->setParameter('planyear', $planyear)
+            ->setParameter('office', $operationalOffice);
+        return $qb
+            ->orderBy('i.initiativeNumber', 'ASC')->getQuery()->getResult();
+    }
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)https://www.100forms.com/sources/ready-forms/student-evaluation-form/ -->
+<html lang="en">
+	<head>
+		<style>
+				table {
+
+				border-collapse: collapse;
+				width: 100%;
+			}
+
+			td,
+			tr,
+			th {
+				border: 1px solid #000;
+				text-align: left;
+				padding-left: 15px;
+				font-size: 11px;
+
+			}
+		</style>
+
+	</head>
+
+
+	<body borde="0">
+		<center>
+        <img class="img-responsive" height="80" width="100" src="{{absolute_url(asset('image/logo.png') )}}"/></center>
+
+
+		<center>
+			<h2>Plan of {{office}}
+			</h2>
+            <h2> Year  {{year}}</h2>
+		</center>
+		
+        	<table border="0px">
+						<thead>
+							<tr>
+
+								<th>#</th>
+								<th>{% trans %}Initiative{% endtrans %}</th>
+								<th>{% trans %}wieght{% endtrans %}</th>
+								{# <th>baseline</th> #}
+								<th>{% trans %}yearPlan{% endtrans %} </th>
+								<th>{% trans %}1st Quarter{% endtrans %}</th>
+								<th>{% trans %}2nd Quarter{% endtrans %}</th>
+								<th>{% trans %}3rd Quarter{% endtrans %}</th>
+								<th>{% trans %}4th  Quarter{% endtrans %}</th>
+                                {# <th>{% trans %}Denominator{% endtrans %}</th> #}
+							
+							</tr>
+						</thead>
+						<tbody>
+							{# {% set count =  objectives.getItemNumberPerPage() * (objectives.getCurrentPageNumber() -1) %} #}
+
+
+							{% for operationalSuitable in operationalSuitables %}
+								<tr>
+
+									<td>{{ loop.index}}
+
+									</td>
+									<td>{{operationalSuitable.suitableInitiative.initiative|title }}</td>
+                                    <td>{{operationalSuitable.suitableInitiative.initiative.weight }}</td>
+                                    {# <td>{{operationalSuitable.initiative.baseline }}</td> #}
+
+
+									<td>
+										{# {% for behavior in operationalSuitable.initiative.initiativeBehaviour %} #}
+
+										{% if operationalSuitable.suitableInitiative.initiative.initiativeBehaviour.code == 0 %}
+											{% if operationalSuitable.suitableInitiative.initiative.socialAtrribute|length > 0 %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+
+													<p>{{plan.socialAttribute.name|first|title}}
+														:
+														{{plan.planValue}}</p>
+
+
+												{% endfor %}
+											{% else %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.quarter.slug == 1) %}
+
+													<p>
+
+														{{plan.planValue}}</p>
+
+
+												{% endfor %}
+
+											{% endif %}
+										{% elseif  operationalSuitable.initiative.initiativeBehaviour.code == 1  %}
+
+											{% for attribute in operationalSuitable.initiative.socialAtrribute %}
+												{% set yearplan = operationalSuitable.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+
+												{{attribute.name|title}}:{{yearplan ??"___" }}
+											{% else %}
+												{% set yearplan = operationalSuitable.planningAccomplishments|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+												{{yearplan }}
+											{% endfor %}
+
+
+										{% elseif  operationalSuitable.initiative.initiativeBehaviour.code == 2  %}
+
+
+											{% for attribute in operationalSuitable.initiative.socialAtrribute %}
+												{% set maxValue = 0 %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
+													{% set maxValue = max(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>{{attribute.name|first|title}}:
+													{{maxValue ??"___" }}</p>
+											{% else %}
+												{% set maxValue = 0 %}
+												{% for plan in operationalSuitable.planningAccomplishments %}
+													{% set maxValue = max(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>
+													{{maxValue == 0 ?"___" :maxValue}}</p>
+											{% endfor %}
+
+										{% elseif  operationalSuitable.initiative.initiativeBehaviour.code == 3  %}
+
+											{% for attribute in operationalSuitable.initiative.socialAtrribute %}
+												{% set maxValue = operationalSuitable.initiative.maximumValue %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.socialAttribute.id == attribute.id) %}
+													{% set maxValue = min(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>{{attribute.name|first|title}}:
+													{{maxValue == operationalSuitable.initiative.maximumValue ?"___": maxValue }}</p>
+											{% else %}
+												{% set maxValue = operationalSuitable.initiative.maximumValue %}
+												{% for plan in operationalSuitable.planningAccomplishments %}
+													{% set maxValue = min(plan.planValue,maxValue) %}
+
+												{% endfor %}
+												<p>{{maxValue == operationalSuitable.initiative.maximumValue ?"___": maxValue }}</p>
+											{% endfor %}
+
+
+										{% endif %}
+
+
+									</td>
+									{% for quarter in quarters %}
+										<td>
+
+											{% if operationalSuitable.initiative.socialAtrribute|length > 0 %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+
+													<p>{{plan.socialAttribute.name|first|title}}
+														:
+														{{plan.planValue}}</p>
+
+
+												{% endfor %}
+											{% else %}
+												{% for plan in operationalSuitable.planningAccomplishments|filter(plan => plan.quarter.id == quarter.id) %}
+
+
+													{{plan.planValue }}
+
+												{% endfor %}
+											{% endif %}
+
+
+										</td>
+									{% endfor %}
+                                      {# <td>{{operationalSuitable.denominator}}</td> #}
+
+									
+                                  
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="8">no records found</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+
+
+		
+		<h5>Date
+			    <u>    {{"now"|date("m/d/Y")}}</u>
+		</h5> 
+	</body>
+</html>
