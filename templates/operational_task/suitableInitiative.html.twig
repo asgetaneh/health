@@ -99,10 +99,7 @@
 									{% for operationalSuitable in operationalSuitables %}
 										{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
 											{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
-												{% if operationalPlanningAccomplishment.quarter.id == quarter %}
 													{% if  operationalPlanningAccomplishment.planValue  != 0 %}
-
-
 														<tr>
 															{% set count = count + 1 %}
 
@@ -181,7 +178,7 @@
 
 														</tr>
 													{% endif %}
-												{% endif %}
+												
 											{% endif %}
 
 										{% endfor %}
