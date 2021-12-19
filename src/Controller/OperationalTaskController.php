@@ -469,7 +469,7 @@ class OperationalTaskController extends AbstractController
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-
+// dd($quarter);
         foreach ($plannings as $key => $value) {
             # code...
             $value->setAccompValue($accomp[$key]);

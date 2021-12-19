@@ -32,6 +32,18 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
 
         return $qb->getQuery()->getResult();
     }
+     public function findByQuarter( $quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+          
+            ->andwhere('pa.quarter = :quarter')
+           
+            ->setParameter('quarter', $quarter);
+
+
+        return $qb->getQuery()->getResult();
+    }
+    
 
     // /**
     //  * @return OperationalPlanningAccomplishment[] Returns an array of OperationalPlanningAccomplishment objects

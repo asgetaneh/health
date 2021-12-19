@@ -82,13 +82,13 @@ $('#example').DataTable();
 						{{ form_end(form) }}
 
 					</div>
-                     <form action="{{path('print_user')}}" method="post">
+					<form action="{{path('print_user')}}" method="post">
 
-								<button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
-									<i class=" fa fa-file-pdf text-danger"></i>
-									PDF
-								</button>
-							</form>
+						<button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
+							<i class=" fa fa-file-pdf text-danger"></i>
+							PDF
+						</button>
+					</form>
 
 
 					<div class="widget-main padding-16">
@@ -115,6 +115,7 @@ $('#example').DataTable();
 										<th>Phone Number</th>
 										<th>Email</th>
 										<th>Alternative Email</th>
+										<th>Username</th>
 
 
 									</tr>
@@ -132,6 +133,7 @@ $('#example').DataTable();
 											<td>{{ userinfo.user.mobile }}</td>
 											<td>{{ userinfo.email }}</td>
 											<td>{{ userinfo.user.alternativeEmail }}</td>
+											<td>{{ userinfo.user.username }}</td>
 
 
 										</tr>

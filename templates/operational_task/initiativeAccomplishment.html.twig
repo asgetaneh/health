@@ -134,7 +134,7 @@
 											{% endif %}
 											<td>
 
-												{{planningAcc[0].planValue}}
+												{{planningAcc[1].planValue}}
 											</td>
 
 											<td>
@@ -211,6 +211,7 @@
 
 												</td>
 												<td>
+												
 													{{planningAcc[1].planValue}}
 												</td>
 												<td>
@@ -222,9 +223,9 @@
 													<input type="hidden" name="planOffice" value="planOffice">
 													{% if totalSocial %}
 
-														<input type="hidden" name="acompAvareage[]" value="{{(totalSocial / countSocail) | number_format}}">
+														<input type="hidden" name="acompAvareage[]" value="{{(totalSocial ) | number_format}}">
 
-														{{ (totalSocial / countSocail) | number_format}}
+														{{ (totalSocial ) | number_format}}
 													{% endif %}
 												</td>
 											</tr>
