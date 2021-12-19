@@ -52,20 +52,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																																												<h5 class="widget-title">
-																																													<strong>Initiative Achievement</strong>
-																																												</h5>
-																																			
-																																												<div class="widget-toolbar">
-																																			
-																																			
-																																													<a href="#" id="reload" data-action="reload">
-																																														<i class="ace-icon fa fa-refresh"></i>
-																																													</a>
-																																			
-																																			
-																																												</div>
-																																											</div> #}
+																																																			<h5 class="widget-title">
+																																																				<strong>Initiative Achievement</strong>
+																																																			</h5>
+																																										
+																																																			<div class="widget-toolbar">
+																																										
+																																										
+																																																				<a href="#" id="reload" data-action="reload">
+																																																					<i class="ace-icon fa fa-refresh"></i>
+																																																				</a>
+																																										
+																																										
+																																																			</div>
+																																																		</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
@@ -166,6 +166,10 @@
 												{% for plan_achievement in plan_achievements %}
 
 													{% set count = count+1 %}
+{% set plan = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.plan) %}
+{% set accomp = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.accomp) %}
+
+
 													<tr>
 														<td>{{count}}
 														</td>
@@ -176,8 +180,8 @@
 
 
 														<td>{{plan_achievement.year}}</td>
-														<td></td>
-														<td></td>
+														<td>{{plan}}</td>
+														<td>{{accomp}}</td>
 														{% for quarterplan in plan_achievement.quarterAchievement %}
 															<td>{{quarterplan.plan }}</td>
 															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
@@ -201,25 +205,26 @@
 					</div>
 				</div>
 
-				<div
-					id="messages" class="tab-pane fade">
-					{# <div class="well">
-											<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
-												<div class="form-group form-group-lg">
-													<select name="kpi" id="" class="select2 form-control">
-					
-														{% for kpi in kpis %}
-															<option value="{{kpi.id}}">{{kpi}}</option>
-														{% endfor %}
-													</select>
-												</div>
-					
-												<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
-											</form>
-										</div> #}
+				<div id="messages" class="tab-pane fade">
+
+					<div class="well">
+						<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+							<div class="form-group form-group-lg" style="min-width: 70%; max-width: 90%;">
+								<select name="objectives[]" id="" class="select2 form-control" multiple>
+
+									{% for objective in objectives %}
+										<option value="{{objective.id}}">{{objective}}</option>
+									{% endfor %}
+								</select>
+							</div>
+
+							<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
+						</form>
+					</div>
 					<div id="chartdiv">
 						<canvas id="myChart" width="400" height="400"></canvas>
 					</div>
+
 
 				</div>
 
@@ -237,103 +242,22 @@ $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
-function getRandomColor() {
-var letters = '0123456789ABCDEF';
-var color = '#';
-for (var i = 0; i < 6; i++) {
-color += letters[Math.floor(Math.random() * 16)];
-}
-return color;
-}
-var bgcolor = [];
-var fillColor = [];{% for objective in data.objective %}bgcolor.push(getRandomColor());
-fillColor.push(getRandomColor());{% endfor %}var ctx = document.getElementById("myChart").getContext('2d');
-
-
-var dat = {
-labels: [{{ data.year|join(',') }}],
-datasets: [{% for objective in data.objective %}{
-
-label: "{{ objective.name }}",
-fillColor: fillColor[{{ loop.index }}],
-strokeColor: fillColor[{{ loop.index }}],
-highlightFill: fillColor[{{ loop.index }}],
-highlightStroke: fillColor[{{ loop.index }}],
-data: [{{ objective.achieve|join(',') }}],
-backgroundColor: [{% for i in range(1,objective.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderColor: [{% for i in range(1,objective.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderWidth: 1
-}
-{% if loop.last != true %},{% endif %}{% endfor %}]
-};
-
-
-var myChart = new Chart(ctx, {
-type: 'bar',
-barShowStroke: false,
-data: dat,
-options: {
-responsive: true, // Instruct chart js to respond nicely.
-maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
-legend: {
-display: false,
-position: 'top'
-
+$('#visform').submit(function (event) {
+event.preventDefault();
+var $form = $(this);
+$.ajax({
+type: 'GET',
+url: $form.attr('action'),
+data: $form.serialize(),
+success: function (data) {
+$('#chartdiv').html(data);
 },
-plugins: {
-
-title: {
-display: true,
-text: 'jimma University Objective Accomplishment'
-}
-},
-legendCallback: function (chart) {
-var text = [];
-text.push('<ul class=">' + chart.id + '-legend">');
-for (var i = 0; i < chart.data.datasets.length; i++) {
-text.push('<li><div class="legendValue"><span style="background-color:' + chart.data.datasets[i].backgroundColor + '">&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-if (chart.data.datasets[i].label) {
-text.push('<span class="label">' + chart.data, datasets[i].label + '</span>');
-
-}
-text.push('</div></li><div class="clear"></div>');
-}
-text.push('</ul>');
-return text.join('');
-},
-scales: {
-yAxes: [
-{
-display: true,
-tricks: {
-beginAtZero: true
-},
-gridlines: {
-color: "rgba(0,0,0,0)"
-}
-
-}
-],
-xAxes: [
-{
-display: false,
-gridlines: {
-color: "rgba(0,0,0,0)"
-},
-barPercentage: 0.5,
-categoryPercentage: 0.5
-}
-]
-},
-scaleFontSize: 16,
-showTooltips: false,
-scaleGridLineColor: "rgba(0,0,0,.05)",
-scaleGridLineWidth: 1
-
-
-}
+error: function (error) {}
 });
-$('#legend').prepend(myChart.generatelegend());
+
+})
+
+
 })
 	</script>
 {% endblock %}

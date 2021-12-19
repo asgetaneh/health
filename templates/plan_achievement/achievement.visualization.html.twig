@@ -33,7 +33,7 @@
 							<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
 								<div class="form-group form-group-lg">
 
-									<select multiple="" name="objective[]" id="" class="select2" data-placeholder="Click to Choose Objective...">
+									<select multiple="" name="objectives[]" id="" class="select2" data-placeholder="Click to Choose Objective...">
 
 										{% for objective in objectives %}
 											<option value="{{objective.id}}">{{objective}}</option>
@@ -82,57 +82,109 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 var bgcolor = [];
+
 var fillColor = [];
-var bgcolor2 = [];
-var fillColor2 = [];{% for goal in data.goal %}bgcolor.push(getRandomColor());
-fillColor.push(getRandomColor());{% endfor %}var ctx = document.getElementById("goal").getContext('2d');
+{% for goal in data.goal %}
+	bgcolor.push(getRandomColor());
+	fillColor.push(getRandomColor());
+{% endfor %}
+//var ctx = document.getElementById("myChart2").getContext('2d');
+var ctx2 = document.getElementById("goal").getContext('2d');
 
 
-var dat = {
-labels: [{{ data.year|join(',') }}],
-datasets: [{% for goal in data.goal %}{
 
-label: "{{ goal.name }}",
-fillColor: fillColor[{{ loop.index }}],
-strokeColor: fillColor[{{ loop.index }}],
-highlightFill: fillColor[{{ loop.index }}],
-highlightStroke: fillColor[{{ loop.index }}],
-data: [{{ goal.achieve|join(',') }}],
-backgroundColor: [{% for i in range(1,goal.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderColor: [{% for i in range(1,goal.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderWidth: 1
-}
-{% if loop.last != true %},{% endif %}{% endfor %}]
-};
+var myChart2 = new Chart(ctx2, {
+
+	type: 'bar',
+	data:{
+ labels: [{{ data.year|join(',') }}],
+
+		 datasets: [
+{% for goal in data.goal %}
 
 
-var myChart = new Chart(ctx, {
-type: 'bar',
-data: dat,
-options: {
-responsive: true, // Instruct chart js to respond nicely.
-maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+	{
+	                label: "{{ goal.name }}",
+	
+	               data:[{{ goal.plan|join(',') }}],
+	
+	              stack: "{{ goal.name }}",
+	
+	
+	
+	              backgroundColor:bgcolor[{{ loop.index -1  }}],
+	
+	
+	
+					 categoryPercentage:1
+	 
+	
+				 },
+				  {
+	           label: "{{ goal.accomp }}",
+	
+	            data:[{{ goal.achieve|join(',') }}],
+	
+	        stack: "{{ goal.accomp }}",
+	
+	           backgroundColor:fillColor[{{ loop.index - 1 }}],
+	
+					 categoryPercentage:1
+	 
+	
+				 },
 
-scaleFontStyle: "bold",
-scaleLabel: "<%=value%>",
-scaleFontSize: 16,
-showTooltips: true,
-legend: {
-display: false,
-position: 'top'
+{% endfor %}
 
-},
-plugins: {
+]
+	},
+	options: {
+		tooltips: {
+			mode: 'x'
+		},
+		scales: {
+			scaleShowValues:true,
+			xAxes:[{
+				stacked:true,
+				ticks: {
+					display:false,
+					//autoSkip:false
+				},
+				scaleLabel: {
+					display:false,
+				}
+			},
+			{
+				type:'category',
+				offset:false,
+              // labels:['first_time_visitors','repeat_visitors','first_time_visitors','repeat_visitors'],
+			   gridLines:{
+				   display:false
+			   }
 
-title: {
-display: true,
-text: 'Jimma University Goal Accomplishment'
-}
-}
 
 
-}
+
+			}
+			/*{
+				offset:true,
+				gridLines:{
+					display:false
+				}
+			}*/
+		],
+			yAxes: [{
+            stacked:true,
+
+				ticks: {
+					beginAtZero:true
+				}
+			}]
+		}
+
+	}
 });
+
 })
 	</script>
 

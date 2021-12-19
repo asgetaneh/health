@@ -19,8 +19,8 @@
 
 		</form>
 		{# <a href="#" data-action="reload">
-																															<i class="ace-icon fa fa-refresh"></i>
-																														</a> #}
+																																					<i class="ace-icon fa fa-refresh"></i>
+																																				</a> #}
 
 	</div>
 	<div class="col-sm-12 col-md-12 col-lg-12">
@@ -50,20 +50,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																																					<h5 class="widget-title">
-																																						<strong>Initiative Achievement</strong>
-																																					</h5>
-																												
-																																					<div class="widget-toolbar">
-																												
-																												
-																																						<a href="#" id="reload" data-action="reload">
-																																							<i class="ace-icon fa fa-refresh"></i>
-																																						</a>
-																												
-																												
-																																					</div>
-																																				</div> #}
+																																																										<h5 class="widget-title">
+																																																											<strong>Initiative Achievement</strong>
+																																																										</h5>
+																																																	
+																																																										<div class="widget-toolbar">
+																																																	
+																																																	
+																																																											<a href="#" id="reload" data-action="reload">
+																																																												<i class="ace-icon fa fa-refresh"></i>
+																																																											</a>
+																																																	
+																																																	
+																																																										</div>
+																																																									</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
@@ -182,6 +182,10 @@
 												{% for plan_achievement in plan_achievements %}
 
 													{% set count = count+1 %}
+													{% set plan = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.plan) %}
+													{% set accomp = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.accomp) %}
+
+
 													<tr>
 														<td>{{count}}
 														</td>
@@ -193,8 +197,8 @@
 														{# <td>{{plan_achievement.initiative.initiativeBehaviour}}</td> #}
 
 														<td>{{plan_achievement.year}}</td>
-														<td></td>
-														<td></td>
+														<td>{{plan}}</td>
+														<td>{{accomp}}</td>
 														{% for quarterplan in plan_achievement.quarterAchievement %}
 															<td>{{quarterplan.plan }}</td>
 															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
@@ -220,18 +224,24 @@
 				</div>
 
 				<div id="messages" class="tab-pane fade">
-					<div>
+					<div class="well">
+						<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+							<div class="form-group form-group-lg" style="min-width: 70%; max-width: 90%;">
+								<select name="initiatives[]" id="" class="select2 form-control" multiple>
+
+									{% for initiative in initiatives %}
+										<option value="{{initiative.id}}">{{initiative}}</option>
+									{% endfor %}
+								</select>
+							</div>
+
+							<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
+						</form>
+					</div>
+					<div id="chartdiv">
 						<canvas id="myChart" width="400" height="400"></canvas>
-
 					</div>
-					<div>
-<canvas id="myChart2" width="400" height="400"></canvas>
 
-					</div>
-<div>
-	
-
-</div>
 
 				</div>
 
@@ -239,7 +249,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 {% endblock %}
 {% block javascripts %}
 	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
@@ -250,178 +260,22 @@ $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
 })
-
-function getRandomColor() {
-var letters = '0123456789ABCDEF';
-var color = '#';
-for (var i = 0; i < 6; i++) {
-color += letters[Math.floor(Math.random() * 16)];
-}
-return color;
-}
-var year = [{{ data.year|join(',') }}];
-var bgcolor = [];
-
-var fillColor = [];
-{% for year in data.year %}bgcolor.push(getRandomColor());
-fillColor.push(getRandomColor());{% endfor %}
-var ctx = document.getElementById("myChart2").getContext('2d');
-var ctx2 = document.getElementById("myChart").getContext('2d');
-
-
-var dat = {
-//labels: [{{ data.datalabels|join(',') }}],
-xLabels: ["{{ data.datalabels|join(',') }}"],
-datasets: [
-{% for initiative in data.initiative %}
-{
-	
-	
-	
-label: {{ initiative.year }},
-fillColor: fillColor[year.indexOf("{{initiative.year}}")],
-strokeColor: fillColor[year.indexOf("{{initiative.year}}")],
-highlightFill: fillColor[year.indexOf("{{initiative.year}}")],
-highlightStroke: fillColor[year.indexOf("{{initiative.year}}")],
-data: [{{ initiative.plan|join(',') }}],
-backgroundColor: bgcolor[year.indexOf({{initiative.year}})],
-borderColor: fillColor[year.indexOf({{initiative.year}})],
-borderWidth : 1
-}
-{% if loop.last != true %},{% endif %}
-{% endfor %}
-]
-};
-
-
-/*var myChart = new Chart(ctx, {
- type: "bar",
-data: dat,
-options: {
-responsive: true, // Instruct chart js to respond nicely.
-maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
-
-scaleFontStyle: "bold",
-
-scaleFontSize: 16,
-
-scales: {
-        xAxes: [
-     {
-         weight: 10,
-         labels: [ "{{ data.datalabels|join(',') }} "],
-         ticks: {
-             fontColor: 'black'
-         }
-     },{
-         weight: 20,
-         labels: [" {{ data.labels|join(',') }}" ],
-         ticks: {
-             fontColor: 'purple'
-         },
-         offset: true,
-     },
- ],
-     },
-
-
-}
+$('#visform').submit(function (event) {
+event.preventDefault();
+var $form = $(this);
+$.ajax({
+type: 'GET',
+url: $form.attr('action'),
+data: $form.serialize(),
+success: function (data) {
+$('#chartdiv').html(data);
+},
+error: function (error) {}
 });
 
+})
+
+
 });
-*/
-var myChart2 = new Chart(ctx2, {
-
-	type: 'bar',
-	data:{
-		labels: ["1.2021","2.2021"],
-		 datasets: [
-			 {
-				 label: 'first time visitor England',
-				 data:[10,3],
-				 //stack: "first_time_visitors_england",
-                 backgroundColor:"#f5a0a7",
-				 categoryPercentage:1
- 
-
-			 },
-			  {
-				 label: 'repeating visitor England',
-				 data:[20,6],
-				 stack: "repeat_visitors_england",
-                 backgroundColor:"#e75177",
-				 categoryPercentage:1
- 
-
-			 },
-			  {
-				 label: 'first time visitor sweeden',
-				 data:[7,5],
-				 stack: "first_time_visitors",
-                 backgroundColor:"#924565",
-				 categoryPercentage:1
- 
-
-			 },
-			  {
-				 label: 'repeating visitor sweeden',
-				 data:[9,16],
-                 stack: "repeat_visitors",
-
-                 backgroundColor:"#2979a7",
-				 categoryPercentage:1
- 
-
-			 }
-		 ]
-	},
-	options: {
-		tooltips: {
-			mode: 'x'
-		},
-		scales: {
-			scaleShowValues:true,
-			xAxes:[{
-				stacked:true,
-				ticks: {
-					display:false,
-					//autoSkip:false
-				},
-				scaleLabel: {
-					display:false,
-				}
-			},
-			{
-				type:'category',
-				//offset:false,
-              // labels:['first_time_visitors','repeat_visitors','first_time_visitors','repeat_visitors'],
-			   gridLines:{
-				   display:false
-			   }
-
-
-
-
-			}
-			/*{
-				offset:true,
-				gridLines:{
-					display:false
-				}
-			}*/
-		],
-			yAxes: [{
-stacked:true,
-
-				ticks: {
-					beginAtZero:true
-				}
-			}]
-		}
-
-	}
-});
-});
-
 	</script>
 {% endblock %}

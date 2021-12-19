@@ -48,20 +48,20 @@
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
 							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
 							{# <div class="widget-header">
-																																					<h5 class="widget-title">
-																																						<strong>Initiative Achievement</strong>
-																																					</h5>
-																												
-																																					<div class="widget-toolbar">
-																												
-																												
-																																						<a href="#" id="reload" data-action="reload">
-																																							<i class="ace-icon fa fa-refresh"></i>
-																																						</a>
-																												
-																												
-																																					</div>
-																																				</div> #}
+																																																										<h5 class="widget-title">
+																																																											<strong>Initiative Achievement</strong>
+																																																										</h5>
+																																																	
+																																																										<div class="widget-toolbar">
+																																																	
+																																																	
+																																																											<a href="#" id="reload" data-action="reload">
+																																																												<i class="ace-icon fa fa-refresh"></i>
+																																																											</a>
+																																																	
+																																																	
+																																																										</div>
+																																																									</div> #}
 
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
@@ -76,10 +76,8 @@
 													</div>
 												</div>
 												{# <div class="clearfix "></div> #}
-												
 
-												
-												
+
 												<div class="col-md-3">
 													<div class="form-group">
 														{{ form_label(filterform.year,'Year') }}
@@ -113,7 +111,7 @@
 
 													<th rowspan="2">#</th>
 
-													
+
 													<th rowspan="2">Goal</th>
 													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
 
@@ -154,13 +152,16 @@
 														</td>
 
 
-														
 														<td>{{plan_achievement.goal}}</td>
 														{# <td>{{plan_achievement.initiative.initiativeBehaviour}}</td> #}
+														{% set plan = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.plan) %}
+														{% set accomp = plan_achievement.quarterAchievement|reduce((carry,plan)=>carry+plan.accomp) %}
+
 
 														<td>{{plan_achievement.year}}</td>
-														<td></td>
-														<td></td>
+														<td>{{plan}}</td>
+
+														<td>{{accomp}}</td>
 														{% for quarterplan in plan_achievement.quarterAchievement %}
 															<td>{{quarterplan.plan }}</td>
 															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
@@ -184,21 +185,22 @@
 					</div>
 				</div>
 
-				<div id="messages" class="tab-pane fade">
+				<div
+					id="messages" class="tab-pane fade">
 					{# <div class="well">
-						<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
-							<div class="form-group form-group-lg">
-								<select name="kpi" id="" class="select2 form-control">
-
-									{% for kpi in kpis %}
-										<option value="{{kpi.id}}">{{kpi}}</option>
-									{% endfor %}
-								</select>
-							</div>
-
-							<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
-						</form>
-					</div> #}
+																					<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
+																						<div class="form-group form-group-lg">
+																							<select name="kpi" id="" class="select2 form-control">
+															
+																								{% for kpi in kpis %}
+																									<option value="{{kpi.id}}">{{kpi}}</option>
+																								{% endfor %}
+																							</select>
+																						</div>
+															
+																						<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
+																					</form>
+																				</div> #}
 					<div id="chartdiv">
 						<canvas id="myChart" width="400" height="400"></canvas>
 					</div>
@@ -209,11 +211,12 @@
 			</div>
 		</div>
 	</div>
-{% endblock %}{% block javascripts %}
-<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
-<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
-<script>
-	$(function () {
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script>
+		$(function () {
 $('#reloadbtn').click(function () {
 $('#reload').trigger('click');
 // $('#reloadform').submit();
@@ -227,50 +230,95 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 var bgcolor = [];
+
 var fillColor = [];{% for goal in data.goal %}bgcolor.push(getRandomColor());
 fillColor.push(getRandomColor());{% endfor %}
+// var ctx = document.getElementById("myChart2").getContext('2d');
+var ctx2 = document.getElementById("myChart").getContext('2d');
 
 
-var ctx = document.getElementById("myChart").getContext('2d');
+var myChart2 = new Chart(ctx2, {
 
-
-var dat = {
-labels: [{{ data.year|join(',') }}],
-datasets: [{% for goal in data.goal %}
-{
-
-label: "{{ goal.name }}",
-fillColor: fillColor[{{ loop.index }}],
-strokeColor: fillColor[{{ loop.index }}],
-highlightFill: fillColor[{{ loop.index }}],
-highlightStroke: fillColor[{{ loop.index }}],
-data: [{{ goal.achieve|join(',') }}],
-backgroundColor: [{% for i in range(1,goal.achieve|length) %}bgcolor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderColor: [{% for i in range(1,goal.achieve|length) %}fillColor[{{ loop.parent.loop.index }}],{% endfor %}],
-borderWidth: 1
-}
-{% if loop.last != true %},
-{% endif %}
-{% endfor %}]
-};
-
-
-var myChart = new Chart(ctx, {
 type: 'bar',
-data: dat,
+data: {
+labels: [{{ data.year|join(',') }}],
+
+datasets: [{% for goal in data.goal %}{
+label: "{{ goal.name }}",
+
+data: [{{ goal.plan|join(',') }}],
+
+stack: "{{ goal.name }}",
+
+
+backgroundColor: bgcolor[{{ loop.index -1 }}],
+
+
+categoryPercentage: 1
+
+
+}, {
+label: "{{ goal.accomp }}",
+
+data: [{{ goal.achieve|join(',') }}],
+
+stack: "{{ goal.accomp }}",
+
+backgroundColor: fillColor[{{ loop.index - 1 }}],
+
+categoryPercentage: 1
+
+
+},{% endfor %}]
+},
 options: {
-responsive: true, // Instruct chart js to respond nicely.
-maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+tooltips: {
+mode: 'x'
+},
+scales: {
+scaleShowValues: true,
+xAxes: [
+{
+stacked: true,
+ticks: {
+display: false,
+// autoSkip:false
+},
+scaleLabel: {
+display: false
+}
+}, {
+type: 'category',
+offset: false,
+// labels:['first_time_visitors','repeat_visitors','first_time_visitors','repeat_visitors'],
+gridLines: {
+display: false
+}
 
-scaleFontStyle: "bold",
-scaleLabel: "<%=value%>",
-scaleFontSize: 16,
-showTooltips: true
 
+}
+/*{
+				offset:true,
+				gridLines:{
+					display:false
+				}
+			}*/
+],
+yAxes: [
+{
+stacked: true,
+
+ticks: {
+beginAtZero: true
+}
+}
+]
+}
 
 }
 });
 
 
 });
-</script>{% endblock %}
+	</script>
+{% endblock %}

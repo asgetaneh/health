@@ -74,6 +74,7 @@ class PlanAchievementController extends AbstractController
 
 
         $datas = VisualizationHelper::goal($em);
+        
 
         $objectives = $em->getRepository(Objective::class)->findAll();
         return $this->render('plan_achievement/achievement.visualization.html.twig', [
@@ -220,7 +221,7 @@ class PlanAchievementController extends AbstractController
             $this->addFlash('success', 'load successfuly');
             return $this->redirectToRoute('plan_achievement_objective');
         }
-        $datas = VisualizationHelper::objective($em);
+    //  VisualizationHelper::objective($em);
         if ($filterform->isSubmitted() && $filterform->isValid()) {
             $query = $em->getRepository(ObjectiveAchievement::class)->search($filterform->getData());
         } else
@@ -230,10 +231,13 @@ class PlanAchievementController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+        $objectives=$em->getRepository(Objective::class)->findAll();
+        
         return $this->render('plan_achievement/objective.html.twig', [
             'plan_achievements' => $data,
-            'data' => $datas,
+            
             'filterform' => $filterform->createView(),
+            'objectives'=>$objectives
         ]);
     }
 
@@ -276,6 +280,7 @@ class PlanAchievementController extends AbstractController
             ])
             ->getForm();
         $filterform->handleRequest($request);
+        
         if ($request->request->get('reload')) {
 
             InitiativeHelper::kpiSync($em);
@@ -292,7 +297,7 @@ class PlanAchievementController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-
+    // dd(VisualizationHelper::Kpi($em,[]));
 
         return $this->render('plan_achievement/kpi.html.twig', [
             'plan_achievements' =>  $data,
@@ -319,24 +324,35 @@ class PlanAchievementController extends AbstractController
         }
 
         if ($request->query->get('kpi')) {
-            $kpi = $keyPerformanceIndicatorRepository->find($request->query->get('kpi'));
-            $year = array();
-            $accomp = array();
-            foreach ($planyears as  $planyear) {
-                array_push($year, date_format($planyear->getYear(), "Y"));
-                $kpiAccomp = $planAchievementRepository->findByKpi($kpi, $planyear);
-                if ($kpiAccomp)
-
-                    array_push($accomp, $kpiAccomp->getAccomplishmentValue());
-
-                else
-                    array_push($accomp, 0);
-            }
-            //  dd($kpi->getPlanAchievements());
+            $kpi = $keyPerformanceIndicatorRepository->findBy(['id'=> $request->query->get('kpi')]);
+          
+            $datas=VisualizationHelper::Kpi($em,$kpi);
             $responce = $this->renderView('plan_achievement/kpi_vis.html.twig', [
-                'year' => $year,
-                'accomp' => $accomp,
+                'data'=>$datas,
+              
                 'kpi' => $kpi
+            ]);
+            return new Response($responce);
+        }
+        if ($request->query->get('initiatives')) {
+            $initiative = $em->getRepository(Initiative::class)->findBy(['id' => $request->query->get('initiatives')]);
+
+            $datas = VisualizationHelper::initiative($em, $initiative);
+            $responce = $this->renderView('plan_achievement/initiative_vis.html.twig', [
+                'data' => $datas,
+
+                // 'kpi' => $kpi
+            ]);
+            return new Response($responce);
+        }
+        if ($request->query->get('objectives')) {
+            $objective = $em->getRepository(Objective::class)->findBy(['id' => $request->query->get('objectives')]);
+
+            $datas = VisualizationHelper::objective($em, $objective);
+            $responce = $this->renderView('plan_achievement/objective_vis.html.twig', [
+                'data' => $datas,
+
+                // 'kpi' => $kpi
             ]);
             return new Response($responce);
         }
@@ -425,11 +441,12 @@ class PlanAchievementController extends AbstractController
             10
         );
         $datas=VisualizationHelper::Initiative($em, []);
-
+        $initiatives=$em->getRepository(Initiative::class)->findAll();
         return $this->render('plan_achievement/initiative.html.twig', [
             'plan_achievements' =>  $data,
             'filterform' => $filterform->createView(),
-            'data'=>$datas
+            'data'=>$datas,
+            'initiatives'=>$initiatives
         ]);
     }
     /**

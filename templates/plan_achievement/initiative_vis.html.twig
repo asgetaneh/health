@@ -1,7 +1,7 @@
 <canvas id="myChart" width="400" height="400"></canvas>
 <script>
-$(function(){
-   function getRandomColor() {
+	$(function () {
+function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
 for (var i = 0; i < 6; i++) {
@@ -13,11 +13,11 @@ var year = [{{ data.year|join(',') }}];
 var bgcolor = [];
 
 var fillColor = [];
-{% for kpi in data.kpi %}
-bgcolor.push(getRandomColor());
-fillColor.push(getRandomColor());
+{% for initiative in data.initiative %}
+	bgcolor.push(getRandomColor());
+	fillColor.push(getRandomColor());
 {% endfor %}
-
+//var ctx = document.getElementById("myChart2").getContext('2d');
 var ctx2 = document.getElementById("myChart").getContext('2d');
 
 
@@ -28,43 +28,43 @@ var myChart2 = new Chart(ctx2, {
  labels: [{{ data.year|join(',') }}],
 
 		 datasets: [
-			 {% for kpi in data.kpi %}
-				 
-			
-			 {
-                label: "{{ kpi.name }}",
-
-               data:[{{ kpi.plan|join(',') }}],
-
-              stack: "{{ kpi.name }}",
+{% for initiative in data.initiative %}
 
 
+	{
+	                label: "{{ initiative.name }}",
+	
+	               data:[{{ initiative.plan|join(',') }}],
+	
+	              stack: "{{ initiative.name }}",
+	
+	
+	
+	              backgroundColor:bgcolor[{{ loop.index -1  }}],
+	
+	
+	
+					 categoryPercentage:1
+	 
+	
+				 },
+				  {
+	           label: "{{ initiative.accomp }}",
+	
+	            data:[{{ initiative.achieve|join(',') }}],
+	
+	        stack: "{{ initiative.accomp }}",
+	
+	           backgroundColor:fillColor[{{ loop.index - 1 }}],
+	
+					 categoryPercentage:1
+	 
+	
+				 },
 
-              backgroundColor:bgcolor[{{ loop.index -1  }}],
-
-
-
-				 categoryPercentage:1
- 
-
-			 },
-			  {
-           label: "{{ kpi.accomp }}",
-
-            data:[{{ kpi.achieve|join(',') }}],
-
-        stack: "{{ kpi.accomp }}",
-
-           backgroundColor:fillColor[{{ loop.index - 1 }}],
-
-				 categoryPercentage:1
- 
-
-			 },
-			  
 {% endfor %}
 
-		 ]
+]
 	},
 	options: {
 		tooltips: {
@@ -112,5 +112,6 @@ var myChart2 = new Chart(ctx2, {
 
 	}
 });
+
 })
 </script>

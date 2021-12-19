@@ -1,0 +1,105 @@
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+	$(function () {
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var year = [{{ data.year|join(',') }}];
+var bgcolor = [];
+
+var fillColor = [];{% for objective in data.objective %}bgcolor.push(getRandomColor());
+fillColor.push(getRandomColor());{% endfor %}
+
+var ctx2 = document.getElementById("myChart").getContext('2d');
+
+
+var myChart2 = new Chart(ctx2, {
+
+type: 'bar',
+data: {
+labels: [{{ data.year|join(',') }}],
+
+datasets: [{% for objective in data.objective %}
+
+
+{
+label: "{{ objective.name }}",
+
+data: [{{ objective.plan|join(',') }}],
+
+stack: "{{ objective.name }}",
+
+
+backgroundColor: bgcolor[{{ loop.index -1 }}],
+
+
+categoryPercentage: 1
+
+
+}, {
+label: "{{ objective.accomp }}",
+
+data: [{{ objective.achieve|join(',') }}],
+
+stack: "{{ objective.accomp }}",
+
+backgroundColor: fillColor[{{ loop.index - 1 }}],
+
+categoryPercentage: 1
+
+
+},{% endfor %}]
+},
+options: {
+tooltips: {
+mode: 'x'
+},
+scales: {
+scaleShowValues: true,
+xAxes: [
+{
+stacked: true,
+ticks: {
+display: false,
+// autoSkip:false
+},
+scaleLabel: {
+display: false
+}
+}, {
+type: 'category',
+offset: false,
+// labels:['first_time_visitors','repeat_visitors','first_time_visitors','repeat_visitors'],
+gridLines: {
+display: false
+}
+
+
+}
+/*{
+				offset:true,
+				gridLines:{
+					display:false
+				}
+			}*/
+],
+yAxes: [
+{
+stacked: true,
+
+ticks: {
+beginAtZero: true
+}
+}
+]
+}
+
+}
+});
+})
+</script>
