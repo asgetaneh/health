@@ -3,22 +3,29 @@
 namespace App\Controller;
 
 
+use App\Entity\Performer;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningAccomplishment;
+use App\Entity\StaffEvaluationBehaviorCriteria;
 use App\Entity\SuitableInitiative;
 use App\Entity\TaskMeasurement;
+use App\Form\OperationalTaskType;
 use App\Form\PerformerTaskType;
 use App\Form\TaskMeasurementType;
 use App\Repository\OperationalManagerRepository;
-
+use App\Repository\OperationalOfficeRepository;
+use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
-
+use App\Repository\PlanRepository;
+use App\Repository\PrincipalOfficeRepository;
+use App\Repository\StaffEvaluationBehaviorCriteriaRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
-
+use App\Repository\TaskMeasurementRepository;
+use App\Repository\UserInfoRepository;
 use DateTime;
 use Andegna\DateTime as AD;
 use Andegna\DateTimeFactory;
@@ -38,12 +45,16 @@ use App\Entity\User;
 use App\Helper\AmharicHelper;
 use App\Helper\Helper;
 use App\Helper\PlanAchievementHelper;
+use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalSuitableInitiativeRepository;
+use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
+use Proxies\__CG__\App\Entity\OperationalSuitableInitiative as EntityOperationalSuitableInitiative;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
+use Proxies\__CG__\App\Entity\SuitableOperational as EntitySuitableOperational;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -131,7 +142,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+                $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
         $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -197,8 +208,8 @@ class OperationalTaskController extends AbstractController
             return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
         }
 
-        $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
         $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         return $this->render('operational_task/index.html.twig', [
@@ -249,21 +260,8 @@ class OperationalTaskController extends AbstractController
             }
         }
         $operationalSuitables = $em->getRepository(SuitableOperational::class)->findSuitableInitiatve($operationalOffice, $currentYear);
-        $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByQuarter($currentQuarter);
-        $array = array_reverse($operationalPlanningAccomplishments);
-        foreach ($array as $k => $v)
-            $tmp[$k] = $v->getOperationalSuitable()->getId();
-
-        $tmp = array_unique($tmp);
-
-        foreach ($array as $k => $v) {
-            if (!array_key_exists($k, $tmp))
-                unset($array[$k]);
-        }
-
-        
-        $array = array_reverse($array);
-
+        // dd($operationalSuitables);
+        $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findAll();
         $data = $paginator->paginate(
             $operationalSuitables,
             $request->query->getInt('page', 1),
@@ -274,7 +272,7 @@ class OperationalTaskController extends AbstractController
             'operationalSuitables' => $data,
             'data' => $operationalSuitables,
             'count' => $operationalSuitables,
-            'operationalPlanningAccomplishments' => $array,
+            'operationalPlanningAccomplishments' => $operationalPlanningAccomplishments,
             'quarter' => $currentQuarter = AmharicHelper::getCurrentQuarter($em)
 
 
@@ -388,8 +386,8 @@ class OperationalTaskController extends AbstractController
         } else {
             $remainingdays = $diff->m * 30 + $diff->d;
         }
-        $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+           $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $sendToPrincipal = $maxTasks->getSendToPrincipal();
         $sendToPlan = $maxPenalityDays->getSendToPlan();
         return $this->render('operational_task/accomplishmentDetail.html.twig', [
@@ -399,8 +397,8 @@ class OperationalTaskController extends AbstractController
             'performerTasks' => $performerTasks,
             'social' => $social,
             'remainingdays' => $remainingdays,
-            'sendToPrincipal' => $sendToPrincipal,
-            'sendToPlan' => $sendToPlan
+            'sendToPrincipal'=>$sendToPrincipal,
+            'sendToPlan'=>$sendToPlan
 
         ]);
     }
@@ -416,7 +414,6 @@ class OperationalTaskController extends AbstractController
 
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
-            // dd($acompAverages);
 
             $quarter = $request->request->get("quarter");
             if ($social[0]) {
@@ -438,9 +435,9 @@ class OperationalTaskController extends AbstractController
                 }
 
                 $em->flush();
-                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitId);
+                $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitId);
 
-                PlanAchievementHelper::setInitiativeAchievement($em, $suitableInitiative);
+                PlanAchievementHelper::setInitiativeAchievement($em,$suitableInitiative);
             } else {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -472,10 +469,9 @@ class OperationalTaskController extends AbstractController
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-
+// dd($quarter);
         foreach ($plannings as $key => $value) {
             # code...
-            // dd($accomp[$key]);
             $value->setAccompValue($accomp[$key]);
             //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
@@ -669,18 +665,18 @@ class OperationalTaskController extends AbstractController
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $principal = $request->request->get('principal');
+         
+            $principal = $request->request->get('principal');
 
         if ($request->request->get('accompValue')) {
             $principal = $request->request->get('principal');
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
             $accompValue = $request->request->get('accompValue');
+            // dd($accompValue);
             $reportValueSocial = $request->request->get('reportValueSocial');
             $accompValueSocial = $request->request->get('accompValueSocial');
             $quality = $request->request->get('quality');
-            // dd($accompValue);
             $ids = $request->request->get('taskAccomplishmentId');
             //   foreach ($ids as $key => $value) {
             $evaluation = new Evaluation();
@@ -703,13 +699,15 @@ class OperationalTaskController extends AbstractController
             //   }
             $em->flush();
             $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
-            if ($principal) {
-                return $this->redirectToRoute('operational_task_principal_show');
-            } else {
-                return $this->redirectToRoute('operational_task_show');
+            if($principal){
+           return $this->redirectToRoute('operational_task_principal_show');
+            }   
+            else{
+           return $this->redirectToRoute('operational_task_show');
+
             }
         }
-        // dd($principal);
+            // dd($principal);
         $taskAssign = $request->request->get('taskAssign');
         //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
@@ -737,7 +735,7 @@ class OperationalTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
             'social' => $social,
-            'principal' => $principal
+            'principal'=>$principal
         ]);
     }
 
