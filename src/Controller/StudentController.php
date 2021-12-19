@@ -29,125 +29,122 @@ class StudentController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $form=$this->createFormBuilder()
-        ->add('campus',EntityType::class,[
-            'class'=>Campus::class,
-            'multiple'=>true,
-        ])
-         ->add('college',EntityType::class,[
-            'class'=>College::class,
-            'multiple'=>true,
-        ])
-         ->add('programLevel',EntityType::class,[
-            'class'=>ProgramLevel::class,
-            'multiple'=>true,
-        ])
-         ->add('programType',EntityType::class,[
-            'class'=>ProgramType::class,
-            'multiple'=>true,
-        ])
-         ->add('enrollmentType',EntityType::class,[
-            'class'=>EnrollmentType::class,
-            'multiple'=>true,
-        ])
-         ->add('department',EntityType::class,[
-            'class'=>Department::class,
-            'multiple'=>true,
-        ])
-         ->add('program',EntityType::class,[
-            'class'=>Program::class,
-            'multiple'=>true,
-        ])
-         ->add('region',EntityType::class,[
-            'class'=>Region::class,
-            'multiple'=>true,
-        ])
-         ->add('disablity',EntityType::class,[
-            'class'=>Disablity::class,
-            'multiple'=>true,
-        ])
-         ->add('semister',ChoiceType::class,[
-            'choices'=>[
-                'All'=>null,
-                '1'=>1,
-                '2'=>2,
-                '3'=>3,
-                '4'=>4,
-                '5'=>5,
-                '6'=>6,
-                '7'=>7,
-                '8'=>8,
+        $form = $this->createFormBuilder()
+            ->add('campus', EntityType::class, [
+                'class' => Campus::class,
+                'multiple' => true,
+            ])
+            ->add('college', EntityType::class, [
+                'class' => College::class,
+                'multiple' => true,
+            ])
+            ->add('programLevel', EntityType::class, [
+                'class' => ProgramLevel::class,
+                'multiple' => true,
+            ])
+            ->add('programType', EntityType::class, [
+                'class' => ProgramType::class,
+                'multiple' => true,
+            ])
+            ->add('enrollmentType', EntityType::class, [
+                'class' => EnrollmentType::class,
+                'multiple' => true,
+            ])
+            ->add('department', EntityType::class, [
+                'class' => Department::class,
+                'multiple' => true,
+            ])
+            ->add('program', EntityType::class, [
+                'class' => Program::class,
+                'multiple' => true,
+            ])
+            ->add('region', EntityType::class, [
+                'class' => Region::class,
+                'multiple' => true,
+            ])
+            ->add('disablity', EntityType::class, [
+                'class' => Disablity::class,
+                'multiple' => true,
+            ])
+            ->add('semister', ChoiceType::class, [
+                'choices' => [
+                    'All' => null,
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7,
+                    '8' => 8,
 
-                
-            ],
-            'multiple'=>true,
-        ])
-        ->add('year',ChoiceType::class,[
-            'choices'=>[
-                'All'=>null,
-                '1'=>1,
-                '2'=>2,
-                '3'=>3,
-                '4'=>4,
-                '5'=>5,
-                '6'=>6,
-                '7'=>7
-               
 
-                
-            ],
-            'multiple'=>true,
-        ])
-         ->add('sex',ChoiceType::class,[
-            'choices'=>[
-                'All'=>null,
-                'Male'=>'M',
-                'Female'=>'F',
-            ],
-            'multiple'=>true,
-        ])
-        ->add('sposnsorship',EntityType::class,[
-            'class'=>Sposnsorship::class,
-            'multiple'=>true,
-        ])
-        ->add('studentStatus',EntityType::class,[
-            'class'=>StudentStatus::class,
-            'multiple'=>true,
-        ])
-          ->add('nationality',EntityType::class,[
-            'class'=>Nationality::class,
-            'multiple'=>true,
-        ])
-        ->getForm();
+                ],
+                'multiple' => true,
+            ])
+            ->add('year', ChoiceType::class, [
+                'choices' => [
+                    'All' => null,
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7
+
+
+
+                ],
+                'multiple' => true,
+            ])
+            ->add('sex', ChoiceType::class, [
+                'choices' => [
+                    'All' => null,
+                    'Male' => 'M',
+                    'Female' => 'F',
+                ],
+                'multiple' => true,
+            ])
+            ->add('sposnsorship', EntityType::class, [
+                'class' => Sposnsorship::class,
+                'multiple' => true,
+            ])
+            ->add('studentStatus', EntityType::class, [
+                'class' => StudentStatus::class,
+                'multiple' => true,
+            ])
+            ->add('nationality', EntityType::class, [
+                'class' => Nationality::class,
+                'multiple' => true,
+            ])
+            ->getForm();
         $form->handleRequest($request);
 
         return $this->render('student/index.html.twig', [
             'controller_name' => 'StudentController',
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
-     /**
+    /**
      * @Route("/student-report", name="student-report")
      */
-    public function student(Request $request,SISHelper $sISHelper): Response
+    public function student(Request $request, SISHelper $sISHelper): Response
     {
         // dd($sISHelper->getStudent());
-        $arr=[];
+        $arr = [];
         foreach ($sISHelper->getStudent() as $value) {
-            // dump($value);
-            $arr[]=$value;
-            # code...
+            $arr[] = $value;
         }
-        // dd($arr[1]);
-        
-       
-
+        $pop=array_pop($arr[1]);
+     
         return $this->render('student/dashboard.html.twig', [
             'controller_name' => 'StudentController',
-            'totalStudent'=>$arr[0],
-            'studentSex'=>$arr[1],
-             'studentEnrollment'=>$arr[2]
-            // 'form'=>$form->createView()
+            'totalStudent' => $arr[0],
+            'studentSex' => $arr[1],
+            'studentEnrollment' => $arr[2],
+            'studentProgramLevel' => $arr[3]
+
         ]);
     }
 }

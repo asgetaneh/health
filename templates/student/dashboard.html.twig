@@ -21,69 +21,84 @@
 		<div class="page-content page-container" id="page-content">
 			<div class="padding">
 				<div class="row">
-					<div class=" col-md-4 small-box bg-success ">
-						<div class="inner">
-							<h1>{{totalStudent}}</h1>
-
-							<h2>Total Students</h2>
-						</div>
-						<div class="icon">
-							<i class="fa fa-user "></i>
-						</div>
-
-					</div>
-
 					<div class=" col-md-4 small-box ">
-					<div class="widget-box widget-color-dark" id="widget-box-8">
-						<div class="widget-header">
-							<h5 class="widget-title bigger lighter">STUDENT BASED ON SEX
-								{# {{operationalTask}} #}
-							</h5>
-
-
+						<div class="widget-box" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">TOTAL NUMBER OF STUDENT
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="inner">
+								<h1>{{totalStudent}}</h1>
+							</div>
 						</div>
-
-
-						<div class="widget-body">
-
-							<canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box " id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON ENROLLMENT
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-enrollment" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM LEVEL
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-programLevel" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-8 col-md-4">
-					<div class="card">
-						<div class="card-header">
-							<h2>STUDENT BASED ON Enrollment</h2>
-						</div>
-						<div class="card-body" style="height: 420px">
-
-							<canvas id="chart-enrollment" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
-						</div>
-					</div>
-				</div>
-
 			</div>
-
-
 		</div>
 	</div>
 
-</div>{% endblock %}{% block javascripts %}
-<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
 
-{# Chart.bundle.min.js
-			<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
-<script>
-	$(document).ready(function () {
+	{# Chart.bundle.min.js
+					<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+	<script>
+		$(document).ready(function () {
 var ctx = $("#chart-sex");
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
 var myLineChart = new Chart(ctx, {
 type: 'pie',
 data: {
 labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
 datasets: [
 {
-data: [{% for data in studentSex %}{{ data.count }},{% endfor %}],
-backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)"]
+data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
+backgroundColor: [{% for sex in studentSex %}
+getRandomColor(),{% endfor %}]
 }
 ]
 },
@@ -95,10 +110,19 @@ text: 'Weather'
 }
 });
 });
-</script>
-<script>
-	$(document).ready(function () {
+	</script>
+	<script>
+		$(document).ready(function () {
 var ctx = $("#chart-enrollment");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
 var myLineChart = new Chart(ctx, {
 type: 'pie',
 data: {
@@ -106,9 +130,8 @@ labels: [{% for enroll in studentEnrollment %}"{{ enroll.name }}",{% endfor %}],
 datasets: [
 {
 data: [{% for enroll in studentEnrollment %}{{ enroll.count }},{% endfor %}],
-backgroundColor: [
-  {% for enroll in studentEnrollment %}"{{ "rgba(100, 255, 0, 0.5)"}}",{% endfor %}
-  ]
+backgroundColor: [{% for enroll in studentEnrollment %}
+getRandomColor(),{% endfor %}]
 }
 ]
 },
@@ -120,24 +143,57 @@ text: 'Weather'
 }
 });
 });
-</script>
-<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
-<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
-<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
-<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
-<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
-<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
-<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
-<script>
-	$(function () {
+	</script>
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-programLevel");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for programLevel in studentProgramLevel %}"{{ programLevel.name }}",{% endfor %}],
+datasets: [
+{
+data: [{% for programLevel in studentProgramLevel %}{{ programLevel.count }},{% endfor %}],
+backgroundColor: [{% for programLevel in studentProgramLevel %}
+getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
+	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+	<script>
+		$(function () {
 $('.select2').css('min-width', '50%').select2({allowClear: false});
 });
-</script>
+	</script>
 
 
-<script>
-	$(function () {
+	<script>
+		$(function () {
 
 $('#visform').submit(function (event) {
 event.preventDefault();
@@ -154,4 +210,5 @@ error: function (error) {}
 
 })
 })
-</script>{% endblock %}
+	</script>
+{% endblock %}

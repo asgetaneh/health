@@ -52,7 +52,7 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('pa');
 
-
+//  dd($quarterId);
         $qb
             ->leftJoin('pa.suitableInitiative', 's')
             ->andWhere('s.principalOffice = :principalOffice')
@@ -60,10 +60,6 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
             ->setParameter('quarter', $quarterId)
 
             ->setParameter('principalOffice', $search);
-
-
-
-
         return $qb->getQuery()->getResult();
     }
     public function findPrincipalReports($search = [], $quarterId)
