@@ -435,9 +435,7 @@ class OperationalTaskController extends AbstractController
                 }
 
                 $em->flush();
-                $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitId);
 
-                PlanAchievementHelper::setInitiativeAchievement($em,$suitableInitiative);
             } else {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -448,6 +446,8 @@ class OperationalTaskController extends AbstractController
                 $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
                 $em->flush();
+                $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitId);
+                PlanAchievementHelper::setInitiativeAchievement($em,$suitableInitiative);
             }
             $this->addFlash('success', 'Successfully Send To Plan Office !');
 
