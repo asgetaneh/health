@@ -277,6 +277,7 @@ ace.settings.loadState('sidebar')
 
 
 						{% block tobologyMenu %}
+									{% if is_granted('vw_usr_lst') %}
 
 
 							<li class="toplist" role="treeitem">
@@ -295,6 +296,7 @@ ace.settings.loadState('sidebar')
 
 								</ul>
 							</li>
+							{% endif %}
 							<li class="toplist" role="treeitem">
 								<a class="dropdown-toggle" href="#">
 									<i class=""></i>
