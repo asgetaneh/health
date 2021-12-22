@@ -466,12 +466,33 @@ class PlanAchievementController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $data=$em->getRepository(PlanningAccomplishment::class)->SumByInitiativeAndYear();
 
-dd($data);
-
-        dd(VisualizationHelper::Initiative($em, []));
    
         return $this->render('plan_achievement/initiative.html.twig', [
             'plan_achievements' => $planAchievementRepository->findAll(),
+        ]);
+    }
+    /**
+     * @Route("/initiative-progress", name="plan_achievement_initiative_progress")
+     */
+    public function initiativeProgress(
+        PlanAchievementRepository $planAchievementRepository,
+        InitiativeRepository $initiativeRepository,
+        PlanningYearRepository $planningYearRepository,
+        PlanningQuarterRepository $planningQuarterRepository,
+        SuitableInitiativeRepository $suitableInitiativeRepository,
+        PlanningAccomplishmentRepository $planningAccomplishmentRepository,
+        QuarterAccomplishmentRepository $quarterAccomplishmentRepository
+
+    ): Response {
+
+        $em = $this->getDoctrine()->getManager();
+        $years=$em->getRepository(PlanningYear::class)->findAll();
+        $initiative=$em->getRepository(Initiative::class)->findAll();
+      
+        return $this->render('plan_achievement/progress/initiative.html.twig', [
+            'years' =>
+            $years,
+            'initiatives'=>$initiative
         ]);
     }
 

@@ -12,10 +12,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Facade\General;
 use App\Entity\SuitableInitiative;
 use App\Entity\OperationalPlanningAccomplishment;
-
-
-
-
+use App\Entity\PlanningYear;
+use App\Entity\QuarterPlanAchievement;
 
 class AppExtension extends AbstractExtension
 {
@@ -49,6 +47,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
+            new TwigFunction('getProgress', [$this, 'getProgress']),
             new TwigFunction('getTaskStatusAssigned', [$this, 'getTaskStatusAssigned']),
             new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
             new TwigFunction('getYearlyPlan', [$this, 'getYearlyPlan']),
@@ -85,6 +84,43 @@ class AppExtension extends AbstractExtension
 
         $req = General::getTaskStatusSend($this->entityManager, $id, $office);
         return ($req);
+    }
+    function getProgress($initiative, $yearId)
+    {
+           $previous_year=$this->getYearId($yearId);
+        $year = $this->entityManager->getRepository(PlanningYear::class)->find($yearId);
+           if(!$previous_year)
+           return "no plan in previous year";
+        $current_plan= $this->entityManager->getRepository(QuarterPlanAchievement::class)->getYearlyPlanByInitiative($initiative, $year);
+        $current_accomp = $this->entityManager->getRepository(QuarterPlanAchievement::class)->getYearlyPlanAccompByInitiative($initiative, $year);
+        $previous_accomp = $this->entityManager->getRepository(QuarterPlanAchievement::class)->getYearlyPlanAccompByInitiative($initiative,$previous_year);
+         if($current_plan==0 && $previous_accomp==0)
+         return "not planed";
+        $progress= (($current_accomp- $previous_accomp)/ ($current_plan- $previous_accomp))*100;
+        return $progress;
+
+    
+    }
+    function getYearId($id)
+    {
+        $years = $this->entityManager->getRepository(PlanningYear::class)->findAll();
+        $ids = [];
+        if (count($years) <= 1) {
+        return null;
+        }
+
+
+        foreach ($years as $key => $year) {
+            $ids[$key] = $year->getId();
+        }
+        $id_index=array_search($id,$ids);
+        if($id_index<1)
+        return null;
+        $year = $this->entityManager->getRepository(PlanningYear::class)->find($ids[$id_index - 1]);
+
+        return $year;
+
+
     }
     public  function getQuarterPlanAccomp($suitable, $quarter)
     {
