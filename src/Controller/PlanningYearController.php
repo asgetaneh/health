@@ -22,7 +22,7 @@ class PlanningYearController extends AbstractController
     /**
      * @Route("/", name="planning_year_index", methods={"GET","POST"})
      */
-    public function index(PlanningYearRepository $planningYearRepository,SmsHelper $smsHelper, Request $request): Response
+    public function index(PlanningYearRepository $planningYearRepository, SmsHelper $smsHelper, Request $request): Response
     {
         $this->denyAccessUnlessGranted('vw_pln_yr');
         $planningYear = new PlanningYear();
@@ -32,10 +32,10 @@ class PlanningYearController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('ad_pln_yr');
             $entityManager = $this->getDoctrine()->getManager();
-            $ethYear=$form->getData()->getEthYear();
+            $ethYear = $form->getData()->getEthYear();
             $year = date_format($form->getData()->getYear(), "Y-m-d");
             $year = date('Y-m-d', strtotime($year . ' -7 year'));
-            $date=new DateTime($year);
+            $date = new DateTime($year);
             // dd($date);
             $planningYear->setYear($date);
             $planningYear->setCreatedAt(new DateTime('now'));
@@ -44,13 +44,16 @@ class PlanningYearController extends AbstractController
             $entityManager->persist($planningYear);
 
             $entityManager->flush();
-            $message="MIS  ".$ethYear. " Plan Announce";
-              $users = $entityManager->getRepository(PrincipalManager::class)->findAll();
+            $message = "MIS  " . $ethYear . " Plan Announce";
+            $users = $entityManager->getRepository(PrincipalManager::class)->findAll();
             // dd($sms,$message);
             // foreach ($users as $key) {
-                $mobileNumber[] = "0923707888";
+            $mobileNumber[] = "0923707888";
+            // $mobileNumber[] = "0932443364";
+            // $mobileNumber[] = "0912820468";
+            // $mobileNumber[] = "0938353388";
 
-                // dd($mobileNumber);
+            // dd($mobileNumber);
             // }
             //   dd($mobileNumber,$message);
 
