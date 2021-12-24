@@ -10,6 +10,7 @@ use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
+use App\Entity\SuitableInitiative;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
 use DateTime;
@@ -205,9 +206,9 @@ class SmisReportController extends AbstractController
             // dd(1);
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
-            $principalOffices=$em->getRepository(PrincipalOffice::class)->find($principalOffice);
-            $principalOfficeName=$principalOffices->getName();
-            $chifPrincipal=$principalOffices->getManagedBy()->getName();
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->find($principalOffice);
+            $principalOfficeName = $principalOffices->getName();
+            $chifPrincipal = $principalOffices->getManagedBy()->getName();
             // dd($principalOfficeName);
             $quarterId = $form->getData()['planningQuarter']->getId();
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
@@ -231,6 +232,10 @@ class SmisReportController extends AbstractController
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
             $quarterId = $form->getData()['planningQuarter']->getId();
+            $planningYear = $form->getData()['planningYear']->getId();
+
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $quarterId);
+            dd($suitableInitiatives);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
         } else {
 
@@ -238,7 +243,7 @@ class SmisReportController extends AbstractController
             $principalReports[] = "";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
-      
+
 
 
         $data = $paginator->paginate(

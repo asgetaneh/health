@@ -52,9 +52,7 @@ use App\Repository\PrincipalManagerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Proxies\__CG__\App\Entity\InitiativeAttribute;
-use Proxies\__CG__\App\Entity\OperationalSuitableInitiative as EntityOperationalSuitableInitiative;
 use Proxies\__CG__\App\Entity\PlanningQuarter;
-use Proxies\__CG__\App\Entity\SuitableOperational as EntitySuitableOperational;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -207,7 +205,7 @@ class OperationalTaskController extends AbstractController
             $this->addFlash('success', ' Task Created Successfully!');
             return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
         }
-
+// dd($performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational));
          $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
          $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
@@ -231,7 +229,7 @@ class OperationalTaskController extends AbstractController
         ]);
     }
     /**
-     * @Route("/suitableInitiative_list", name="suitable_initiative_list")
+     * @Route("/suitable_initiative_list", name="suitable_initiative_list")
      */
     public function suitableInitiative(Request $request, PaginatorInterface $paginator, OperationalManagerRepository $operationalManagerRepository): Response
     {
@@ -247,7 +245,14 @@ class OperationalTaskController extends AbstractController
         }
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
-        $operation = $operationalManagerRepository->findOneBy(['manager' => $user]);
+        $operation = $operationalManagerRepository->findOneBy(['manager' => $user,'isActive'=>1]);
+      
+    //    dd($operation);
+        if (!$operation) {
+          $this->addFlash('danger', 'You are Not active!');
+
+            return $this->redirectToRoute('choose_office');
+        }
         $operationalOffice =  $operation->getOperationalOffice()->getId();
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
         $currentMonths = AmharicHelper::getCurrentMonth($em);
