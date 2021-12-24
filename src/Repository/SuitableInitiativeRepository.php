@@ -189,5 +189,46 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('initiative', $initiative);       
         return $qb->getQuery()->getResult();
     }
+     public function findPrincipal($search,  $quarterId)
+    {
+        $qb = $this->createQueryBuilder('pa');
+
+//  dd($quarterId);
+        $qb
+            ->leftJoin('pa.suitableInitiative', 's')
+            ->andWhere('s.principalOffice = :principalOffice')
+            ->andWhere('pa.quarter = :quarter')
+            ->setParameter('quarter', $quarterId)
+
+            ->setParameter('principalOffice', $search);
+        return $qb->getQuery()->getResult();
+    }
+
+
+    public function findScore($search = [], $quarterId)
+    {
+        $qb = $this->createQueryBuilder('s');
+        if (isset($search['principalOffice'])) {
+
+
+            $qb
+                ->andWhere('s.principalOffice = :principalOffice')
+
+                ->setParameter('principalOffice', $search['principalOffice']);
+        }
+        
+        if (isset($search['planningYear'])) {
+
+
+            $qb
+                ->andWhere('s.planningYear = :planningYear')
+
+                ->setParameter('planningYear', $search['planningYear']);
+        }
+
+
+
+        return $qb->getQuery();
+    }
     
 }
