@@ -614,20 +614,12 @@ class PlanController extends AbstractController
                 $operationalSuitable = new SuitableOperational();
                 $operationalSuitable->setSuitableInitiative($planInitiative);
                 $operationalSuitable->setOperationalOffice($operationaloffice);
-                $operationalSuitable->setStatus(1);
+                $operationalSuitable->setStatus(0);
                 $isexist = false;
                 $em->persist($operationalSuitable);
                 $em->flush();
             } else
                 $operationalSuitable->setStatus(1);
-
-
-
-
-
-
-
-
             if ($request->request->get('denominator')) {
                 $operationalSuitable->setDenimonator($request->request->get('denominator'));
             };
@@ -855,7 +847,7 @@ class PlanController extends AbstractController
                 $em->persist($operationalSuitable);
                 $em->flush();
             } else
-                $operationalSuitable->setStatus(1);
+                $operationalSuitable->setStatus(0);
 
 
 
