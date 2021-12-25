@@ -612,11 +612,13 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
+        // $units=0;
         // dd($request->request->get('isCore'));
         if ($request->request->get('isCore')) {
 
             $units = $performerTaskRepository->filterDeliverByIsCore($request->request->get('task'), $user, $request->request->get('quartertask'));
         } else {
+            // dd(1);
             $units = $performerTaskRepository->filterDeliverBy($request->request->get('task'), $user, $request->request->get('quartertask'));
         }
         // dd($units);

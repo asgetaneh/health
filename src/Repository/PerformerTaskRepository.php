@@ -86,20 +86,15 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('s.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'su')
             ->leftJoin('s.taskCategory', 'ta')
-
-
-
             ->Select('s.name')
-
             ->addSelect('s.id')
             // ->addSelect('s.user')
-
             ->orderBy('s.id', 'ASC')->andWhere('su.id = :plan')
             ->setParameter('plan', $plan)
             ->andWhere('s.quarter = :quarter')
             ->setParameter('quarter', $quarter)
             ->andWhere('s.createdBy = :user')
-            ->andWhere('ta.isCore is NULL')
+            ->andWhere('ta.isCore = 0')
             ->andWhere('s.status = 1')
             ->setParameter('user', $user)
             ->getQuery()

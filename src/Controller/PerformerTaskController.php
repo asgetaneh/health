@@ -176,10 +176,29 @@ class PerformerTaskController extends AbstractController
             $taskAssignNa->setStatus(4);
             $em = $this->getDoctrine()->getManager();
             $uploadedFile = $narativeForm['narrative']->getData();
+            $file_size = $uploadedFile->getSize();
+            $file_type = $uploadedFile->getType();
+// dd($file_size);
+            // $file_size = $_FILES['narrative']['size'];
+            // $file_type = $_FILES['narrative']['type'];
             // dd($uploadedFile);
 
             $destination = $this->getParameter('kernel.project_dir') . '/public/narrative';
             $newFilename = $taskAc->getId() . uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
+            if (($file_size > 1024000)) {
+                $this->addFlash("danger", "File too large. File must be less than 2 megabytes !!");
+                return $this->redirectToRoute('performer_task_index');
+            } elseif (
+                ($file_type != "application/pdf") &&
+                ($file_type != "image/jpeg") &&
+                ($file_type != "image/jpg") &&
+                ($file_type != "image/gif") &&
+                ($file_type != "image/png")
+            ) {
+                $this->addFlash("danger", "Invalid file type. Only PDF, JPG, GIF and PNG types are accepted !!");
+                return $this->redirectToRoute('performer_task_index');
+                '';
+            }
             $uploadedFile->move($destination, $newFilename);
             //   dd($newFilename);
             //$user=$this->getUser()->getUserInfo();
@@ -194,7 +213,7 @@ class PerformerTaskController extends AbstractController
 
             $taskAccomplishment = $taskAccomplishmentRepository->find($taskAcoompId);
             $taskAccomplishment->setReportedValue($editedReportValue);
-            $taskAssigned=$taskAssignRepository->findOneBy(['id'=>$taskAccomplishment->getTaskAssign()->getId()]);
+            $taskAssigned = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskAssigned->setExpectedValue($editedReportValue);
 
             $em->flush();
@@ -241,7 +260,7 @@ class PerformerTaskController extends AbstractController
         }
         $social = 0;
 
-        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()-> getInitiative()->getSocialAtrribute() as $va) {
+        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
             if ($va->getName()) {
                 $social = 1;
             }
@@ -269,8 +288,8 @@ class PerformerTaskController extends AbstractController
             'taskAssigns' => $taskAssigns,
         ]);
     }
-    
-     /**
+
+    /**
      * @Route("/skip_challenge", name="task_challenge_skip")
      */
     public function skipChallenge(Request $request, TaskAssignRepository $taskAssignRepository)
@@ -306,9 +325,9 @@ class PerformerTaskController extends AbstractController
         $taskAssignId = $request->request->get('taskAssignIds');
         // dd($taskAssignId);
         $taskAssign = $taskAssignRepository->find($taskAssignId);
-      $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskAssign'=>$taskAssign]);
-    //    dd($taskAccomplishment);
-    $taskAccomplishment->setReportedAt(new \DateTime());
+        $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskAssign' => $taskAssign]);
+        //    dd($taskAccomplishment);
+        $taskAccomplishment->setReportedAt(new \DateTime());
         $taskAssign->setStatus(5);
         // $taskUser->setType(1);
         $em->flush();
