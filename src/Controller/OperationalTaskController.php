@@ -419,8 +419,8 @@ class OperationalTaskController extends AbstractController
 
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
-
             $quarter = $request->request->get("quarter");
+// dd($acompAverages);
             if ($social[0]) {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -463,7 +463,7 @@ class OperationalTaskController extends AbstractController
         $principal = $opOffice->getPrincipalOffice();
         $accomp = $request->request->get('accomp');
         $suitiniId = $request->request->get('suitableinitiative');
-        // dd($accomp[0]);
+        // dd($accomp);
         $quarterId = $request->request->get('quarterId');
         $quarter = $em->getRepository(PlanningQuarter::class)->find($quarterId);
         $socialAttribute = $em->getRepository(InitiativeAttribute::class)->findAll();
@@ -473,7 +473,7 @@ class OperationalTaskController extends AbstractController
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-        // dd($quarter);
+        // dd($plannings,$opOffice,$quarter,$suitiniId);
         foreach ($plannings as $key => $value) {
             # code...
             $value->setAccompValue($accomp[$key]);

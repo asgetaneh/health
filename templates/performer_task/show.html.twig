@@ -169,29 +169,7 @@
 																			Female={{ taskAccomplishment.expectedValueSocial }}
 																		{% endif %}
 																	</td>
-																	{% if taskAccomplishment.reportedValue == 0 %}
-																		<td>
-																			{% if social == 1 %}
-																				Male=
-																			{% endif %}
-																			{{ taskAccomplishment.reportedValue  }}
-																			{% if social == 1  %}
-
-																				Female={{ taskAccomplishment.reportedValueSocial }}
-																			{% endif %}
-																		</td>
-																	{% elseif taskAccomplishment.reportedValue %}
-																		<td>
-																			{% if social == 1 %}
-																				Male=
-																			{% endif %}
-																			{{ taskAccomplishment.reportedValue  }}
-																			{% if social == 1  %}
-
-																				Female={{ taskAccomplishment.reportedValueSocial }}
-																			{% endif %}
-																		</td>
-																	{% else %}
+																	{% if taskAccomplishment.reportedValue  is null %}
 																		<td>
 																			{% if social == 1  %}
 
@@ -206,6 +184,20 @@
 
 																			{% endif %}
 																		</td>
+
+																	{% else %}
+																		<td>
+																			{% if social == 1 %}
+																				Male=
+																			{% endif %}
+																			{{ taskAccomplishment.reportedValue  }}
+																			{% if social == 1  %}
+
+																				Female={{ taskAccomplishment.reportedValueSocial }}
+																			{% endif %}
+																		</td>
+
+
 																	{% endif %}
 																	<td>
 																		<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">

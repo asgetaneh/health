@@ -377,14 +377,14 @@ class PerformerTaskController extends AbstractController
             $taskAssigns->setEndDate($endDate);
             $taskAssigns->setTimeGap($timeGap);
             $taskAssigns->setExpectedValue($expectedValue);
-            // $taskUsers->setStatus(0);
+            $taskAssigns->setStatus(0);
             // $taskUsers->setRejectReason(null);
             // $taskAccomplishment->setExpectedValue($expectedValue);
             $em->flush();
 
             $this->addFlash('success', 'Performer Task Updated and Resendsuccessfully !');
 
-            return $this->redirectToRoute('operational_task_index', ['id' => $taskAssigns->getPerformerTask()->getPlanAcomplishment()->getSuitableInitiative()->getId()]);
+            return $this->redirectToRoute('operational_task_index', ['id' => $taskAssigns->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getId()]);
         }
         if ($id = $request->request->get('id')) {
             $weight = $request->request->get('weight');
