@@ -155,8 +155,19 @@
 														{{ (total ) | number_format(2, '.',',')}}
 
 													{% endif %}
+                                                   {% else %}
+													   {% if social ==1 %}
+														<input type="hidden" name="acompAvareage[]" value="0">
 
+														 0 
+													{% else %}
+														<input type="hidden" name="acompAvareage[]" value="0">
+
+													0
+
+													{% endif %}
 												{% endif %}
+												
 											</td>
 										</tr>
 

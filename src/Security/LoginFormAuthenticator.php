@@ -76,10 +76,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-    //    $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
+        // $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+      $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
      $this->user = $user;
-        //  dd($user);
         if (!$user) {
 
 
@@ -92,31 +91,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
         return $user;
     }
-    public function getUserlist($username)
-    {
-
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
-        }
-
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
-        //$user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
-        $this->user = $user;
-        //  dd($user);
-        if (!$user) {
-
-
-            throw new CustomUserMessageAuthenticationException('Invalid Credentials.');
-            // throw new CustomUserMessageAuthenticationException('Username could not be found.');
-        } else {
-
-            $this->is_ldap_user = true;
-        }
-
-        return $user;
-    }
-
+   
     public function checkCredentials($credentials, UserInterface $user)
     {
         return true;
