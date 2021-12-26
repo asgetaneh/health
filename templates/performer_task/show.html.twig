@@ -169,18 +169,7 @@
 																			Female={{ taskAccomplishment.expectedValueSocial }}
 																		{% endif %}
 																	</td>
-																	{% if taskAccomplishment.reportedValue == 0 %}
-																		<td>
-																			{% if social == 1 %}
-																				Male=
-																			{% endif %}
-																			{{ taskAccomplishment.reportedValue  }}
-																			{% if social == 1  %}
-
-																				Female={{ taskAccomplishment.reportedValueSocial }}
-																			{% endif %}
-																		</td>
-																	{% else if taskAccomplishment.reportedValue %}
+																	{% if taskAccomplishment.reportedValue %}
 																		<td>
 																			{% if social == 1 %}
 																				Male=
