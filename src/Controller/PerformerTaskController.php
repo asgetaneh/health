@@ -176,29 +176,29 @@ class PerformerTaskController extends AbstractController
             $taskAssignNa->setStatus(4);
             $em = $this->getDoctrine()->getManager();
             $uploadedFile = $narativeForm['narrative']->getData();
-            $file_size = $uploadedFile->getSize();
-            $file_type = $uploadedFile->getType();
-// dd($file_size);
+            // $file_size = $uploadedFile->getSize();
+            // $file_type = $uploadedFile->getType();
+            // dd($file_size);
             // $file_size = $_FILES['narrative']['size'];
             // $file_type = $_FILES['narrative']['type'];
             // dd($uploadedFile);
 
             $destination = $this->getParameter('kernel.project_dir') . '/public/narrative';
             $newFilename = $taskAc->getId() . uniqid() . '.' . $uploadedFile->getClientOriginalExtension();
-            if (($file_size > 1024000)) {
-                $this->addFlash("danger", "File too large. File must be less than 2 megabytes !!");
-                return $this->redirectToRoute('performer_task_index');
-            } elseif (
-                ($file_type != "application/pdf") &&
-                ($file_type != "image/jpeg") &&
-                ($file_type != "image/jpg") &&
-                ($file_type != "image/gif") &&
-                ($file_type != "image/png")
-            ) {
-                $this->addFlash("danger", "Invalid file type. Only PDF, JPG, GIF and PNG types are accepted !!");
-                return $this->redirectToRoute('performer_task_index');
-                '';
-            }
+            // if (($file_size > 1024000)) {
+            //     $this->addFlash("danger", "File too large. File must be less than 2 megabytes !!");
+            //     return $this->redirectToRoute('performer_task_index');
+            // } elseif (
+            //     ($file_type != "application/pdf") &&
+            //     ($file_type != "image/jpeg") &&
+            //     ($file_type != "image/jpg") &&
+            //     ($file_type != "image/gif") &&
+            //     ($file_type != "image/png")
+            // ) {
+            //     $this->addFlash("danger", "Invalid file type. Only PDF, JPG, GIF and PNG types are accepted !!");
+            //     return $this->redirectToRoute('performer_task_index');
+            //     '';
+            // }
             $uploadedFile->move($destination, $newFilename);
             //   dd($newFilename);
             //$user=$this->getUser()->getUserInfo();
@@ -220,15 +220,29 @@ class PerformerTaskController extends AbstractController
             $this->addFlash('success', 'Reported Value Edited Successfully !');
             return $this->redirectToRoute('performer_task_index');
         }
-        if ($report = $request->request->get('reportValue')) {
+        if ($request->request->get('reportAvail')) {
             $reportValue = $request->request->get('reportValue');
+            // dd(1);
             $reportValueSocial = $request->request->get('reportValueSocial');
             $id = $request->request->get('taskAccomplishmentId');
             $taskAccomplishment = $taskAccomplishmentRepository->find($id);
-            $taskAccomplishment->setReportedValue($reportValue);
-            if ($reportValueSocial) {
+            if ($reportValue < 0) {
+                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
+                return $this->redirectToRoute('performer_task_index');
+                # code...
+            }
+            if ($reportValue == 0) {
+                $taskAccomplishment->setReportedValue(0);
+                if ($reportValueSocial) {
 
-                $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                }
+            } else {
+                $taskAccomplishment->setReportedValue($reportValue);
+                if ($reportValueSocial) {
+
+                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                }
             }
             $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskUser->setStatus(2);
@@ -260,11 +274,11 @@ class PerformerTaskController extends AbstractController
         }
         $social = 0;
 
-        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
-            if ($va->getName()) {
-                $social = 1;
-            }
-        }
+        // foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
+        //     if ($va->getName()) {
+        //         $social = 1;
+        //     }
+        // }
 
         return $this->render('performer_task/show.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,

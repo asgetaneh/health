@@ -217,6 +217,8 @@
 																				Male
 																			{% endif %}
 																			<input type="number" name="accompValue" class="form-conrol" required>
+																			<input type="hidden" name="reportAvail" class="form-conrol" value="1" required>
+
 																			{% if social == 1  %}
 																				Female<input type="number" name="accompValueSocial" class="form-conrol" required>
 
@@ -247,11 +249,10 @@
 
 									</tbody>
 								</table>
-								
-													<input type="hidden" name="principal" value="{{principal}}">
 
-								<button type="submit" name="report" class="btn btn-primary pull-right"
-								onclick="return confirm('Are you sure you want to Send this Report?');">Report</button>
+								<input type="hidden" name="principal" value="{{principal}}">
+
+								<button type="submit" name="report" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Send this Report?');">Report</button>
 
 
 							</form>

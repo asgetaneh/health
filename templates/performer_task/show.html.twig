@@ -169,7 +169,7 @@
 																			Female={{ taskAccomplishment.expectedValueSocial }}
 																		{% endif %}
 																	</td>
-																	{% if taskAccomplishment.reportedValue %}
+																	{% if taskAccomplishment.reportedValue == 0 %}
 																		<td>
 																			{% if social == 1 %}
 																				Male=
@@ -180,8 +180,17 @@
 																				Female={{ taskAccomplishment.reportedValueSocial }}
 																			{% endif %}
 																		</td>
+																	{% elseif taskAccomplishment.reportedValue %}
+																		<td>
+																			{% if social == 1 %}
+																				Male=
+																			{% endif %}
+																			{{ taskAccomplishment.reportedValue  }}
+																			{% if social == 1  %}
 
-
+																				Female={{ taskAccomplishment.reportedValueSocial }}
+																			{% endif %}
+																		</td>
 																	{% else %}
 																		<td>
 																			{% if social == 1  %}
@@ -189,6 +198,8 @@
 																				Male
 																			{% endif %}
 																			<input type="number" name="reportValue" class="form-conrol" required>
+																			<input type="hidden" name="reportAvail" class="form-conrol" value="1" required>
+
 																			{% if social == 1  %}
 																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
 
@@ -230,13 +241,13 @@
 								</tbody>
 							</table>
 							{% if status == 2 %}
-							
+
 								<button type="button" name="chalenge" data-taskuserid="{{taskAssignId}}" class="btn btn-primary show pull-right">Challenge/Opportunity</button>
-								
+
 								<div class="pull-right ">
 									<button type="button" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skipChallenge  ">Skip</button>
 								</div>
-								
+
 							{% elseif status == 3 %}
 								<button type="button" name="narrative" data-taskuseridd="{{taskAssignId}}" class="btn btn-warning skip  pull-right">Skip</button>
 							{% elseif status == 4 %}
@@ -254,7 +265,7 @@
 								<div class="form-group col-md-6 ">
 									{{ form_widget(narativeForm.narrative,{'attr':{'class':'form-control  ','placeholder':'File','autocomplete':'off'}}) }}
 									<div class="help-block with-errors"></div>
-								</div><input type="hidden" name="id" value="{{taskAssignId}}"><button type="submit"  class="btn btn-primary ">Narrative</button>
+								</div><input type="hidden" name="id" value="{{taskAssignId}}"><button type="submit" class="btn btn-primary ">Narrative</button>
 							</div>
 							{{ form_end(narativeForm) }}
 						{% endif %}

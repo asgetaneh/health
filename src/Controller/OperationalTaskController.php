@@ -140,7 +140,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-                $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
         $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -205,9 +205,9 @@ class OperationalTaskController extends AbstractController
             $this->addFlash('success', ' Task Created Successfully!');
             return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
         }
-// dd($performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational));
-         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        // dd($performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational));
+        $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
         $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         return $this->render('operational_task/index.html.twig', [
@@ -245,11 +245,11 @@ class OperationalTaskController extends AbstractController
         }
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
-        $operation = $operationalManagerRepository->findOneBy(['manager' => $user,'isActive'=>1]);
-      
-    //    dd($operation);
+        $operation = $operationalManagerRepository->findOneBy(['manager' => $user, 'isActive' => 1]);
+
+        //    dd($operation);
         if (!$operation) {
-          $this->addFlash('danger', 'You are Not active!');
+            $this->addFlash('danger', 'You are Not active!');
 
             return $this->redirectToRoute('choose_office');
         }
@@ -391,8 +391,8 @@ class OperationalTaskController extends AbstractController
         } else {
             $remainingdays = $diff->m * 30 + $diff->d;
         }
-           $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
-         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $sendToPrincipal = $maxTasks->getSendToPrincipal();
         $sendToPlan = $maxPenalityDays->getSendToPlan();
         return $this->render('operational_task/accomplishmentDetail.html.twig', [
@@ -402,8 +402,8 @@ class OperationalTaskController extends AbstractController
             'performerTasks' => $performerTasks,
             'social' => $social,
             'remainingdays' => $remainingdays,
-            'sendToPrincipal'=>$sendToPrincipal,
-            'sendToPlan'=>$sendToPlan
+            'sendToPrincipal' => $sendToPrincipal,
+            'sendToPlan' => $sendToPlan
 
         ]);
     }
@@ -440,7 +440,6 @@ class OperationalTaskController extends AbstractController
                 }
 
                 $em->flush();
-
             } else {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
@@ -451,8 +450,8 @@ class OperationalTaskController extends AbstractController
                 $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
                 $em->flush();
-                $suitableInitiative=$em->getRepository(SuitableInitiative::class)->find($suitId);
-                PlanAchievementHelper::setInitiativeAchievement($em,$suitableInitiative);
+                $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitId);
+                PlanAchievementHelper::setInitiativeAchievement($em, $suitableInitiative);
             }
             $this->addFlash('success', 'Successfully Send To Plan Office !');
 
@@ -474,7 +473,7 @@ class OperationalTaskController extends AbstractController
         }
 
         $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->findplanAccwithoutSocial($suitiniId, $opOffice, $quarter);
-// dd($quarter);
+        // dd($quarter);
         foreach ($plannings as $key => $value) {
             # code...
             $value->setAccompValue($accomp[$key]);
@@ -672,10 +671,11 @@ class OperationalTaskController extends AbstractController
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
-         
-            $principal = $request->request->get('principal');
 
-        if ($request->request->get('accompValue')) {
+        $principal = $request->request->get('principal');
+
+        if ($request->request->get('reportAvail')) {
+            // dd(1);
             $principal = $request->request->get('principal');
             $percent = 0;
             $reportValue = $request->request->get('reportValue');
@@ -690,12 +690,27 @@ class OperationalTaskController extends AbstractController
             $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
             $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
-            $taskAccomplishment->setAccomplishmentValue($accompValue);
-            $taskAccomplishment->setReportedValue($reportValue);
-            if ($reportValueSocial) {
-                $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
-                $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+            if ($accompValue < 0) {
+                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
+                return $this->redirectToRoute('performer_task_index');
+                # code...
             }
+            if ($accompValue == 0) {
+                $taskAccomplishment->setAccomplishmentValue(0);
+                $taskAccomplishment->setReportedValue(0);
+                if ($reportValueSocial) {
+                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                }
+            } else {
+                $taskAccomplishment->setAccomplishmentValue($accompValue);
+                $taskAccomplishment->setReportedValue($reportValue);
+                if ($reportValueSocial) {
+                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                }
+            }
+
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
             $evaluation->setQuantity($percent);
@@ -706,15 +721,13 @@ class OperationalTaskController extends AbstractController
             //   }
             $em->flush();
             $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
-            if($principal){
-           return $this->redirectToRoute('operational_task_principal_show');
-            }   
-            else{
-           return $this->redirectToRoute('operational_task_show');
-
+            if ($principal) {
+                return $this->redirectToRoute('operational_task_principal_show');
+            } else {
+                return $this->redirectToRoute('operational_task_show');
             }
         }
-            // dd($principal);
+        // dd($principal);
         $taskAssign = $request->request->get('taskAssign');
         //    dd($taskAssign);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
@@ -742,7 +755,7 @@ class OperationalTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
             'social' => $social,
-            'principal'=>$principal
+            'principal' => $principal
         ]);
     }
 
