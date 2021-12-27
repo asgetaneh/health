@@ -99,20 +99,26 @@ class OperationalTaskController extends AbstractController
         $maxcount = 0;
         $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
         $taskAssigns = $em->getRepository(TaskAssign::class)->findTaskUsers($user);
+        $assign = 0;
+        $idd=0;
         $countCore = 0;
         $count = 0;
         $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
-        foreach ($performerTasksList as $operational) {
+        foreach ($performerTasksList as $performerTas) {
             // dd($operational);
-            if ($operational?->getTaskCategory()?->getIsCore()) {
-                $countCore = $countCore + $operational->getWeight();
+            if ($performerTas?->getTaskCategory()?->getIsCore()) {
+                $countCore = $countCore + $performerTas->getWeight();
+                $idd=$performerTas->getId();
             } else {
-
                 $count = $count +
-                    $operational->getWeight();
+                    $performerTas->getWeight();
             }
         }
-
+       $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask'=>$idd]);
+         if ($assigns) {
+                $assign++;  
+            }
+        // dd($assign);
         $time = new DateTime('now');
         $quarterId = 0;
         $quarterName = 0;
@@ -217,6 +223,7 @@ class OperationalTaskController extends AbstractController
             'quarterName' => $quarterName,
             'taskAssigns' => $taskAssigns,
             'form' => $form->createView(),
+            'assign' => $assign,
             'maxDate' => $maxDate,
             'maxContengencyTime' => $maxPenalityDay,
             'minDate' => $minDate,
@@ -420,7 +427,7 @@ class OperationalTaskController extends AbstractController
             $social = $request->request->get("social");
             $acompAverages = $request->request->get("acompAvareage");
             $quarter = $request->request->get("quarter");
-// dd($acompAverages);
+            // dd($acompAverages);
             if ($social[0]) {
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['PlanningAcomplishment' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {

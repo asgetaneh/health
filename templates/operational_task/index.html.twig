@@ -1,3 +1,6 @@
+
+
+
 {% extends 'base.html.twig' %}
 {% block application_simple_title %}
 	<strong>
@@ -131,19 +134,21 @@
 
 											{% endif %}
 											{% if countCore >= 100 %}
+												{% if  assign == 0 %}
 
-												<a class="btn btn-primary btn-sm  btn-white btn-round assign" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
-													<i class="ace-icon fa fa-0check bigger-110 blue"></i>
-													Assign
-													{{taskCategory.name}}
-													Task</a>
 
+													<a class="btn btn-primary btn-sm  btn-white btn-round assign" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
+														<i class="ace-icon fa fa-user bigger-110 blue"></i>
+														Assign
+														{{taskCategory.name}}
+														Task</a>
+												{% endif %}
 											{% endif %}
 										{% else %}
 
 											{% if countWeight < 100  %}
 
-												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal"data-category-id="{{taskCategory.id}}" data-category="">
+												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="">
 													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 													Create
 													{{taskCategory.name}}
@@ -151,7 +156,7 @@
 											{% endif %}
 											{% if countWeight >= 100 %}
 												<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
-													<i class="ace-icon fa fa-0check bigger-110 blue "></i>
+													<i class="ace-icon fa fa-users bigger-110 blue "></i>
 
 													Assign
 													{{taskCategory.name}}
@@ -162,20 +167,6 @@
 
 										{% endif %}
 									{% endfor %}
-									{# {% if countWeight < 100  %}
-									
-																			<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category="">
-																				<i class="ace-icon fa fa-plus bigger-110 blue"></i>
-																				Create Task</a>
-																		{% endif %}
-																		{% if countWeight >= 100 %}
-																			<a class="btn btn-primary btn-sm btn-white btn-round assign" data-toggle="modal">
-																				<i class="ace-icon fa fa-0check bigger-110 blue "></i>
-																				{% trans %}
-																				Assign Task{% endtrans %}</a>
-									
-									
-																		{% endif %} #}
 
 
 								</div>
@@ -547,7 +538,7 @@ select.append('<option value="' + value.id + '">' + value.fullName + ' </option>
 }
 })
 var isCore = $(this).attr('data-category');
-//console.log(isCore)
+// console.log(isCore)
 var categoryId = $(this).attr('data-category-id');
 var task = $('.task').val();
 var user = $('.user').val();
