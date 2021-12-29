@@ -588,8 +588,11 @@ class OperationalTaskController extends AbstractController
      */
     public function OperationalFetch(Request $request, PerformerRepository $performerRepository, OperationalManagerRepository $operationalManagerRepository)
     {
-        if ($office = $request->request->get('isCore')) {
-            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'));
+        // dd($user);
+        $user=$this->getUser();
+        // dd($user);
+        if ($request->request->get('isCore')) {
+            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'),$user);
         } else {
             $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
         }

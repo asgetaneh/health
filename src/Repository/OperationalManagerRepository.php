@@ -18,18 +18,22 @@ class OperationalManagerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OperationalManager::class);
     }
- public function findAllsUser($principalOffice)
+    public function findAllsUser($principalOffice, $user)
     {
 
         // dd($user);
+        // $user=$this->getUser();
+        // dd($user);
         return $this->createQueryBuilder('s')
-                    ->leftJoin('s.operationalOffice', 'op')
+            ->leftJoin('s.operationalOffice', 'op')
             ->leftJoin('op.principalOffice', 'po')
             ->leftJoin('s.manager', 'u')
             ->leftJoin('u.userInfo', 'ui')
             ->Select('ui.fullName')
             ->addSelect('u.id')
             ->andWhere('po.id = :val')
+            ->andWhere('u.id = :user')
+            ->setParameter('user', $user)
             ->setParameter('val', $principalOffice)
             ->orderBy('s.id', 'ASC')
 
@@ -65,34 +69,33 @@ class OperationalManagerRepository extends ServiceEntityRepository
         ;
     }
     */
-    
-     public function findByPrincipal($principalOffice){
-        $qb=$this->createQueryBuilder('om');
-             $qb->leftJoin('om.operationalOffice' ,'oo')
-             ->andwhere('oo.principalOffice = :principalOffice')
-            
-             ->setParameter('principalOffice',$principalOffice);
-           
-        
+
+    public function findByPrincipal($principalOffice)
+    {
+        $qb = $this->createQueryBuilder('om');
+        $qb->leftJoin('om.operationalOffice', 'oo')
+            ->andwhere('oo.principalOffice = :principalOffice')
+
+            ->setParameter('principalOffice', $principalOffice);
+
+
         return $qb->getQuery()->getResult();
-      
     }
-     public function findActive($operationaloffice,$manager=null){
-        $qb=$this->createQueryBuilder('om');
+    public function findActive($operationaloffice, $manager = null)
+    {
+        $qb = $this->createQueryBuilder('om');
         if ($manager) {
-             $qb->andWhere('om.operationalOffice = :po')
-             ->andwhere('om.manager = :manager')
-            
-             ->setParameter('manager',$manager)
-             ->setParameter('po',$operationaloffice);
-        }
-        else{
-             $qb->andWhere('om.operationalOffice = :po')
-             ->andwhere('om.isActive = true')
-             ->setParameter('po',$operationaloffice);
+            $qb->andWhere('om.operationalOffice = :po')
+                ->andwhere('om.manager = :manager')
+
+                ->setParameter('manager', $manager)
+                ->setParameter('po', $operationaloffice);
+        } else {
+            $qb->andWhere('om.operationalOffice = :po')
+                ->andwhere('om.isActive = true')
+                ->setParameter('po', $operationaloffice);
         }
         return $qb->getQuery()->getResult();
-      
     }
     public function search($search = [])
     {

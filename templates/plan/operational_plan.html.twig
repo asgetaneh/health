@@ -127,7 +127,7 @@
 									<tr>
 										<th class="center">
 											<label class="pos-rel">
-												<input type="checkbox" class="ace"/>
+												<input type="checkbox" id="checkall2" class="ace"/>
 												<span class="lbl"></span>
 											</label>
 										</th>
@@ -331,4 +331,12 @@ $('.currentPage').val(currentpa);
 $('#suitablebutton').click(function () {
 $('#initiative_form').submit();
 
-})</script>{% endblock %}
+})</script>
+<script>
+$('#checkall2').click(function () {
+var $chk = $(':checkbox');
+$chk.prop('checked', $(this).is(':checked'));
+
+})
+</script>
+{% endblock %}
