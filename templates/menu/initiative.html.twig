@@ -50,6 +50,20 @@
 			</a>
 		</li>
          {% endif %}
+		  {% if is_granted('vw_intv_bvr') %}
+        
+       
+		
+		<li role="treeitem">
+			<a href="{{ path('core_task_index') }}">
+				<b class="fa fa-caret-right"></b>
+				{% trans %}Core Task
+				{% endtrans %}
+			</a>
+		</li>
+         {% endif %}
+		 
+		 
 		 
          
         {# {% if is_granted('vw_intv_atr') %}
