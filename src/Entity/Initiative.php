@@ -128,6 +128,11 @@ class Initiative implements TranslatableInterface
      */
     private $inistuitionSuitableInitiatives;
 
+    /**
+     * @ORM\OneToOne(targetEntity=CoreTask::class, cascade={"persist", "remove"})
+     */
+    private $coreTask;
+
    
      
      const NUMERICAL=0;
@@ -502,6 +507,18 @@ class Initiative implements TranslatableInterface
                 $inistuitionSuitableInitiative->setInitiative(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCoreTask(): ?CoreTask
+    {
+        return $this->coreTask;
+    }
+
+    public function setCoreTask(?CoreTask $coreTask): self
+    {
+        $this->coreTask = $coreTask;
 
         return $this;
     }

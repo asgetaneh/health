@@ -38,6 +38,14 @@ class General
     //  dd($count);
         return $count;
     }
+     public static function getTaskList(EntityManager $entityManager,$office)
+    {
+
+        # code...
+    $count= $entityManager->getRepository(TaskAssign::class)->getTaskList($office);
+    //  dd($count);
+        return $count;
+    }
     
     
 }

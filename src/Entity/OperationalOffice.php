@@ -59,10 +59,10 @@ class OperationalOffice
      */
     private $performers;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="operationalOffice")
-     */
-    private $initiatives;
+    // /**
+    //  * @ORM\ManyToMany(targetEntity=Initiative::class, mappedBy="operationalOffice")
+    //  */
+    // private $initiatives;
 
     /**
      * @ORM\OneToMany(targetEntity=OperationalInitiative::class, mappedBy="office")
@@ -93,7 +93,7 @@ class OperationalOffice
     {
         $this->operationalManagers = new ArrayCollection();
         $this->performers = new ArrayCollection();
-        $this->initiatives = new ArrayCollection();
+        // $this->initiatives = new ArrayCollection();
         $this->operationalInitiatives = new ArrayCollection();
         $this->operationalSuitableInitiatives = new ArrayCollection();
         $this->performerTasks = new ArrayCollection();
@@ -241,32 +241,32 @@ class OperationalOffice
         return $this;
     }
 
-    /**
-     * @return Collection|Initiative[]
-     */
-    public function getInitiatives(): Collection
-    {
-        return $this->initiatives;
-    }
+    // /**
+    //  * @return Collection|Initiative[]
+    //  */
+    // public function getInitiatives(): Collection
+    // {
+    //     return $this->initiatives;
+    // }
 
-    public function addInitiative(Initiative $initiative): self
-    {
-        if (!$this->initiatives->contains($initiative)) {
-            $this->initiatives[] = $initiative;
-            $initiative->addOperationalOffice($this);
-        }
+    // public function addInitiative(Initiative $initiative): self
+    // {
+    //     if (!$this->initiatives->contains($initiative)) {
+    //         $this->initiatives[] = $initiative;
+    //         $initiative->addOperationalOffice($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeInitiative(Initiative $initiative): self
-    {
-        if ($this->initiatives->removeElement($initiative)) {
-            $initiative->removeOperationalOffice($this);
-        }
+    // public function removeInitiative(Initiative $initiative): self
+    // {
+    //     if ($this->initiatives->removeElement($initiative)) {
+    //         $initiative->removeOperationalOffice($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection|OperationalInitiative[]

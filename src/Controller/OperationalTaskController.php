@@ -18,14 +18,9 @@ use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerRepository;
 use App\Repository\PerformerTaskRepository;
 use App\Repository\PlanningAccomplishmentRepository;
-use App\Repository\PlanRepository;
-use App\Repository\PrincipalOfficeRepository;
-use App\Repository\StaffEvaluationBehaviorCriteriaRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
-use App\Repository\TaskMeasurementRepository;
-use App\Repository\UserInfoRepository;
 use DateTime;
 use Andegna\DateTime as AD;
 use Andegna\DateTimeFactory;
@@ -45,7 +40,6 @@ use App\Entity\User;
 use App\Helper\AmharicHelper;
 use App\Helper\Helper;
 use App\Helper\PlanAchievementHelper;
-use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\PlanningQuarterRepository;
 use App\Repository\PrincipalManagerRepository;
@@ -75,6 +69,7 @@ class OperationalTaskController extends AbstractController
     {
         $this->denyAccessUnlessGranted('opr_task');
         //create task 
+        // dd($suitableOperational->getSuitableInitiative()->getInitiative()->getCoreTask());
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -97,10 +92,9 @@ class OperationalTaskController extends AbstractController
         $formtask->handleRequest($request);
         $count = 0;
         $maxcount = 0;
-        $operationalTasks = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
         $taskAssigns = $em->getRepository(TaskAssign::class)->findTaskUsers($user);
         $assign = 0;
-        $idd=0;
+        $idd = 0;
         $countCore = 0;
         $count = 0;
         $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
@@ -108,16 +102,16 @@ class OperationalTaskController extends AbstractController
             // dd($operational);
             if ($performerTas?->getTaskCategory()?->getIsCore()) {
                 $countCore = $countCore + $performerTas->getWeight();
-                $idd=$performerTas->getId();
+                $idd = $performerTas->getId();
             } else {
                 $count = $count +
                     $performerTas->getWeight();
             }
         }
-       $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask'=>$idd]);
-         if ($assigns) {
-                $assign++;  
-            }
+        $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask' => $idd]);
+        if ($assigns) {
+            $assign++;
+        }
         // dd($assign);
         $time = new DateTime('now');
         $quarterId = 0;
@@ -166,6 +160,26 @@ class OperationalTaskController extends AbstractController
                 $performerTask->setOperationalPlanningAccSocial($plans[1]);
             }
             $isCore = $request->request->get("isCore");
+            $performerTaskName = $request->request->get("performerTaskName");
+            $coreTaskName = $request->request->get("coreTaskList");
+            if ($isCore) {
+                $performerTask->setName($coreTaskName);
+            } else {
+                if(!$performerTaskName){
+                   
+                     $this->addFlash('danger', 'Task Name Required!');
+                return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+                }
+                if(!$form->getData()->getWeight()){
+                   
+                     $this->addFlash('danger', 'Task Weight Required!');
+                return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+
+                }
+                
+                $performerTask->setName($performerTaskName);
+            }
+            //  dd(1);
             $categoryId = $request->request->get("categoryId");
             $taskCategory = $em->getRepository(TaskCategory::class)->find($categoryId);
             $performerTask->setTaskCategory($taskCategory);
@@ -192,7 +206,6 @@ class OperationalTaskController extends AbstractController
             }
             $performerTask->setWeight($weight);
 
-            // dd($count, $weight, $isCore);
             if (!$isCore) {
                 # code...
                 if ($count + $weight > 100) {
@@ -232,7 +245,9 @@ class OperationalTaskController extends AbstractController
             'social' => $social,
             'formtask' => $formtask->createView(),
             'initiativeName' => $suitableOperational->getSuitableInitiative()->getInitiative()->getName(),
-            'taskCategorys' => $taskCategorys
+            'taskCategorys' => $taskCategorys,
+            'coreTaskList' => $suitableOperational->getSuitableInitiative()->getInitiative()->getCoreTask()
+
         ]);
     }
     /**
@@ -589,10 +604,10 @@ class OperationalTaskController extends AbstractController
     public function OperationalFetch(Request $request, PerformerRepository $performerRepository, OperationalManagerRepository $operationalManagerRepository)
     {
         // dd($user);
-        $user=$this->getUser();
+        $user = $this->getUser();
         // dd($user);
         if ($request->request->get('isCore')) {
-            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'),$user);
+            $units = $operationalManagerRepository->findAllsUser($request->request->get('userprincipal'), $user);
         } else {
             $units = $performerRepository->findAllsUser($request->request->get('userprincipal'));
         }

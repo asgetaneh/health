@@ -1,6 +1,3 @@
-
-
-
 {% extends 'base.html.twig' %}
 {% block application_simple_title %}
 	<strong>
@@ -202,10 +199,6 @@
 									</div>
 								{% endif %}
 
-
-								{# </div> #}
-
-
 							</div>
 						</div>
 
@@ -318,7 +311,6 @@
 																			{% endif %}
 																		</td>
 
-
 																	{% endif %}
 																</tr>
 
@@ -328,10 +320,13 @@
 													</td>
 													<td>
 														{% if not taskAssigns %}
+															{% if not performerTask.taskCategory.isCore %}
 
-															<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" title="edit" data-target="#edit" type="button">
-																<i class="fa fa-edit"></i>
-															</button>
+
+																<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" title="edit" data-target="#edit" type="button">
+																	<i class="fa fa-edit"></i>
+																</button>
+															{% endif %}
 														{% endif %}
 													</td>
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
@@ -506,6 +501,9 @@ $('.isCore').val(isCore);
 $('.categoryId').val(categoryId);
 if (isCore == 1) {
 $('.isCores').addClass("hidden -xs-up");
+} else {
+$('.isSupportive').addClass("hidden -xs-up");
+
 }
 })
 		</script>

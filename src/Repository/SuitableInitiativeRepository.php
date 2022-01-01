@@ -228,7 +228,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
 
 
 
-        return $qb->getQuery();
+        return $qb->getQuery()->getResult();
     }
     
 }

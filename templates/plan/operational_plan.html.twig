@@ -72,15 +72,16 @@
 			</h5>
 
 			<div class="widget-toolbar">
-				<span class="badge badge-info">
+				<span
+					class="badge badge-info">
 					{# <form action="{{path('operational_print')}}" method="post">
-						<input type="hidden" name="planyear" value="{{planyear}}">
-						<input type="hidden" name="office" value="{{operationaloffice}}">
-						<button type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right">
-							<i class=" fa fa-print"></i>
-							Print
-						</button>
-					</form> #}
+											<input type="hidden" name="planyear" value="{{planyear}}">
+											<input type="hidden" name="office" value="{{operationaloffice}}">
+											<button type="submit" formtarget="_blank" class="btn btn-app btn-grey btn-xs pull-right">
+												<i class=" fa fa-print"></i>
+												Print
+											</button>
+										</form> #}
 					<strong></strong>
 				</span>
 			</div>
@@ -161,8 +162,8 @@
 												</label>
 											</td>
 											{# <td>{{count}}
-																																																																																																																																										
-																																																																																																																																																						</td> #}
+																																																																																																																																																					
+																																																																																																																																																																	</td> #}
 											<td>{{ suitableInitiative.initiative }}</td>
 
 											<td>{{ suitableInitiative.initiative.weight }}</td>
@@ -261,21 +262,25 @@
 
 
 										<td>
-											{% if operationsuitablelength > 0 %}
-												<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
+											{% if operationalSuitable.status == 0 %}
+
+												{% if operationsuitablelength > 0 %}
+
+													<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
 
 
-													<span class="glyphicon glyphicon-edit"></span>
+														<span class="glyphicon glyphicon-edit"></span>
 
-												</a>
-											{% else %}
-												<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
+													</a>
+												{% else %}
+													<a href="#" data-id="{{operationalSuitable.suitableInitiative.id}}" data-operational="{{operationaloffice.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
 
 
-													<span class="glyphicon glyphicon-plus"></span>
+														<span class="glyphicon glyphicon-plus"></span>
 
-												</a>
+													</a>
 
+												{% endif %}
 											{% endif %}
 
 
@@ -331,12 +336,8 @@ $('.currentPage').val(currentpa);
 $('#suitablebutton').click(function () {
 $('#initiative_form').submit();
 
-})</script>
-<script>
-$('#checkall2').click(function () {
+})</script><script>$('#checkall2').click(function () {
 var $chk = $(':checkbox');
 $chk.prop('checked', $(this).is(':checked'));
 
-})
-</script>
-{% endblock %}
+})</script>{% endblock %}

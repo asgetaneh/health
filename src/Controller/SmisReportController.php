@@ -9,10 +9,12 @@ use App\Entity\OperationalSuitableInitiative;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
+use App\Entity\PrincipalManager;
 use App\Entity\PrincipalOffice;
 use App\Entity\SuitableInitiative;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
+use App\Helper\AmharicHelper;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -163,6 +165,8 @@ class SmisReportController extends AbstractController
         $this->denyAccessUnlessGranted('pre_rep');
         $em = $this->getDoctrine()->getManager();
         $time = new DateTime('now');
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+
         $quarterId = 0;
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
         foreach ($quarters as $quarter) {
@@ -182,14 +186,7 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
-            ->add('planningQuarter', EntityType::class, [
-                'class' => PlanningQuarter::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
-                'placeholder' => "All",
 
-                'required' => false
-            ])
             ->add('planningYear', EntityType::class, [
                 'class' => PlanningYear::class,
                 // 'multiple' => true,
@@ -207,23 +204,26 @@ class SmisReportController extends AbstractController
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
             $principalOffices = $em->getRepository(PrincipalOffice::class)->find($principalOffice);
+            $princpalManager = $em->getRepository(PrincipalManager::class)->findOneBy(['principalOffice' => $principalOffice]);
             $principalOfficeName = $principalOffices->getName();
             $chifPrincipal = $principalOffices->getManagedBy()->getName();
-            // dd($principalOfficeName);
-            $quarterId = $form->getData()['planningQuarter']->getId();
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
+            $princpalManager = $princpalManager->getPrincipal()->getUserInfo()->getFullName();
+            $planningYear = $form->getData()['planningYear']->getId();
+
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
+            // dd($suitableInitiatives);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
+            $planningYear = $em->getRepository(PlanningYear::class)->find( $planningYear);
+            $ethYear=$planningYear->getEthYear();
             $domPrint->print('smis_report/score_print.html.twig', [
                 'principalReports' => $principalReports,
                 'date' => (new \DateTime())->format('y-m-d'),
-                // 'fullName' => $fullName,
-                // 'quarter' => $quarter,
-                // 'currentYear' => $currentYear,
                 'chifPrincipal' => $chifPrincipal,
+                'suitableInitiatives' => $suitableInitiatives,
                 'principalOfficeName' => $principalOfficeName,
-                // 'operationalManager' => $operationalManager,
-
-
-            ], 'performance score xard', 'landscape');
+                'ethYear'=>$ethYear,
+                'fullName' => $princpalManager,
+            ], 'performance score card for ' . $principalOfficeName, 'landscape');
 
             // return $this->redirectToRoute('score_report');
         }
@@ -231,21 +231,18 @@ class SmisReportController extends AbstractController
             $value = 1;
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
-            $quarterId = $form->getData()['planningQuarter']->getId();
             $planningYear = $form->getData()['planningYear']->getId();
 
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $quarterId);
-            dd($suitableInitiatives);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($principalOffice, $quarterId);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
+            // dd($suitableInitiatives);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
         } else {
 
             $value = 0;
             $principalReports[] = "";
+            $suitableInitiatives[] = "";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
-
-
-
         $data = $paginator->paginate(
             $principalReports,
             $request->query->getInt('page', 1),
@@ -254,8 +251,9 @@ class SmisReportController extends AbstractController
         // dd($data);
 
         return $this->render('smis_report/score.html.twig', [
-            'principals' => $data,
+            'principalReports' => $data,
             'form' => $form->createView(),
+            'suitableInitiatives' => $suitableInitiatives,
             'value' => $value
 
         ]);

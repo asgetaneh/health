@@ -109,6 +109,25 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+     public function getTaskList($principalOfficeId)
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.PerformerTask', 'p')
+            ->leftJoin('p.taskCategory', 'ta')
+            ->leftJoin('p.operationalOffice', 'of')
+            ->leftJoin('of.principalOffice', 'pf')
+                        ->select('count(t.id)')
+            ->andWhere('pf.id = :val')
+
+            ->andWhere('t.type < 3 ')
+            ->andWhere('t.status > 4 ')
+            ->andWhere('ta.isCore  = 1 ')
+            ->setParameter('val', $principalOfficeId)
+            ->orderBy('t.id', 'ASC')
+            // ->setMaxResults(10)
+                       ->getQuery()->getSingleScalarResult();
+
+    }
 
     // /**
     //  * @return TaskAssign[] Returns an array of TaskAssign objects

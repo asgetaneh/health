@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/operational/office")
+ * @Route("/operational_office")
  */
 class OperationalOfficeController extends AbstractController
 {
@@ -25,12 +25,12 @@ class OperationalOfficeController extends AbstractController
     public function index(OperationalOfficeRepository $operationalOfficeRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $this->denyAccessUnlessGranted('vw_opof');
-        $filterForm=$this->createFormBuilder()
-         ->setMethod('Get')
-        ->add('principaloffice',EntityType::class,[
-            'class'=>PrincipalOffice::class,
-            'multiple'=>true
-        ])->getForm();
+        $filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'multiple' => true
+            ])->getForm();
         $filterForm->handleRequest($request);
 
 
@@ -71,12 +71,10 @@ class OperationalOfficeController extends AbstractController
         }
         if ($request->query->get('search')) {
             $query = $operationalOfficeRepository->search(['name' => $request->query->get('search')]);
-        } 
-        elseif($filterForm->isSubmitted() && $filterForm->isValid()){
+        } elseif ($filterForm->isSubmitted() && $filterForm->isValid()) {
             // dd($filterForm->getData()['principaloffice']);
-              $query = $operationalOfficeRepository->search($filterForm->getData());
-        }
-        else
+            $query = $operationalOfficeRepository->search($filterForm->getData());
+        } else
             $query = $operationalOfficeRepository->findAll();
         $data = $paginator->paginate(
             $query,
@@ -89,7 +87,7 @@ class OperationalOfficeController extends AbstractController
             'operational_offices' => $data,
 
             'form' => $form->createView(),
-            'filterform'=>$filterForm->createView()
+            'filterform' => $filterForm->createView()
         ]);
     }
 
@@ -151,20 +149,19 @@ class OperationalOfficeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/{id}", name="operational_office_delete", methods={"DELETE"})
      */
     public function delete(Request $request, OperationalOffice $operationalOffice): Response
     {
         $this->denyAccessUnlessGranted('dlt_opof');
-        // dd($operationalOffice);
         if ($this->isCsrfTokenValid('delete' . $operationalOffice->getId(), $request->request->get('_token'))) {
+            // dd($operationalOffice);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($operationalOffice);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', "Successfully Deleted ");
         return $this->redirectToRoute('operational_office_index');
     }
 }

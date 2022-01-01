@@ -77,33 +77,16 @@
 				font-size: 15px;
 
 			}
+			.custom {
+				font-family: "Times New Roman", Times, serif;
 
-			.sign {
-				float: right;
-				height: 100px;
-				position: absolute;
-				right: 0;
-				bottom: 30;
-			}
-			.sign2 {
-				float: right;
-				height: 100px;
-				position: absolute;
-				right: 0;
-				bottom: 10;
-			}
-			.mt {
-				margin-top: 45px;
-			}
-			.sty {
-				list-style-type: none;
 			}
 		</style>
 
 	</head>
 	<body borde="0">
 		<center><img class="img-responsive" height="60" width="80" src="{{ absolute_url(asset('assets/favicon.png')) }}"/></center>
-		<div class="amharic2">
+		<div class="custom">
 
 			<center>
 				<h2>STRATEGIC PERFORMANCE SCORE CARD FORMAT
@@ -111,9 +94,7 @@
 
 			</center>
 			<h4>
-				I, ____________________, commit to deliver and agreed to be rated on the attainment of the
-																																			 following targets, in accordance with the
-																																			  indicated measures set for the period of ________2021 to________2021.
+				I, <u>{{fullName}}</u> commit to deliver and agreed to be rated on the attainment of the	following targets, in accordance with the									  indicated measures set for the period of <u>1/11/{{ethYear - 1}}</u> to <u>30/10/{{ethYear }}</u> .
 			</h4>
 
 			<h5>Name of the Institution<u>Jimma University</u>
@@ -121,7 +102,6 @@
 			<h5>College/Institute:<u>{{chifPrincipal}}</u>
 				Office Name:<u>{{principalOfficeName}}</u>
 			</h5>
-
 
 
 			<table class="table table-striped table-bordered table-hover">
@@ -135,7 +115,7 @@
 						<th>Iitiative</th>
 						<th>Weight</th>
 						<th>Target</th>
-						<th colspan="4">Success indicators</th>
+						<th colspan="7">Success indicators</th>
 
 
 					</tr>
@@ -148,7 +128,7 @@
 						<th></th>
 
 
-						<th>Quantity</th>
+						<th colspan="4">Quantity</th>
 						<th>Quality</th>
 						<th>Time</th>
 
@@ -162,36 +142,47 @@
 					{% set c = 0 %}
 					{% set count =0 %}
 					{% for principal in principalReports   %}
-						<tr>
-							{% set count = count + 1 %}
+						{% for suitable in suitableInitiatives   %}
+							{% if principal.suitableInitiative.id == suitable.id %}
 
-							<td>{{ count }}</td>
-							<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator}}</td>
-							<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator.weight}}</td>
 
-							<td>{{principal.suitableInitiative.initiative}}</td>
-							<td>{{principal.suitableInitiative.initiative.weight}}</td>
+								<tr>
+									{% set count = count + 1 %}
 
-							<td>{{principal.planValue}}</td>
-							{# <td>{{principal.accompValue}}</td> #}
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
+									<td>{{ count }}</td>
+									<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator}}</td>
+									<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator.weight}}</td>
+									<td>{{principal.suitableInitiative.initiative}}</td>
+									<td>{{principal.suitableInitiative.initiative.weight}}</td>
 
+									<td>{{ getYearlyPlan( suitable,'year')}}</td>
+									<td>{{ getQuarterPlan( suitable,1)}}</td>
+									<td>{{ getQuarterPlan(suitable,2)}}</td>
+									<td>{{ getQuarterPlan(suitable,3)}}</td>
+									<td>{{ getQuarterPlan(suitable,4)}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							{% endif %}
+						{% endfor %}
 					{% else %}
 						<tr>
 							<td colspan="6">no records found</td>
 						</tr>
 					{% endfor %}
 
+
 				</tbody>
-			</table>
-			Name_____________                                                                           Name_____________________                                    Name________________
-Office_____________                                                                           Title______________________                                    Title_________________
-Job position________                                                                         Signature__________________                                  Signature_____________
-Signature _______&Date______                                                              Date______________________                                    Date________________
+			</table><br>
+			Name <u>{{fullName}}</u><br>                                                                 
+																																			Office <u>{{principalOfficeName}}</u>  <br>                                                                                            Date                                        __________________       <br>                                                            Signature________________
+		</div>
+		<div id="footer">
+			<div class="custom">
+				Jimma University, Strategic Management Senior Directorate<br>
+				‘’If you can’t Measure it, You Can’t Manage it’’
+			</div>
 		</div>
 	</body>
-</html></body></html>
+</html>

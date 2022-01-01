@@ -48,19 +48,32 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
     }
     */
 
-    public function findPrincipal($search,  $quarterId)
+    public function findPrincipal($search=[],$currentQuarter)
     {
         $qb = $this->createQueryBuilder('pa');
+        if (isset($search['principalOffice'])) {
 
-//  dd($quarterId);
-        $qb
-            ->leftJoin('pa.suitableInitiative', 's')
-            ->andWhere('s.principalOffice = :principalOffice')
-            ->andWhere('pa.quarter = :quarter')
-            ->setParameter('quarter', $quarterId)
 
-            ->setParameter('principalOffice', $search);
-        return $qb->getQuery()->getResult();
+            $qb
+                ->leftJoin('pa.suitableInitiative', 's')
+                ->andWhere('s.principalOffice = :principalOffice')
+
+                ->setParameter('principalOffice', $search['principalOffice']);
+        }
+
+        if (isset($search['planningYear'])) {
+
+
+            $qb
+                ->leftJoin('pa.suitableInitiative', 'p')
+                ->andWhere('p.planningYear = :planningYear')
+
+                ->setParameter('planningYear', $search['planningYear']);
+        }
+        return $qb->andWhere('pa.quarter = :planningQuarter')
+
+            ->setParameter('planningQuarter', $currentQuarter)
+            ->getQuery()->getResult();
     }
     public function findPrincipalReports($search = [], $quarterId)
     {
@@ -136,135 +149,108 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    public function findQuarterPlanAccomp($suitable, $social=null,$quarter)
+    public function findQuarterPlanAccomp($suitable, $social = null, $quarter)
     {
-       
+
         $qb = $this->createQueryBuilder('pa');
-       
+
 
         $qb->select('pa.accompValue as acomp')
-        ->join('pa.quarter','q')
-        ->andWhere('q.slug = :slg')
-        ->andwhere('pa.suitableInitiative = :suitin')
-           
+            ->join('pa.quarter', 'q')
+            ->andWhere('q.slug = :slg')
+            ->andwhere('pa.suitableInitiative = :suitin')
+
             ->setParameter('suitin', $suitable)
-             ->setParameter('slg', $quarter);
-        
+            ->setParameter('slg', $quarter);
 
-     
-        if($social){
+
+
+        if ($social) {
             $qb
-             ->andwhere('pa.socialAttribute = :name')
-             ->setParameter('name', $social);
-        }
+                ->andwhere('pa.socialAttribute = :name')
+                ->setParameter('name', $social);
+        };
+        // dd($qb->getQuery()->getSingleScalarResult());
 
+        $result = $qb->getQuery()->getOneOrNullResult();
 
-           
-            
-            ;
-            // dd($qb->getQuery()->getSingleScalarResult());
-
-       $result=$qb->getQuery()->getOneOrNullResult();
-            
-             return $result? $result['acomp']:null;
+        return $result ? $result['acomp'] : null;
     }
-    public function findQuarterPlan($suitable, $social=null,$quarter)
+    public function findQuarterPlan($suitable, $social = null, $quarter)
     {
-       
+
         $qb = $this->createQueryBuilder('pa');
-       
+
 
         $qb->select('pa.planValue as plan')
-        ->join('pa.quarter','q')
-        ->andWhere('q.slug = :slg')
-        ->andwhere('pa.suitableInitiative = :suitin')
-           
+            ->join('pa.quarter', 'q')
+            ->andWhere('q.slug = :slg')
+            ->andwhere('pa.suitableInitiative = :suitin')
+
             ->setParameter('suitin', $suitable)
-             ->setParameter('slg', $quarter);
-        
+            ->setParameter('slg', $quarter);
 
-     
-        if($social){
+
+
+        if ($social) {
             $qb
-             ->andwhere('pa.socialAttribute = :name')
-             ->setParameter('name', $social);
-        }
+                ->andwhere('pa.socialAttribute = :name')
+                ->setParameter('name', $social);
+        };
+        //  dd($qb->getQuery()->getSingleScalarOrNullResult());
+        $result = $qb->getQuery()->getOneOrNullResult();
 
-
-           
-            
-            ;
-            //  dd($qb->getQuery()->getSingleScalarOrNullResult());
-             $result=$qb->getQuery()->getOneOrNullResult();
-            
-             return $result? $result['plan']:null;
-
-
-       
+        return $result ? $result['plan'] : null;
     }
-     public function findYearlyPlan($suitable, $social=null,$type)
+    public function findYearlyPlan($suitable, $social = null, $type)
     {
-       
+
         $qb = $this->createQueryBuilder('pa');
-        if($type== 0 || $type == 2){
+        if ($type == 0 || $type == 2) {
             $qb->select('max(pa.planValue)');
-        }
-        elseif ($type == 1 ) {
-           $qb->select('sum(pa.planValue)');
-        }
-         elseif ($type == 3 )
+        } elseif ($type == 1) {
+            $qb->select('sum(pa.planValue)');
+        } elseif ($type == 3)
 
-        $qb->select('min(pa.planValue)');
+            $qb->select('min(pa.planValue)');
 
         $qb->andwhere('pa.suitableInitiative = :suitin')
-           
+
             ->setParameter('suitin', $suitable);
-        if($social){
+        if ($social) {
             $qb
-             ->andwhere('pa.socialAttribute = :name')
-             ->setParameter('name', $social);
-        }
-
-
-           
-            
-            ;
-            // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
+                ->andwhere('pa.socialAttribute = :name')
+                ->setParameter('name', $social);
+        };
+        // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
 
         return $qb->getQuery()->getSingleScalarResult();
     }
-    public function findYearlyPlanAccomp($suitable, $social=null,$type)
+    public function findYearlyPlanAccomp($suitable, $social = null, $type)
     {
-       
-        $qb = $this->createQueryBuilder('pa');
-        if($type== 0 || $type == 2){
-            $qb->select('max(pa.accompValue)');
-        }
-        elseif ($type == 1 ) {
-           $qb->select('sum(pa.accompValue)');
-        }
-         elseif ($type == 3 )
 
-        $qb->select('min(pa.accompValue)');
+        $qb = $this->createQueryBuilder('pa');
+        if ($type == 0 || $type == 2) {
+            $qb->select('max(pa.accompValue)');
+        } elseif ($type == 1) {
+            $qb->select('sum(pa.accompValue)');
+        } elseif ($type == 3)
+
+            $qb->select('min(pa.accompValue)');
 
         $qb->andwhere('pa.suitableInitiative = :suitin')
-           
+
             ->setParameter('suitin', $suitable);
-        if($social){
+        if ($social) {
             $qb
-             ->andwhere('pa.socialAttribute = :name')
-             ->setParameter('name', $social);
-        }
-
-
-           
-            
-            ;
-            // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
+                ->andwhere('pa.socialAttribute = :name')
+                ->setParameter('name', $social);
+        };
+        // dd($qb->groupBy('pa.suitableInitiative')->getQuery()->getSingleScalarResult());
 
         return $qb->getQuery()->getSingleScalarResult();
     }
-   
+
     public function findByQuarter($suitable, $quarter)
     {
         $qb = $this->createQueryBuilder('pa')
@@ -295,10 +281,10 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-      public function calulateSumByInitiativeAndYear($initiative, $year, $quarter)
+    public function calulateSumByInitiativeAndYear($initiative, $year, $quarter)
     {
         $qb = $this->createQueryBuilder('pa')
-        ->select('sum(pa.planValue) as plan')
+            ->select('sum(pa.planValue) as plan')
             // ->leftjoin('pa.socialAttribute', 'sa')
             ->Join('pa.suitableInitiative', 'si')
             // ->andwhere('pa.suitableInitiative = :suitin')
@@ -310,26 +296,26 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
             ->setParameter('quarter', $quarter)
             ->setParameter('initiative', $initiative)
             // ->setParameter('name', $social)
-            ;
+        ;
 
         return $qb->getQuery()->getSingleScalarResult();
     }
     public function SumByInitiativeAndYear()
     {
-        $conn=$this->getEntityManager()->getConnection();
-        $sql='SELECT year(p.year) as year from planning_year p';
-         $fraud_stmt = $conn->prepare($sql);
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT year(p.year) as year from planning_year p';
+        $fraud_stmt = $conn->prepare($sql);
         $fraud_stmt->execute();
-        $result=$fraud_stmt->fetchAllAssociative();
-     dd($result);
+        $result = $fraud_stmt->fetchAllAssociative();
+        dd($result);
         $qb = $this->createQueryBuilder('pa')
-        ->select('sum(pa.planValue) as plan,i.id as initiative, y.ethYear as year')
-        // ->addSelect('extract(YEAR FROM y.year) years')
-        
+            ->select('sum(pa.planValue) as plan,i.id as initiative, y.ethYear as year')
+            // ->addSelect('extract(YEAR FROM y.year) years')
+
             // ->leftjoin('pa.socialAttribute', 'sa')
             ->Join('pa.suitableInitiative', 'si')
-              ->Join('si.initiative', 'i')
-               ->Join('si.planningYear', 'y')
+            ->Join('si.initiative', 'i')
+            ->Join('si.planningYear', 'y')
             // ->andwhere('pa.suitableInitiative = :suitin')
             // ->andwhere('pa.quarter = :quarter')
             // ->andwhere('si.initiative = :initiative')
@@ -339,31 +325,31 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
             // ->setParameter('quarter', $quarter)
             // ->setParameter('initiative', $initiative)
             // ->setParameter('name', $social)
-             
-           
+
+
             ->groupBy('i.id')
-             ->addGroupBy('y.id')
-             
-            
-             ->orderBy('y.id','ASC')
-              ->addOrderBy('i.id','ASC')
+            ->addGroupBy('y.id')
+
+
+            ->orderBy('y.id', 'ASC')
+            ->addOrderBy('i.id', 'ASC')
             // ->addGroupBy('si.planningYear')
-          
-           
-            ;
+
+
+        ;
 
         return $qb->getQuery()->getResult();
     }
 
 
-      public function getOrganizationPlanByInitiativeAndYear($initiative, $year, $quarter,$org,$attrib=null)
+    public function getOrganizationPlanByInitiativeAndYear($initiative, $year, $quarter, $org, $attrib = null)
     {
         $qb = $this->createQueryBuilder('pa')
-        ->select('sum(pa.planValue) as plan')
+            ->select('sum(pa.planValue) as plan')
             // ->leftjoin('pa.socialAttribute', 'sa')
             ->Join('pa.suitableInitiative', 'si')
-              ->Join('si.principalOffice', 'po')
-             ->andwhere('po.officeGroup = :og')
+            ->Join('si.principalOffice', 'po')
+            ->andwhere('po.officeGroup = :og')
             ->andwhere('pa.quarter = :quarter')
             ->andwhere('si.initiative = :initiative')
             ->andwhere('si.planningYear = :year')
@@ -371,13 +357,11 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
             ->setParameter('year',  $year)
             ->setParameter('quarter', $quarter)
             ->setParameter('initiative', $initiative)
-             ->setParameter('og', $org)
-            ;
-            if($attrib){
-                $qb->andWhere('pa.socialAttribute= :attr')
-                 ->setParameter('attr', $attrib)
-            ;
-            }
+            ->setParameter('og', $org);
+        if ($attrib) {
+            $qb->andWhere('pa.socialAttribute= :attr')
+                ->setParameter('attr', $attrib);
+        }
 
 
         return $qb->getQuery()->getSingleScalarResult();
@@ -408,23 +392,22 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getPlanByKpiAndYear($kpi, $year,$office, $quarter)
+    public function getPlanByKpiAndYear($kpi, $year, $office, $quarter)
     {
         $qb = $this->createQueryBuilder('pa')
             ->select('sum(pa.planValue) as accomp')
-          
+
             ->Join('pa.suitableInitiative', 'si')
             ->Join('si.initiative', 'i')
-             ->andwhere('i.keyPerformanceIndicator = :kpi')
+            ->andwhere('i.keyPerformanceIndicator = :kpi')
             ->andwhere('pa.quarter = :quarter')
             ->andwhere('si.principalOffice = :office')
             ->andwhere('si.planningYear = :year')
-          
+
             ->setParameter('year',  $year)
             ->setParameter('quarter', $quarter)
             ->setParameter('office', $office)
-            ->setParameter('kpi', $kpi)
-        ;
+            ->setParameter('kpi', $kpi);
 
         return $qb->getQuery()->getSingleScalarResult();
     }

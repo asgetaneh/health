@@ -7,6 +7,7 @@ use App\Entity\InitiativeAttribute;
 use App\Entity\InitiativeBehaviour;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\PrincipalOffice;
+use App\Entity\CoreTask;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -40,9 +41,7 @@ class InitiativeType extends AbstractType
                 ->add('weight', null, [
                     'attr' => ['class' => 'form-control']
                 ])
-                  ->add('initiativeNumber', null, [
-                    'attr' => ['class' => 'form-control']
-                ])
+                
                 ->add('maximumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])
@@ -71,6 +70,14 @@ class InitiativeType extends AbstractType
                 ])
                  ->add('weight', null, [
                     'attr' => ['class' => 'form-control']
+                ])
+                 ->add('coreTask', EntityType::class, [
+                    'class' => CoreTask::class,
+                   
+                    'attr' => ['class' => 'select2 form-control'],
+                    'placeholder'=>'choose Core Task ',
+                    'required'=>false
+                    // 'multiple'=>true,
                 ])
                 // ->add('baseline', null, [
                    
