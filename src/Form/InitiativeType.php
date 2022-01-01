@@ -8,6 +8,7 @@ use App\Entity\InitiativeBehaviour;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\PrincipalOffice;
 use App\Entity\CoreTask;
+use App\Entity\InitiativeMeasurement;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -129,17 +130,26 @@ class InitiativeType extends AbstractType
                    
 
                 ])
-                ->add('measurement',ChoiceType::class,[
-                    'choices'=>[
-                        'Numerical'=>Initiative::NUMERICAL,
-                        'Ratio'=>Initiative::RATIO,
-                        'Percent'=>Initiative::PERCENT
-                    ],
-                     'attr' => ['class' => 'select2 form-control'],
-                     'required' => false,
-                      'placeholder'=>'choose measurement',
+                 ->add('measurement', EntityType::class, [
+                    'class' => InitiativeMeasurement::class,
+                    'attr' => ['class' => 'select2 form-control'],
+                    //  'multiple'=>true,
+                   'required' => false,
+                    'placeholder'=>'select measurement',
+                   
 
                 ])
+                // ->add('measurement',ChoiceType::class,[
+                //     'choices'=>[
+                //         'Numerical'=>Initiative::NUMERICAL,
+                //         'Ratio'=>Initiative::RATIO,
+                //         'Percent'=>Initiative::PERCENT
+                //     ],
+                //      'attr' => ['class' => 'select2 form-control'],
+                //      'required' => false,
+                //       'placeholder'=>'choose measurement',
+
+                // ])
                 ;
         }
     }

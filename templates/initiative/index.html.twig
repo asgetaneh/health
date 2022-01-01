@@ -39,12 +39,12 @@
 								{% endif %}
 
 								{# <form class="form-inline" method="post" style="display:inline;">
-																																																										<input type="hidden" name="nonapplicable" value="nonapp"/>
-																																																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-																																																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
-																																																											{% trans %}
-																																																											None Applicable Initiatives{% endtrans %}</button>
-																																																									</form> #}
+																																																																																										<input type="hidden" name="nonapplicable" value="nonapp"/>
+																																																																																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
+																																																																																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
+																																																																																											{% trans %}
+																																																																																											None Applicable Initiatives{% endtrans %}</button>
+																																																																																									</form> #}
 
 							</div>
 
@@ -97,7 +97,7 @@
 											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'Choose responsible office' }}) }}
 										</div>
 									</div>
-                                    <div class="col-md-4">
+									<div class="col-md-4">
 										<div class="form-group">
 											{{ form_label(filterform.category,'Initiative Category') }}
 											{{ form_widget(filterform.category,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Initiative Category' }}) }}
@@ -130,14 +130,14 @@
 									</div>
 								</div>
 							</form>
-                            <form action="{{path('print_initiative')}}" method="post">
+							<form action="{{path('print_initiative')}}" method="post">
 
 								<button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
 									<i class=" fa fa-file-pdf text-danger"></i>
 									PDF
 								</button>
 							</form>
-                            <form action="{{path('excel_initiative')}}" method="post">
+							<form action="{{path('excel_initiative')}}" method="post">
 
 								<button type="submit" formtarget="_blank" class="btn btn-app btn-success btn-xs pull-right" style="margin-bottom:30px;">
 									<i class=" fa fa-file-ex-o"></i>
@@ -157,10 +157,10 @@
 										{# <th>MinValue</th> #}
 										{# <th>MaxValue</th> #}
 										<th>KPI</th>
-										{# <th>Objective</th> #}
-										<th>{% trans %}Social{% endtrans %}</th>
+										<th>Goal</th>
+										<th>{% trans %}Measurement{% endtrans %}</th>
 										<th>
-											{% trans %}Principal Office{% endtrans %}
+											{% trans %}Principal Office and Core Task{% endtrans %}
 										</th>
 										<th>{% trans %}Weight{% endtrans %}</th>
 										<th>
@@ -192,29 +192,24 @@
 											<td>
 												{{ initiative.keyPerformanceIndicator|title }}
 											</td>
+												<td>
+												{{ initiative.keyPerformanceIndicator.objective.goal }}
+											</td>
 
 											<td>
-												{% for item in initiative.socialAtrribute  %}
-													{{ item }}
-												{% endfor %}
+												{# {% for item in initiative.socialAtrribute  %} #}
+													{{ initiative.measurement }}
+												{# {% endfor %} #}
 											</td>
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
-											<td>
-												{% set count = 0 %}
-												<ul class="list-unstyled">
-													{% for office in initiative.principalOffice %}
-
-
-														<li>
-															{% set count = count + 1 %}
-															{{count}},
-															{{office}}
-														</li>
-													{% endfor %}
-
-												</ul>
-
+											<td class="center">
+												<div class="action-buttons">
+													<a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+														<i class="ace-icon fa fa-angle-double-down"></i>
+														<span class="sr-only">Operational Office Detail</span>
+													</a>
+												</div>
 											</td>
 											<td>{{initiative.weight}}</td>
 											<td>
@@ -245,13 +240,38 @@
 
 														<input type="hidden" name="{{initiative.isActive ?"deactive":"active"}}" value="{{ initiative.id}}">
 														<button type="submit" title="{{ initiative.isActive?" deactivate":" Activate"}}" style="display:inline;" class="btn btn-sm {{ initiative.isActive?" btn-danger":" btn-success"}}" value="" onclick="return confirm('are you sure you want to {{initiative.isActive?" deactivate":" activate"}}')">
-                                                        <span class="{{initiative.isActive?"fa fa-times":"fa fa-check-square-o"}}"></span>
-                                                        </button>
+															<span class="{{initiative.isActive?"fa fa-times":"fa fa-check-square-o"}}"></span>
+														</button>
 
 													</form>
 												{% endif %}
 											</td>
 										</tr>
+										<tr class="detail-row">
+											<td colspan="8">
+												<div class="table-detail">
+													{% set count = 0 %}
+													<ul class="list-unstyled">
+														{% for office in initiative.principalOffice %}
+
+
+															<li>
+																{% set count = count + 1 %}
+																{{count}},
+																{{office}}
+															</li>
+														{% endfor %}
+
+													</ul>
+
+
+
+												</div>
+												<span>Core Task
+												<h3 class="text-danger">{{initiative.coreTask}}</h3></span>
+											</td>
+										</tr>
+										
 									{% else %}
 										<tr>
 											<td colspan="7">no records found</td>
@@ -317,5 +337,16 @@
 		$(function () {
 $('.select2').css('width', '100%').select2({allowClear: true})
 })
+	</script>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		$('.show-details-btn').on('click', function (e) {
+e.preventDefault();
+$(this).closest('tr').next().toggleClass('open');
+$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+});
 	</script>
 {% endblock %}

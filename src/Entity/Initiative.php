@@ -108,10 +108,7 @@ class Initiative implements TranslatableInterface
      */
     private $weight;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $measurement;
+   
 
     /**
      * @ORM\ManyToOne(targetEntity=InitiativeCategory::class, inversedBy="initiatives")
@@ -133,17 +130,12 @@ class Initiative implements TranslatableInterface
      */
     private $coreTask;
 
-   
-     
-     const NUMERICAL=0;
-     const RATIO=1;
-     const PERCENT=2;
-     
+    /**
+     * @ORM\ManyToOne(targetEntity=InitiativeMeasurement::class, inversedBy="initiatives")
+     */
+    private $measurement;
 
-   
-
-
-    public function __construct()
+       public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->principalOffice = new ArrayCollection();
@@ -427,17 +419,7 @@ class Initiative implements TranslatableInterface
         return $this;
     }
 
-    public function getMeasurement(): ?int
-    {
-        return $this->measurement;
-    }
-
-    public function setMeasurement(?int $measurement): self
-    {
-        $this->measurement = $measurement;
-
-        return $this;
-    }
+  
 
     public function getCategory(): ?InitiativeCategory
     {
@@ -519,6 +501,18 @@ class Initiative implements TranslatableInterface
     public function setCoreTask(?CoreTask $coreTask): self
     {
         $this->coreTask = $coreTask;
+
+        return $this;
+    }
+
+    public function getMeasurement(): ?InitiativeMeasurement
+    {
+        return $this->measurement;
+    }
+
+    public function setMeasurement(?InitiativeMeasurement $measurement): self
+    {
+        $this->measurement = $measurement;
 
         return $this;
     }
