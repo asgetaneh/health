@@ -158,7 +158,7 @@
 										{# <th>MaxValue</th> #}
 										<th>KPI</th>
 										<th>Goal</th>
-										<th>{% trans %}Measurement{% endtrans %}</th>
+										{# <th>{% trans %}Measurement{% endtrans %}</th> #}
 										<th>
 											{% trans %}Principal Office and Core Task{% endtrans %}
 										</th>
@@ -196,11 +196,11 @@
 												{{ initiative.keyPerformanceIndicator.objective.goal }}
 											</td>
 
-											<td>
+											{# <td> #}
 												{# {% for item in initiative.socialAtrribute  %} #}
-													{{ initiative.measurement }}
+													{# {{ initiative.measurement }} #}
 												{# {% endfor %} #}
-											</td>
+											{# </td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective }}</td> #}
 											{# <td>{{ initiative.keyPerformanceIndicator.strategy.objective.goal }}</td> #}
 											<td class="center">

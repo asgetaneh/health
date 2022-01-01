@@ -768,7 +768,7 @@ class PlanController extends AbstractController
                     $operationalSuitable = new SuitableOperational();
                     $operationalSuitable->setSuitableInitiative($selectedSuitable);
                     $operationalSuitable->setOperationalOffice($operationaloffice);
-                    $operationalSuitable->setStatus(1);
+                    $operationalSuitable->setStatus(0);
 
                     $em->persist($operationalSuitable);
                     $em->flush();
