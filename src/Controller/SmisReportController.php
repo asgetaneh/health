@@ -209,19 +209,22 @@ class SmisReportController extends AbstractController
             $chifPrincipal = $principalOffices->getManagedBy()->getName();
             $princpalManager = $princpalManager->getPrincipal()->getUserInfo()->getFullName();
             $planningYear = $form->getData()['planningYear']->getId();
-
+            $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffices);
+            // dd($totalInitiative);
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
             // dd($suitableInitiatives);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
-            $planningYear = $em->getRepository(PlanningYear::class)->find( $planningYear);
-            $ethYear=$planningYear->getEthYear();
+            $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
+            $ethYear = $planningYear->getEthYear();
+
             $domPrint->print('smis_report/score_print.html.twig', [
                 'principalReports' => $principalReports,
                 'date' => (new \DateTime())->format('y-m-d'),
                 'chifPrincipal' => $chifPrincipal,
                 'suitableInitiatives' => $suitableInitiatives,
                 'principalOfficeName' => $principalOfficeName,
-                'ethYear'=>$ethYear,
+                'totalInitiative' => $totalInitiative,
+                'ethYear' => $ethYear,
                 'fullName' => $princpalManager,
             ], 'performance score card for ' . $principalOfficeName, 'landscape');
 
@@ -232,6 +235,8 @@ class SmisReportController extends AbstractController
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
             $planningYear = $form->getData()['planningYear']->getId();
+            $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
+
 
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
             // dd($suitableInitiatives);
@@ -241,6 +246,7 @@ class SmisReportController extends AbstractController
             $value = 0;
             $principalReports[] = "";
             $suitableInitiatives[] = "";
+            $totalInitiative="";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
         $data = $paginator->paginate(
@@ -252,6 +258,7 @@ class SmisReportController extends AbstractController
 
         return $this->render('smis_report/score.html.twig', [
             'principalReports' => $data,
+            'totalInitiative' => $totalInitiative,
             'form' => $form->createView(),
             'suitableInitiatives' => $suitableInitiatives,
             'value' => $value

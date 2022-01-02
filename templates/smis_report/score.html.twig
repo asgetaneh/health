@@ -81,9 +81,9 @@
 										<th>Weight</th>
 										<th>Iitiative</th>
 										<th>Weight</th>
-										<th>Target</th>
-										<th colspan="7">Success indicators</th>
 
+										<th colspan="11">Success indicators(
+																													Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}})</th>
 
 									</tr>
 									<tr>
@@ -92,16 +92,21 @@
 										<th></th>
 										<th></th>
 										<th></th>
-										<th></th>
-
-
-										<th colspan="4">Quantity</th>
-										<th>Quality</th>
-										<th>Time</th>
+										<th>Target</th>
+										<th>Achievement</th>
+										<th>Q1T</th>
+										<th>Q1A</th>
+										<th>Q2T</th>
+										<th>Q2A</th>
+										<th>Q3T</th>
+										<th>Q3A</th>
+										<th>Q4T</th>
+										<th>Q4A</th>
 
 										<th>Remarks</th>
 
 									</tr>
+
 								</thead>
 
 								{% if value %}
@@ -110,7 +115,6 @@
 										{% set c = 0 %}
 										{% set count =0 %}
 										{% for principal in principalReports   %}
-
 											{% for suitable in suitableInitiatives   %}
 												{% if principal.suitableInitiative.id == suitable.id %}
 
@@ -121,17 +125,20 @@
 														<td>{{ count }}</td>
 														<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator}}</td>
 														<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator.weight}}</td>
-
 														<td>{{principal.suitableInitiative.initiative}}</td>
 														<td>{{principal.suitableInitiative.initiative.weight}}</td>
 
 														<td>{{ getYearlyPlan( suitable,'year')}}</td>
+														<td>{{ getYearlyPlanAccomp( suitable,'year')}}</td>
 														<td>{{ getQuarterPlan( suitable,1)}}</td>
+														<td>{{ getQuarterPlanAccomp(suitable,1)}}</td>
 														<td>{{ getQuarterPlan(suitable,2)}}</td>
+														<td>{{ getQuarterPlanAccomp(suitable,2)}}</td>
 														<td>{{ getQuarterPlan(suitable,3)}}</td>
+														<td>{{ getQuarterPlanAccomp(suitable,3)}}</td>
 														<td>{{ getQuarterPlan(suitable,4)}}</td>
-														<td></td>
-														<td></td>
+														<td>{{ getQuarterPlanAccomp(suitable,4)}}</td>
+
 														<td></td>
 													</tr>
 												{% endif %}

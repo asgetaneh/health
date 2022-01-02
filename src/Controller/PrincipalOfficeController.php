@@ -218,7 +218,9 @@ class PrincipalOfficeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+                 $this->addFlash('success', "Update successfuly");
             return $this->redirectToRoute('principal_office_index');
+
         }
 
         return $this->render('principal_office/edit.html.twig', [
@@ -236,7 +238,9 @@ class PrincipalOfficeController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $principalOffice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($principalOffice);
+
             $entityManager->flush();
+            $this->addFlash('success', "Delete successfuly");
         }
 
         return $this->redirectToRoute('principal_office_index');

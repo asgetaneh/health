@@ -76,6 +76,7 @@
 									<tr>
 										<th>#</th>
 										<th>TaskName</th>
+										<th>Initiative</th>
 										<th>Performer Name</th>
 										<th>StartDate</th>
 										<th>EndDate</th>
@@ -91,6 +92,8 @@
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
 											<td>{{ taskAssign.performerTask.name }}</td>
+											<td>{{ taskAssign.performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.initiative }}</td>
+
 											<td>{{taskAssign.assignedTo.userInfo}}</td>
 
 											<td>{{ taskAssign.startDate  }}</td>
@@ -99,7 +102,7 @@
 											<td>{{ taskAssign.performerTask.weight }}</td>
 											<td>
 												<form action="{{path('operational_task_show_detail')}}" method="post">
-												
+
 													<input type="hidden" name="principal" value="{{principal}}">
 
 													<input type="hidden" name="taskAssign" value="{{taskAssign.id}}">
@@ -120,8 +123,8 @@
 
 
 											{# <td>
-																																																																																																																																																																																																																		<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
-																																																																																																																																																																																																								</td> #}
+																																																																																																																																																																																																																																								<a href="{{ path('performer_task_show', {'id': performer_task.id}) }}" class="btn btn-primary btn-sm">
+																																																																																																																																																																																																																														</td> #}
 
 										</tr>
 									{% else %}

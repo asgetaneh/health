@@ -540,7 +540,8 @@ class OperationalTaskController extends AbstractController
         $socialcount = 0;
         $socialAttr = 0;
         $principalOffice = $suitableInitiative->getPrincipalOffice()->getId();
-
+ $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $sendToPlan = $maxTasks->getSendToPlan();
         $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
         $initiativeName = $suitableInitiative->getInitiative()->getName();
         $time = new DateTime('now');
@@ -585,15 +586,18 @@ class OperationalTaskController extends AbstractController
 
             ]);
         } else {
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId());
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        // dd($currentQuarter);
+            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(),$currentQuarter);
             $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
             // dd($planningAcc);
-            // dd($operatioanlSuitables);
+
             return $this->render('operational_task/initiativeAccomplishment.html.twig', [
                 'operatioanlSuitables' => $operatioanlSuitables,
                 'initiativeName' => $initiativeName,
                 'remainingdays' => $remainingdays,
                 'planningAcc' => $planningAcc,
+                'sendToPlan'=>$sendToPlan,
                 'social' => 0,
             ]);
         }
@@ -763,7 +767,7 @@ class OperationalTaskController extends AbstractController
             $date = new DateTime();
         }
         $task = $taskAssignRepository->find($taskAssign);
-        // dd($task);
+ $iniName=$task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();        
         if ($task->getType() < 2) {
             $task->setType(2);
             $em->flush();
@@ -780,6 +784,7 @@ class OperationalTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
             'social' => $social,
+            'iniName'=>$iniName,
             'principal' => $principal
         ]);
     }

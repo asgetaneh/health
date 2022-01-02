@@ -24,16 +24,18 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
     //  */
 
 
-    public function findplan($principalOffice, $suitable)
+    public function findplan($principalOffice, $suitable, $currentQuarter)
     {
         // dd($suitable,$principalOffice);
         return $this->createQueryBuilder('o')
             ->leftJoin('o.operationalOffice', 'op')
             ->leftJoin('o.operationalPlanning', 'pa')
-          ->leftJoin('pa.operationalSuitable', 'su')
+            ->leftJoin('pa.operationalSuitable', 'su')
             ->andWhere('op.principalOffice = :val')
             ->andWhere('su.suitableInitiative = :suitable')
+            ->andWhere('o.quarter = :currentQuarter')
             ->andWhere('o.status = 1')
+            ->setParameter('currentQuarter', $currentQuarter)
             ->setParameter('val', $principalOffice)
             ->setParameter('suitable', $suitable)
             ->orderBy('o.id', 'ASC')

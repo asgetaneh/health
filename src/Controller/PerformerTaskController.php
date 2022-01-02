@@ -265,7 +265,9 @@ class PerformerTaskController extends AbstractController
         $taskAssign = $request->request->get('taskUser');
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
         $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
+        $iniName=0;
         foreach ($taskAssigns as $key) {
+            $iniName=$key->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
             if ($key->getStatus() < 1) {
                 $key->setStatus(1);
                 $em->flush();
@@ -284,7 +286,8 @@ class PerformerTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
             'narativeForm' => $narativeForm->createView(),
-            'social' => $social
+            'social' => $social,
+            'iniName'=>$iniName
 
         ]);
     }

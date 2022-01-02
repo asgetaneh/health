@@ -246,6 +246,7 @@ class PrincipalManagerController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($principalManager);
             $entityManager->flush();
+            $this->addFlash('success', "Delete successfuly");
         }
 
         return $this->redirectToRoute('principal_manager_index');

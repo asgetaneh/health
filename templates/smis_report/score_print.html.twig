@@ -72,8 +72,7 @@
 			tr,
 			th {
 				border: 1px solid #000;
-				text-align: left;
-				padding-left: 15px;
+
 				font-size: 15px;
 
 			}
@@ -94,7 +93,13 @@
 
 			</center>
 			<h4>
-				I, <u>{{fullName}}</u> commit to deliver and agreed to be rated on the attainment of the	following targets, in accordance with the									  indicated measures set for the period of <u>1/11/{{ethYear - 1}}</u> to <u>30/10/{{ethYear }}</u> .
+				I,
+				<u>{{fullName}}</u>
+				commit to deliver and agreed to be rated on the attainment of the	following targets, in accordance with the									  indicated measures set for the period of
+				<u>1/11/{{ethYear - 1}}</u>
+				to
+				<u>30/10/{{ethYear }}</u>
+				.
 			</h4>
 
 			<h5>Name of the Institution<u>Jimma University</u>
@@ -114,8 +119,10 @@
 						<th>Weight</th>
 						<th>Iitiative</th>
 						<th>Weight</th>
-						<th>Target</th>
-						<th colspan="7">Success indicators</th>
+
+						<th colspan="11">Success indicators(
+							Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}}
+						)</th>
 
 
 					</tr>
@@ -125,16 +132,21 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<th></th>
-
-
-						<th colspan="4">Quantity</th>
-						<th>Quality</th>
-						<th>Time</th>
+						<th>Target</th>
+						<th>Achievement</th>
+						<th>Q1T</th>
+						<th>Q1A</th>
+						<th>Q2T</th>
+						<th>Q2A</th>
+						<th>Q3T</th>
+						<th>Q3A</th>
+						<th>Q4T</th>
+						<th>Q4A</th>
 
 						<th>Remarks</th>
 
 					</tr>
+
 				</thead>
 
 
@@ -156,12 +168,16 @@
 									<td>{{principal.suitableInitiative.initiative.weight}}</td>
 
 									<td>{{ getYearlyPlan( suitable,'year')}}</td>
+									<td>{{ getYearlyPlanAccomp( suitable,'year')}}</td>
 									<td>{{ getQuarterPlan( suitable,1)}}</td>
+									<td>{{ getQuarterPlanAccomp(suitable,1)}}</td>
 									<td>{{ getQuarterPlan(suitable,2)}}</td>
+									<td>{{ getQuarterPlanAccomp(suitable,2)}}</td>
 									<td>{{ getQuarterPlan(suitable,3)}}</td>
+									<td>{{ getQuarterPlanAccomp(suitable,3)}}</td>
 									<td>{{ getQuarterPlan(suitable,4)}}</td>
-									<td></td>
-									<td></td>
+									<td>{{ getQuarterPlanAccomp(suitable,4)}}</td>
+
 									<td></td>
 								</tr>
 							{% endif %}
@@ -175,8 +191,14 @@
 
 				</tbody>
 			</table><br>
-			Name <u>{{fullName}}</u><br>                                                                 
-																																			Office <u>{{principalOfficeName}}</u>  <br>                                                                                            Date                                        __________________       <br>                                                            Signature________________
+			Name
+			<u>{{fullName}}</u><br>
+			Office
+			<u>{{principalOfficeName}}</u>
+			<br>
+			Date                                        __________________
+			<br>
+			Signature________________
 		</div>
 		<div id="footer">
 			<div class="custom">

@@ -142,6 +142,8 @@ class OperationalOfficeController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('operational_office_index');
+                        $this->addFlash('success', "Update successfuly");
+
         }
 
         return $this->render('operational_office/edit.html.twig', [

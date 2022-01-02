@@ -73,7 +73,7 @@
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">Performer Task
-						{# {{operationalTask}} #}
+						{# {{iniName}} #}
 					</h5>
 
 
@@ -86,6 +86,10 @@
 							{# <strong>{{tasks|length}}</strong> #}
 						</span>
 					</div>
+				</div>
+				<div class="pull-right" style="margin-bottom:20px; margin-top:10px;">
+					<span class="badge badge-info text-white">
+						{{iniName}}</span>
 				</div>
 
 
@@ -101,6 +105,7 @@
 
 						</div>
 					</div>
+
 
 					<div class="widget-main padding-16">
 
@@ -200,7 +205,7 @@
 
 
 																	{% endif %}
-																	<td>	
+																	<td>
 
 																		<button class="btn btn-sm edit btn-warning" type="button" data-accomp="{{taskAccomplishment.id}}">
 																			<i class="fa fa-edit"></i>

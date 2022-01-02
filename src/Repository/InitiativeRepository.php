@@ -111,8 +111,7 @@ class InitiativeRepository extends ServiceEntityRepository
         if (isset($search['goal']) && sizeof($search['goal']) > 0) {
             $qb
                 ->innerJoin('i.keyPerformanceIndicator', 'k')
-                ->innerJoin('k.strategy', 's')
-                ->innerJoin('s.objective', 'o')
+                ->innerJoin('k.objective', 'o')
                 ->andWhere('o.goal in (:goal)')
                 ->setParameter('goal', $search['goal']);
         }
@@ -124,8 +123,7 @@ class InitiativeRepository extends ServiceEntityRepository
 
             $qb
                 ->Join('i.keyPerformanceIndicator', 'k')
-                ->Join('k.strategy', 's')
-                ->andWhere('s.objective in (:objective)')
+                ->andWhere('k.objective in (:objective)')
                 ->setParameter('objective', $search['objective']);
         }
         if (isset($search['strategy']) && sizeof($search['strategy']) > 0) {
@@ -162,4 +160,17 @@ class InitiativeRepository extends ServiceEntityRepository
         return $qb->orderBy('i.initiativeNumber','ASC')->getQuery();
 
     }
+    public function findOfficeInitiative($principalOffice)
+    {
+        // dd($id);
+
+        return $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->leftJoin('s.principalOffice ','p')
+           ->andWhere('p.id = :office')
+            ->setParameter('office', $principalOffice)
+
+            ->getQuery()->getSingleScalarResult();
+    }
+    
 }
