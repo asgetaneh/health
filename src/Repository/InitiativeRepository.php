@@ -149,6 +149,16 @@ class InitiativeRepository extends ServiceEntityRepository
                 ->andWhere('c.id in (:category)')
                 ->setParameter('category', $search['category']);
         }
+        if (isset($search['coreTask'])) {
+            if ($search['coreTask'] == 0) {
+                $qb
+                    ->andWhere('i.coreTask is NULL');
+            }
+            else{
+            $qb
+                ->andWhere('i.coreTask IS NOT NULL');
+                }
+        }
         if (isset($search['name'])) {
 
             $qb
@@ -157,8 +167,7 @@ class InitiativeRepository extends ServiceEntityRepository
         }
 
 
-        return $qb->orderBy('i.initiativeNumber','ASC')->getQuery();
-
+        return $qb->orderBy('i.initiativeNumber', 'ASC')->getQuery();
     }
     public function findOfficeInitiative($principalOffice)
     {
@@ -166,11 +175,10 @@ class InitiativeRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('s')
             ->select('count(s.id)')
-            ->leftJoin('s.principalOffice ','p')
-           ->andWhere('p.id = :office')
+            ->leftJoin('s.principalOffice ', 'p')
+            ->andWhere('p.id = :office')
             ->setParameter('office', $principalOffice)
 
             ->getQuery()->getSingleScalarResult();
     }
-    
 }

@@ -25,6 +25,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Constraints\Length;
@@ -105,13 +106,14 @@ class InitiativeController extends AbstractController
                 'required' => false,
 
             ])
+            ->add('coreTask', ChoiceType::class, [
+                'choices'  => [
+                    'Choose ' => null,
+                    'Assign' => 1,
+                    'Not Assign' => 0,
+                ],
+            ])
             ->getForm();
-
-
-
-
-
-
 
 
 
@@ -239,7 +241,7 @@ class InitiativeController extends AbstractController
     public function print(Request $request, PaginatorInterface $paginator, InitiativeRepository $initiativeRepository)
     {
         set_time_limit(120);
-                
+
 
         $session = new Session();
         // $em = $this->getDoctrine()->getManager();
@@ -250,11 +252,11 @@ class InitiativeController extends AbstractController
         } else {
             $initiativestotal = $initiativeRepository->findAll();
         }
-        $count=0;
-               foreach ($initiativestotal as $initiative) {
-                   $count++;
-               }
-       
+        $count = 0;
+        foreach ($initiativestotal as $initiative) {
+            $count++;
+        }
+
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $pdfOptions->set('isRemoteEnabled', true);
@@ -284,7 +286,7 @@ class InitiativeController extends AbstractController
                            
                             
                             ';
-        $body  = '<center><h3 >Ju Initiative   </h3></center>Total : ' . $count.' <br/>';
+        $body  = '<center><h3 >Ju Initiative   </h3></center>Total : ' . $count . ' <br/>';
         $table = '    
                     <table border="1" >
                     <thead>
@@ -310,16 +312,16 @@ class InitiativeController extends AbstractController
             <td>' . $initiative->getKeyPerformanceIndicator()->getStrategy()->getObjective() . '</td>
             <td>' . $initiative->getKeyPerformanceIndicator()->getStrategy()->getObjective()->getGoal() . '</td>
             <td> ' . $initiative->getInitiativeBehaviour() . '</td><td>';
-            $count=0;
+            $count = 0;
             foreach ($initiative->getPrincipalOffice() as $office) {
-                $count+=1;
-                $table .= '<p>'.$count.','.
-                $office .'</p>';
+                $count += 1;
+                $table .= '<p>' . $count . ',' .
+                    $office . '</p>';
             }
 
 
 
-           $table.= '</td><td> ' . $initiative->getWeight() . '</td>
+            $table .= '</td><td> ' . $initiative->getWeight() . '</td>
 <td> ' . $initiative->getCategory() . '</td>
              </tr>';
         }
@@ -328,7 +330,7 @@ class InitiativeController extends AbstractController
         $end = '</body></html>';
         // return new Response($start . $body . $table . $end);
         $dompdf->loadHtml($start . $body . $table . $end);
- 
+
         $pdfOptions->setIsHtml5ParserEnabled(true);
 
         $dompdf->setPaper('A4', 'Landscape');
