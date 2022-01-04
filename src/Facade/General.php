@@ -3,6 +3,7 @@
 namespace App\Facade;
 
 use App\Entity\OperationalPlanningAccomplishment;
+use App\Entity\SuitableOperational;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use App\Entity\PerformerTask;
@@ -57,6 +58,13 @@ class General
     {
 
     $count= $entityManager->getRepository(OperationalPlanningAccomplishment::class)->getOperationalCascading($principalOffice);
+     dd($count);
+        return $count;
+    }
+      public static function getPlanningApproved(EntityManager $entityManager,$principalOffice)
+    {
+
+    $count= $entityManager->getRepository(SuitableOperational::class)->getPlanningApproved($principalOffice);
     //  dd($count);
         return $count;
     }

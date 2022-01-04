@@ -237,8 +237,6 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->leftJoin('s.planningYear', 'py')
             ->select('count(s.id)')
-            // ->andWhere('py.ethYear', 'currentYear')
-            // ->setParameter('currentYear', $currentYear)
             ->andWhere('s.principalOffice =  :office')
             ->setParameter('office', $principalOffice)
             ->getQuery()->getSingleScalarResult();

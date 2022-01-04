@@ -48,6 +48,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('getPrincipalSelectSuitable', [$this, 'getPrincipalSelectSuitable']),
             new TwigFunction('getOperationalCascading', [$this, 'getOperationalCascading']),
+            new TwigFunction('getPlanningApproved', [$this, 'getPlanningApproved']),
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
             new TwigFunction('getTaskList', [$this, 'getTaskList']),
             new TwigFunction('getProgress', [$this, 'getProgress']),
@@ -74,13 +75,19 @@ class AppExtension extends AbstractExtension
         $req = General::getPrincipalSelectSuitable($this->entityManager, $principalOffice);
         return ($req);
     }
-      function getOperationalCascading($principalOffice)
+    function getOperationalCascading($principalOffice)
     {
 
         $req = General::getPrincipalSelectSuitable($this->entityManager, $principalOffice);
         return ($req);
     }
-    
+    function getPlanningApproved($principalOffice)
+    {
+
+        $req = General::getPlanningApproved($this->entityManager, $principalOffice);
+        return ($req);
+    }
+
 
     function getTaskStatus($id, $office)
     {

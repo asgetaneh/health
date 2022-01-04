@@ -61,6 +61,7 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
     // public function findBySelect($quarter)
     // {
     //     return $this->createQueryBuilder('o')

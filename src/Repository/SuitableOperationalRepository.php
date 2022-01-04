@@ -72,6 +72,19 @@ class SuitableOperationalRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('i.initiativeNumber', 'ASC')->getQuery()->getResult();
     }
+     public function getPlanningApproved($principalOffice)
+    {
+        // dd($principalOffice);
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.suitableInitiative', 'si')
+            ->select('count(s.id)')
+            // ->andWhere('py.ethYear', 'currentYear')
+            ->andWhere('s.status = 1')
+            ->andWhere('si.principalOffice =  :office')
+            ->setParameter('office', $principalOffice)
+            ->getQuery()->getSingleScalarResult();
+    }
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */
