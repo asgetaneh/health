@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\CoreTask;
 use App\Form\CoreTaskType;
 use App\Repository\CoreTaskRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CoreTaskController extends AbstractController
 {
     #[Route('/', name: 'core_task_index')]
-    public function index(Request $request, CoreTaskRepository $coreTaskRepository): Response
+    public function index(Request $request,PaginatorInterface $paginator, CoreTaskRepository $coreTaskRepository): Response
     {
         $coreTask = new CoreTask();
         $form = $this->createForm(CoreTaskType::class, $coreTask);
@@ -35,10 +37,17 @@ class CoreTaskController extends AbstractController
 
             return $this->redirectToRoute('core_task_index');
         }
+       $coreTaskss= $coreTaskRepository->findAllTasks();
+          $data = $paginator->paginate(
+            $coreTaskRepository->findAllTasks(),
+            $request->query->getInt('page', 1),
+            10
+        );
 
         return $this->render('core_task/index.html.twig', [
-            'core_tasks' => $coreTaskRepository->findAll(),
+            'core_tasks' => $data,
             'form' => $form->createView(),
+            'coreTaskss'=>$coreTaskss,
 
         ]);
     }
