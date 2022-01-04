@@ -78,12 +78,9 @@
 							<div class="navbar-buttons navbar-header pull-right" role="navigation">
 								{% block nav_list %}
 
-									
 
+									<ul class="nav ace-nav">
 
-									<ul
-										class="nav ace-nav">
-										
 										{% if is_granted('IS_PPO_DIRECTOR') %}
 											<li></li>
 										{% endif %}
@@ -122,8 +119,9 @@
 										<li class="green dropdown-modal">
 											{% set locale = app.request.locale %}
 
-										
-												<a href="{{ asset('assets/assets/images/strategic'~ locale ~'.png')}}" class="btn btn-sm btn-success pull-right" width="1300" target="_blank" height="600"> {% trans %}
+
+											<a href="{{ asset('assets/assets/images/strategic'~ locale ~'.png')}}" class="btn btn-sm btn-success pull-right" width="1300" target="_blank" height="600">
+												{% trans %}
 												View Strategic Map{% endtrans %}
 											</a>
 											{# <span class="badge badge-success"></span> #}
@@ -277,25 +275,25 @@ ace.settings.loadState('sidebar')
 
 
 						{% block tobologyMenu %}
-									{% if is_granted('vw_usr_lst') %}
+							{% if is_granted('vw_usr_lst') %}
 
 
-							<li class="toplist" role="treeitem">
-								<a href="#" class="dropdown-toggle ">
-									<i class=""></i>
-									<span class="menu-text">
+								<li class="toplist" role="treeitem">
+									<a href="#" class="dropdown-toggle ">
+										<i class=""></i>
+										<span class="menu-text">
 
-										{% trans %}EMIS{% endtrans %}
-									</span>
-									<b class="arrow fa fa-angle-down"></b>
-								</a>
-								<ul class="submenu" role="treeitem">
+											{% trans %}EMIS{% endtrans %}
+										</span>
+										<b class="arrow fa fa-angle-down"></b>
+									</a>
+									<ul class="submenu" role="treeitem">
 
 
-									{{ include('menu/emis.html.twig') }}
+										{{ include('menu/emis.html.twig') }}
 
-								</ul>
-							</li>
+									</ul>
+								</li>
 							{% endif %}
 							<li class="toplist" role="treeitem">
 								<a class="dropdown-toggle" href="#">
@@ -449,15 +447,22 @@ ace.settings.loadState('sidebar')
 												{% endtrans %}
 											</a>
 										</li>
-											<li>
+										<li>
 											<a href="{{ path('score_report') }}">
 												<b class="fa fa-caret-right"></b>
 												{% trans %}
-												Performance Score 
+												Performance Score
 												{% endtrans %}
 											</a>
 										</li>
-										
+										<li>
+											<a href="{{ path('score_progress') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}
+												Principal Office Progress 
+												{% endtrans %}
+											</a>
+										</li>
 
 
 									</ul>
@@ -505,7 +510,7 @@ ace.settings.loadState('sidebar')
 											<a href="{{ path('sms_list') }}">
 												<b class="fa fa-caret-right"></b>
 												{% trans %}
-												 Sms List
+												Sms List
 												{% endtrans %}
 											</a>
 										</li>
@@ -785,7 +790,7 @@ ace.settings.loadState('sidebar')
 								<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 								<script type="text/javascript">
 									if ('ontouchstart' in document.documentElement) 
-document.write("<script src='                     {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
+document.write("<script src='                      {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
 								</script>
 
 								<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>

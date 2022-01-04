@@ -44,35 +44,20 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
         return $qb->getQuery()->getResult();
     }
     
-
-    // /**
-    //  * @return OperationalPlanningAccomplishment[] Returns an array of OperationalPlanningAccomplishment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+public function getOperationalCascading($principalOffice)
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        // dd($id);
 
-    /*
-    public function findOneBySomeField($value): ?OperationalPlanningAccomplishment
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQueryBuilder('s')
+        ->leftJoin('s.operationalSuitable','os')
+        ->leftJoin('os.suitableInitiative','si')
+                       ->select('count(s.id)')
+            ->andWhere('si.principalOffice =  :office')
+
+            ->setParameter('office', $principalOffice)
+
+            ->getQuery()->getSingleScalarResult();
     }
-    */
      public function findDuplication($operationalSuitable, $attrib = null, $quarter)
     {
         $qb = $this->createQueryBuilder('pa');

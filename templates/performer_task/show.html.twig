@@ -183,6 +183,8 @@
 																			{% endif %}
 																			<input type="number" name="reportValue" class="form-conrol" required>
 																			<input type="hidden" name="reportAvail" class="form-conrol" value="1" required>
+															               <input type="hidden" name="taskUser" value="{{taskAssign.id}}">
+																		  
 
 																			{% if social == 1  %}
 																				Female<input type="number" name="reportValueSocial" class="form-conrol" required>
@@ -252,7 +254,7 @@
 							{% elseif status == 4 %}
 								{# <button type="button" name="narrative" data-taskuseridd="{{taskUserid}}" class="btn btn-warning skip  pull-right">Skip</button> #}
 							{% else %}
-								<button type="submit" name="report" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report this Value?');">Report</button>
+								<button type="submit" name="report" class="btn btn-primary pull-right" onclick="return confirm('Are you sure you want to Report this Value?');">Submit Report Value</button>
 							{% endif %}
 						</form>
 						{% if status == 4 %}

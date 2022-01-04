@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\SuitableInitiative;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry; 
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method SuitableInitiative|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,7 +23,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     //  * @return SuitableInitiative[] Returns an array of SuitableInitiative objects
     //  */
 
-  
+
 
 
     /*
@@ -117,14 +117,13 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     {
 
         $qb = $this->createQueryBuilder('s')
-        ->join('s.initiative','i')
-        ->join('i.keyPerformanceIndicator','k')
-        ->join('k.strategy','st')
-        ->join('st.objective','o')
-        ;
+            ->join('s.initiative', 'i')
+            ->join('i.keyPerformanceIndicator', 'k')
+            ->join('k.strategy', 'st')
+            ->join('st.objective', 'o');
 
         if (isset($search['planyear'])) {
-           
+
             $qb->andWhere('s.planningYear in (:planyear)')
                 ->setParameter('planyear', $search['planyear']);
         }
@@ -136,11 +135,11 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             $qb->andWhere('s.initiative in (:initiative)')
                 ->setParameter('initiative', $search['initiative']);
         }
-         if (isset($search['kpi']) && sizeof($search['kpi']) > 0) {
+        if (isset($search['kpi']) && sizeof($search['kpi']) > 0) {
             $qb->andWhere('i.keyPerformanceIndicator in (:kpi)')
                 ->setParameter('kpi', $search['kpi']);
         }
-          if (isset($search['strategy']) && sizeof($search['strategy']) > 0) {
+        if (isset($search['strategy']) && sizeof($search['strategy']) > 0) {
             $qb->andWhere('k.strategy in (:strategy)')
                 ->setParameter('strategy', $search['strategy']);
         }
@@ -148,7 +147,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             $qb->andWhere('st.objective in (:objective)')
                 ->setParameter('objective', $search['objective']);
         }
-         if (isset($search['goal']) && sizeof($search['goal']) > 0) {
+        if (isset($search['goal']) && sizeof($search['goal']) > 0) {
             $qb->andWhere('o.goal in (:goal)')
                 ->setParameter('goal', $search['goal']);
         }
@@ -176,24 +175,24 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('id', $id);
         return $qb->getQuery()->getOneOrNullResult();
     }
-    public function finds($initiative,$principal)
+    public function finds($initiative, $principal)
     {
         $qb = $this->createQueryBuilder('i');
         $qb
-           
-         ->andwhere('i.initiative = :initiative')
-         ->andwhere('i.principalOffice = :principal')
-            ->setParameter('principal', $principal)   
 
-           
-            ->setParameter('initiative', $initiative);       
+            ->andwhere('i.initiative = :initiative')
+            ->andwhere('i.principalOffice = :principal')
+            ->setParameter('principal', $principal)
+
+
+            ->setParameter('initiative', $initiative);
         return $qb->getQuery()->getResult();
     }
-     public function findPrincipal($search,  $quarterId)
+    public function findPrincipal($search,  $quarterId)
     {
         $qb = $this->createQueryBuilder('pa');
 
-//  dd($quarterId);
+        //  dd($quarterId);
         $qb
             ->leftJoin('pa.suitableInitiative', 's')
             ->andWhere('s.principalOffice = :principalOffice')
@@ -216,7 +215,7 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
 
                 ->setParameter('principalOffice', $search['principalOffice']);
         }
-        
+
         if (isset($search['planningYear'])) {
 
 
@@ -230,5 +229,18 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
+    public function getPrincipalSelectSuitable($principalOffice)
+    {
+        // dd($principalOffice);
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.planningYear', 'py')
+            ->select('count(s.id)')
+            // ->andWhere('py.ethYear', 'currentYear')
+            // ->setParameter('currentYear', $currentYear)
+            ->andWhere('s.principalOffice =  :office')
+            ->setParameter('office', $principalOffice)
+            ->getQuery()->getSingleScalarResult();
+    }
 }

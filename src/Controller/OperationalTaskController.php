@@ -165,18 +165,17 @@ class OperationalTaskController extends AbstractController
             if ($isCore) {
                 $performerTask->setName($coreTaskName);
             } else {
-                if(!$performerTaskName){
-                   
-                     $this->addFlash('danger', 'Task Name Required!');
-                return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
-                }
-                if(!$form->getData()->getWeight()){
-                   
-                     $this->addFlash('danger', 'Task Weight Required!');
-                return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+                if (!$performerTaskName) {
 
+                    $this->addFlash('danger', 'Task Name Required!');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
                 }
-                
+                if (!$form->getData()->getWeight()) {
+
+                    $this->addFlash('danger', 'Task Weight Required!');
+                    return $this->redirectToRoute('operational_task_index', ['id' => $suitableOperational->getId()]);
+                }
+
                 $performerTask->setName($performerTaskName);
             }
             //  dd(1);
@@ -540,7 +539,7 @@ class OperationalTaskController extends AbstractController
         $socialcount = 0;
         $socialAttr = 0;
         $principalOffice = $suitableInitiative->getPrincipalOffice()->getId();
- $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
+        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $sendToPlan = $maxTasks->getSendToPlan();
         $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
         $initiativeName = $suitableInitiative->getInitiative()->getName();
@@ -586,9 +585,9 @@ class OperationalTaskController extends AbstractController
 
             ]);
         } else {
-        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
-        // dd($currentQuarter);
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(),$currentQuarter);
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            // dd($currentQuarter);
+            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(), $currentQuarter);
             $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
             // dd($planningAcc);
 
@@ -597,7 +596,7 @@ class OperationalTaskController extends AbstractController
                 'initiativeName' => $initiativeName,
                 'remainingdays' => $remainingdays,
                 'planningAcc' => $planningAcc,
-                'sendToPlan'=>$sendToPlan,
+                'sendToPlan' => $sendToPlan,
                 'social' => 0,
             ]);
         }
@@ -743,7 +742,12 @@ class OperationalTaskController extends AbstractController
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
             $evaluation->setQuantity($percent);
-            $evaluation->setQuality($quality);
+            if ($quality) {
+                # code...
+                $evaluation->setQuality($quality);
+            } else {
+                $evaluation->setQuality(0);
+            }
             $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskUser->setType(3);
             $em->persist($evaluation);
@@ -767,7 +771,7 @@ class OperationalTaskController extends AbstractController
             $date = new DateTime();
         }
         $task = $taskAssignRepository->find($taskAssign);
- $iniName=$task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();        
+        $iniName = $task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
         if ($task->getType() < 2) {
             $task->setType(2);
             $em->flush();
@@ -784,7 +788,7 @@ class OperationalTaskController extends AbstractController
             'taskAccomplishments' => $taskAccomplishments,
             'taskAssigns' => $taskAssigns,
             'social' => $social,
-            'iniName'=>$iniName,
+            'iniName' => $iniName,
             'principal' => $principal
         ]);
     }

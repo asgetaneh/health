@@ -25,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -41,9 +42,10 @@ class PerformerTaskController extends AbstractController
         if ($request->request->get("taskUserId")) {
             $taskUserId = $request->request->get("taskUserId");
             $reason = $request->request->get("reason");
-            $taskUsers = $taskAssignRepository->find($taskUserId);
-            $taskUsers->setStatus(6);
-            $taskUsers->setRejectReason($reason);
+            $taskUser = $taskAssignRepository->find($taskUserId);
+            $taskUser->setStatus(6);
+            $taskUser->setType(4);
+            $taskUser->setRejectReason($reason);
             $em->flush();
             $this->addFlash('success', 'Task Reject successfully !');
             return $this->redirectToRoute('performer_task_index');
@@ -244,30 +246,45 @@ class PerformerTaskController extends AbstractController
                     $taskAccomplishment->setReportedValueSocial($reportValueSocial);
                 }
             }
+            $taskAssign = $request->request->get('taskUser');
+            $session = new Session();
+            $session->set('request', $request->request->get('taskUser'));
             $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
+            // dd($request);
             $taskUser->setStatus(2);
 
             $em->flush();
             $this->addFlash('success', 'Reported successfully !');
-            return $this->redirectToRoute('performer_task_index');
+            return $this->redirectToRoute('performer_task_show');
         }
         if ($request->request->get('challenge')) {
             $challenge = $request->request->get('challenge');
             $id = $request->request->get('taskUserid');
-            $taskAssinCha = $taskAssignRepository->find($id);
 
+            $taskAssinCha = $taskAssignRepository->find($id);
+            $session = new Session();
+            $session->set('request', $request->request->get('taskUserid'));
             $taskAssinCha->setChallenge($challenge);
-            $taskAssinCha->setStatus(3);
+            $taskAssinCha->setStatus(4);
             $em->flush();
             $this->addFlash('success', 'thank you for responding  !');
-            return $this->redirectToRoute('performer_task_index');
+            return $this->redirectToRoute('performer_task_show');
         }
-        $taskAssign = $request->request->get('taskUser');
+        if ($request->request->get('taskUser')) {
+            $taskAssign = $request->request->get('taskUser');
+            $session = new Session();
+            $session->remove('request');
+        } else {
+            $session = new Session();
+            $taskAssign = $session->get('request');
+        }
+
+        // dd($request);
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
         $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
-        $iniName=0;
+        $iniName = 0;
         foreach ($taskAssigns as $key) {
-            $iniName=$key->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
+            $iniName = $key->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
             if ($key->getStatus() < 1) {
                 $key->setStatus(1);
                 $em->flush();
@@ -287,7 +304,7 @@ class PerformerTaskController extends AbstractController
             'taskAssigns' => $taskAssigns,
             'narativeForm' => $narativeForm->createView(),
             'social' => $social,
-            'iniName'=>$iniName
+            'iniName' => $iniName
 
         ]);
     }
@@ -315,7 +332,7 @@ class PerformerTaskController extends AbstractController
 
         $taskId = $request->request->get('taskId');
         $taskAssign = $taskAssignRepository->find($taskId);
-        $taskAssign->setStatus(3);
+        $taskAssign->setStatus(4);
         $em->flush();
         return new JsonResponse($taskAssign);
     }
@@ -341,12 +358,15 @@ class PerformerTaskController extends AbstractController
 
         $taskAssignId = $request->request->get('taskAssignIds');
         // dd($taskAssignId);
+
         $taskAssign = $taskAssignRepository->find($taskAssignId);
         $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->findOneBy(['taskAssign' => $taskAssign]);
         //    dd($taskAccomplishment);
         $taskAccomplishment->setReportedAt(new \DateTime());
         $taskAssign->setStatus(5);
         // $taskUser->setType(1);
+         $session = new Session();
+            $session->remove('request');
         $em->flush();
         return $this->redirectToRoute('performer_task_index');
     }
@@ -381,6 +401,7 @@ class PerformerTaskController extends AbstractController
             $taskAssigns->setTimeGap($timeGap);
             $taskAssigns->setExpectedValue($expectedValue);
             $taskAssigns->setStatus(0);
+            $taskAssigns->setType(1);
             // $taskUsers->setRejectReason(null);
             // $taskAccomplishment->setExpectedValue($expectedValue);
             $em->flush();

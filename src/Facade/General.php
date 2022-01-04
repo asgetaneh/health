@@ -2,9 +2,11 @@
 
 namespace App\Facade;
 
+use App\Entity\OperationalPlanningAccomplishment;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use App\Entity\PerformerTask;
+use App\Entity\SuitableInitiative;
 use App\Entity\TaskAssign;
 
 class General
@@ -46,6 +48,20 @@ class General
     //  dd($count);
         return $count;
     }
+      public static function getPrincipalSelectSuitable(EntityManager $entityManager,$principalOffice)
+    {
+    $count= $entityManager->getRepository(SuitableInitiative::class)->getPrincipalSelectSuitable($principalOffice);
+        return $count;
+    }
+     public static function getOperationalCascading(EntityManager $entityManager,$principalOffice)
+    {
+
+    $count= $entityManager->getRepository(OperationalPlanningAccomplishment::class)->getOperationalCascading($principalOffice);
+    //  dd($count);
+        return $count;
+    }
+    
+    
     
     
 }

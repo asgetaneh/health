@@ -246,7 +246,7 @@ class SmisReportController extends AbstractController
             $value = 0;
             $principalReports[] = "";
             $suitableInitiatives[] = "";
-            $totalInitiative="";
+            $totalInitiative = "";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
         $data = $paginator->paginate(
@@ -262,6 +262,69 @@ class SmisReportController extends AbstractController
             'form' => $form->createView(),
             'suitableInitiatives' => $suitableInitiatives,
             'value' => $value
+
+        ]);
+    }
+    /**
+     * @Route("/score_progress", name="score_progress")
+     */
+    public function progress(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
+    {
+        $this->denyAccessUnlessGranted('pre_rep');
+        $em = $this->getDoctrine()->getManager();
+        $time = new DateTime('now');
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        $quarterId = 0;
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+            }
+        }
+        // dd($quarterId);
+        $value = 1;
+
+        $form = $this->createFormBuilder()
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                // 'multiple' => true,
+                // 'placeholder' => 'All',
+                'placeholder' => "Principal Office",
+
+                'required' => false
+            ])
+
+          
+
+            ->getForm();
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted()) {
+            $prinOfId = $form->getData()['principalOffice']->getId();
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
+        } else {
+
+            $value = 0;
+            $principalReports[] = "";
+            $currentYear = AmharicHelper::getCurrentYear();
+// dd($startYear);
+            $suitableInitiatives[] = "";
+            $totalInitiative = "";
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findAll();
+        }
+        $data = $paginator->paginate(
+            $principalOffices,
+            $request->query->getInt('page', 1),
+            10
+        );
+        // dd($data);
+
+        return $this->render('smis_report/progress.html.twig', [
+
+            'form' => $form->createView(),
+            'currentYear'=> AmharicHelper::getCurrentYear(),
+            'principalOffices' => $data,
 
         ]);
     }
