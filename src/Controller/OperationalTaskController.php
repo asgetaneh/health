@@ -498,6 +498,8 @@ class OperationalTaskController extends AbstractController
         foreach ($plannings as $key => $value) {
             # code...
             $value->setAccompValue($accomp[$key]);
+            $operationalSuitable=$value->getOperationalSuitable();
+            $operationalSuitable->setStatus(2);
             //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($value);

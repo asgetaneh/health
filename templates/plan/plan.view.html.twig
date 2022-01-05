@@ -74,16 +74,17 @@
 					</div>
 
 				</div>
-				<div class="table-responsive">
+				<div
+					class="table-responsive">
 
 					{# <form action="{{path('principal_office_report')}}" method="post">
-						<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
-							<i class=" fa fa-print"></i>
-
-							Excel
-						</button>
-
-					</form> #}
+											<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
+												<i class=" fa fa-print"></i>
+					
+												Excel
+											</button>
+					
+										</form> #}
 					<form action="{{path('plan_print')}}" method="post">
 						<input type="hidden" name="planyear" value="{{planyear.id}}">
 						<input type="hidden" name="office" value="{{pricipaloffice.id}}">
@@ -423,12 +424,18 @@
 																<input type="hidden" name="currentpa" class="currentpa" value="{{suitableplans.getCurrentPageNumber() }}">
 
 																{% if operationsuitablelength >0 %}
-																	<a href="#" data-id="{{suitableplan.id}}" data-operational="{{operational.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
+																	{% for operationalPlan in operationalPlans %}
+																		{% if  operationalPlan.suitableInitiative.id == suitableplan.id and operationalPlan.operationalOffice.id == operational.id %}
+																			{% if  operationalPlan.status == 0 %}
+																				<a href="#" data-id="{{suitableplan.id}}" data-operational="{{operational.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-warning btn-sm">
 
 
-																		<span class="glyphicon glyphicon-edit"></span>
+																					<span class="glyphicon glyphicon-edit"></span>
 
-																	</a>
+																				</a>
+																			{% endif %}
+																		{% endif %}
+																	{% endfor %}
 																{% else %}
 																	<a href="#" data-id="{{suitableplan.id}}" data-operational="{{operational.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" title="add plan" class="addPlan btn btn-info btn-sm">
 

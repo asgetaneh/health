@@ -133,7 +133,7 @@
 																{% endfor %}
 															</td>
 															<td>
-																{% if operationalSuitable.status %}
+																{% if operationalSuitable.status == 1%}
 
 																	{% if getTaskStatus(operationalSuitable.id,office) %}
 																		{# {{getTaskStatus(suitableInitiative.id,office)}} #}
