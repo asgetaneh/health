@@ -58,7 +58,7 @@ class General
     {
 
     $count= $entityManager->getRepository(OperationalPlanningAccomplishment::class)->getOperationalCascading($principalOffice);
-     dd($count);
+    //  dd($count);
         return $count;
     }
       public static function getPlanningApproved(EntityManager $entityManager,$principalOffice)

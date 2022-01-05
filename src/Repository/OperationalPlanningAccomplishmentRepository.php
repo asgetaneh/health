@@ -46,12 +46,12 @@ class OperationalPlanningAccomplishmentRepository extends ServiceEntityRepositor
     
 public function getOperationalCascading($principalOffice)
     {
-        // dd($id);
+        // dd($principalOffice);
 
         return $this->createQueryBuilder('s')
         ->leftJoin('s.operationalSuitable','os')
         ->leftJoin('os.suitableInitiative','si')
-                       ->select('count(s.id)')
+                       ->select('count(os.id)')
             ->andWhere('si.principalOffice =  :office')
 
             ->setParameter('office', $principalOffice)

@@ -78,7 +78,7 @@ class AppExtension extends AbstractExtension
     function getOperationalCascading($principalOffice)
     {
 
-        $req = General::getPrincipalSelectSuitable($this->entityManager, $principalOffice);
+        $req = General::getOperationalCascading($this->entityManager, $principalOffice);
         return ($req);
     }
     function getPlanningApproved($principalOffice)
