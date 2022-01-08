@@ -85,6 +85,20 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             ->setParameter('office', $principalOffice)
             ->getQuery()->getSingleScalarResult();
     }
+    public function findByPrincipal($principalOffice)
+    {
+        // dd($principalOffice);
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.suitableInitiative', 'si')
+            // ->select('count(s.id)')
+            // ->andWhere('py.ethYear', 'currentYear')
+            // ->andWhere('s.status = 1')
+            ->andWhere('si.principalOffice =  :office')
+            ->setParameter('office', $principalOffice)
+            ->getQuery()->getResult();
+    }
+    
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

@@ -78,13 +78,13 @@
 					class="table-responsive">
 
 					{# <form action="{{path('principal_office_report')}}" method="post">
-											<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
-												<i class=" fa fa-print"></i>
-					
-												Excel
-											</button>
-					
-										</form> #}
+																															<button type="submit" name="excel" value="excel" class="btn btn-app btn-success btn-xs  pull-right ">
+																																<i class=" fa fa-print"></i>
+																									
+																																Excel
+																															</button>
+																									
+																														</form> #}
 					<form action="{{path('plan_print')}}" method="post">
 						<input type="hidden" name="planyear" value="{{planyear.id}}">
 						<input type="hidden" name="office" value="{{pricipaloffice.id}}">
@@ -294,22 +294,44 @@
 																	{% set yearlyplan = operationsuitable.planValue|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
 																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 2 %}
 
-																	{% set yearplan = {} %}
+																	{% set yearplan = [] %}
 																	{% for plan in operationsuitable.planValue|filter(plan => plan.planValue > 0) %}
 																		{% set planvalue = plan.planValue %}
 																		{% set yearplan = yearplan|merge({planvalue })  %}
 
 																	{% endfor %}
-																	{% set yearlyplan = max(yearplan) %}
+																	{% if yearplan|length > 1 %}
+
+																		{% set yearplan = max(yearplan) %}
+																	{% elseif yearplan|length == 1 %}
+																		{% set yearplan = yearplan[0] %}
+																	{% else %}
+
+																		{% set yearplan = 0 %}
+
+																	{% endif %}
+
+																	{# {% set yearlyplan = max(yearplan) %} #}
 																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3 %}
 
-																	{% set yearplan = {} %}
+																	{% set yearplan = [] %}
 																	{% for plan in operationsuitable.planValue %}
 																		{% set planvalue = plan.planValue %}
-																		{% set yearplan = yearplan|merge({planvalue })  %}
+
+																		{% set yearplan = yearplan|merge([planvalue ])  %}
 
 																	{% endfor %}
-																	{% set yearlyplan = min(yearplan) %}
+																	
+																	{% if yearplan|length > 1 %}
+
+																		{% set yearplan = min(yearplan) %}
+																	{% elseif yearplan|length == 1 %}
+																		{% set yearplan = yearplan[0] %}
+																	{% else %}
+
+																		{% set yearplan = 0 %}
+
+																	{% endif %}
 
 																{% endif %}
 

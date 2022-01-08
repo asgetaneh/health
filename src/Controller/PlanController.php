@@ -112,7 +112,8 @@ class PlanController extends AbstractController
                     $this->addFlash('success', " successfuly selected Suitable initiatives for your office! thank you for responding");
                 }
             }
-            $operationalPlans = $em->getRepository(SuitableOperational::class)->findAll();
+            $operationalPlans = $em->getRepository(SuitableOperational::class)->findByPrincipal($principaloffice);;
+            // dd($operationalPlans);
 
             $suitableInitiatives = $this->findSuitableInitiative($em, $principaloffice, $planningyear);
 

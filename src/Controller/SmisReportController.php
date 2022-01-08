@@ -211,7 +211,7 @@ class SmisReportController extends AbstractController
             $planningYear = $form->getData()['planningYear']->getId();
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffices);
             // dd($totalInitiative);
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData());
             // dd($suitableInitiatives);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
             $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
@@ -238,7 +238,7 @@ class SmisReportController extends AbstractController
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
 
 
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($principalOffice, $planningYear);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData());
             // dd($suitableInitiatives);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
         } else {
@@ -249,6 +249,7 @@ class SmisReportController extends AbstractController
             $totalInitiative = "";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
+        // dd($suitableInitiatives);
         $data = $paginator->paginate(
             $principalReports,
             $request->query->getInt('page', 1),

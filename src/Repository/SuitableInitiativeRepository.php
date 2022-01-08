@@ -204,11 +204,10 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     }
 
 
-    public function findScore($search = [], $quarterId)
+    public function findScore($search = [])
     {
         $qb = $this->createQueryBuilder('s');
         if (isset($search['principalOffice'])) {
-
 
             $qb
                 ->andWhere('s.principalOffice = :principalOffice')
