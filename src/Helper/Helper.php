@@ -400,13 +400,12 @@ class Helper
 
         if (!$parent)
          return $principalOffice;
+        // while ($parent->getManagedBy()) {
 
-        while ($parent->getManagedBy()) {
-
-            $parent = $parent->getManagedBy();
-        }
+        //     $parent = $parent->getManagedBy();
+        // }
 
 
-        return $parent;
+        // return $parent;
     }
 }

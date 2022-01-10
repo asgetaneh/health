@@ -700,7 +700,7 @@ class PlanController extends AbstractController
 
                 $em->flush();
                 $em->clear();
-            }
+            } 
 
 
             $this->calculatePrincipalOfficePlan($em, $planInitiative);

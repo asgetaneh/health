@@ -297,9 +297,10 @@
 																	{% set yearplan = [] %}
 																	{% for plan in operationsuitable.planValue|filter(plan => plan.planValue > 0) %}
 																		{% set planvalue = plan.planValue %}
-																		{% set yearplan = yearplan|merge({planvalue })  %}
+																		{% set yearplan = yearplan|merge([planvalue ])  %}
 
 																	{% endfor %}
+																	
 																	{% if yearplan|length > 1 %}
 
 																		{% set yearplan = max(yearplan) %}
@@ -309,7 +310,7 @@
 
 																		{% set yearplan = 0 %}
 
-																	{% endif %}
+																	{% endif %} 
 
 																	{# {% set yearlyplan = max(yearplan) %} #}
 																{% elseif  suitableplan.initiative.initiativeBehaviour.code == 3 %}
