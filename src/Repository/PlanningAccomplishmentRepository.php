@@ -47,6 +47,17 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
+     public function findByPrincipalRemove($principalOffice)
+    {
+        return $this->createQueryBuilder('pa')
+         ->leftJoin('pa.suitableInitiative', 's')
+                ->andWhere('s.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('pa.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
+    }
 
     public function findPrincipal($search=[],$currentQuarter)
     {

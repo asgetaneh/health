@@ -52,6 +52,23 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
 
     //         ->getResult();
     // }
+     public function findByPrincipal($principalOffice)
+    {
+
+        return $this->createQueryBuilder('ts')
+        ->leftJoin('ts.taskAssign','ta')
+        ->leftJoin('ta.PerformerTask','ps')
+         ->leftJoin('ps.operationalPlanningAcc','pa')
+          ->leftJoin('pa.operationalSuitable','op')
+             ->leftJoin('op.suitableInitiative','su')
+              ->andWhere('su.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('ts.id', 'ASC')
+    
+            ->getQuery()
+            
+            ->getResult();
+    }
     public function findDetailAccomplishSocial($suitableInitiative, $user)
     {
 

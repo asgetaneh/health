@@ -243,25 +243,27 @@ public function getOperationalCascading($principalOffice)
            
             ->setParameter('suitin', $suitable)
              ->setParameter('slg', $quarter);
-        
-
-     
+    
         if($social){
             $qb
              ->andwhere('pa.socialAttribute = :name')
              ->setParameter('name', $social);
-        }
-
-
-           
-            
-            ;
+        } ;
             //  dd($qb->getQuery()->getSingleScalarOrNullResult());
              $result=$qb->getQuery()->getOneOrNullResult();
             
              return $result? $result['acomp']:null;
-
-
-       
+    }
+    public function findByPrincipal($principalOffice)
+    {
+        return $this->createQueryBuilder('pa')
+          ->leftJoin('pa.operationalSuitable','op')
+             ->leftJoin('op.suitableInitiative','su')
+              ->andWhere('su.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('pa.id', 'ASC')
+            ->getQuery()
+            
+            ->getResult();
     }
 }

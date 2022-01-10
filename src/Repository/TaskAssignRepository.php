@@ -128,6 +128,22 @@ class TaskAssignRepository extends ServiceEntityRepository
                        ->getQuery()->getSingleScalarResult();
 
     }
+      public function findByPrincipal($principalOffice)
+    {
+
+        return $this->createQueryBuilder('ta')
+        ->leftJoin('ta.PerformerTask','ps')
+         ->leftJoin('ps.operationalPlanningAcc','pa')
+          ->leftJoin('pa.operationalSuitable','op')
+             ->leftJoin('op.suitableInitiative','su')
+              ->andWhere('su.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('ta.id', 'ASC')
+    
+            ->getQuery()
+            
+            ->getResult();
+    }
 
     // /**
     //  * @return TaskAssign[] Returns an array of TaskAssign objects

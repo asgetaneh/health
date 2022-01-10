@@ -69,6 +69,25 @@ class EvaluationRepository extends ServiceEntityRepository
             
             ->getResult();
     }
+     public function findByPrincipal($principalOffice)
+    {
+
+        return $this->createQueryBuilder('e')->
+     leftJoin('e.taskAccomplishment','ts')
+        ->leftJoin('ts.taskAssign','ta')
+        ->leftJoin('ta.PerformerTask','ps')
+         ->leftJoin('ps.operationalPlanningAcc','pa')
+          ->leftJoin('pa.operationalSuitable','op')
+             ->leftJoin('op.suitableInitiative','su')
+              ->andWhere('su.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('e.id', 'ASC')
+    
+            ->getQuery()
+            
+            ->getResult();
+    }
+    
     
 
     // /**

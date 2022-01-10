@@ -99,6 +99,7 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
     
+    
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

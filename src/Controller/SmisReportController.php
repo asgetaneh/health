@@ -5,13 +5,18 @@ namespace App\Controller;
 use App\Entity\Evaluation;
 use App\Entity\Initiative;
 use App\Entity\OperationalOffice;
+use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\OperationalSuitableInitiative;
+use App\Entity\PerformerTask;
 use App\Entity\PlanningAccomplishment;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
 use App\Entity\PrincipalManager;
 use App\Entity\PrincipalOffice;
 use App\Entity\SuitableInitiative;
+use App\Entity\SuitableOperational;
+use App\Entity\TaskAccomplishment;
+use App\Entity\TaskAssign;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
 use App\Helper\AmharicHelper;
@@ -295,7 +300,7 @@ class SmisReportController extends AbstractController
                 'required' => false
             ])
 
-          
+
 
             ->getForm();
         $form->handleRequest($request);
@@ -309,7 +314,7 @@ class SmisReportController extends AbstractController
             $value = 0;
             $principalReports[] = "";
             $currentYear = AmharicHelper::getCurrentYear();
-// dd($startYear);
+            // dd($startYear);
             $suitableInitiatives[] = "";
             $totalInitiative = "";
             $principalOffices = $em->getRepository(PrincipalOffice::class)->findAll();
@@ -324,7 +329,125 @@ class SmisReportController extends AbstractController
         return $this->render('smis_report/progress.html.twig', [
 
             'form' => $form->createView(),
-            'currentYear'=> AmharicHelper::getCurrentYear(),
+            'currentYear' => AmharicHelper::getCurrentYear(),
+            'principalOffices' => $data,
+
+        ]);
+    }
+    /**
+     * @Route("/plan_remove", name="plan_remove")
+     */
+    public function plan_remove(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
+    {
+        $this->denyAccessUnlessGranted('pre_rep');
+        $em = $this->getDoctrine()->getManager();
+        $time = new DateTime('now');
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        $quarterId = 0;
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+            }
+        }
+        // dd($quarterId);
+        $value = 1;
+
+        $form = $this->createFormBuilder()
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                // 'multiple' => true,
+                // 'placeholder' => 'All',
+                'placeholder' => "Principal Office",
+
+                'required' => false
+            ])
+
+
+
+            ->getForm();
+        $form->handleRequest($request);
+        if ($request->request->get("remove")) {
+
+            $prinOfId = $form->getData()['principalOffice']->getId();
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
+
+            $evaluations = $em->getRepository(Evaluation::class)->findByPrincipal($prinOfId);
+            $operationalSuitableInitiatives = $em->getRepository(OperationalSuitableInitiative::class)->findByPrincipal($prinOfId);
+            $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId);
+            $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId);
+            $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId);
+            $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByPrincipal($prinOfId);
+            $suitableOperationals = $em->getRepository(SuitableOperational::class)->findByPrincipal($prinOfId);
+            $planningAccomplishments = $em->getRepository(PlanningAccomplishment::class)->findByPrincipalRemove($prinOfId);
+
+            foreach ($evaluations as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($operationalSuitableInitiatives as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($operationalSuitableInitiatives as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($taskAccomplishments as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($taskAssigns as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($performerTasks as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($operationalPlanningAccomplishments as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($suitableOperationals as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            foreach ($planningAccomplishments as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
+            $this->addFlash('success', 'Plan Remove Successfuly');
+        }
+
+        if ($form->isSubmitted()) {
+            $prinOfId = $form->getData()['principalOffice']->getId();
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
+
+            // return $this->redirectToRoute('plan_remove');
+
+            // dd($evaluation, $operationalSuitableInitiative,$taskAccomplishment,$taskAssign,$performerTask);
+        } else {
+
+            $value = 0;
+            $principalReports[] = "";
+            $currentYear = AmharicHelper::getCurrentYear();
+            // dd($startYear);
+            $suitableInitiatives[] = "";
+            $totalInitiative = "";
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->findAll();
+        }
+        $data = $paginator->paginate(
+            $principalOffices,
+            $request->query->getInt('page', 1),
+            10
+        );
+        // dd($data);
+
+        return $this->render('smis_report/plan_remove.html.twig', [
+
+            'form' => $form->createView(),
+            'currentYear' => AmharicHelper::getCurrentYear(),
             'principalOffices' => $data,
 
         ]);

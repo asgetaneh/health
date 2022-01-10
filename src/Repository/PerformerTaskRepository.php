@@ -230,6 +230,21 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+  public function findByPrincipal($principalOffice)
+    {
+
+        return $this->createQueryBuilder('ps')
+         ->leftJoin('ps.operationalPlanningAcc','pa')
+          ->leftJoin('pa.operationalSuitable','op')
+             ->leftJoin('op.suitableInitiative','su')
+              ->andWhere('su.principalOffice = :principalOffice')
+              ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('ps.id', 'ASC')
+    
+            ->getQuery()
+            
+            ->getResult();
+    }
     // /**
     //  * @return PerformerTask[] Returns an array of PerformerTask objects
     //  */
