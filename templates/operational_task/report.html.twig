@@ -110,10 +110,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									{# {% set count =  strategies.getItemNumberPerPage() * (strategies.getCurrentPageNumber() -1) %} #}
+									{% set count =  suitable_initiatives.getItemNumberPerPage() * (suitable_initiatives.getCurrentPageNumber() -1) %}
 									{% for suitable_initiative in suitable_initiatives %}
 										<tr>
-											<td>{{ loop.index }}</td>
+											{% set count = count + 1 %}
+
+											<td>{{count}}</td>
 											<td>{{ suitable_initiative.initiative}}</td>
 											<td>{{ suitable_initiative.principalOffice}}
 											</td>
@@ -149,7 +151,7 @@
 									{% endfor %}
 								</tbody>
 							</table>
-							{# <div class="float-left" id="custompaginator">{{ knp_pagination_render(strategies) }}</div> #}
+							<div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitable_initiatives) }}</div>
 
 						</div>
 					</div>

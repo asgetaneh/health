@@ -82,7 +82,7 @@ class SmsController extends AbstractController
             }
             //   dd($mobileNumber,$message);
 
-            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+            // $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
             foreach ($users as $user) {
                 $sms = new Sms();
                 $sms->setSender($this->getUser());
@@ -91,7 +91,7 @@ class SmsController extends AbstractController
                 $sms->setText($message);
                 $em->persist($sms);
             }
-            $em->flush();
+            // $em->flush();
             $this->addFlash('success', "Message successfuly Send");
             return $this->redirectToRoute('sms_index');
         }
@@ -103,7 +103,7 @@ class SmsController extends AbstractController
                 $mobileNumber[] = $user->getMobile();
             }
             //    dd($mobileNumber);
-            $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
+            // $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
 
             $this->addFlash('success', "Message successfuly Send");
             return $this->redirectToRoute('sms_index');

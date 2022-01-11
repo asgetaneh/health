@@ -44,7 +44,8 @@
 								Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
 								{% if  operatioanlSuitables  %}
 
-									<button type="submit" class="btn btn-success">
+									<button type="submit" class="btn btn-success"
+									onclick="return confirm('Are you sure you want to Send this Report To Plan Office?');">
 										Send To Plan Office
 									</button>
 								{% endif %}

@@ -330,7 +330,7 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/principal_report", name="principal_office_report", methods={"GET","POST"})
      */
-    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request): Response
+    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request,PaginatorInterface $paginator): Response
     {
         $em = $this->getDoctrine()->getManager();
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
@@ -368,8 +368,15 @@ class OperationalTaskController extends AbstractController
             $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+
+         $data = $paginator->paginate(
+            $suitableInitiatives,
+            $request->query->getInt('page', 1),
+            12
+        );
+
         return $this->render('operational_task/report.html.twig', [
-            'suitable_initiatives' => $suitableInitiatives,
+            'suitable_initiatives' => $data,
             'filterform' => $filterForm->createView()
         ]);
     }
