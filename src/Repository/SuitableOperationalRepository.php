@@ -98,7 +98,34 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             ->setParameter('office', $principalOffice)
             ->getQuery()->getResult();
     }
-    
+      public function findDuplication($operationalOffice, $initiative, $planyear)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->andwhere('s.operationalOffice = :office')
+                    ->leftJoin('s.suitableInitiative' ,'su')
+            ->andwhere('s.suitableInitiative = :initiative')
+            ->andwhere('su.planningYear = :planyear')
+            ->setParameter('planyear', $planyear)
+            ->setParameter('office', $operationalOffice)
+            ->setParameter('initiative', $initiative);
+        return $qb->getQuery()->getResult();
+    }
+     public function getRemovable($operationalOffice, $initiative, $planyear)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb
+            //->leftJoin('s.planningAccomplishments','p')
+            ->andwhere('s.operationalOffice = :office')
+             ->leftJoin('s.suitableInitiative' ,'su')
+            ->andwhere('s.suitableInitiative = :initiative')
+            ->andwhere('su.planningYear = :planyear')
+            // ->andWhere('s.planningAccomplishments is null')
+            ->setParameter('planyear', $planyear)
+            ->setParameter('office', $operationalOffice)
+            ->setParameter('initiative', $initiative);
+        // dd($qb->getQuery());
+        return $qb->getQuery()->getOneOrNullResult();
+    }
     
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects

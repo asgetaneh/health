@@ -196,6 +196,7 @@ class PlanController extends AbstractController
 
     private function removeSuitableInitiative(EntityManagerInterface $em, $principaloffice, $planningyear, $removableId)
     {
+        // dd($removableId);
         $removableInitiatives = $em->getRepository(Initiative::class)->findBy(['id' => $removableId]);
 
         foreach ($removableInitiatives as $removableInitiative) {
@@ -213,6 +214,29 @@ class PlanController extends AbstractController
 
         return true;
     }
+    private function removeOperationalSuitableInitiative(EntityManagerInterface $em, $operationaloffice, $planningyear, $removableId)
+    {
+        // dd($removableId);
+        $removableInitiatives = $em->getRepository(SuitableInitiative::class)->findBy(['id' => $removableId]);
+        // dd($removableInitiatives);
+
+        foreach ($removableInitiatives as $removableInitiative) {
+            $removableSuitable = $em->getRepository(SuitableOperational::class)->getRemovable($operationaloffice, $removableInitiative, $planningyear);
+       
+            if ($removableSuitable) {
+                $isacomplish = false;
+                $planAcomplishments = $removableSuitable->getPlanValue();
+                // dd($planAcomplishments);
+                if (count($planAcomplishments) <= 0) {
+                    $em->remove($removableSuitable);
+                    $em->flush();
+                }
+            }
+        }
+
+        return true;
+    }
+    
 
 
     /**
@@ -250,6 +274,61 @@ class PlanController extends AbstractController
         return new Response("done");
     }
 
+ /**
+     * @Route("/operationalRecover", name="operational_plan_recover")
+     */
+    public function operationalRecover(Request $request, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+            // dd($request->query->get('planyear'));
+        if ($request->query->get('office') && $request->query->get('planyear')) {
+            $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
+            $operationaloffice = $em->getRepository(OperationalOffice::class)->find($request->query->get('office'));
+            $principaloffice=$operationaloffice->getPrincipalOffice();
+
+            // $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
+            $recoverInitiatives = $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($principaloffice);
+// dd($recoverInitiatives);
+            $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
+            if ($request->query->get('nonsuitable')) {
+                $removableId = $request->query->get('initiative');
+            // dd($removableId);
+                $this->removeOperationalSuitableInitiative($em, $operationaloffice, $planningyear,  $removableId);
+                $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
+                //  return $this->redirectToRoute('plan_index');
+            } else {
+
+// dd($request->query->get('initiative'),$operationaloffice);
+
+                $selectedInitiatives = $em->getRepository(SuitableInitiative::class)->findBy(['id' => $request->query->get('initiative')]);
+                $countinitiative = count($selectedInitiatives);
+                        // dd($request->query->get('initiative'),$selectedInitiatives);
+ 
+                foreach ($selectedInitiatives as  $selectedInitiative) {
+
+                    $existinitiative = $em->getRepository(SuitableOperational::class)->findDuplication($operationaloffice, $selectedInitiative, $planningyear);
+                    // dd($existinitiative);
+                    if (!$existinitiative) {
+                        $suitableoperational = new SuitableOperational();
+                        $suitableoperational->setOperationalOffice($operationaloffice);
+                        $suitableoperational->setSuitableInitiative($selectedInitiative);
+                        $suitableoperational->setStatus(0);
+
+                        $em->persist($suitableoperational);
+                        $em->flush();
+                    }
+                }
+                if ($request->query->get('initiative'))
+                    $this->addFlash('success', " successfuly selected Operational Suitable initiatives for your office! thank you for responding");
+            }
+        }
+        return $this->render('plan/operational_initiative.html.twig', [
+            'operationaloffice' => $operationaloffice,
+            'planyear' => $planningyear,
+            'recoverInitiatives' => $recoverData
+
+        ]);
+    }
     /**
      * @Route("/recover", name="plan_recover")
      */
@@ -266,7 +345,7 @@ class PlanController extends AbstractController
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             if ($request->query->get('nonsuitable')) {
                 $removableId = $request->query->get('initiative');
-
+            // dd($removableId);
                 $this->removeSuitableInitiative($em, $principaloffice, $planningyear,  $removableId);
                 $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
                 //  return $this->redirectToRoute('plan_index');
