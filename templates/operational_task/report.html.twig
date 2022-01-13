@@ -105,6 +105,8 @@
 										{# <th>Planning Year</th> #}
 										<th>View</th>
 										<th>Send</th>
+										<th>Status</th>
+
 
 
 									</tr>
@@ -140,6 +142,17 @@
 														</a>
 													</div>
 												</div>
+
+											
+												
+											</td>
+											<td>
+
+													{% if suitable_initiative.status == 1 %}
+														<span class="badge badge-primary">reported</span>
+													{% else %}
+														<span class="badge badge-danger">not reported </span>
+													{% endif %}
 											</td>
 
 

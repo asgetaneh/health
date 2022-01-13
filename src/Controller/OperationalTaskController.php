@@ -264,6 +264,7 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy();
             $user = $delegatedBy;
         }
+        // dd($user);
         $social = 0;
         $currentYear = AmharicHelper::getCurrentYear();
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user, 'isActive' => 1]);
@@ -330,9 +331,19 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/principal_report", name="principal_office_report", methods={"GET","POST"})
      */
-    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request,PaginatorInterface $paginator): Response
+    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $em = $this->getDoctrine()->getManager();
+        // $sui = $em->getRepository(OperationalSuitableInitiative::class)->findAll();
+        // foreach ($sui as $value) {
+        //     $suit = 0;
+        //     if ($value->getStatus() == 2) {
+        //         $suit = $value->getOperationalPlanning()->getOperationalSuitable()->getSuitableInitiative()->getId();
+        //         $suit = $em->getRepository(SuitableInitiative::class)->find($suit);
+        //         $suit->setStatus(1);
+        //         $em->flush();
+        //     }
+        // }
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
 
@@ -369,7 +380,7 @@ class OperationalTaskController extends AbstractController
         $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
 
-         $data = $paginator->paginate(
+        $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
             12
@@ -477,8 +488,11 @@ class OperationalTaskController extends AbstractController
                 $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
                 $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
-                $em->flush();
+
                 $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitId);
+                $suitableInitiative->setStatus(1);
+                $em->flush();
+
                 PlanAchievementHelper::setInitiativeAchievement($em, $suitableInitiative);
             }
             $this->addFlash('success', 'Successfully Send To Plan Office !');
@@ -505,7 +519,7 @@ class OperationalTaskController extends AbstractController
         foreach ($plannings as $key => $value) {
             # code...
             $value->setAccompValue($accomp[$key]);
-            $operationalSuitable=$value->getOperationalSuitable();
+            $operationalSuitable = $value->getOperationalSuitable();
             $operationalSuitable->setStatus(2);
             //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
@@ -514,6 +528,7 @@ class OperationalTaskController extends AbstractController
             $operationalSuitableInitiative->setAccomplishedValue($accomp[$key]);
             $operationalSuitableInitiative->setQuarter($quarter);
             $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+
 
             $operationalSuitableInitiative->setStatus(1);
             $em->persist($operationalSuitableInitiative);
