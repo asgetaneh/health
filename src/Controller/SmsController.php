@@ -83,14 +83,14 @@ class SmsController extends AbstractController
             //   dd($mobileNumber,$message);
 
             // $smsHelper->sendSms("MIS Message ", $message, json_encode($mobileNumber));
-            foreach ($users as $user) {
-                $sms = new Sms();
-                $sms->setSender($this->getUser());
-                $sms->setReciver($user);
-                $sms->setSendDate(new \DateTime());
-                $sms->setText($message);
-                $em->persist($sms);
-            }
+            // foreach ($users as $user) {
+            //     $sms = new Sms();
+            //     $sms->setSender($this->getUser());
+            //     $sms->setReciver($user);
+            //     $sms->setSendDate(new \DateTime());
+            //     $sms->setText($message);
+            //     $em->persist($sms);
+            // }
             // $em->flush();
             $this->addFlash('success', "Message successfuly Send");
             return $this->redirectToRoute('sms_index');

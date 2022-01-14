@@ -24,7 +24,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{suitable_initiatives|length}}</strong>
+							<strong>{{suitableTotal|length}}</strong>
 						</span>
 					</div>
 				</div>
@@ -33,65 +33,64 @@
 
 
 					<div class="widget-main padding-16">
-						<div class="row">
-							<div class="search-area well col-xs-12">
-								{# <form action="{{path('principal_office_report')}}" method="post">
-									<button type="submit" name="excel"  value="excel" class="btn btn-default no-border btn-sm">
-                                    Excel
-									</button>
-								</form> #}
+						{% if is_granted('vw_usr_lst') %}
 
-								<div class="row" style="margin-bottom:10px;">
-									{{ form_start(filterform,{'attr': {'role':'form','class':'' }}) }}
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.initiative,'Initiative') }}
-											{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.planyear,'Planning Year') }}
-											{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group">
-											{{ form_label(filterform.principaloffice,"Principal Office") }}
-											{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group" style="margin-top:25px;">
-											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
-										</div>
-									</div>
+							<div class="row">
+								<div
+									class="search-area well col-xs-12">
 
-
-									{{ form_end(filterform) }}
-								</div>
-								<div class="pull-left">
-
-
-									<form class="form-inline" method="post" style="display:inline;">
-
-										<div class="input-group">
-											<input type="text" class="form-control" name="search" placeholder="search"/>
-											<div class="input-group-btn">
-												<button type="submit" class="btn btn-default no-border btn-sm">
-													<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-												</button>
+									<div class="row" style="margin-bottom:10px;">
+								{{ form_start(filterform,{'attr': {'role':'form','id':'filteruserform'}}) }}
+										<div class="col-md-3">
+											<div class="form-group">
+												{{ form_label(filterform.initiative,'Initiative') }}
+												{{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'chose initiative' }}) }}
 											</div>
 										</div>
-									</form>
+										<div class="col-md-3">
+											<div class="form-group">
+												{{ form_label(filterform.planyear,'Planning Year') }}
+												{{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'chose planning year' }}) }}
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												{{ form_label(filterform.principaloffice,"Principal Office") }}
+												{{ form_widget(filterform.principaloffice,{'attr':{'class':'select2','data-placeholder':'select Principal office' }}) }}
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group" style="margin-top:25px;">
+												<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+											</div>
+										</div>
 
+
+										{{ form_end(filterform) }}
+									</div>
+									<div class="pull-left">
+
+
+										<form class="form-inline" method="post" style="display:inline;">
+
+											<div class="input-group">
+												<input type="text" class="form-control" name="search" placeholder="search"/>
+												<div class="input-group-btn">
+													<button type="submit" class="btn btn-default no-border btn-sm">
+														<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+													</button>
+												</div>
+											</div>
+										</form>
+
+									</div>
+
+
+									<div class="pull-right"></div>
 								</div>
 
-
-								<div class="pull-right"></div>
 							</div>
-
-						</div>
+						{% endif %}
 
 						<div class="table-responsive">
 							{% set status = 1 %}
@@ -106,7 +105,6 @@
 										<th>View</th>
 										<th>Send</th>
 										<th>Status</th>
-
 
 
 									</tr>
@@ -143,16 +141,16 @@
 													</div>
 												</div>
 
-											
-												
+
 											</td>
 											<td>
 
-													{% if suitable_initiative.status == 1 %}
-														<span class="badge badge-primary">reported</span>
-													{% else %}
-														<span class="badge badge-danger">not reported </span>
-													{% endif %}
+												{% if suitable_initiative.status == 1 %}
+													<span class="badge badge-primary">reported</span>
+												{% else %}
+													<span class="badge badge-danger">not reported
+													</span>
+												{% endif %}
 											</td>
 
 
@@ -184,5 +182,14 @@ $('.select2').css('width', '100%').select2({allowClear: false})
 
 
 })
+	</script>
+		<script>
+		$('#custompaginator .page-link').click(function (e) {
+e.preventDefault();
+$('#filteruserform').attr('action', $(this).attr('href'));
+
+$('#filteruserform').submit();
+
+});
 	</script>
 {% endblock %}

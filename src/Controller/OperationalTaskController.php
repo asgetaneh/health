@@ -344,10 +344,10 @@ class OperationalTaskController extends AbstractController
         //         $em->flush();
         //     }
         // }
-        $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+        // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
 
-        $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+        // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $filterForm = $this->createFormBuilder()
             ->add("planyear", EntityType::class, [
                 'class' => PlanningYear::class,
@@ -365,7 +365,7 @@ class OperationalTaskController extends AbstractController
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
-                'multiple' => true,
+                // 'multiple' => true,
                 'required' => false,
 
                 'placeholder' => 'Choose an principal office',
@@ -373,21 +373,32 @@ class OperationalTaskController extends AbstractController
             ->getForm();
         $filterForm->handleRequest($request);
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            // dd(1);
+            // dd($filterForm->getData()['principaloffice']->getId());
 
-            $suitableInitiatives = $suitableInitiativeRepository->search($filterForm->getData());
-        } else
-            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-        $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-
-        $data = $paginator->paginate(
+      $suitableInitiatives = $suitableInitiativeRepository->findBy(['principalOffice'=>$filterForm->getData()['principaloffice']->getId()]);
+            // dd($suitableInitiatives->getResult());
+             $data = $paginator->paginate(
             $suitableInitiatives,
             $request->query->getInt('page', 1),
             12
         );
 
+        } else{
+            // $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+        $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+        $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+         $data = $paginator->paginate(
+            $suitableInitiatives,
+            $request->query->getInt('page', 1),
+            12
+        );
+        }
+       
+
         return $this->render('operational_task/report.html.twig', [
             'suitable_initiatives' => $data,
+            'suitableTotal'=>$suitableInitiatives,
             'filterform' => $filterForm->createView()
         ]);
     }
