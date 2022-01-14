@@ -93,16 +93,18 @@ class PlanAchievementHelper
             foreach ($kpis as $kpi) {
 
                 $accompPlan = $em->getRepository(QuarterPlanAchievement::class)->getByKpiAndQuarter($kpi, $quarter, $year);
+                // dd($accompPlan);
                 $accompValue = 0;
                 $wieght = $kpi->getWeight();
+                // dd($wieght);
                 if ($accompPlan) {
                     $accompValue = $accompPlan->getAccomp();
                     $plan = $accompPlan->getPlan();
-
-                    $accomp = $accomp + ($accompValue / $plan) * $wieght;
+// dd($accompValue);
+                    // $accomp = $accomp + ($accompValue / $plan) * $wieght;
                 }
             }
-            $quarterPlanAchievement->setAccomp($accomp);
+            // $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
 
 
