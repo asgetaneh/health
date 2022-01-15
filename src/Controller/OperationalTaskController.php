@@ -376,29 +376,28 @@ class OperationalTaskController extends AbstractController
             // dd(1);
             // dd($filterForm->getData()['principaloffice']->getId());
 
-      $suitableInitiatives = $suitableInitiativeRepository->findBy(['principalOffice'=>$filterForm->getData()['principaloffice']->getId()]);
+            $suitableInitiatives = $suitableInitiativeRepository->findBy(['principalOffice' => $filterForm->getData()['principaloffice']->getId()]);
             // dd($suitableInitiatives->getResult());
-             $data = $paginator->paginate(
-            $suitableInitiatives,
-            $request->query->getInt('page', 1),
-            12
-        );
-
-        } else{
+            $data = $paginator->paginate(
+                $suitableInitiatives,
+                $request->query->getInt('page', 1),
+                12
+            );
+        } else {
             // $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-        $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-        $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-         $data = $paginator->paginate(
-            $suitableInitiatives,
-            $request->query->getInt('page', 1),
-            12
-        );
+            $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
+            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+            $data = $paginator->paginate(
+                $suitableInitiatives,
+                $request->query->getInt('page', 1),
+                12
+            );
         }
-       
+
 
         return $this->render('operational_task/report.html.twig', [
             'suitable_initiatives' => $data,
-            'suitableTotal'=>$suitableInitiatives,
+            'suitableTotal' => $suitableInitiatives,
             'filterform' => $filterForm->createView()
         ]);
     }
@@ -751,6 +750,10 @@ class OperationalTaskController extends AbstractController
             //   foreach ($ids as $key => $value) {
             $evaluation = new Evaluation();
             $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
+            $planning=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc();
+             $operationalOffice=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice();
+             $quarter=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter();
+            
             $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
             if ($accompValue < 0) {
@@ -785,6 +788,23 @@ class OperationalTaskController extends AbstractController
             }
             $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskUser->setType(3);
+            $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
+
+                $plannings->setAccompValue($accompValue);
+                $operationalSuitable = $plannings->getOperationalSuitable();
+                $operationalSuitable->setStatus(2);
+                //   dd(1);
+                $operationalSuitableInitiative = new OperationalSuitableInitiative();
+                $operationalSuitableInitiative->setOperationalPlanning($planning);
+                $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+                $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+                $operationalSuitableInitiative->setQuarter($quarter);
+                // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+
+
+                $operationalSuitableInitiative->setStatus(1);
+                $em->persist($operationalSuitableInitiative);
+            
             $em->persist($evaluation);
             //   }
             $em->flush();
