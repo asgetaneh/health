@@ -49,7 +49,7 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function getTaskStatusAssigned($id, $office)
+    public function getTaskStatusAssigned($id, $office, $quarter)
     {
         // dd($id);
 
@@ -59,7 +59,9 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->leftJoin('pa.operationalSuitable', 'su')
             ->select('count(ta.id)')->andWhere('su.id =  :id')
             ->andWhere('s.operationalOffice =  :office')
+            ->andWhere('s.quarter = :quarter')
             ->setParameter('office', $office)
+            ->setParameter('quarter', $quarter)
             ->setParameter('id', $id)
 
             ->getQuery()->getSingleScalarResult();
@@ -109,14 +111,14 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-     public function getTaskList($principalOfficeId)
+    public function getTaskList($principalOfficeId)
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.PerformerTask', 'p')
             ->leftJoin('p.taskCategory', 'ta')
             ->leftJoin('p.operationalOffice', 'of')
             ->leftJoin('of.principalOffice', 'pf')
-                        ->select('count(t.id)')
+            ->select('count(t.id)')
             ->andWhere('pf.id = :val')
 
             ->andWhere('t.type < 3 ')
@@ -125,23 +127,22 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->setParameter('val', $principalOfficeId)
             ->orderBy('t.id', 'ASC')
             // ->setMaxResults(10)
-                       ->getQuery()->getSingleScalarResult();
-
+            ->getQuery()->getSingleScalarResult();
     }
-      public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice)
     {
 
         return $this->createQueryBuilder('ta')
-        ->leftJoin('ta.PerformerTask','ps')
-         ->leftJoin('ps.operationalPlanningAcc','pa')
-          ->leftJoin('pa.operationalSuitable','op')
-             ->leftJoin('op.suitableInitiative','su')
-              ->andWhere('su.principalOffice = :principalOffice')
-              ->setParameter('principalOffice', $principalOffice)
+            ->leftJoin('ta.PerformerTask', 'ps')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('su.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ta.id', 'ASC')
-    
+
             ->getQuery()
-            
+
             ->getResult();
     }
 

@@ -16,28 +16,28 @@ class General
    
 
   
-    public static function getTaskStatus(EntityManager $entityManager,$id,$office)
+    public static function getTaskStatus(EntityManager $entityManager,$id,$office,$quarter)
     {
 
         # code...
-    $count= $entityManager->getRepository(PerformerTask::class)->getTaskStatus($id,$office);
+    $count= $entityManager->getRepository(PerformerTask::class)->getTaskStatus($id,$office,$quarter);
     //  dd($count);
         return $count;
     }
 
-     public static function getTaskStatusAssigned(EntityManager $entityManager,$id,$office)
+     public static function getTaskStatusAssigned(EntityManager $entityManager,$id,$office,$quarter)
     {
 
         # code...
-    $count= $entityManager->getRepository(TaskAssign::class)->getTaskStatusAssigned($id,$office);
+    $count= $entityManager->getRepository(TaskAssign::class)->getTaskStatusAssigned($id,$office,$quarter);
     //  dd($count);
         return $count;
     }
-     public static function getTaskStatusSend(EntityManager $entityManager,$id,$office)
+     public static function getTaskStatusSend(EntityManager $entityManager,$id,$office,$quarter)
     {
 
         # code...
-    $count= $entityManager->getRepository(PerformerTask::class)->getTaskStatusSend($id,$office);
+    $count= $entityManager->getRepository(PerformerTask::class)->getTaskStatusSend($id,$office,$quarter);
     //  dd($count);
         return $count;
     }

@@ -294,6 +294,7 @@ class OperationalTaskController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+        // dd($currentQuarter = AmharicHelper::getCurrentQuarter($em));
 
         return $this->render('operational_task/suitableInitiative.html.twig', [
             'operationalSuitables' => $data,

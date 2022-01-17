@@ -19,7 +19,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
         parent::__construct($registry, PerformerTask::class);
     }
 
-    public function getTaskStatus($id, $office)
+    public function getTaskStatus($id, $office, $quarter)
     {
         // dd($id);
 
@@ -29,12 +29,15 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->select('count(s.id)')
             ->andWhere('su.id =  :id')
             ->andWhere('s.operationalOffice =  :office')
+            ->andWhere('s.quarter =  :quarter')
             ->setParameter('office', $office)
+            ->setParameter('quarter', $quarter)
+
             ->setParameter('id', $id)
 
             ->getQuery()->getSingleScalarResult();
     }
-    public function getTaskStatusSend($id, $office)
+    public function getTaskStatusSend($id, $office,$quarter)
     {
         // dd($id);
 
@@ -44,6 +47,9 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->select('count(s.id)')->andWhere('su.id =  :id')
             ->andWhere('s.status =  0')
             ->andWhere('s.operationalOffice =  :office')
+             ->andWhere('s.quarter =  :quarter')
+            ->setParameter('quarter', $quarter)
+
             ->setParameter('office', $office)
             ->setParameter('id', $id)
 
@@ -230,19 +236,19 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-  public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice)
     {
 
         return $this->createQueryBuilder('ps')
-         ->leftJoin('ps.operationalPlanningAcc','pa')
-          ->leftJoin('pa.operationalSuitable','op')
-             ->leftJoin('op.suitableInitiative','su')
-              ->andWhere('su.principalOffice = :principalOffice')
-              ->setParameter('principalOffice', $principalOffice)
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('su.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ps.id', 'ASC')
-    
+
             ->getQuery()
-            
+
             ->getResult();
     }
     // /**

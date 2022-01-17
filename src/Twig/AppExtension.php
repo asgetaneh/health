@@ -89,22 +89,22 @@ class AppExtension extends AbstractExtension
     }
 
 
-    function getTaskStatus($id, $office)
+    function getTaskStatus($id, $office,$quarter)
     {
 
-        $req = General::getTaskStatus($this->entityManager, $id, $office);
+        $req = General::getTaskStatus($this->entityManager, $id, $office,$quarter);
         return ($req);
     }
-    function getTaskStatusAssigned($id, $office)
+    function getTaskStatusAssigned($id, $office,$quarter)
     {
 
-        $req = General::getTaskStatusAssigned($this->entityManager, $id, $office);
+        $req = General::getTaskStatusAssigned($this->entityManager, $id, $office,$quarter);
         return ($req);
     }
-    function getTaskStatusSend($id, $office)
+    function getTaskStatusSend($id, $office,$quarter)
     {
 
-        $req = General::getTaskStatusSend($this->entityManager, $id, $office);
+        $req = General::getTaskStatusSend($this->entityManager, $id, $office,$quarter);
         return ($req);
     }
     function getTaskList($office)

@@ -97,8 +97,10 @@
 									{% set create = 0 %}
 									{% set assign = 0 %}
 									{% for operationalSuitable in operationalSuitables %}
+
 										{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
 											{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
+											
 												{% if operationalPlanningAccomplishment.quarter.id == quarter %}
 
 													{% if  operationalPlanningAccomplishment.planValue  != 0 %}
@@ -113,21 +115,9 @@
 																{% for operationalPlanningAccomplishment in operationalPlanningAccomplishments %}
 																	{% if operationalPlanningAccomplishment.operationalSuitable.id == operationalSuitable.id %}
 																		{% if operationalPlanningAccomplishment.quarter.id == quarter %}
-																			{% if operationalPlanningAccomplishment.socialAttribute %}
-																				{% if operationalPlanningAccomplishment.socialAttribute.code == 1 %}
-																					Male=
-																					{{ operationalPlanningAccomplishment.planValue  }}
-																				{% else %}
-																					Female=
-																					{{ operationalPlanningAccomplishment.planValue  }}
-
-
-																				{% endif %}
-
-																			{% else %}
+																			
 																				{{ operationalPlanningAccomplishment.planValue  }}
 
-																			{% endif %}
 																		{% endif %}
 																	{% endif %}
 																{% endfor %}
@@ -135,7 +125,7 @@
 															<td>
 																{% if operationalSuitable.status == 1%}
 
-																	{% if getTaskStatus(operationalSuitable.id,office) %}
+																	{% if getTaskStatus(operationalSuitable.id,office,quarter) %}
 																		{# {{getTaskStatus(suitableInitiative.id,office)}} #}
 																		<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
 																			Assign
@@ -159,17 +149,17 @@
 															</td>
 															<td>
 
-																{% if getTaskStatus(operationalSuitable.id,office) %}
+																{% if getTaskStatus(operationalSuitable.id,office,quarter) %}
 																	<div class="badge badge-primary">
 																		created
 																	</div>
 																{% endif %}
-																{% if getTaskStatusAssigned(operationalSuitable.id,office) %}
+																{% if getTaskStatusAssigned(operationalSuitable.id,office,quarter) %}
 																	<div class="badge badge-danger">
 																		assigned
 																	</div>
 																{% endif %}
-																{% if getTaskStatusSend(operationalSuitable.id,office) %}
+																{% if getTaskStatusSend(operationalSuitable.id,office,quarter) %}
 																	<div class="badge badge-success">
 																		reported
 																	</div>
@@ -182,24 +172,23 @@
 													{% endif %}
 
 												{% endif %}
-												{% endif %}
+											{% endif %}
 
-											{% endfor %}
-										{% else %}
-											<tr>
-												<td colspan="8">no records found</td>
-											</tr>
 										{% endfor %}
-									</tbody>
+									{% else %}
+										<tr>
+											<td colspan="8">no records found</td>
+										</tr>
+									{% endfor %}
 								</tbody>
-							</table>
-							<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operationalSuitables) }}</div>
-						</div>
-
+							</tbody>
+						</table>
+						<div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operationalSuitables) }}</div>
 					</div>
 
 				</div>
+
 			</div>
 		</div>
 	</div>
-{% endblock %}
+</div>{% endblock %}
