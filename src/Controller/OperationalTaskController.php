@@ -750,10 +750,10 @@ class OperationalTaskController extends AbstractController
             //   foreach ($ids as $key => $value) {
             $evaluation = new Evaluation();
             $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
-            $planning=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc();
-             $operationalOffice=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice();
-             $quarter=$taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter();
-            
+            $planning = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc();
+            $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice();
+            $quarter = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter();
+            $performerTaskId = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getId();
             $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
             if ($accompValue < 0) {
@@ -789,22 +789,24 @@ class OperationalTaskController extends AbstractController
             $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             $taskUser->setType(3);
             $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
+            $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
+                $performerTask->setStatus(0);
+            // dd($performerTaskId);
+            $plannings->setAccompValue($accompValue);
+            $operationalSuitable = $plannings->getOperationalSuitable();
+            $operationalSuitable->setStatus(2);
+            //   dd(1);
+            $operationalSuitableInitiative = new OperationalSuitableInitiative();
+            $operationalSuitableInitiative->setOperationalPlanning($planning);
+            $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+            $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+            $operationalSuitableInitiative->setQuarter($quarter);
+            // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
 
-                $plannings->setAccompValue($accompValue);
-                $operationalSuitable = $plannings->getOperationalSuitable();
-                $operationalSuitable->setStatus(2);
-                //   dd(1);
-                $operationalSuitableInitiative = new OperationalSuitableInitiative();
-                $operationalSuitableInitiative->setOperationalPlanning($planning);
-                $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
-                $operationalSuitableInitiative->setAccomplishedValue($accompValue);
-                $operationalSuitableInitiative->setQuarter($quarter);
-                // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
 
+            $operationalSuitableInitiative->setStatus(1);
+            $em->persist($operationalSuitableInitiative);
 
-                $operationalSuitableInitiative->setStatus(1);
-                $em->persist($operationalSuitableInitiative);
-            
             $em->persist($evaluation);
             //   }
             $em->flush();
