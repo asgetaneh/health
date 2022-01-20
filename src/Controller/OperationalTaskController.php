@@ -566,54 +566,58 @@ class OperationalTaskController extends AbstractController
         ]);
     }
     /**
-     * @Route("/fetch_operational_accomplishment/{id}", name="fetch_operational_accomplishment")
+     * @Route("/fetch_operational_accomplishment", name="fetch_operational_accomplishment")
      */
-    public function fetchOperationalAccomplishment(Request $request, SuitableInitiative $suitableInitiative)
+    public function fetchOperationalAccomplishment(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
 
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
         // dd($currentQuarter);
-        $operatioanlSuitables = $em->getRepository(TaskAccomplishment::class)->findOperationalAccomplishment($suitableInitiative->getId(), $currentQuarter);
-        foreach ($operatioanlSuitables as $key => $value) {
-            $operationalSuitableInitiative = new OperationalSuitableInitiative();
+        $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
+        foreach ($suitableInitiatives as $suit) {
+            # code...
+            // dd($suit);
+            $operatioanlSuitables = $em->getRepository(TaskAccomplishment::class)->findOperationalAccomplishment($suit->getId(), $currentQuarter);
+            foreach ($operatioanlSuitables as $key => $value) {
+                $operationalSuitableInitiative = new OperationalSuitableInitiative();
 
-            $planning = $value->getTaskASsign()->getPerformerTask()->getOperationalPlanningAcc();
-            $operationalOffice = $value->getTaskASsign()->getPerformerTask()->getOperationalOffice();
-            $quarter = $value->getTaskASsign()->getPerformerTask()->getQuarter();
-            $accompValue = $value->getAccomplishmentValue();
-             $expectedValue = $value->getExpectedValue();
-            // dd($planning, $operationalOffice, $accompValue, $quarter);
-            if ($accompValue) {
-          $to=$planning->getPlanValue() * $accompValue;
-          $accompValueto=$to/$expectedValue;
-          $accompValuetott=round($accompValueto, 2);
-// dd($expectedValue,$accompValue,$to,$planning->getPlanValue(),$accompValuetott);
-            $operationalSuitableInitiative->setOperationalPlanning($planning);
-            $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
-            $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
-            $operationalSuitableInitiative->setQuarter($quarter);
-            // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
-            $operationalSuitableInitiative->setStatus(1);
-              $performerTask = $em->getRepository(PerformerTask::class)->find($value->getTaskASsign()->getPerformerTask()->getId());
-            $performerTask->setStatus(0);
-            // dd($performerTaskId);
-            $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
+                $planning = $value->getTaskASsign()->getPerformerTask()->getOperationalPlanningAcc();
+                $operationalOffice = $value->getTaskASsign()->getPerformerTask()->getOperationalOffice();
+                $quarter = $value->getTaskASsign()->getPerformerTask()->getQuarter();
+                $accompValue = $value->getAccomplishmentValue();
+                $expectedValue = $value->getExpectedValue();
+                // dd($planning, $operationalOffice, $accompValue, $quarter);
+                if ($accompValue) {
+                    $to = $planning->getPlanValue() * $accompValue;
+                    $accompValueto = $to / $expectedValue;
+                    $accompValuetott = round($accompValueto, 2);
+                    // dd($expectedValue,$accompValue,$to,$planning->getPlanValue(),$accompValuetott);
+                    $operationalSuitableInitiative->setOperationalPlanning($planning);
+                    $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+                    $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
+                    $operationalSuitableInitiative->setQuarter($quarter);
+                    // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+                    $operationalSuitableInitiative->setStatus(1);
+                    $performerTask = $em->getRepository(PerformerTask::class)->find($value->getTaskASsign()->getPerformerTask()->getId());
+                    $performerTask->setStatus(0);
+                    // dd($performerTaskId);
+                    $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
 
-            $plannings->setAccompValue($accompValuetott);
-            $operationalSuitable = $plannings->getOperationalSuitable();
-            $operationalSuitable->setStatus(2);
-            $em->persist($operationalSuitableInitiative);}
+                    $plannings->setAccompValue($accompValuetott);
+                    $operationalSuitable = $plannings->getOperationalSuitable();
+                    $operationalSuitable->setStatus(2);
+                    $em->persist($operationalSuitableInitiative);
+                }
+                $em->flush();
+            }
+            $em->flush();
         }
-        $em->flush();
-                    if ($operatioanlSuitables) {
-
-                    $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');}
-                    else{
-     $this->addFlash('danger', 'Not Fetch Operational Office Result!');
-
-                    }
+        // $em->flush();
+       
+            $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
+       
         return $this->redirectToRoute('principal_office_report');
     }
 
@@ -843,12 +847,12 @@ class OperationalTaskController extends AbstractController
             $taskUser->setType(3);
             $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
             $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
-             $expectedValue = $taskAccomplishment->getExpectedValue();
+            $expectedValue = $taskAccomplishment->getExpectedValue();
             // dd($planning, $operationalOffice, $accompValue, $quarter);
-          $to=$planning->getPlanValue() * $accompValue;
-          $accompValueto=$to/$expectedValue;
-          $accompValuetott=round($accompValueto, 2);
-        //   dd($expectedValue,$accompValue,$planning->getPlanValue(),$accompValuetott );
+            $to = $planning->getPlanValue() * $accompValue;
+            $accompValueto = $to / $expectedValue;
+            $accompValuetott = round($accompValueto, 2);
+            //   dd($expectedValue,$accompValue,$planning->getPlanValue(),$accompValuetott );
             $performerTask->setStatus(0);
             // dd($performerTaskId);
             $plannings->setAccompValue($accompValuetott);

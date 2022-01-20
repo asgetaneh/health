@@ -83,6 +83,15 @@
 										</form>
 
 									</div>
+										
+												{% if is_granted('vw_usr_lst') %}
+													<div class="col-md-4">
+														<a href="{{ path('fetch_operational_accomplishment') }}" title="show" class="btn btn-primary btn-sm d-inline p-2 ">
+															Fetch
+														</a>
+													</div>
+												{% endif %}
+										
 
 
 									<div class="pull-right"></div>
@@ -103,7 +112,7 @@
 										{# <th>Planning Year</th> #}
 										<th>View</th>
 										<th>Send</th>
-										<th>Fetch</th>
+										{# <th>Fetch</th> #}
 										<th>Status</th>
 
 
@@ -133,7 +142,7 @@
 													</div>
 												</div>
 											</td>
-											<td>
+											{# <td>
 												{% if is_granted('vw_usr_lst') %}
 													<div class="col-md-4">
 														<a href="{{ path('fetch_operational_accomplishment', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-primary btn-sm d-inline p-2 ">
@@ -141,7 +150,7 @@
 														</a>
 													</div>
 												{% endif %}
-											</td>
+											</td> #}
 											<td>
 												{% if suitable_initiative.status == 1 %}
 													<span class="badge badge-primary">reported</span>

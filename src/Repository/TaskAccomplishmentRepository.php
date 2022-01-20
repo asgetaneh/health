@@ -32,6 +32,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->leftJoin('op.suitableInitiative', 'su')
             ->andWhere('ps.status = 1')
             ->andWhere('ta.status = 5')
+            ->andWhere('op.status = 1')
             ->andWhere('ps.quarter = :quarter')
             ->andWhere('su.id = :suitableInitiative')
             ->setParameter('suitableInitiative', $suitableInitiative)
