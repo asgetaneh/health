@@ -34,6 +34,7 @@ use App\Entity\PlanningYear;
 use App\Entity\PrincipalOffice;
 use App\Entity\SmisSetting;
 use App\Entity\SuitableOperational;
+use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
 use App\Entity\TaskCategory;
 use App\Entity\User;
@@ -564,6 +565,50 @@ class OperationalTaskController extends AbstractController
             'suitableInitiatives' => $suitableInitiatives,
         ]);
     }
+    /**
+     * @Route("/fetch_operational_accomplishment/{id}", name="fetch_operational_accomplishment")
+     */
+    public function fetchOperationalAccomplishment(Request $request, SuitableInitiative $suitableInitiative)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        // dd($currentQuarter);
+        $operatioanlSuitables = $em->getRepository(TaskAccomplishment::class)->findOperationalAccomplishment($suitableInitiative->getId(), $currentQuarter);
+        foreach ($operatioanlSuitables as $key => $value) {
+            $operationalSuitableInitiative = new OperationalSuitableInitiative();
+
+            $planning = $value->getTaskASsign()->getPerformerTask()->getOperationalPlanningAcc();
+            $operationalOffice = $value->getTaskASsign()->getPerformerTask()->getOperationalOffice();
+            $quarter = $value->getTaskASsign()->getPerformerTask()->getQuarter();
+            $accompValue = $value->getAccomplishmentValue();
+             $expectedValue = $value->getExpectedValue();
+            // dd($planning, $operationalOffice, $accompValue, $quarter);
+            if ($accompValue) {
+          $to=$planning->getPlanValue() * $accompValue;
+          $accompValueto=$to/$expectedValue;
+          $accompValuetott=round($accompValueto, 2);
+// dd($expectedValue,$accompValue,$to,$planning->getPlanValue(),$accompValuetott);
+            $operationalSuitableInitiative->setOperationalPlanning($planning);
+            $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+            $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
+            $operationalSuitableInitiative->setQuarter($quarter);
+            // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+            $operationalSuitableInitiative->setStatus(1);
+              $performerTask = $em->getRepository(PerformerTask::class)->find($value->getTaskASsign()->getPerformerTask()->getId());
+            $performerTask->setStatus(0);
+            // dd($performerTaskId);
+            $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
+
+            $plannings->setAccompValue($accompValuetott);
+            $operationalSuitable = $plannings->getOperationalSuitable();
+            $operationalSuitable->setStatus(2);
+            $em->persist($operationalSuitableInitiative);}
+        }
+        $em->flush();
+        return $this->redirectToRoute('principal_office_report');
+    }
 
     /**
      * @Route("/intiative_accomplishment/{id}", name="initiative_accomplishment_list")
@@ -791,16 +836,22 @@ class OperationalTaskController extends AbstractController
             $taskUser->setType(3);
             $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
             $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
-                $performerTask->setStatus(0);
+             $expectedValue = $taskAccomplishment->getExpectedValue();
+            // dd($planning, $operationalOffice, $accompValue, $quarter);
+          $to=$planning->getPlanValue() * $accompValue;
+          $accompValueto=$to/$expectedValue;
+          $accompValuetott=round($accompValueto, 2);
+        //   dd($expectedValue,$accompValue,$planning->getPlanValue(),$accompValuetott );
+            $performerTask->setStatus(0);
             // dd($performerTaskId);
-            $plannings->setAccompValue($accompValue);
+            $plannings->setAccompValue($accompValuetott);
             $operationalSuitable = $plannings->getOperationalSuitable();
             $operationalSuitable->setStatus(2);
             //   dd(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($planning);
             $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
-            $operationalSuitableInitiative->setAccomplishedValue($accompValue);
+            $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
             $operationalSuitableInitiative->setQuarter($quarter);
             // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
 
@@ -808,7 +859,7 @@ class OperationalTaskController extends AbstractController
             $operationalSuitableInitiative->setStatus(1);
             $em->persist($operationalSuitableInitiative);
 
-            $em->persist($evaluation);
+            // $em->persist($evaluation);
             //   }
             $em->flush();
             $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');

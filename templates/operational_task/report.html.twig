@@ -36,11 +36,10 @@
 						{% if is_granted('vw_usr_lst') %}
 
 							<div class="row">
-								<div
-									class="search-area well col-xs-12">
+								<div class="search-area well col-xs-12">
 
 									<div class="row" style="margin-bottom:10px;">
-								{{ form_start(filterform,{'attr': {'role':'form','id':'filteruserform'}}) }}
+										{{ form_start(filterform,{'attr': {'role':'form','id':'filteruserform'}}) }}
 										<div class="col-md-3">
 											<div class="form-group">
 												{{ form_label(filterform.initiative,'Initiative') }}
@@ -104,6 +103,7 @@
 										{# <th>Planning Year</th> #}
 										<th>View</th>
 										<th>Send</th>
+										<th>Fetch</th>
 										<th>Status</th>
 
 
@@ -119,32 +119,30 @@
 											<td>{{ suitable_initiative.initiative}}</td>
 											<td>{{ suitable_initiative.principalOffice}}
 											</td>
-											{# <td>{{suitable_initiative.planningYear}}</td> #}
-
 											<td>
 												<div class="col-md-3">
 													<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">View Plan</a>
-													{# <a class="btn btn-primary btn-sm" title="send" href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}">Send To Plan</a> #}
-
 												</div>
 											</td>
 											<td>
 												<div class="row">
-
-
 													<div class="col-md-4">
-
-
 														<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
 															View Report
 														</a>
 													</div>
 												</div>
-
-
 											</td>
 											<td>
-
+												{% if is_granted('vw_usr_lst') %}
+													<div class="col-md-4">
+														<a href="{{ path('fetch_operational_accomplishment', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
+															Fetch
+														</a>
+													</div>
+												{% endif %}
+											</td>
+											<td>
 												{% if suitable_initiative.status == 1 %}
 													<span class="badge badge-primary">reported</span>
 												{% else %}
@@ -152,8 +150,6 @@
 													</span>
 												{% endif %}
 											</td>
-
-
 										</tr>
 									{% else %}
 										<tr>
@@ -183,7 +179,7 @@ $('.select2').css('width', '100%').select2({allowClear: false})
 
 })
 	</script>
-		<script>
+	<script>
 		$('#custompaginator .page-link').click(function (e) {
 e.preventDefault();
 $('#filteruserform').attr('action', $(this).attr('href'));

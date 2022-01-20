@@ -19,54 +19,44 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
         parent::__construct($registry, TaskAccomplishment::class);
     }
 
-  
-    // public function findTask($user)
-    // {
 
-    //     //dd($productNmae);
-    //     return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
 
-    //         ->andWhere('ts.assignedTo = :val')
-    //         ->setParameter('val', $user)
-    //         ->orderBy('s.id', 'ASC')
-
-    //         ->getQuery()
-
-    //         ->getResult();
-    // }
-    // public function findDetailAccomplish($suitableInitiative, $user)
-    // {
-
-    //     //dd($productNmae);
-    //     return $this->createQueryBuilder('s')->leftJoin('s.taskUser', 'ts')
-    //         ->leftJoin('ts.taskAssign', 'ta')
-    //         ->leftJoin('ta.PerformerTask', 'ps')
-    //         ->leftJoin('ps.PlanAcomplishment', 'pa')
-    //         ->andWhere('pa.suitableInitiative = :val')
-    //         ->andWhere('ps.createdBy = :user')
-    //         ->setParameter('user', $user)
-    //         ->setParameter('val', $suitableInitiative)
-    //         ->orderBy('ps.name', 'ASC')
-
-    //         ->getQuery()
-
-    //         ->getResult();
-    // }
-     public function findByPrincipal($principalOffice)
+    public function findOperationalAccomplishment($suitableInitiative, $quarter)
     {
 
         return $this->createQueryBuilder('ts')
-        ->leftJoin('ts.taskAssign','ta')
-        ->leftJoin('ta.PerformerTask','ps')
-         ->leftJoin('ps.operationalPlanningAcc','pa')
-          ->leftJoin('pa.operationalSuitable','op')
-             ->leftJoin('op.suitableInitiative','su')
-              ->andWhere('su.principalOffice = :principalOffice')
-              ->setParameter('principalOffice', $principalOffice)
+            ->leftJoin('ts.taskAssign', 'ta')
+            ->leftJoin('ta.PerformerTask', 'ps')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('ps.status = 1')
+            ->andWhere('ta.status = 5')
+            ->andWhere('ps.quarter = :quarter')
+            ->andWhere('su.id = :suitableInitiative')
+            ->setParameter('suitableInitiative', $suitableInitiative)
+            ->setParameter('quarter', $quarter)
             ->orderBy('ts.id', 'ASC')
-    
+
             ->getQuery()
-            
+
+            ->getResult();
+    }
+    public function findByPrincipal($principalOffice)
+    {
+
+        return $this->createQueryBuilder('ts')
+            ->leftJoin('ts.taskAssign', 'ta')
+            ->leftJoin('ta.PerformerTask', 'ps')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('su.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
+            ->orderBy('ts.id', 'ASC')
+
+            ->getQuery()
+
             ->getResult();
     }
     public function findDetailAccomplishSocial($suitableInitiative, $user)
@@ -108,7 +98,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     //         ->setParameter('taskName',$search['taskName']);
 
     //     }
-      
+
     //      if(isset($search['initiative']) ){
 
     //         $qb 
@@ -139,13 +129,13 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     //     return $qb->orderBy('taa.id', 'ASC')->getQuery();
     // }
 
- public function findPrintTasks($taskAssignedTo)
+    public function findPrintTasks($taskAssignedTo)
     {
 
         //dd($productNmae);
         return $this->createQueryBuilder('s')
             ->leftJoin('s.taskAssign', 'ta')
-           
+
             ->andWhere('ta.assignedTo = :taskAssignedTo')
             ->setParameter('taskAssignedTo', $taskAssignedTo)
 
