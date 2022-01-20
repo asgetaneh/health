@@ -607,6 +607,13 @@ class OperationalTaskController extends AbstractController
             $em->persist($operationalSuitableInitiative);}
         }
         $em->flush();
+                    if ($operatioanlSuitables) {
+
+                    $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');}
+                    else{
+     $this->addFlash('danger', 'Not Fetch Operational Office Result!');
+
+                    }
         return $this->redirectToRoute('principal_office_report');
     }
 
