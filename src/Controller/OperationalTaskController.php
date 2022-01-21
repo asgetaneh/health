@@ -853,22 +853,22 @@ class OperationalTaskController extends AbstractController
             $accompValueto = $to / $expectedValue;
             $accompValuetott = round($accompValueto, 2);
             //   dd($expectedValue,$accompValue,$planning->getPlanValue(),$accompValuetott );
-            $performerTask->setStatus(0);
-            // dd($performerTaskId);
-            $plannings->setAccompValue($accompValuetott);
-            $operationalSuitable = $plannings->getOperationalSuitable();
-            $operationalSuitable->setStatus(2);
-            //   dd(1);
-            $operationalSuitableInitiative = new OperationalSuitableInitiative();
-            $operationalSuitableInitiative->setOperationalPlanning($planning);
-            $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
-            $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
-            $operationalSuitableInitiative->setQuarter($quarter);
-            // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+            // $performerTask->setStatus(0);
+            // // dd($performerTaskId);
+            // $plannings->setAccompValue($accompValuetott);
+            // $operationalSuitable = $plannings->getOperationalSuitable();
+            // $operationalSuitable->setStatus(2);
+            // //   dd(1);
+            // $operationalSuitableInitiative = new OperationalSuitableInitiative();
+            // $operationalSuitableInitiative->setOperationalPlanning($planning);
+            // $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+            // $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
+            // $operationalSuitableInitiative->setQuarter($quarter);
+            // // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
 
 
-            $operationalSuitableInitiative->setStatus(1);
-            $em->persist($operationalSuitableInitiative);
+            // $operationalSuitableInitiative->setStatus(1);
+            // $em->persist($operationalSuitableInitiative);
 
             // $em->persist($evaluation);
             //   }
