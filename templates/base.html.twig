@@ -438,31 +438,37 @@ ace.settings.loadState('sidebar')
 										</span>
 										<b class="arrow fa fa-angle-down"></b>
 									</a>
-									<ul class="submenu">
-										<li>
-											<a href="{{ path('smis_report') }}">
-												<b class="fa fa-caret-right"></b>
-												{% trans %}
-												Principal Office
-												{% endtrans %}
-											</a>
-										</li>
-										<li>
-											<a href="{{ path('score_report') }}">
-												<b class="fa fa-caret-right"></b>
-												{% trans %}
-												Performance Score
-												{% endtrans %}
-											</a>
-										</li>
-										<li>
-											<a href="{{ path('score_progress') }}">
-												<b class="fa fa-caret-right"></b>
-												{% trans %}
-												Principal Office Plan Progress 
-												{% endtrans %}
-											</a>
-										</li>
+									<ul
+										class="submenu">
+										{# <li>
+																					<a href="{{ path('smis_report') }}">
+																						<b class="fa fa-caret-right"></b>
+																						{% trans %}
+																						Principal Office
+																						{% endtrans %}
+																					</a>
+																				</li> #}
+										{% if is_granted("pre_rep_scr")   %}
+											<li>
+												<a href="{{ path('score_report') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Performance Score
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted("pre_rep_pro")   %}
+											<li>
+												<a href="{{ path('score_progress') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Principal Office Plan Progress
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted("pre_rep_rem")   %}
 										<li>
 											<a href="{{ path('plan_remove') }}">
 												<b class="fa fa-caret-right"></b>
@@ -471,7 +477,7 @@ ace.settings.loadState('sidebar')
 												{% endtrans %}
 											</a>
 										</li>
-
+										{% endif %}
 
 
 									</ul>
@@ -799,7 +805,7 @@ ace.settings.loadState('sidebar')
 								<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 								<script type="text/javascript">
 									if ('ontouchstart' in document.documentElement) 
-document.write("<script src='                      {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
+document.write("<script src='                       {{ asset('assets/assets/js/jquery.mobile.custom.min.js') }}'>" + "<" + "/script>");
 								</script>
 
 								<script src="{{ asset('assets/assets/js/bootstrap.min.js') }}"></script>
