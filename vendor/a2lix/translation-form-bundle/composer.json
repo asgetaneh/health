@@ -1,0 +1,81 @@
+{
+    "name": "a2lix/translation-form-bundle",
+    "type": "symfony-bundle",
+    "description": "Translate your doctrine objects easily with some helps",
+    "keywords": [
+        "symfony",
+        "doctrine2",
+        "i18n",
+        "internationalization",
+        "translation",
+        "translatable",
+        "form",
+        "knplabs",
+        "prezent"
+    ],
+    "homepage": "https://github.com/a2lix/TranslationFormBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David ALLIX",
+            "homepage": "http://a2lix.fr"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/a2lix/TranslationFormBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "a2lix/auto-form-bundle": "^0.2|^0.3",
+        "symfony/config": "^3.4.30|^4.3|^5.0",
+        "symfony/dependency-injection": "^3.4.30|^4.3|^5.0",
+        "symfony/doctrine-bridge": "^3.4.30|^4.3|^5.0",
+        "symfony/event-dispatcher": "^3.4.30|^4.3|^5.0",
+        "symfony/form": "^3.4.30|^4.3|^5.0",
+        "symfony/http-foundation": "^3.4.30|^4.3|^5.0",
+        "symfony/http-kernel": "^3.4.30|^4.3|^5.0",
+        "symfony/options-resolver": "^3.4.30|^4.3|^5.0"
+    },
+    "require-dev": {
+        "doctrine/orm": "^2.7",
+        "edgedesign/phpqa": "^1.23",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "knplabs/doctrine-behaviors": "^1.6",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.0",
+        "phpstan/phpstan": "^0.11.19",
+        "sensiolabs/security-checker": "^6.0",
+        "symfony/phpunit-bridge": "^4.3|^5.0",
+        "symfony/validator": "^3.4.30|^4.3|^5.0",
+        "vimeo/psalm": "^3.6"
+    },
+    "suggest": {
+        "knplabs/doctrine-behaviors": "For Knp strategy",
+        "prezent/doctrine-translatable-bundle": "For Prezent strategy"
+    },
+    "scripts": {
+        "cs-fixer": [
+            "php-cs-fixer fix --verbose"
+        ],
+        "psalm": [
+            "psalm"
+        ],
+        "phpunit": [
+            "SYMFONY_DEPRECATIONS_HELPER=max[self]=0 SYMFONY_PHPUNIT_VERSION=8.5 SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1 simple-phpunit"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": { "A2lix\\TranslationFormBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "A2lix\\TranslationFormBundle\\Tests\\": "tests/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
+}
