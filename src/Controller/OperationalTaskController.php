@@ -356,14 +356,12 @@ class OperationalTaskController extends AbstractController
                 'multiple' => true,
                 'placeholder' => 'Choose an planning year',
                 'required' => false,
-
             ])
             ->add("initiative", EntityType::class, [
                 'class' => Initiative::class,
                 'multiple' => true,
                 'placeholder' => 'Choose an planning year',
                 'required' => false,
-
             ])
             ->add('principaloffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
@@ -375,18 +373,13 @@ class OperationalTaskController extends AbstractController
             ->getForm();
         $filterForm->handleRequest($request);
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            // dd(1);
-            // dd($filterForm->getData()['principaloffice']->getId());
-
             $suitableInitiatives = $suitableInitiativeRepository->findBy(['principalOffice' => $filterForm->getData()['principaloffice']->getId()]);
-            // dd($suitableInitiatives->getResult());
             $data = $paginator->paginate(
                 $suitableInitiatives,
                 $request->query->getInt('page', 1),
                 12
             );
         } else {
-            // $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
             $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
             $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
             $data = $paginator->paginate(

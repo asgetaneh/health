@@ -126,6 +126,33 @@ class StudentController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+     /**
+     * @Route("/student_internal_report", name="student_internal_report")
+     */
+    public function studentReport(Request $request, SISHelper $sISHelper): Response
+    {
+        // dd($sISHelper->getStudent());
+        $arr = [];
+        foreach ($sISHelper->getStudent() as $value) {
+            $arr[] = $value;
+        }
+        $pop = array_pop($arr[1]);
+
+        return $this->render('student/report.html.twig', [
+            'controller_name' => 'StudentController',
+            'totalStudent' => $arr[0],
+            'studentSex' => $arr[1],
+            'studentEnrollment' => $arr[2],
+            'studentProgramLevel' => $arr[3],
+            'studentProgramLevelbysexs' => $arr[4],
+            'studentbysexandYears' => $arr[5],
+            'programs' => $arr[6],
+            'programTypes' => $arr[7]
+
+
+
+        ]);
+    }
     /**
      * @Route("/student-report", name="student-report")
      */
@@ -136,14 +163,18 @@ class StudentController extends AbstractController
         foreach ($sISHelper->getStudent() as $value) {
             $arr[] = $value;
         }
-        $pop=array_pop($arr[1]);
-     
+        $pop = array_pop($arr[1]);
+
         return $this->render('student/dashboard.html.twig', [
             'controller_name' => 'StudentController',
             'totalStudent' => $arr[0],
             'studentSex' => $arr[1],
             'studentEnrollment' => $arr[2],
-            'studentProgramLevel' => $arr[3]
+            'studentProgramLevel' => $arr[3],
+            'studentProgramLevelbysexs' => $arr[4],
+            'studentbysexandYears' => $arr[5],
+            'programs' => $arr[6]
+
 
         ]);
     }

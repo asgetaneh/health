@@ -1,0 +1,533 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('student_internal_report')}}">{% trans %}
+			<strong>
+				STUDENT INFORMATION{% endtrans %}
+			</strong>
+		</a>
+	</li>
+{% endblock %}
+{% block body %}
+	<div class="row" style="margin-top:30px; margin-left:30px; margin-right:20px;margin-bottom:50px;">
+
+
+		<div class="page-content page-container" id="page-content">
+			<div class="padding">
+				<div class="row">
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">TOTAL NUMBER OF STUDENT
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="inner">
+								<h1>{{totalStudent}}</h1>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box " id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Enrollment Type
+																																	</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for sex in studentSex %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ sex.sex}}</td>
+												<td>{{ sex.count}}
+												</td>
+												{% set total = total + sex.count  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON ENROLLMENT
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-enrollment" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Enrollment Type
+																																	</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for enroll in studentEnrollment %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ enroll.name}}</td>
+												<td>{{ enroll.count}}
+												</td>
+												{% set total = total + enroll.count  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM LEVEL
+								</h5>
+							</div>
+							<div class="widget-body">
+								<canvas id="chart-programLevel" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Program Level
+																																	</th>
+											
+
+											<th>Student Number</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for programLevel in studentProgramLevel %}
+
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												{# <td>{{ studentProgramLevelbysexandYear.name}}</td> #}
+												<td>{{ programLevel.name}}</td>
+
+												<td>{{ programLevel.count}}
+												</td>
+												{% set total = total + programLevel.count  %}
+
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM LEVEL AND SEX
+								</h5>
+							</div>
+							<div class="widget-body">
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Program Level
+											</th>
+
+											<th>Sex</th>
+											<th>Student Number</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for studentProgramLevelbysex in studentProgramLevelbysexs %}
+
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ studentProgramLevelbysex.name}}</td>
+												<td>{{ studentProgramLevelbysex.sex}}</td>
+												<td>{{ studentProgramLevelbysex.count}}
+												</td>
+												{% set total = total + studentProgramLevelbysex.count  %}
+
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM TYPE
+								</h5>
+							</div>
+							<div class="widget-body">
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Program Type
+											</th>
+
+											<th>Student Number</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for programType in programTypes %}
+
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ programType.name}}</td>
+												<td>{{ programType.count}}
+												</td>
+												{% set total = total + programType.count  %}
+
+
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box widget-color-dar" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON YEAR AND SEX
+								</h5>
+							</div>
+							<div class="widget-body">
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											{# <th>Program Level
+																																	</th> #}
+											<th>Year</th>
+											<th>Sex</th>
+
+											<th>Student Number</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for studentbysexandYear in studentbysexandYears| sort((a, b) => a.year <=> b.year) %}
+
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												{# <td>{{ studentProgramLevelbysexandYear.name}}</td> #}
+												<td>{{ studentbysexandYear.year}}</td>
+
+												<td>{{ studentbysexandYear.sex}}</td>
+												<td>{{ studentbysexandYear.count}}
+												</td>
+												{% set total = total + studentbysexandYear.count  %}
+
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box " id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">PROGRAM BASED ON PROGRAM LEVEL AND ENROLLMENT
+								</h5>
+							</div>
+							<div class="widget-body">
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Program Level
+											</th>
+											<th>Enrollment</th>
+
+											<th>Count</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for program in programs| sort((a, b) => a.enroll <=> b.enroll) %}
+
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												{# <td>{{ studentProgramLevelbysexandYear.name}}</td> #}
+												<td>{{ program.enroll }}</td>
+
+												<td>{{ program.name}}</td>
+												<td>{{ program.count}}
+												</td>
+												{% set total = total + program.count  %}
+
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+
+	{# Chart.bundle.min.js
+										<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-sex");
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
+datasets: [
+{
+data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
+backgroundColor: [{% for sex in studentSex %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-enrollment");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for enroll in studentEnrollment %}"{{ enroll.name }}",{% endfor %}],
+datasets: [
+{
+data: [{% for enroll in studentEnrollment %}{{ enroll.count }},{% endfor %}],
+backgroundColor: [{% for enroll in studentEnrollment %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-programLevel");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for programLevel in studentProgramLevel %}"{{ programLevel.name }}",{% endfor %}],
+datasets: [
+{
+data: [{% for programLevel in studentProgramLevel %}{{ programLevel.count }},{% endfor %}],
+backgroundColor: [{% for programLevel in studentProgramLevel %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
+	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+	<script>
+		$(function () {
+$('.select2').css('min-width', '50%').select2({allowClear: false});
+});
+	</script>
+
+
+	<script>
+		$(function () {
+
+$('#visform').submit(function (event) {
+event.preventDefault();
+var $form = $(this);
+$.ajax({
+type: 'GET',
+url: $form.attr('action'),
+data: $form.serialize(),
+success: function (data) {
+$('#chartdiv').html(data);
+},
+error: function (error) {}
+});
+
+})
+})
+	</script>
+{% endblock %}
