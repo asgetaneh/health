@@ -22,7 +22,24 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
     // /**
     //  * @return OperationalSuitableInitiative[] Returns an array of OperationalSuitableInitiative objects
     //  */
+    public function findPrincipalAccomplishment($suitableInitiative, $quarter)
+    {
 
+        return $this->createQueryBuilder('os')
+            ->leftJoin('os.operationalPlanning', 'op')
+            ->leftJoin('op.operationalSuitable', 'osu')
+            ->leftJoin('osu.suitableInitiative', 'su')
+            ->andWhere('os.quarter = :quarter')
+            ->andWhere('su.id = :suitableInitiative')
+            ->andWhere('os.status = 1')
+            ->setParameter('suitableInitiative', $suitableInitiative)
+            ->setParameter('quarter', $quarter)
+            ->orderBy('os.id', 'ASC')
+
+            ->getQuery()
+
+            ->getResult();
+    }
 
     public function findplan($principalOffice, $suitable, $currentQuarter)
     {
@@ -61,22 +78,22 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-      public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice)
     {
 
         return $this->createQueryBuilder('ops')
-              ->leftJoin('ops.operationalPlanning','opa')
-          ->leftJoin('opa.operationalSuitable','op')
-             ->leftJoin('op.suitableInitiative','su')
-              ->andWhere('su.principalOffice = :principalOffice')
-              ->setParameter('principalOffice', $principalOffice)
+            ->leftJoin('ops.operationalPlanning', 'opa')
+            ->leftJoin('opa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('su.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ops.id', 'ASC')
-    
+
             ->getQuery()
-            
+
             ->getResult();
     }
-    
+
     // public function findBySelect($quarter)
     // {
     //     return $this->createQueryBuilder('o')

@@ -21,14 +21,12 @@
 					<div class="widget-toolbar"></div>
 
 					<div class="widget-toolbar">
-						{% if is_granted('vw_usr_lst') %}
-							<div class="col-md-4">
-								<a href="{{ path('fetch_operational_accomplishment') }}" title="show" class="btn btn-success  ">
-									Fetch
-								</a>
-							</div>
-						{% endif %}
-
+					<span class="badge badge-info">
+							{% trans %}Total{% endtrans %}
+							:
+							<strong>{{suitableTotal|length}}</strong>
+						</span>
+						
 
 					</div>
 				</div>
@@ -96,11 +94,26 @@
 						{% endif %}
 
 						<div class="table-responsive">
-						<span class="badge badge-info">
-							{% trans %}Total{% endtrans %}
-							:
-							<strong>{{suitableTotal|length}}</strong>
-						</span>
+						
+						{% if is_granted('vw_usr_lst') %}
+							<div class="col-md-2 pull-right">
+								<a href="{{ path('fetch_operational_accomplishment') }}" title="show" class="btn btn-success  ">
+									Fetch Operational
+								</a>
+							</div>
+						{% endif %}
+						{% if is_granted('vw_usr_lst') %}
+							<div class="col-md-2 pull-right">
+							<form action="{{path('fetch_operational_accomplishment')}}" method="post">
+							<button type="submit" class="btn btn-primary">
+							<input type="hidden" name="principal" value="principal">
+							Fetch Principal
+								</button>
+							</form>
+								
+							</div>
+						{% endif %}
+
 						
 							{% set status = 1 %}
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">

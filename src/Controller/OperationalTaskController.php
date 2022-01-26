@@ -563,9 +563,29 @@ class OperationalTaskController extends AbstractController
      */
     public function fetchOperationalAccomplishment(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
 
+        if ($request->request->get("principal")) {
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
+            foreach ($suitableInitiatives as $suit) {
+                $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
+                $plan = 0;
+                foreach ($operatioanlSuitableInitiative as $value) {
+                    $plan = $plan + $value->getAccomplishedValue();
+                    $value->setStatus(2);
+                    $em->flush();
+                }
+                $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
+                if ($plan) {
+                    $planningAccomplishment->setAccompValue($plan);
+                }
+                    $suit->setStatus(1);
+
+                $em->flush();
+            } 
+            $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
+        }
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
         // dd($currentQuarter);
         $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
@@ -608,9 +628,9 @@ class OperationalTaskController extends AbstractController
             $em->flush();
         }
         // $em->flush();
-       
-            $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
-       
+
+        $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
+
         return $this->redirectToRoute('principal_office_report');
     }
 
