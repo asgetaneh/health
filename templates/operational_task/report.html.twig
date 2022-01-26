@@ -95,14 +95,14 @@
 
 						<div class="table-responsive">
 						
-						{% if is_granted('vw_usr_lst') %}
+						{% if is_granted('smis_rep_fetch') %}
 							<div class="col-md-2 pull-right">
 								<a href="{{ path('fetch_operational_accomplishment') }}" title="show" class="btn btn-success  ">
 									Fetch Operational
 								</a>
 							</div>
 						{% endif %}
-						{% if is_granted('vw_usr_lst') %}
+						{% if is_granted('smis_rep_fetch') %}
 							<div class="col-md-2 pull-right">
 							<form action="{{path('fetch_operational_accomplishment')}}" method="post">
 							<button type="submit" class="btn btn-primary">
