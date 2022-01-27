@@ -32,7 +32,7 @@ class UserController extends AbstractController
         );
     }
     /**
-     * @Route("/user", name="user")
+     * @Route("/user_group", name="user")
      */
     public function index(UserGroupRepository $userGroupRepository, Request $request, PaginatorInterface $paginator): Response
     {
