@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Helper\DomPrint;
 use App\Entity\Delegation;
 use App\Entity\Evaluation;
+use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningQuarter;
 use App\Entity\PlanningYear;
@@ -16,16 +17,9 @@ use App\Entity\User;
 use App\Entity\UserInfo;
 use App\Form\TaskAssignType;
 use App\Helper\AmharicHelper;
-use App\Helper\EmailHelper;
-use App\Repository\OperationalPlanningAccomplishmentRepository;
-use App\Repository\OperationalTaskRepository;
 use App\Repository\PerformerTaskRepository;
-use App\Repository\PlanningAccomplishmentRepository;
-use App\Repository\PlanRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
-use App\Repository\TaskMeasurementRepository;
-use App\Repository\UserRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -141,8 +135,6 @@ class TaskAssignController extends AbstractController
         $operationalOffice = "";
         $operationalManager = "";
         $currentYear = "";
-
-
         $taskAccomplishments = $taskAccomplishmentRepository->findPrintTasks($taskUserId);
         foreach ($taskAccomplishments as $taskAccomplishment) {
 
@@ -312,8 +304,7 @@ class TaskAssignController extends AbstractController
      */
     public function performerFetch(
         Request $request,
-        PerformerTaskRepository $performerTaskRepository,
-        OperationalPlanningAccomplishmentRepository $operationalPlanningAccomplishmentRepository
+        PerformerTaskRepository $performerTaskRepository
     ) {
         $em = $this->getDoctrine()->getManager();
 
@@ -335,7 +326,7 @@ class TaskAssignController extends AbstractController
         $startDate = $request->request->get('startDate');
         $endDate = $request->request->get('endDate');
 
-        // dd($startDate,$endDate);
+        // dd($expectedValue);
         $timeGap = $request->request->get('timeGap');
         $measurementDescriptions = $request->request->get("measurementDescription");
 
@@ -387,24 +378,19 @@ class TaskAssignController extends AbstractController
                     $taskAccoplishment->setMeasureDescription($measurementDescriptions);
                     $em->persist($taskAccoplishment);
                 }
-
-
                 $em->persist($taskAssign);
-
                 $em->flush();
             }
             $em->flush();
         }
         $em->flush();
         // dd($planId);
-        $planId = $operationalPlanningAccomplishmentRepository->find($planId->getId());
+        $planId = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planId->getId());
         // dd($planId);
         if ($planId->getStatus() < 2) {
             $planId->setStatus(2);
             $em->flush();
         }
-
-
         $this->addFlash('success', 'Task Assignd successfully !');
         return $this->redirectToRoute('operational_task_index', ['id' => $initibativeId]);
     }
@@ -417,8 +403,6 @@ class TaskAssignController extends AbstractController
             'task_assign' => $taskAssign,
         ]);
     }
-
-
     /**
      * @Route("/{id}/edit", name="task_assign_edit", methods={"GET","POST"})
      */
@@ -426,19 +410,15 @@ class TaskAssignController extends AbstractController
     {
         $form = $this->createForm(TaskAssignType::class, $taskAssign);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
             return $this->redirectToRoute('task_assign_index');
         }
-
         return $this->render('task_assign/edit.html.twig', [
             'task_assign' => $taskAssign,
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/{id}", name="task_assign_delete", methods={"DELETE"})
      */
@@ -449,7 +429,6 @@ class TaskAssignController extends AbstractController
             $entityManager->remove($taskAssign);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('task_assign_index');
     }
 }

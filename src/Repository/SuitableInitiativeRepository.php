@@ -22,21 +22,6 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     // /**
     //  * @return SuitableInitiative[] Returns an array of SuitableInitiative objects
     //  */
-
-
-
-
-    /*
-    public function findOneBySomeField($value): ?SuitableInitiative
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
     public function findDuplication($principaloffice, $initiative, $planyear)
     {
         $qb = $this->createQueryBuilder('s');
@@ -183,8 +168,6 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->andwhere('i.initiative = :initiative')
             ->andwhere('i.principalOffice = :principal')
             ->setParameter('principal', $principal)
-
-
             ->setParameter('initiative', $initiative);
         return $qb->getQuery()->getResult();
     }
@@ -204,35 +187,37 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
     }
 
 
-    public function findScore($search = [])
+    public function findScore($search = [],$principalOffice, $principalValue)
     {
+
         $qb = $this->createQueryBuilder('s');
-        if (isset($search['principalOffice'])) {
+        if ($principalValue == 1) {
+            # code...
 
-            $qb
-                ->andWhere('s.principalOffice = :principalOffice')
-
-                ->setParameter('principalOffice', $search['principalOffice']);
+            if (isset($search['principalOffice'])) {
+                $qb
+                    ->andWhere('s.principalOffice = :principalOffice')
+                    ->setParameter('principalOffice', $search['principalOffice']);
+            }
+            if (isset($search['planningYear'])) {
+                $qb
+                    ->andWhere('s.planningYear = :planningYear')
+                    ->setParameter('planningYear', $search['planningYear']);
+            }
+        } else {
+           
+            if (isset($search['planningYear'])) {
+                $qb
+                    ->andWhere('s.planningYear = :planningYear')
+                    ->setParameter('planningYear', $search['planningYear'])
+                    ->andWhere('s.principalOffice = :principalOffice')
+                    ->setParameter('principalOffice', $principalOffice);
+            }
         }
-
-        if (isset($search['planningYear'])) {
-
-
-            $qb
-                ->andWhere('s.planningYear = :planningYear')
-
-                ->setParameter('planningYear', $search['planningYear']);
-        }
-
-
-
         return $qb->getQuery()->getResult();
     }
-
     public function getPrincipalSelectSuitable($principalOffice)
     {
-        // dd($principalOffice);
-
         return $this->createQueryBuilder('s')
             ->leftJoin('s.planningYear', 'py')
             ->select('count(s.id)')

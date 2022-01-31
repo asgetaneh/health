@@ -13,6 +13,11 @@
 {% endblock %}
 {% block body %}
 	<div class="row">
+		<div class=" pull-right">
+			<a href="{{ path('principal_office_report') }}" title="history" class="btn btn-primary  ">
+				Back
+			</a>
+		</div>
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -38,30 +43,22 @@
 								<div class="row">
 									{{ form_start(form,{'attr': {'role':'form','id':'filteruserform'}}) }}
 									<div class="form-group col-md-4" style="display:inline;">
-										{{ form_label(form.planningYear," Year ") }}
 										{{ form_widget(form.planningYear,{'attr':{ 'class': ' select2 form-control','required':'true'}}) }}
 
 
 									</div>
 
-
-									<div class="form-group col-md-4" style="display:inline;">
-										{{ form_label(form.principalOffice," Principal Office ") }}
-										{{ form_widget(form.principalOffice,{'attr':{ 'class': ' select2 form-control','required':'true'}}) }}
-
-
-									</div>
 									<div class="form-group col-md-1" style="display:inline;">
 
 										<button type="submit" class="btn btn-sm btn-primary">{% trans %}filter{% endtrans %}</button>
 									</div>
-									<div class="form-group col-md-1" style="display:inline;">
-
-										<button type="submit" name="print" value="print" class="btn  btn-danger btn-xs ">
-											<i class=" fa fa-file-pdf text-danger"></i>
-											PDF
-										</button>
-									</div>
+									{# <div class="form-group col-md-1" style="display:inline;">
+									
+																			<button type="submit" name="print" value="print" class="btn  btn-danger btn-xs ">
+																				<i class=" fa fa-file-pdf text-danger"></i>
+																				PDF
+																			</button>
+																		</div> #}
 									{{ form_end(form) }}
 
 
@@ -83,7 +80,7 @@
 										<th>Weight</th>
 
 										<th colspan="11">Success indicators(
-																													Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}})</th>
+																																								Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}})</th>
 
 									</tr>
 									<tr>

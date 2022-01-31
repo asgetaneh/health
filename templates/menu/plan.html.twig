@@ -20,20 +20,20 @@
 			{% if is_granted('csc_nd_pln') %}
 
 
-				<li>
+				{# <li>
 					<a href="{{ path('plan_principal') }}" style="background:#009933; color: #f5f6f8" class="bg-primary">
 						<b class="fa fa-caret-right"></b>
 						{% trans %}Plan{% endtrans %}
 					</a>
 					<b class="arrow"></b>
-				</li>
-				<li>
+				</li> #}
+				{# <li>
 					<a href="{{ path('inistuition_suitable_initiative_index') }}" style="background:#009933; color: #f5f6f8" class="bg-primary">
 						<b class="fa fa-caret-right"></b>
 						{% trans %}Organ.Plan{% endtrans %}
 					</a>
 					<b class="arrow"></b>
-				</li>
+				</li> #}
 			{% endif %}
 			{% if is_granted('csc_nd_pln') %}
 				<li>
@@ -90,6 +90,7 @@
 											</a>
 										</li>
 									{% endif %} #}
+									
 			{% if is_granted('opr_task') %}
 
 				<li>

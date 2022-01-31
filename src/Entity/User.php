@@ -220,6 +220,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=PrincipalOfficeGroup::class, mappedBy="director")
      */
     private $principalOfficeGroups;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="reportedBy")
+     */
+    private $operationalSuitableInitiatives;
     public function __construct()
     {
       
@@ -257,6 +262,7 @@ class User implements UserInterface
         $this->evaluations = new ArrayCollection();
         $this->sms = new ArrayCollection();
         $this->principalOfficeGroups = new ArrayCollection();
+        $this->operationalSuitableInitiatives = new ArrayCollection();
 
     }
     public function __toString()
@@ -1345,6 +1351,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($principalOfficeGroup->getDirector() === $this) {
                 $principalOfficeGroup->setDirector(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OperationalSuitableInitiative[]
+     */
+    public function getOperationalSuitableInitiatives(): Collection
+    {
+        return $this->operationalSuitableInitiatives;
+    }
+
+    public function addOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if (!$this->operationalSuitableInitiatives->contains($operationalSuitableInitiative)) {
+            $this->operationalSuitableInitiatives[] = $operationalSuitableInitiative;
+            $operationalSuitableInitiative->setReportedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperationalSuitableInitiative(OperationalSuitableInitiative $operationalSuitableInitiative): self
+    {
+        if ($this->operationalSuitableInitiatives->removeElement($operationalSuitableInitiative)) {
+            // set the owning side to null (unless already changed)
+            if ($operationalSuitableInitiative->getReportedBy() === $this) {
+                $operationalSuitableInitiative->setReportedBy(null);
             }
         }
 

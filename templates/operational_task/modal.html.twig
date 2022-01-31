@@ -24,7 +24,7 @@
 			</div>
 			<div class="modal-body">
 				{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
-				
+
 				<div class="form-group isSupportive">
 
 					<lable class=" control-label no-padding-right ">
@@ -32,9 +32,10 @@
 							Task Name
 						</b>
 					</lable>
-					<select name="coreTaskList" class="select2  form-control ">
+					<select
+						name="coreTaskList" class="select2  form-control ">
 						{# {% for coreTask in coreTaskList %} #}
-						<option  value="{{ coreTaskList.name }}">{{ coreTaskList.name }}</option>
+						<option value="{{ coreTaskList.name }}">{{ coreTaskList.name }}</option>
 						{# {% endfor %} #}
 					</select>
 				</div>
@@ -46,7 +47,7 @@
 						</b>
 					</lable>
 					<input type="text" name="performerTaskName" class="form-control">
-					
+
 				</div>
 				<div class="form-group">
 					<lable class=" control-label no-padding-right">
@@ -149,7 +150,9 @@
 								</b>
 							</lable>
 
-							<input type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
+							<input
+							type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
+							{# <input type="hidden" class="planValues" name="planValue"> #}
 
 							<input type="hidden" class="categoryId" name="categoryId">
 							<input type="hidden" class="isCoreAssign" name="isCore">
@@ -186,7 +189,9 @@
 									<td>{{ count}}</td>
 									<td>{{ measurement.name }}</td>
 									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
-									<td><input type="number" name="expectedValue" class="form-control" required></td>
+									<td><input type="hidden"  name="expectedValue" class="form-control planValues"  required>
+										<p class="planValueste"></p>
+									</td>
 									{% if social == 1 %}
 
 										<td><input type="number" name="expectedValueSocial" class="form-control"></td>

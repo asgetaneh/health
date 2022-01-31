@@ -52,9 +52,16 @@ class OperationalSuitableInitiative
     private $operationalPlanning;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SuitableOperational::class, inversedBy="operationalSuitableInitiatives")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="operationalSuitableInitiatives")
      */
-    private $operationalSuitable;
+    private $reportedBy;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $reportedAt;
+
+    
 
    
 
@@ -138,17 +145,30 @@ class OperationalSuitableInitiative
         return $this;
     }
 
-    public function getOperationalSuitable(): ?SuitableOperational
+    public function getReportedBy(): ?User
     {
-        return $this->operationalSuitable;
+        return $this->reportedBy;
     }
 
-    public function setOperationalSuitable(?SuitableOperational $operationalSuitable): self
+    public function setReportedBy(?User $reportedBy): self
     {
-        $this->operationalSuitable = $operationalSuitable;
+        $this->reportedBy = $reportedBy;
 
         return $this;
     }
+
+    public function getReportedAt(): ?\DateTimeInterface
+    {
+        return $this->reportedAt;
+    }
+
+    public function setReportedAt(?\DateTimeInterface $reportedAt): self
+    {
+        $this->reportedAt = $reportedAt;
+
+        return $this;
+    }
+
 
     
 }

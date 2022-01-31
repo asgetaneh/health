@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SmisReportController extends AbstractController
 {
     /**
-     * @Route("/smis/report", name="smis_report")
+     * @Route("/smis_report", name="smis_report")
      */
     public function index(Request $request, PaginatorInterface $paginator)
     {
@@ -181,6 +181,8 @@ class SmisReportController extends AbstractController
         }
         // dd($quarterId);
         $value = 1;
+        $principalValue = 1;
+
 
         $form = $this->createFormBuilder()
             ->add('principalOffice', EntityType::class, [
@@ -216,9 +218,10 @@ class SmisReportController extends AbstractController
             $planningYear = $form->getData()['planningYear']->getId();
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffices);
             // dd($totalInitiative);
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData());
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(),$principalValue,$principalValue);
+
             // dd($suitableInitiatives);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$principalValue,$currentQuarter,$principalValue);
             $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
             $ethYear = $planningYear->getEthYear();
 
@@ -243,9 +246,9 @@ class SmisReportController extends AbstractController
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
 
 
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData());
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(),$principalValue,$principalValue);
             // dd($suitableInitiatives);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $currentQuarter);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$principalValue,$currentQuarter,$principalValue);
         } else {
 
             $value = 0;

@@ -37,7 +37,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getQuery()->getSingleScalarResult();
     }
-    public function getTaskStatusSend($id, $office,$quarter)
+    public function getTaskStatusSend($id, $office, $quarter)
     {
         // dd($id);
 
@@ -47,7 +47,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->select('count(s.id)')->andWhere('su.id =  :id')
             ->andWhere('s.status =  0')
             ->andWhere('s.operationalOffice =  :office')
-             ->andWhere('s.quarter =  :quarter')
+            ->andWhere('s.quarter =  :quarter')
             ->setParameter('quarter', $quarter)
 
             ->setParameter('office', $office)
@@ -145,7 +145,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findInitiativeBySocial($suitableOperational, $user)
+    public function findInitiativeBySocial($suitableOperational, $user, $quarter)
     {
 
         //dd($productNmae);
@@ -155,8 +155,10 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('s.taskCategory', 'tc')
             ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
+            ->andWhere('s.quarter = :quarter')
             ->andWhere('tc.isCore = 1')
             ->setParameter('user', $user)
+            ->setParameter('quarter', $quarter)
             ->setParameter('initiative', $suitableOperational)
 
             ->orderBy('s.id', 'ASC')

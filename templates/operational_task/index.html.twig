@@ -76,6 +76,11 @@
 		{% endfor %}
 	</div>
 	<div class="row">
+		<div class=" pull-right">
+			<a href="{{ path('suitable_initiative_list') }}" title="history" class="btn btn-info  ">
+				Back
+			</a>
+		</div>
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -94,8 +99,6 @@
 						<span class="badge badge-info">
 							{% trans %}Quarter{% endtrans %}
 							:
-
-
 							<strong>
 								{{quarterName}}</strong>
 						</span>
@@ -178,8 +181,6 @@
 
 									<div class="row ">
 										{% if  taskAssigns %}
-
-
 											<form action="{{path('task_assign_pdf')}}" method="post">
 												<div class="col-md-4 ">
 													<select autocomplete="off" name="user" class="form-control performerList  select2 " required></select>
@@ -332,6 +333,7 @@
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
 													<input type="hidden" class="user" value="{{app.user.id}}">
 													<input type="hidden" class="quartertask" value="{{performerTask.quarter.id}}">
+													<input type="hidden" class="planValue" value="{{performerTask.operationalPlanningAcc.planValue}}">
 													<input type="hidden" class="task" value="{{performerTask.operationalPlanningAcc.operationalSuitable.id}}">
 													<input type="hidden" class="office" value="{{performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.principalOffice.id}}">
 
@@ -512,9 +514,14 @@ $('.isSupportive').addClass("hidden -xs-up");
 $('.assignModal').modal('show');
 var isCore = $(this).attr('data-category');
 var categoryId = $(this).attr('data-category-id');
-
+var planValues = $('.planValue').val();
 $('.isCoreAssign2').val(isCore);
 $('.categoryId').val(categoryId);
+$('.planValues').val(planValues);
+$('.planValueste').text(planValues);
+
+
+
 if (isCore == 1) {
 $('.isCores').addClass("hidden -xs-up");
 }

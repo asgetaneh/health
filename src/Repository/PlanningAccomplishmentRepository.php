@@ -47,39 +47,44 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
         ;
     }
     */
-     public function findByPrincipalRemove($principalOffice)
+    public function findByPrincipalRemove($principalOffice)
     {
         return $this->createQueryBuilder('pa')
-         ->leftJoin('pa.suitableInitiative', 's')
-                ->andWhere('s.principalOffice = :principalOffice')
-              ->setParameter('principalOffice', $principalOffice)
+            ->leftJoin('pa.suitableInitiative', 's')
+            ->andWhere('s.principalOffice = :principalOffice')
+            ->setParameter('principalOffice', $principalOffice)
             ->orderBy('pa.id', 'ASC')
             ->getQuery()
-            
+
             ->getResult();
     }
 
-    public function findPrincipal($search=[],$currentQuarter)
+    public function findPrincipal($search = [], $principalOffice, $currentQuarter, $principalValue)
     {
         $qb = $this->createQueryBuilder('pa');
-        if (isset($search['principalOffice'])) {
+        if ($principalValue == 1) {
 
-
-            $qb
-                ->leftJoin('pa.suitableInitiative', 's')
-                ->andWhere('s.principalOffice = :principalOffice')
-
-                ->setParameter('principalOffice', $search['principalOffice']);
-        }
-
-        if (isset($search['planningYear'])) {
-
-
-            $qb
-                ->leftJoin('pa.suitableInitiative', 'p')
-                ->andWhere('p.planningYear = :planningYear')
-
-                ->setParameter('planningYear', $search['planningYear']);
+            if (isset($search['principalOffice'])) {
+                $qb
+                    ->leftJoin('pa.suitableInitiative', 's')
+                    ->andWhere('s.principalOffice = :principalOffice')
+                    ->setParameter('principalOffice', $search['principalOffice']);
+            }
+            if (isset($search['planningYear'])) {
+                $qb
+                    ->leftJoin('pa.suitableInitiative', 'p')
+                    ->andWhere('p.planningYear = :planningYear')
+                    ->setParameter('planningYear', $search['planningYear']);
+            }
+        } else {
+            if (isset($search['planningYear'])) {
+                $qb->leftJoin('pa.suitableInitiative', 's')
+                    ->leftJoin('pa.suitableInitiative', 'p')
+                    ->andWhere('p.planningYear = :planningYear')
+                    ->setParameter('planningYear', $search['planningYear'])
+                    ->andWhere('s.principalOffice = :principalOffice')
+                    ->setParameter('principalOffice', $principalOffice);
+            }
         }
         return $qb->andWhere('pa.quarter = :planningQuarter')
 

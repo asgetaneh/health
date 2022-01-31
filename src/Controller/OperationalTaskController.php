@@ -69,8 +69,6 @@ class OperationalTaskController extends AbstractController
     public function index(Request $request, SuitableOperational $suitableOperational,    PerformerTaskRepository $performerTaskRepository): Response
     {
         $this->denyAccessUnlessGranted('opr_task');
-        //create task 
-        // dd($suitableOperational->getSuitableInitiative()->getInitiative()->getCoreTask());
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -257,8 +255,6 @@ class OperationalTaskController extends AbstractController
     {
         $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
-
-        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
         if ($delegatedUser) {
@@ -270,7 +266,6 @@ class OperationalTaskController extends AbstractController
         $currentYear = AmharicHelper::getCurrentYear();
         $operation = $operationalManagerRepository->findOneBy(['manager' => $user, 'isActive' => 1]);
 
-        //    dd($operation);
         if (!$operation) {
             $this->addFlash('danger', 'You are Not active!');
 
@@ -296,8 +291,7 @@ class OperationalTaskController extends AbstractController
             10
         );
         // dd($currentQuarter = AmharicHelper::getCurrentQuarter($em));
-
-        return $this->render('operational_task/suitableInitiative.html.twig', [
+        return $this->render('operational_task/suitable_initiative.html.twig', [
             'operationalSuitables' => $data,
             'data' => $operationalSuitables,
             'count' => $operationalSuitables,
@@ -312,8 +306,6 @@ class OperationalTaskController extends AbstractController
      */
     public function approveOperationalPlan(Request $request)
     {
-        // dd(1);
-
         $em = $this->getDoctrine()->getManager();
 
         $suitableInId = $request->request->get('suitableInId');
@@ -330,72 +322,7 @@ class OperationalTaskController extends AbstractController
         return new JsonResponse($operationalSuitable);
     }
 
-    /**
-     * @Route("/principal_report", name="principal_office_report", methods={"GET","POST"})
-     */
-    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request, PaginatorInterface $paginator): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        // $sui = $em->getRepository(OperationalSuitableInitiative::class)->findAll();
-        // foreach ($sui as $value) {
-        //     $suit = 0;
-        //     if ($value->getStatus() == 2) {
-        //         $suit = $value->getOperationalPlanning()->getOperationalSuitable()->getSuitableInitiative()->getId();
-        //         $suit = $em->getRepository(SuitableInitiative::class)->find($suit);
-        //         $suit->setStatus(1);
-        //         $em->flush();
-        //     }
-        // }
-        // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-        $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
-
-        // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-        $filterForm = $this->createFormBuilder()
-            ->add("planyear", EntityType::class, [
-                'class' => PlanningYear::class,
-                'multiple' => true,
-                'placeholder' => 'Choose an planning year',
-                'required' => false,
-            ])
-            ->add("initiative", EntityType::class, [
-                'class' => Initiative::class,
-                'multiple' => true,
-                'placeholder' => 'Choose an planning year',
-                'required' => false,
-            ])
-            ->add('principaloffice', EntityType::class, [
-                'class' => PrincipalOffice::class,
-                // 'multiple' => true,
-                'required' => false,
-
-                'placeholder' => 'Choose an principal office',
-            ])
-            ->getForm();
-        $filterForm->handleRequest($request);
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $suitableInitiatives = $suitableInitiativeRepository->findBy(['principalOffice' => $filterForm->getData()['principaloffice']->getId()]);
-            $data = $paginator->paginate(
-                $suitableInitiatives,
-                $request->query->getInt('page', 1),
-                12
-            );
-        } else {
-            $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
-            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-            $data = $paginator->paginate(
-                $suitableInitiatives,
-                $request->query->getInt('page', 1),
-                12
-            );
-        }
-
-
-        return $this->render('operational_task/report.html.twig', [
-            'suitable_initiatives' => $data,
-            'suitableTotal' => $suitableInitiatives,
-            'filterform' => $filterForm->createView()
-        ]);
-    }
+  
 
     /**
      * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
@@ -419,7 +346,7 @@ class OperationalTaskController extends AbstractController
         }
         $initiativeName = $suitableOperational->getSuitableInitiative()->getInitiative()->getName();
         $initiativeId = $suitableOperational->getId();
-        $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableOperational, $user);
+        $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableOperational, $user, AmharicHelper::getCurrentQuarter($em));
         $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableOperational, $user);
         $time = new DateTime('now');
         $endDate = 0;
@@ -634,77 +561,7 @@ class OperationalTaskController extends AbstractController
         return $this->redirectToRoute('principal_office_report');
     }
 
-    /**
-     * @Route("/intiative_accomplishment/{id}", name="initiative_accomplishment_list")
-     */
-    public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,  OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $socialcount = 0;
-        $socialAttr = 0;
-        $principalOffice = $suitableInitiative->getPrincipalOffice()->getId();
-        $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
-        $sendToPlan = $maxTasks->getSendToPlan();
-        $socials = $suitableInitiative->getInitiative()->getSocialAtrribute();
-        $initiativeName = $suitableInitiative->getInitiative()->getName();
-        $time = new DateTime('now');
-        $endDate = 0;
-        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
-        foreach ($quarters as $quarter) {
-            if ($time >= $quarter->getStartDate() && $time < $quarter->getEndDate()) {
-                $endDate = $quarter->getEndDate();
-            }
-        }
-        $diff = $endDate->diff($time);
-        if ($diff->m == 0) {
-            $remainingdays = $diff->d;
-        } else {
-            $remainingdays = $diff->m * 30 + $diff->d;
-        }
-        if ($socials) {
-
-            foreach ($socials as $so) {
-                if ($so->getCode() == 1) {
-                    $socialAttr = 1;
-                    $male = $so->getId();
-                }
-                if ($so->getCode() == 2) {
-                    $female = $so->getId();
-                }
-            }
-        }
-        if ($socialAttr == 1) {
-            // dd($suitableInitiative->getId());
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $male);
-            $operatioanlSuitablessocails = $operationalSuitableInitiativeRepository->findplanSocial($principalOffice, $suitableInitiative->getId(), $female);
-            $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
-            // dd($planningAcc);
-            return $this->render('operational_task/initiativeAccomplishment.html.twig', [
-                'operatioanlSuitables' => $operatioanlSuitables,
-                'operatioanlSuitablessocails' => $operatioanlSuitablessocails,
-                'initiativeName' => $initiativeName,
-                'planningAcc' => $planningAcc,
-                'remainingdays' => $remainingdays,
-                'social' => 1,
-
-            ]);
-        } else {
-            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
-            // dd($currentQuarter);
-            $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(), $currentQuarter);
-            $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
-            // dd($planningAcc);
-
-            return $this->render('operational_task/initiativeAccomplishment.html.twig', [
-                'operatioanlSuitables' => $operatioanlSuitables,
-                'initiativeName' => $initiativeName,
-                'remainingdays' => $remainingdays,
-                'planningAcc' => $planningAcc,
-                'sendToPlan' => $sendToPlan,
-                'social' => 0,
-            ]);
-        }
-    }
+    
     /**
      * @Route("/user_fetch", name="user_fetch")
      */
@@ -776,27 +633,7 @@ class OperationalTaskController extends AbstractController
             'principal' => false
         ]);
     }
-    /**
-     * @Route("/principal_show", name="operational_task_principal_show")
-     */
-    public function principalShow(Request $request, TaskAssignRepository $taskAssignRepository)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-        $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
-        if ($delegatedUser) {
-            $delegatedBy = $delegatedUser->getDelegatedBy();
-            $user = $delegatedBy;
-            // dd($delegatedUser->getDelegatedtaskUserUser());
-        }
-        $principalOfficeId = $user->getOperationalManagers()[0]->getOperationaloffice()->getPrincipalOffice()->getId();
-        // dd($principalOfficeId);
-        $taskAssigns = $taskAssignRepository->findTaskOperattionalList($principalOfficeId);
-        return $this->render('operational_task/show.html.twig', [
-            'taskAssigns' => $taskAssigns,
-            'principal' => true
-        ]);
-    }
+   
     /**
      * @Route("/show_detail", name="operational_task_show_detail")
      */

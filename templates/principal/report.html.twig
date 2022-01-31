@@ -11,6 +11,11 @@
 
 
 	<div class="row">
+		<div class=" pull-right">
+			<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
+				Report History
+			</a>
+		</div>
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -21,12 +26,12 @@
 					<div class="widget-toolbar"></div>
 
 					<div class="widget-toolbar">
-					<span class="badge badge-info">
+						{# <span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
 							<strong>{{suitableTotal|length}}</strong>
-						</span>
-						
+						</span> #}
+
 
 					</div>
 				</div>
@@ -69,22 +74,7 @@
 
 										{{ form_end(filterform) }}
 									</div>
-									<div class="pull-left">
-
-
-										<form class="form-inline" method="post" style="display:inline;">
-
-											<div class="input-group">
-												<input type="text" class="form-control" name="search" placeholder="search"/>
-												<div class="input-group-btn">
-													<button type="submit" class="btn btn-default no-border btn-sm">
-														<i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
-													</button>
-												</div>
-											</div>
-										</form>
-
-									</div>
+									<div class="pull-left"></div>
 
 
 									<div class="pull-right"></div>
@@ -94,86 +84,78 @@
 						{% endif %}
 
 						<div class="table-responsive">
-						
-						{% if is_granted('smis_rep_fetch') %}
-							<div class="col-md-2 pull-right">
-								<a href="{{ path('fetch_operational_accomplishment') }}" title="show" class="btn btn-success  ">
-									Fetch Operational
-								</a>
-							</div>
-						{% endif %}
-						{% if is_granted('smis_rep_fetch') %}
-							<div class="col-md-2 pull-right">
-							<form action="{{path('fetch_operational_accomplishment')}}" method="post">
-							<button type="submit" class="btn btn-primary">
-							<input type="hidden" name="principal" value="principal">
-							Fetch Principal
-								</button>
-							</form>
-								
-							</div>
-						{% endif %}
 
-						
+							{% if is_granted('smis_rep_fetch') %}
+								<div class="col-md-2 pull-right">
+									<a href="{{ path('fetch_operational_accomplishment') }}" title="fetch" class="btn btn-success  ">
+										Fetch Operational
+									</a>
+								</div>
+							{% endif %}
+							{% if is_granted('smis_rep_fetch') %}
+								<div class="col-md-2 pull-right">
+									<form action="{{path('fetch_operational_accomplishment')}}" method="post">
+										<button type="submit" class="btn btn-primary">
+											<input type="hidden" name="principal" value="principal">
+											Fetch Principal
+										</button>
+									</form>
+
+								</div>
+							{% endif %}
 							{% set status = 1 %}
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
 									<tr>
 										<th>#</th>
 										<th>Suitable Initiative</th>
-
 										<th>Office</th>
-										{# <th>Planning Year</th> #}
 										<th>View</th>
 										<th>Send</th>
-										{# <th>Fetch</th> #}
 										<th>Status</th>
-
-
 									</tr>
 								</thead>
 								<tbody>
 									{% set count =  suitable_initiatives.getItemNumberPerPage() * (suitable_initiatives.getCurrentPageNumber() -1) %}
+									{# {% set count = 0 %} #}
 									{% for suitable_initiative in suitable_initiatives %}
-										<tr>
-											{% set count = count + 1 %}
+										{% set value = 0 %}
+										{% set plan = suitable_initiative.planningAccomplishments|filter(plan => plan.quarter.slug == currentQuarter) %}
+										{% if plan|length %}
+											{% set value = 1  %}
+										{% endif %}
+										{% if value %}
 
-											<td>{{count}}</td>
-											<td>{{ suitable_initiative.initiative}}</td>
-											<td>{{ suitable_initiative.principalOffice}}
-											</td>
-											<td>
-												<div class="col-md-3">
-													<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">View Plan</a>
-												</div>
-											</td>
-											<td>
-												<div class="row">
-													<div class="col-md-4">
-														<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
-															View Report
-														</a>
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{count}}</td>
+												<td>{{ suitable_initiative.initiative}}</td>
+												<td>{{ suitable_initiative.principalOffice}}
+												</td>
+												<td>
+													<div class="col-md-3">
+														<a class="btn btn-info btn-sm  " title="show" href="{{ path('suitable_initiative_show', {'id': suitable_initiative.id}) }}">View Plan</a>
 													</div>
-												</div>
-											</td>
-											{# <td>
-																							{% if is_granted('vw_usr_lst') %}
-																								<div class="col-md-4">
-																									<a href="{{ path('fetch_operational_accomplishment', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-primary btn-sm d-inline p-2 ">
-																										Fetch
-																									</a>
-																								</div>
-																							{% endif %}
-																						</td> #}
-											<td>
-												{% if suitable_initiative.status == 1 %}
-													<span class="badge badge-primary">reported</span>
-												{% else %}
-													<span class="badge badge-danger">not reported
-													</span>
-												{% endif %}
-											</td>
-										</tr>
+												</td>
+												<td>
+													<div class="row">
+														<div class="col-md-4">
+															<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
+																View Report
+															</a>
+														</div>
+													</div>
+												</td>
+												<td>
+													{% if suitable_initiative.status == 1 %}
+														<span class="badge badge-primary">reported</span>
+													{% else %}
+														<span class="badge badge-danger">not reported
+														</span>
+													{% endif %}
+												</td>
+											</tr>
+										{% endif %}
 									{% else %}
 										<tr>
 											<td colspan="3">no records found</td>
@@ -188,8 +170,6 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 
 {% endblock %}
