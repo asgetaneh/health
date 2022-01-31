@@ -82,6 +82,7 @@
 										<th>#</th>
 										<th>Suitable Initiative</th>
 										<th>Operational Office</th>
+										<th>Quarter </th>
 										<th>Current Quarter Plan</th>
 										<th>actions</th>
 										<th>Report to Principal Office</th>
@@ -89,7 +90,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% set count =  operationalSuitables.getItemNumberPerPage() * (operationalSuitables.getCurrentPageNumber() -1) %}									
+									{% set count =  operationalSuitables.getItemNumberPerPage() * (operationalSuitables.getCurrentPageNumber() -1) %}
 									{% for operationalSuitable in operationalSuitables %}
 										{% for  plan in operationalSuitable.planValue|filter(plan => plan.quarter.slug == quarter, plan => operationalSuitable.id == plan.operationalSuitable.id,plan => plan.planValue != 0  ) %}
 											{% if plan.planValue %}
@@ -98,6 +99,9 @@
 													<td>{{ count}}</td>
 													<td>{{operationalSuitable. suitableInitiative.initiative.name }}</td>
 													<td>{{ operationalSuitable.operationalOffice.name  }}</td>
+													<td>
+														{{ plan.quarter.slug  }}
+													</td>
 													<td>
 														{{ plan.planValue  }}
 													</td>

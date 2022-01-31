@@ -25,12 +25,12 @@
 
 					<div class="widget-toolbar"></div>
 
-					<div class="widget-toolbar">
-						{# <span class="badge badge-info">
-							{% trans %}Total{% endtrans %}
-							:
-							<strong>{{suitableTotal|length}}</strong>
-						</span> #}
+					<div
+						class="widget-toolbar">{# <span class="badge badge-info">
+														{% trans %}Total{% endtrans %}
+														:
+														<strong>{{suitableTotal|length}}</strong>
+													</span> #}
 
 
 					</div>
@@ -110,6 +110,7 @@
 										<th>#</th>
 										<th>Suitable Initiative</th>
 										<th>Office</th>
+										<th>Quarter</th>
 										<th>View</th>
 										<th>Send</th>
 										<th>Status</th>
@@ -131,6 +132,9 @@
 												<td>{{count}}</td>
 												<td>{{ suitable_initiative.initiative}}</td>
 												<td>{{ suitable_initiative.principalOffice}}
+												</td>
+												<td>
+													{{currentQuarter }}
 												</td>
 												<td>
 													<div class="col-md-3">
