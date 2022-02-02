@@ -57,6 +57,15 @@ class General
     //  dd($count);
         return $count;
     }
+    public static function getPerformerTaskCount(EntityManager $entityManager,$user)
+    {
+
+        # code...
+    $count= $entityManager->getRepository(TaskAssign::class)->findPerformerTaskCount($user);
+    //  dd($count);
+        return $count;
+    }
+    
       public static function getPrincipalSelectSuitable(EntityManager $entityManager,$principalOffice)
     {
     $count= $entityManager->getRepository(SuitableInitiative::class)->getPrincipalSelectSuitable($principalOffice);

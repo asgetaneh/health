@@ -137,6 +137,14 @@
 				<li>
 					<a href="{{ path('performer_task_index') }}" style="background:#ff3300; color: #f5f6f8">
 						<b class="fa fa-caret-right"></b>
+						{% set user = 0 %}
+						{% set user = app.user %}
+						{% if getPerformerTaskCount(user) %}
+
+							<div class="badge badge-info">
+								{{getPerformerTaskCount(user)}}
+							</div>
+						{% endif %}
 						{% trans %}Performer Task{% endtrans %}
 					</a>
 					<b class="arrow"></b>

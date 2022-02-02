@@ -79,6 +79,18 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findPerformerTaskCount($value)
+    {
+        return $this->createQueryBuilder('t')
+            // ->leftJoin('ta.performerTask','p')
+            ->andWhere('t.assignedTo = :val')
+            ->andWhere('t.status < 5  ')
+            ->setParameter('val', $value)
+            ->select('count(t.id)')
+            //  ->setParameter('status', 5)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()->getSingleScalarResult();
+    }
     public function findTaskUsersList($value)
     {
         return $this->createQueryBuilder('t')
@@ -129,7 +141,7 @@ class TaskAssignRepository extends ServiceEntityRepository
             // ->setMaxResults(10)
             ->getQuery()->getSingleScalarResult();
     }
-     public function getTaskListOperational($operationalOfficeId)
+    public function getTaskListOperational($operationalOfficeId)
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.PerformerTask', 'p')

@@ -50,6 +50,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getOperationalCascading', [$this, 'getOperationalCascading']),
             new TwigFunction('getPlanningApproved', [$this, 'getPlanningApproved']),
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
+            new TwigFunction('getPerformerTaskCount', [$this, 'getPerformerTaskCount']),
             new TwigFunction('getTaskList', [$this, 'getTaskList']),
             new TwigFunction('getTaskListOperational', [$this, 'getTaskListOperational']),
             new TwigFunction('getProgress', [$this, 'getProgress']),
@@ -114,10 +115,16 @@ class AppExtension extends AbstractExtension
         $req = General::getTaskList($this->entityManager, $office);
         return ($req);
     }
-      function getTaskListOperational($office)
+    function getTaskListOperational($office)
     {
         // dd(1);
         $req = General::getTaskListOperational($this->entityManager, $office);
+        return ($req);
+    }
+    function getPerformerTaskCount($user)
+    {
+        // dd(1);
+        $req = General::getPerformerTaskCount($this->entityManager, $user);
         return ($req);
     }
     function getProgress($initiative, $yearId)
