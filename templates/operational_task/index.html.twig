@@ -115,6 +115,10 @@
 							{% endif %}
 
 						</div>
+						<div class="pull-right" style="margin-bottom:20px; margin-top:10px;">
+									<span class="badge badge-info text-white">
+										{{initiativeName}}</span>
+								</div>
 					</div>
 
 					<div class="widget-body">
@@ -170,10 +174,7 @@
 
 
 								</div>
-								<div class="pull-right" style="margin-bottom:20px; margin-top:10px;">
-									<span class="badge badge-info text-white">
-										{{initiativeName}}</span>
-								</div>
+								
 
 
 								{# <div class="pull-right"> #}
@@ -182,12 +183,12 @@
 									<div class="row ">
 										{% if  taskAssigns %}
 											<form action="{{path('task_assign_pdf')}}" method="post">
-												<div class="col-md-4 ">
+												<div class="col-md-4  ">
 													<select autocomplete="off" name="user" class="form-control performerList  select2 " required></select>
 												</div>
 												<div class="col-md-3 ">
 
-													<button class="btn btn-sm btn-danger t" type="submit">
+													<button class="btn btn-sm btn-danger " titlr="print pdf" type="submit">
 														<i class="fa fa-file-pdf-o "></i>
 
 													</button>
@@ -515,19 +516,24 @@ $('.assignModal').modal('show');
 var isCore = $(this).attr('data-category');
 var categoryId = $(this).attr('data-category-id');
 var planValues = $('.planValue').val();
-$('.isCoreAssign2').val(isCore);
 $('.categoryId').val(categoryId);
-$('.planValues').val(planValues);
-$('.planValueste').text(planValues);
 
 
 
 if (isCore == 1) {
 $('.isCores').addClass("hidden -xs-up");
+$('.values').addClass("hidden -xs-up");
+$('.planValueste').text(planValues);
+$('.planValues').val(planValues);
+$('.isCoreAssign2').val(isCore);
+
+
+
+
 }
+
 var select = $('.userlist')
 var userprincipal = $('.office').val();
-console.log(isCore, userprincipal)
 $.ajax({
 url:"{{ path('user_fetch') }}",
 method: "POST",

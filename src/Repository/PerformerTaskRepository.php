@@ -156,6 +156,27 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->andWhere('s.quarter = :quarter')
+            ->andWhere('tc.isCore = 0')
+            ->setParameter('user', $user)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('initiative', $suitableOperational)
+
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+
+            ->getResult();
+    }
+     public function findCores($suitableOperational, $user, $quarter)
+    {
+
+        //dd($productNmae);
+        return $this->createQueryBuilder('s')
+
+            ->leftJoin('s.operationalPlanningAcc', 'pl')
+            ->leftJoin('s.taskCategory', 'tc')
+            ->andWhere('pl.operationalSuitable = :initiative')
+            ->andWhere('s.createdBy = :user')
+            ->andWhere('s.quarter = :quarter')
             ->andWhere('tc.isCore = 1')
             ->setParameter('user', $user)
             ->setParameter('quarter', $quarter)
@@ -166,6 +187,8 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
+    
+
 
     public function findsendToprincipal($user, $suitableinitiative)
     {

@@ -322,7 +322,7 @@ class OperationalTaskController extends AbstractController
         return new JsonResponse($operationalSuitable);
     }
 
-  
+
 
     /**
      * @Route("/accomplisment/{id}", name="acomplishment_task_detail")
@@ -346,6 +346,8 @@ class OperationalTaskController extends AbstractController
         }
         $initiativeName = $suitableOperational->getSuitableInitiative()->getInitiative()->getName();
         $initiativeId = $suitableOperational->getId();
+        $performerTasksCore = $em->getRepository(PerformerTask::class)->findCores($suitableOperational, $user, AmharicHelper::getCurrentQuarter($em));
+
         $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableOperational, $user, AmharicHelper::getCurrentQuarter($em));
         $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableOperational, $user);
         $time = new DateTime('now');
@@ -366,8 +368,9 @@ class OperationalTaskController extends AbstractController
         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $sendToPrincipal = $maxTasks->getSendToPrincipal();
         $sendToPlan = $maxPenalityDays->getSendToPlan();
-        return $this->render('operational_task/accomplishmentDetail.html.twig', [
+        return $this->render('operational_task/accomplishment_detail.html.twig', [
             'taskAcomolishs' => $taskAcomolishs,
+            'performerTasksCore'=>$performerTasksCore,
             'initiativeName' => $initiativeName,
             'initiativeId' => $initiativeId,
             'performerTasks' => $performerTasks,
@@ -507,10 +510,10 @@ class OperationalTaskController extends AbstractController
                 if ($plan) {
                     $planningAccomplishment->setAccompValue($plan);
                 }
-                    $suit->setStatus(1);
+                $suit->setStatus(1);
 
                 $em->flush();
-            } 
+            }
             $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
         }
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
@@ -561,7 +564,7 @@ class OperationalTaskController extends AbstractController
         return $this->redirectToRoute('principal_office_report');
     }
 
-    
+
     /**
      * @Route("/user_fetch", name="user_fetch")
      */
@@ -633,7 +636,7 @@ class OperationalTaskController extends AbstractController
             'principal' => false
         ]);
     }
-   
+
     /**
      * @Route("/show_detail", name="operational_task_show_detail")
      */

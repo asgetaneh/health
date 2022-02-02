@@ -152,10 +152,9 @@
 
 							<input
 							type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
-							{# <input type="hidden" class="planValues" name="planValue"> #}
+						{# <input type="hidden" class="planValues" name="planValue"> #}
 
-							<input type="hidden" class="categoryId" name="categoryId">
-							<input type="hidden" class="isCoreAssign" name="isCore">
+
 						</div>
 
 
@@ -189,8 +188,13 @@
 									<td>{{ count}}</td>
 									<td>{{ measurement.name }}</td>
 									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
-									<td><input type="hidden"  name="expectedValue" class="form-control planValues"  required>
-										<p class="planValueste"></p>
+									<td>
+
+										<input type="hidden" name="expectedValues" class="form-control planValues isCores" required>
+										<input type="number" name="expectedValue" class="form-control values isCores">
+										<p class="planValueste" id="planValueste"></p>
+										<input type="hidden" class="categoryId" name="categoryId">
+										<input type="hidden" class="isCoreAssign2" name="isCore">
 									</td>
 									{% if social == 1 %}
 

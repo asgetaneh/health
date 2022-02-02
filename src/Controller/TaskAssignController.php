@@ -322,11 +322,13 @@ class TaskAssignController extends AbstractController
         $tasksss = $request->request->get('task');
         $measurementids = $request->request->get('measurementId');
         $expectedValueSocial = $request->request->get('expectedValueSocial');
+        $expectedValues = $request->request->get('expectedValues');
         $expectedValue = $request->request->get('expectedValue');
         $startDate = $request->request->get('startDate');
         $endDate = $request->request->get('endDate');
+        $isCore = $request->request->get('isCore');
 
-        // dd($expectedValue);
+        // dd($isCore, $expectedValues);
         $timeGap = $request->request->get('timeGap');
         $measurementDescriptions = $request->request->get("measurementDescription");
 
@@ -355,7 +357,13 @@ class TaskAssignController extends AbstractController
                 $taskAssign->setEndDate($endDate);
                 $taskAssign->setTimeGap($timeGap);
                 //    dd($expectedValues[$key]);
-                $taskAssign->setExpectedValue($expectedValue);
+                if ($isCore == 1) {
+
+                    $taskAssign->setExpectedValue($expectedValues);
+                    # code...
+                } else {
+                    $taskAssign->setExpectedValue($expectedValue);
+                }
                 $taskAssign->setStatus(0);
 
                 $user = $em->getRepository(User::class)->find($userId);
@@ -370,8 +378,13 @@ class TaskAssignController extends AbstractController
                     // $measurementDescription = $measurementDescriptions[$key];
                     $taskmeasurementId = $em->getRepository(TaskMeasurement::class)->find($valuea);
                     $taskAccoplishment->setTaskAssign($taskAssign);
+                    if ($isCore == 1) {
+                        $taskAccoplishment->setExpectedValue($expectedValues);
+                        # code...
+                    } else {
+                        $taskAccoplishment->setExpectedValue($expectedValue);
+                    }
                     $taskAccoplishment->setMeasurement($taskmeasurementId);
-                    $taskAccoplishment->setExpectedValue($expectedValue);
                     if ($expectedValueSocial) {
                         $taskAccoplishment->setExpectedValueSocial($expectedValueSocial);
                     }
