@@ -116,6 +116,18 @@
 				<li>
 					<a href="{{ path('operational_task_show') }}" style="background:#3f87a6; color: #f5f6f8">
 						<b class="fa fa-caret-right"></b>
+						{% set oper = 0 %}
+						{% for item in app.user.operationalManagers|filter(pr=> pr.isActive == 1) %}
+
+
+							{% set oper = item.operationalOffice.id %}
+						{% endfor %}
+						{% if getTaskListOperational(oper) %}
+
+							<div class="badge badge-danger">
+								{{getTaskListOperational(oper)}}
+							</div>
+						{% endif %}
 						{% trans %}Operational Task List{% endtrans %}
 					</a>
 				</li>

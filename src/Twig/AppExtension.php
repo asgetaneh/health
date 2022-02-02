@@ -51,6 +51,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getPlanningApproved', [$this, 'getPlanningApproved']),
             new TwigFunction('getTaskStatus', [$this, 'getTaskStatus']),
             new TwigFunction('getTaskList', [$this, 'getTaskList']),
+            new TwigFunction('getTaskListOperational', [$this, 'getTaskListOperational']),
             new TwigFunction('getProgress', [$this, 'getProgress']),
             new TwigFunction('getTaskStatusAssigned', [$this, 'getTaskStatusAssigned']),
             new TwigFunction('getTaskStatusSend', [$this, 'getTaskStatusSend']),
@@ -89,28 +90,34 @@ class AppExtension extends AbstractExtension
     }
 
 
-    function getTaskStatus($id, $office,$quarter)
+    function getTaskStatus($id, $office, $quarter)
     {
 
-        $req = General::getTaskStatus($this->entityManager, $id, $office,$quarter);
+        $req = General::getTaskStatus($this->entityManager, $id, $office, $quarter);
         return ($req);
     }
-    function getTaskStatusAssigned($id, $office,$quarter)
+    function getTaskStatusAssigned($id, $office, $quarter)
     {
 
-        $req = General::getTaskStatusAssigned($this->entityManager, $id, $office,$quarter);
+        $req = General::getTaskStatusAssigned($this->entityManager, $id, $office, $quarter);
         return ($req);
     }
-    function getTaskStatusSend($id, $office,$quarter)
+    function getTaskStatusSend($id, $office, $quarter)
     {
 
-        $req = General::getTaskStatusSend($this->entityManager, $id, $office,$quarter);
+        $req = General::getTaskStatusSend($this->entityManager, $id, $office, $quarter);
         return ($req);
     }
     function getTaskList($office)
     {
         // dd(1);
         $req = General::getTaskList($this->entityManager, $office);
+        return ($req);
+    }
+      function getTaskListOperational($office)
+    {
+        // dd(1);
+        $req = General::getTaskListOperational($this->entityManager, $office);
         return ($req);
     }
     function getProgress($initiative, $yearId)
