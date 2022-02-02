@@ -129,20 +129,18 @@ class TaskAssignRepository extends ServiceEntityRepository
             // ->setMaxResults(10)
             ->getQuery()->getSingleScalarResult();
     }
-     public function getTaskListOperational($principalOfficeId)
+     public function getTaskListOperational($operationalOfficeId)
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.PerformerTask', 'p')
             ->leftJoin('p.taskCategory', 'ta')
             ->leftJoin('p.operationalOffice', 'of')
-            ->leftJoin('of.principalOffice', 'pf')
             ->select('count(t.id)')
-            ->andWhere('pf.id = :val')
-
+            ->andWhere('of.id = :val')
             ->andWhere('t.type < 3 ')
             ->andWhere('t.status > 4 ')
             ->andWhere('ta.isCore  = 0 ')
-            ->setParameter('val', $principalOfficeId)
+            ->setParameter('val', $operationalOfficeId)
             ->orderBy('t.id', 'ASC')
             // ->setMaxResults(10)
             ->getQuery()->getSingleScalarResult();
