@@ -38,13 +38,7 @@
 										New Initiatives{% endtrans %}</a>
 								{% endif %}
 
-								{# <form class="form-inline" method="post" style="display:inline;">
-																																																																																										<input type="hidden" name="nonapplicable" value="nonapp"/>
-																																																																																										<button type="submit" class="btn btn-warning btn-sm btn-white btn-round">
-																																																																																											<i class="ace-icon fa fa-times bigger-110 red2"></i>
-																																																																																											{% trans %}
-																																																																																											None Applicable Initiatives{% endtrans %}</button>
-																																																																																									</form> #}
+								
 
 							</div>
 
@@ -109,9 +103,16 @@
 											{{ form_widget(filterform.coreTask,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Task Status' }}) }}
 										</div>
 									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											{{ form_label(filterform.task,'Initiative Core Task') }}
+											{{ form_widget(filterform.task,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Task ' }}) }}
+										</div>
+									</div>
+									
 
 
-									<div class="col-md-1">
+									<div class="col-md-2">
 										<div class="form-group" style="margin-top:25px;">
 											<input type="submit" class="btn btn-primary btn-sm " value="Filter">
 										</div>

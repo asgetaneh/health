@@ -131,7 +131,10 @@ class Helper
                 $quarterPlanAchievement->setInitiativeAchievement($initiativeAchievement);
                 $isexist = false;
             }
-            $quarterPlanAchievement->setPlan($plan);
+            if ($plan) {
+                # code...
+            
+            $quarterPlanAchievement->setPlan($plan);}
 
 
             if (!$isexist) {
@@ -145,9 +148,9 @@ class Helper
 
         $em->flush();
         $em->clear();
-        self::calculateKpiPlan($em, $suitableInitiative);
-        self::setObjectivePlan($em, $suitableInitiative);
-        self::setGoalPlan($em, $suitableInitiative);
+        // self::calculateKpiPlan($em, $suitableInitiative);
+        // self::setObjectivePlan($em, $suitableInitiative);
+        // self::setGoalPlan($em, $suitableInitiative);
 
 
         return;
@@ -183,8 +186,10 @@ class Helper
                 $quarterPlanAchievement->setKPiAchievement($kpiAchievement);
                 $isexist = false;
             }
-            $quarterPlanAchievement->setPlan($plan);
-
+    if ($plan) {
+                # code...
+            
+            $quarterPlanAchievement->setPlan($plan);}
 
             if (!$isexist) {
                 $kpiAchievement->addQuarterAchievement($quarterPlanAchievement);
@@ -234,8 +239,10 @@ class Helper
                 $quarterPlanAchievement->setObjectiveAchievement($objectiveAchievement);
                 $isexist = false;
             }
-            $quarterPlanAchievement->setPlan($plan);
-
+    if ($plan) {
+                # code...
+            
+            $quarterPlanAchievement->setPlan($plan);}
 
             if (!$isexist) {
                 $objectiveAchievement->addQuarterAchievement($quarterPlanAchievement);
@@ -284,8 +291,10 @@ class Helper
                 $quarterPlanAchievement->setGoalAchievement($goalAchievement);
                 $isexist = false;
             }
-            $quarterPlanAchievement->setPlan($plan);
-
+    if ($plan) {
+                # code...
+            
+            $quarterPlanAchievement->setPlan($plan);}
 
             if (!$isexist) {
                 $goalAchievement->addQuarterAchievement($quarterPlanAchievement);

@@ -36,9 +36,9 @@ class PlanAchievementHelper
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
         }
-        self::setKpiAchievement($em,$suitableInitiative);
-        self::setObjectiveAchievement($em, $suitableInitiative);
-        self::setGoalAchievement($em, $suitableInitiative);
+        // self::setKpiAchievement($em,$suitableInitiative);
+        // self::setObjectiveAchievement($em, $suitableInitiative);
+        // self::setGoalAchievement($em, $suitableInitiative);
         return;
     }
     public static function setKpiAchievement(EntityManagerInterface $em, $suitableInitiative)
@@ -59,13 +59,17 @@ class PlanAchievementHelper
                 $accompPlan = $em->getRepository(QuarterPlanAchievement::class)->getByInitiativeAndQuarter($initiative, $quarter, $year);
                 $accompValue = 0;
                 $wieght = $initiative->getWeight();
+
                 if ($accompPlan) {
                     $accompValue = $accompPlan->getAccomp();
                     $plan = $accompPlan->getPlan();
-
+                    if ($plan) {
                     $accomp = $accomp + ($accompValue / $plan) * $wieght;
+                    }
+
                 }
             }
+            $accomp=round($accomp, 2);
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
 
@@ -98,13 +102,16 @@ class PlanAchievementHelper
                 $wieght = $kpi->getWeight();
                 // dd($wieght);
                 if ($accompPlan) {
+                                    if ($plan = $accompPlan->getPlan()) {
+
                     $accompValue = $accompPlan->getAccomp();
                     $plan = $accompPlan->getPlan();
-// dd($accompValue);
-                    // $accomp = $accomp + ($accompValue / $plan) * $wieght;
-                }
+                    $accomp = $accomp + ($accompValue / $plan) * $wieght;
+                }}
+// dd($accomp);
             }
-            // $quarterPlanAchievement->setAccomp($accomp);
+         $accomp=round($accomp, 2);
+            $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
 
 
@@ -142,6 +149,8 @@ class PlanAchievementHelper
                     $accomp = $accomp + ($accompValue / $plan) * $wieght;
                 }
             }
+                     $accomp=round($accomp, 2);
+
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
            

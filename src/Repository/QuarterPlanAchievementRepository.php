@@ -47,6 +47,61 @@ class QuarterPlanAchievementRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+      public function findByObjective($objective)
+    {
+        $qb = $this->createQueryBuilder('pa')
+          
+           ->join('pa.objectiveAchievement', 'oa')
+            ->andwhere('oa.objective = :objective')
+            ->andwhere('pa.quarter = 2')
+          
+            ->setParameter('objective', $objective)
+            // ->setParameter('name', $social)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+     public function findByKpiandQuarter($objective)
+    {
+        $qb = $this->createQueryBuilder('pa')
+            // ->select('sum(pa.planValue) as plan')
+            // ->leftjoin('pa.socialAttribute', 'sa')
+           ->join('pa.kPiAchievement', 'ki')
+            ->Join('ki.kpi', 'k')
+            // ->Join('k.objective', 'ob')
+
+
+
+
+            // ->andwhere('pa.suitableInitiative = :suitin')
+            ->andwhere('k.objective = :objective')
+            ->andwhere('pa.quarter = 2')
+          
+            ->setParameter('objective', $objective)
+            // ->setParameter('name', $social)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+      public function findByobjgoalandQuarter($goal)
+    {
+        $qb = $this->createQueryBuilder('pa')
+           
+           ->join('pa.objectiveAchievement', 'k')
+            // ->Join('ki.kpi', 'k')
+              ->Join('k.objective', 'o')
+
+            ->andwhere('o.goal = :goal')
+            ->andwhere('pa.quarter = 2')
+          
+            ->setParameter('goal', $goal)
+            // ->setParameter('name', $social)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+    
     public function findByInitiativeAchievementAndQuarter($initiativeAchievement, $quarter)
     {
         return $this->createQueryBuilder('q')

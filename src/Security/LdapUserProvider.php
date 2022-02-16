@@ -76,15 +76,15 @@ class LdapUserProvider implements UserProviderInterface
         //  dd(sprintf($this->ldapSearchDnString, $username));
 
         try {
-           
+
 
             $this->ldap->bind(sprintf($this->ldapSearchDnString, $username), $password);
         } catch (ExceptionConnectionException $th) {
-           
+
             return null;
             throw new CustomUserMessageAuthenticationException('Cant connect to server,try again');
         } catch (\Throwable $th) {
-          
+
             return null;
         }
         // dd("bind");
@@ -107,21 +107,21 @@ class LdapUserProvider implements UserProviderInterface
             // throw new UsernameNotFoundException('More than one user found');
         }
         $ldapEntry = $entries[0];
+        // dd($ldapEntry);
         $fullName = $ldapEntry->getAttributes()['gecos'][0];
         $email = $ldapEntry->getAttributes()['mail'][0];
         $username = $ldapEntry->getAttributes()['uid'][0];
         // $email = $ldapEntry->getAttributes()['mail'][0];
         if ($ldapEntry->getAttributes()['mobile']) {
             # code...
-                    $mobile = $ldapEntry->getAttributes()['mobile'][0];
+            $mobile = $ldapEntry->getAttributes()['mobile'][0];
+        } else {
+            $mobile = "no";
         }
-        else{
-            $mobile="no";
-        }
-         if ($ldapEntry->getAttributes()['employeeNumber']) {
-        $employeeNumber=$ldapEntry->getAttributes()['employeeNumber'][0];}
-        else{
-              $employeeNumber="no";
+        if ($ldapEntry->getAttributes()['employeeNumber']) {
+            $employeeNumber = $ldapEntry->getAttributes()['employeeNumber'][0];
+        } else {
+            $employeeNumber = "no";
         }
         // dd($employeeNumber);
         $userinfo = new UserInfo();
@@ -129,30 +129,31 @@ class LdapUserProvider implements UserProviderInterface
         $user = new User();
         $userRepository = $this->entityManager->getRepository('App\Entity\User');
         $userfind = $userRepository->findOneBy(['username' => $username]);
+        if ($ldapEntry->getAttributes()['employeeType'][0] == "Staff") {
+            # code...
+            if (!$userfind) {
+                $user->setUsername($username);
+                $user->setRoles(['staff']);
+                $user->setStatus(0);
+                $user->setMobile($mobile);
+                $this->entityManager->persist($user);
+                //$this->entityManager->flush();
+                $userinfo->setUser($user);
+                $userinfo->setEmail($email);
+                $userinfo->setEmployeeNumber($employeeNumber);
+                $userinfo->setFullName($fullName);
+                $this->entityManager->persist($userinfo);
 
-        if (!$userfind) {
+                $this->entityManager->flush();
+                $username = $user->getUsername();
+                $userfind1 = $userRepository->findOneBy(['username' => $username]);
+                return $userfind1;
+            }
+        } else {
 
-            $user->setUsername($username);
-            $user->setRoles(['staff']);
-             $user->setStatus(0);
-                     $user->setMobile($mobile);
-            $this->entityManager->persist($user);
-            //$this->entityManager->flush();
-            $userinfo->setUser($user);
-         $userinfo->setEmail($email);
-        $userinfo->setEmployeeNumber($employeeNumber);
-        $userinfo->setFullName($fullName);
-        $this->entityManager->persist($userinfo);
-        $this->entityManager->flush();
-       $username=$user->getUsername();
-       $userfind1 = $userRepository->findOneBy(['username' => $username]);
-     return $userfind1;
-
+            return $userfind;
+        }
     }
-        else{
-
-        return $userfind;
-    }}
 
     /**
      * Refreshes the user after being reloaded from the session.

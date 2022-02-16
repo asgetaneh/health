@@ -1,0 +1,177 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="active">{% trans %}SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('suitable_initiative_report')}}">{% trans %}Goal Achievement{% endtrans %}</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+
+
+	<div
+		class="row">
+		{# <div class=" pull-right">
+					<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
+						Report History
+					</a>
+				</div> #}
+		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+			<div class="widget-box widget-color-blue" id="widget-box-8">
+				<div class="widget-header">
+					<h5 class="widget-title bigger lighter">
+						<strong>Goal Achievement</strong>
+					</h5>
+
+					<div class="widget-toolbar"></div>
+
+					<div
+						class="widget-toolbar">{# <span class="badge badge-info">
+																																																																																				{% trans %}Total{% endtrans %}
+																																																																																				:
+																																																																																				<strong>{{suitableTotal|length}}</strong>
+																																																																																			</span> #}
+
+
+					</div>
+				</div>
+
+				<div class="widget-body">
+
+
+					<div class="widget-main padding-16">
+						{% if is_granted('vw_usr_lst') %}
+
+							<div class="row">
+								<div class="search-area well col-xs-12">
+
+									<div class="row" style="margin-bottom:10px;">
+										{{ form_start(filterform,{'attr': {'role':'form','id':'filteruserform'}}) }}
+										<div class="col-md-3">
+											<div class="form-group">
+												{{ form_label(filterform.goal,'Goal') }}
+												{{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control','data-placeholder':'chose goal' }}) }}
+											</div>
+										</div>
+
+										<div class="col-md-3">
+											<div class="form-group" style="margin-top:25px;">
+												<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+											</div>
+										</div>
+
+
+										{{ form_end(filterform) }}
+									</div>
+
+								</div>
+
+							</div>
+						{% endif %}
+
+						<div class="table-responsive">
+							{% if principal == 1 %}
+
+								{# {% set status = 1 %} #}
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>objective
+											</th>
+											<th>goal
+											</th>
+											<th>Weight</th>
+											<th>PLan</th>
+											<th>achivment</th>
+											<th>accomplishment</th>
+											<th>Weight Accomplishment</th>
+										</tr>
+									</thead>
+									<tbody>
+										{# {% set count =  suitable_initiatives.getItemNumberPerPage() * (suitable_initiatives.getCurrentPageNumber() -1) %} #}
+										{% set count = 0 %}
+										{% set plan = 0 %}
+										{% set achivment = 0 %}
+										{% set weight = 0 %}
+																				{% set weightbased = 0 %}
+
+										{% for planValue in planValues %}
+
+
+											<tr>
+												{% set count = count + 1 %}
+												<td>{{count}}</td>
+												<td>{{ planValue.objectiveAchievement.objective}}</td>
+
+												<td>{{ planValue.objectiveAchievement.objective.goal}}</td>
+												<td>{{ planValue.objectiveAchievement.objective.weight}}</td>
+												<td>{{ planValue.plan}}</td>
+												{% if planValue.accomp %}
+
+													<td>{{ (planValue.plan * planValue.accomp) / 100}}
+													</td>
+													<td>{{ (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp }}
+													</td>
+													{% set weightbased = weightbased + (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp  %}
+												{% endif %}
+												<td>{{ planValue.accomp}}
+												</td>
+												{% set weight = weight + planValue.objectiveAchievement.objective.weight %}
+
+											{% set plan = plan + planValue.plan %}
+												{% set achivment = achivment + (planValue.plan * planValue.accomp) / 100 %}
+
+
+											</tr>
+										{% else %}
+
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Sum</td>
+											<td>{{ weight }}</td>
+
+											<td>{{ plan }}</td>
+											<td colspan="2">{{ achivment }}</td>
+											<input type="hidden" name="weightbased" value="{{weightbased}}">
+											<td>{{ weightbased }}</td>
+											
+
+
+										</tr>
+									</tbody>
+								</table>
+							{% endif %}
+							{# <div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitable_initiatives) }}</div> #}
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+
+	<script>
+		$(function () {
+$('.select2').css('width', '100%').select2({allowClear: false})
+
+
+})
+	</script>
+	<script>
+		$('#custompaginator .page-link').click(function (e) {
+e.preventDefault();
+$('#filteruserform').attr('action', $(this).attr('href'));
+
+$('#filteruserform').submit();
+
+});
+	</script>
+{% endblock %}

@@ -11,15 +11,19 @@ use App\Form\KeyPerformanceIndicatorType;
 use App\Helper\Helper;
 use App\Repository\KeyPerformanceIndicatorRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/key/performance/indicator")
+ * @Route("/key_performance_indicator")
  */
 class KeyPerformanceIndicatorController extends AbstractController
 {
@@ -120,6 +124,50 @@ class KeyPerformanceIndicatorController extends AbstractController
             'filterform' => $filterform->createView(),
 
         ]);
+    }
+     /**
+     * @Route("/excel", name="excel_kpi", methods={"GET","POST"})
+     */
+
+    public function excel(Request $request, PaginatorInterface $paginator, KeyPerformanceIndicatorRepository $keyPerformanceIndicatorRepository)
+    {
+        $session = new Session();
+        // $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+        // if ($session->get('filter')) {
+
+        //     $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
+        // } else
+            $initiativestotal = $keyPerformanceIndicatorRepository->findAll();
+
+
+        $spreadsheet = new Spreadsheet();
+        foreach (range('A', 'E') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'KPI Number');
+        $sheet->setCellValue('B1', 'KPI Name');
+        $sheet->setCellValue('C1', 'OBJECTIVE');
+        $sheet->setCellValue('D1', 'Weight');
+
+        $totalResult = $initiativestotal;
+        // dd($totalResult);
+        $x = 2;
+        $soh = 0;
+        foreach ($totalResult as $result) {
+            $sheet->setCellValue('A' . $x, $result->getKpiNumber());
+            $sheet->setCellValue('B' . $x, $result->getName());
+            $sheet->setCellValue('C' . $x, $result->getObjective()->getName());
+            $sheet->setCellValue('D' . $x, $result->getWeight());
+
+            $x++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $fileName = "Kpi" . '.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
     /**

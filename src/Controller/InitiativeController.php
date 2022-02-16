@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CoreTask;
 use App\Entity\Goal;
 use App\Entity\Initiative;
 use App\Entity\InitiativeAttribute;
@@ -102,6 +103,12 @@ class InitiativeController extends AbstractController
             ])
             ->add('category', EntityType::class, [
                 'class' => InitiativeCategory::class,
+                'multiple' => true,
+                'required' => false,
+
+            ])
+             ->add('task', EntityType::class, [
+                'class' => CoreTask::class,
                 'multiple' => true,
                 'required' => false,
 

@@ -288,7 +288,6 @@ class PlanController extends AbstractController
 
             // $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
             $recoverInitiatives = $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($principaloffice);
-// dd($recoverInitiatives);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             if ($request->query->get('nonsuitable')) {
                 $removableId = $request->query->get('initiative');
@@ -297,13 +296,8 @@ class PlanController extends AbstractController
                 $this->addFlash('success', " successfuly selected  As Non Suitable initiatives");
                 //  return $this->redirectToRoute('plan_index');
             } else {
-
-// dd($request->query->get('initiative'),$operationaloffice);
-
                 $selectedInitiatives = $em->getRepository(SuitableInitiative::class)->findBy(['id' => $request->query->get('initiative')]);
-                $countinitiative = count($selectedInitiatives);
-                        // dd($request->query->get('initiative'),$selectedInitiatives);
- 
+                $countinitiative = count($selectedInitiatives); 
                 foreach ($selectedInitiatives as  $selectedInitiative) {
 
                     $existinitiative = $em->getRepository(SuitableOperational::class)->findDuplication($operationaloffice, $selectedInitiative, $planningyear);
@@ -1016,10 +1010,10 @@ class PlanController extends AbstractController
                 $em->flush();
                 $em->clear();
             }
-
+                $ent=$this->getDoctrine()->getManager();
 
             $this->calculatePrincipalOfficePlan($em, $planInitiative);
-            Helper::calculateInitiativePlan($em, $planInitiative);
+            Helper::calculateInitiativePlan($ent, $planInitiative);
             if ($operationaloffice->getPrincipalOffice()->getOfficeGroup()) {
                 Helper::setOrganizationalInitiativePlan($em, $planInitiative, $operationaloffice->getPrincipalOffice()->getOfficeGroup());
             }

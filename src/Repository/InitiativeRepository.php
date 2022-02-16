@@ -149,6 +149,12 @@ class InitiativeRepository extends ServiceEntityRepository
                 ->andWhere('c.id in (:category)')
                 ->setParameter('category', $search['category']);
         }
+         if (isset($search['task']) && sizeof($search['task']) > 0) {
+            $qb
+                ->leftJoin('i.coreTask', 'c')
+                ->andWhere('c.id in (:task)')
+                ->setParameter('task', $search['task']);
+        }
         if (isset($search['coreTask'])) {
             if ($search['coreTask'] == 0) {
                 $qb

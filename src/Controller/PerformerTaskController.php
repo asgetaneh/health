@@ -55,7 +55,6 @@ class PerformerTaskController extends AbstractController
         return $this->render('performer_task/index.html.twig', [
             'taskAssigns' => $taskAssigns,
             // 'count'=>$count,
-
         ]);
     }
 
@@ -64,14 +63,9 @@ class PerformerTaskController extends AbstractController
      */
     public function list(Request $request, TaskAssignRepository $taskAssignRepository)
     {
-
         $taskAssigns = $taskAssignRepository->findBy(['assignedTo' => $this->getUser(), 'status' => 5]);
-        //  /   dd($taskUsers);
-
         return $this->render('performer_task/list.html.twig', [
             'taskAssigns' => $taskAssigns,
-            // 'count'=>$count,
-
         ]);
     }
 

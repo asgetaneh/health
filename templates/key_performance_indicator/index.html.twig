@@ -105,7 +105,13 @@
 									</div>
 								</div>
 							</form>
+							<form action="{{path('excel_kpi')}}" method="post">
 
+								<button type="submit" formtarget="_blank" class="btn btn-app btn-success btn-xs pull-right" style="margin-bottom:30px;">
+									<i class=" fa fa-file-ex-o"></i>
+									EXCEL
+								</button>
+							</form>
 							<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 								<thead>
 									<tr>
@@ -214,23 +220,22 @@
 
 
 				</div>
-<div class="modal-footer">
-	<input class="btn btn-primary pull-right" type="submit" value="{% trans %}Create{% endtrans %}"/>
-	<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-	{{ form_end(form) }}</div>
-
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right" type="submit" value="{% trans %}Create{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					{{ form_end(form) }}</div>
 
 
 			</div>
 
-			
+
 		</div>
 
 
 		{# <div class="modal-footer">
-			<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-			<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-			{{ form_end(form) }}
-		</div> #}
+					<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					{{ form_end(form) }}
+				</div> #}
 	</div>
 </div></div></div>{% endblock %}
