@@ -129,9 +129,9 @@ class LdapUserProvider implements UserProviderInterface
         $user = new User();
         $userRepository = $this->entityManager->getRepository('App\Entity\User');
         $userfind = $userRepository->findOneBy(['username' => $username]);
-        if ($ldapEntry->getAttributes()['employeeType'][0] == "Staff") {
-            # code...
-            if (!$userfind) {
+        # code...
+        if (!$userfind) {
+            if ($ldapEntry->getAttributes()['employeeType'][0] == "Staff") {
                 $user->setUsername($username);
                 $user->setRoles(['staff']);
                 $user->setStatus(0);
