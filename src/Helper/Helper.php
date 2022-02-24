@@ -36,48 +36,10 @@ class Helper
     }
     public static function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
     {
-
-
-        // dd($planInitiative);
         $suitableoperationals = $em->getRepository(SuitableOperational::class)->findBy(['suitableInitiative' => $planInitiative]);
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
         $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($planInitiative->getId());
-
-
-        // if (count($planInitiative->getInitiative()->getSocialAtrribute()) > 0) {
-        //     $socalAttributes = $em->getRepository(InitiativeAttribute::class)->findAll();
-
-        //     foreach ($socalAttributes as $socalAttribute) {
-        //         $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateSocialAttrQuartertPlan($planInitiative, $socalAttribute);
-        //             //   if($socalAttribute->getId()==2)
-        //             //    dd($plans);
-
-        //         foreach ($quarters as $key => $quarter) {
-        //             $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, $socalAttribute, $quarter);
-        //             $isexist = true;
-        //             if (!$planAcomplishment) {
-        //                 $planAcomplishment = new PlanningAccomplishment();
-        //                 $planAcomplishment->setQuarter($quarter);
-        //                 $planAcomplishment->setSocialAttribute($socalAttribute);
-        //                 $planAcomplishment->setSuitableInitiative($suitableInitiative);
-        //                 $isexist = false;
-        //             }
-        //             $planAcomplishment->setPlanValue($plans[$key][1]);
-        //             if (!$isexist)
-        //                 $em->persist($planAcomplishment);
-
-
-        //             $em->flush();
-        //         }
-
-        //     }
-
-        // } else {
-
         $plans = $em->getRepository(OperationalPlanningAccomplishment::class)->calculateQuartertPlan($planInitiative);
-
-
-
         foreach ($quarters as $key => $quarter) {
             $planAcomplishment = $em->getRepository(PlanningAccomplishment::class)->findDuplication($planInitiative, null, $quarter);
             $isexist = true;
@@ -90,8 +52,6 @@ class Helper
             $planAcomplishment->setPlanValue($plans[$key][1]);
             if (!$isexist)
                 $em->persist($planAcomplishment);
-
-
             $em->flush();
         }
         $em->flush();
@@ -133,10 +93,8 @@ class Helper
             }
             if ($plan) {
                 # code...
-            
-            $quarterPlanAchievement->setPlan($plan);}
-
-
+                $quarterPlanAchievement->setPlan($plan);
+            }
             if (!$isexist) {
                 //$initiativeAchievement->addQuarterAchievement($quarterPlanAchievement);
                 $em->persist($quarterPlanAchievement);
@@ -144,7 +102,6 @@ class Helper
         }
         // if (!$isinitiativeAchievement)
         //     $em->persist($initiativeAchievement);
-
 
         $em->flush();
         $em->clear();
@@ -168,11 +125,8 @@ class Helper
             $kpiAchievement = new KPiAchievement();
             $kpiAchievement->setYear($year);
             $kpiAchievement->setKpi($kpi);
-            // $em->persist($kpiAchievement);
-
             $iskpiAchievement = false;
         }
-        //  $em->flush();
         foreach ($quarters as  $quarter) {
 
             $plan = $em->getRepository(QuarterPlanAchievement::class)->getSumByKpiAndYear($kpi, $year, $quarter);
@@ -186,10 +140,9 @@ class Helper
                 $quarterPlanAchievement->setKPiAchievement($kpiAchievement);
                 $isexist = false;
             }
-    if ($plan) {
-                # code...
-            
-            $quarterPlanAchievement->setPlan($plan);}
+            if ($plan) {
+                $quarterPlanAchievement->setPlan($plan);
+            }
 
             if (!$isexist) {
                 $kpiAchievement->addQuarterAchievement($quarterPlanAchievement);
@@ -198,12 +151,7 @@ class Helper
         }
         if (!$iskpiAchievement)
             $em->persist($kpiAchievement);
-
-
         $em->flush();
-
-
-
         return;
     }
     public static function setObjectivePlan(EntityManagerInterface $em, $suitableInitiative)
@@ -239,10 +187,11 @@ class Helper
                 $quarterPlanAchievement->setObjectiveAchievement($objectiveAchievement);
                 $isexist = false;
             }
-    if ($plan) {
+            if ($plan) {
                 # code...
-            
-            $quarterPlanAchievement->setPlan($plan);}
+
+                $quarterPlanAchievement->setPlan($plan);
+            }
 
             if (!$isexist) {
                 $objectiveAchievement->addQuarterAchievement($quarterPlanAchievement);
@@ -291,10 +240,11 @@ class Helper
                 $quarterPlanAchievement->setGoalAchievement($goalAchievement);
                 $isexist = false;
             }
-    if ($plan) {
+            if ($plan) {
                 # code...
-            
-            $quarterPlanAchievement->setPlan($plan);}
+
+                $quarterPlanAchievement->setPlan($plan);
+            }
 
             if (!$isexist) {
                 $goalAchievement->addQuarterAchievement($quarterPlanAchievement);
@@ -408,7 +358,7 @@ class Helper
         $parent = $principalOffice->getManagedBy();
 
         if (!$parent)
-         return $principalOffice;
+            return $principalOffice;
         // while ($parent->getManagedBy()) {
 
         //     $parent = $parent->getManagedBy();

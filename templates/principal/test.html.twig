@@ -13,10 +13,10 @@
 	<div
 		class="row">
 		{# <div class=" pull-right">
-					<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
-						Report History
-					</a>
-				</div> #}
+											<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
+												Report History
+											</a>
+										</div> #}
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -28,10 +28,10 @@
 
 					<div
 						class="widget-toolbar">{# <span class="badge badge-info">
-																																																																																				{% trans %}Total{% endtrans %}
-																																																																																				:
-																																																																																				<strong>{{suitableTotal|length}}</strong>
-																																																																																			</span> #}
+																																																																																																									{% trans %}Total{% endtrans %}
+																																																																																																									:
+																																																																																																									<strong>{{suitableTotal|length}}</strong>
+																																																																																																								</span> #}
 
 
 					</div>
@@ -73,78 +73,81 @@
 						<div class="table-responsive">
 							{% if principal == 1 %}
 
-								{# {% set status = 1 %} #}
-								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>objective
-											</th>
-											<th>goal
-											</th>
-											<th>Weight</th>
-											<th>PLan</th>
-											<th>achivment</th>
-											<th>accomplishment</th>
-											<th>Weight Accomplishment</th>
-										</tr>
-									</thead>
-									<tbody>
-										{# {% set count =  suitable_initiatives.getItemNumberPerPage() * (suitable_initiatives.getCurrentPageNumber() -1) %} #}
-										{% set count = 0 %}
-										{% set plan = 0 %}
-										{% set achivment = 0 %}
-										{% set weight = 0 %}
-																				{% set weightbased = 0 %}
-
-										{% for planValue in planValues %}
-
-
+								<form action="{{path('goalvsobjective')}}" method="post">
+									<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+										<thead>
 											<tr>
-												{% set count = count + 1 %}
-												<td>{{count}}</td>
-												<td>{{ planValue.objectiveAchievement.objective}}</td>
+												<th>#</th>
+												<th>objective
+												</th>
+												<th>goal
+												</th>
+												<th>Weight</th>
+												<th>PLan</th>
+												<th>achivment</th>
+												<th>accomplishment</th>
+												<th>Weight Accomplishment</th>
+											</tr>
+										</thead>
+										<tbody>
+											{# {% set count =  suitable_initiatives.getItemNumberPerPage() * (suitable_initiatives.getCurrentPageNumber() -1) %} #}
+											{% set count = 0 %}
+											{% set plan = 0 %}
+											{% set achivment = 0 %}
+											{% set weight = 0 %}
+											{% set weightbased = 0 %}
 
-												<td>{{ planValue.objectiveAchievement.objective.goal}}</td>
-												<td>{{ planValue.objectiveAchievement.objective.weight}}</td>
-												<td>{{ planValue.plan}}</td>
-												{% if planValue.accomp %}
+											{% for planValue in planValues %}
 
-													<td>{{ (planValue.plan * planValue.accomp) / 100}}
-													</td>
-													<td>{{ (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp }}
-													</td>
-													{% set weightbased = weightbased + (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp  %}
-												{% endif %}
-												<td>{{ planValue.accomp}}
-												</td>
-												{% set weight = weight + planValue.objectiveAchievement.objective.weight %}
 
-											{% set plan = plan + planValue.plan %}
-												{% set achivment = achivment + (planValue.plan * planValue.accomp) / 100 %}
+												<tr>
+													{% set count = count + 1 %}
+													<td>{{count}}</td>
+													<td>{{ planValue.objectiveAchievement.objective}}</td>
+
+													<td>{{ planValue.objectiveAchievement.objective.goal}}</td>
+													<td>{{ planValue.objectiveAchievement.objective.weight}}</td>
+													<input type="hidden" name="goal" value="{{planValue.objectiveAchievement.objective.goal.id}}">
+
+													<td>{{ planValue.plan}}</td>
+													{% if planValue.accomp %}
+
+														<td>{{ (planValue.plan * planValue.accomp) / 1}}
+														</td>
+														<td>{{ planValue.accomp}}</td>
+														<td>{{ (planValue.objectiveAchievement.objective.weight * 1) / planValue.accomp }}
+														</td>
+														{% set weightbased = weightbased + (planValue.objectiveAchievement.objective.weight * 1) / planValue.accomp  %}
+													{% endif %}
+													
+													{% set weight = weight + planValue.objectiveAchievement.objective.weight %}
+
+													{% set plan = plan + planValue.plan %}
+													{% set achivment = achivment + (planValue.plan * planValue.accomp) / 1 %}
+
+
+												</tr>
+											{% else %}
+
+												<tr>
+													<td colspan="3">no records found</td>
+												</tr>
+											{% endfor %}
+											<tr>
+												<td colspan="3">Sum</td>
+												<td>{{ weight }}</td>
+
+												<td>{{ plan }}</td>
+												<td colspan="2">{{ achivment }}</td>
+												<td>{{ weightbased }}</td>
+												<input type="hidden" name="weightbased" value="{{weightbased}}">
+												<input type="submit" name="goalVSobj" class="btn btn-success" value="Submit">
 
 
 											</tr>
-										{% else %}
-
-											<tr>
-												<td colspan="3">no records found</td>
-											</tr>
-										{% endfor %}
-										<tr>
-											<td colspan="3">Sum</td>
-											<td>{{ weight }}</td>
-
-											<td>{{ plan }}</td>
-											<td colspan="2">{{ achivment }}</td>
-											<input type="hidden" name="weightbased" value="{{weightbased}}">
-											<td>{{ weightbased }}</td>
-											
-
-
-										</tr>
-									</tbody>
-								</table>
+										</tbody>
+									</table>
+								</form>
 							{% endif %}
 							{# <div class="pull-right" id="custompaginator">{{ knp_pagination_render(suitable_initiatives) }}</div> #}
 

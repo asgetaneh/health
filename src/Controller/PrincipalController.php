@@ -81,7 +81,6 @@ class PrincipalController extends AbstractController
             );
         }
 
-
         return $this->render('principal/report.html.twig', [
             'suitable_initiatives' => $data,
             'suitableTotal' => $suitableInitiatives,
@@ -180,131 +179,95 @@ class PrincipalController extends AbstractController
             'principal' => true
         ]);
     }
-     /**
-     * @Route("/testfdfdf", name="objectiveVSkpi")
+
+    /**
+     * @Route("/objectivevskpi", name="objectivevskpi")
      */
-    public function test(Request $request, TaskAssignRepository $taskAssignRepository)
+    public function objectivevskpi(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("objective")) {
-           $objective=$request->request->get("objective");
-          $weightbased=$request->request->get("weightbased");
-            $quarterAccomplishment=$em->getRepository(QuarterPlanAchievement::class)->findByObjective($objective);
-            dd($quarterAccomplishment,$weightbased);
-            
+            $objective = $request->request->get("objective");
+            $weightbased = $request->request->get("weightbased");
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = 2;
+            $quarterAccomplishment = $em->getRepository(QuarterPlanAchievement::class)->findByObjective($objective, $currentQuarter)[0];
+
+            $quarterAccomplishment->setAccomp($weightbased);
+            $em->flush();
+            return $this->redirectToRoute('objectivevskpi');
         }
-          $filterform = $this->createFormBuilder()
+        $filterform = $this->createFormBuilder()
             ->add('objective', EntityType::class, [
                 'class' => Objective::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
-                'placeholder' => "Year",
+                'placeholder' => "Objective",
 
                 'required' => false
             ])
-
             ->getForm();
         $filterform->handleRequest($request);
-         if ($filterform->isSubmitted()) {
+        if ($filterform->isSubmitted()) {
             $principal = 1;
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = 2;
             $data = $filterform->getData()['objective'];
             // dd($data);
-        $planValues=$em->getRepository(PlanningAccomplishment::class)->findByKpiandQuarter($data);
-          } else {
+            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByKpiandQuarter($data,$currentQuarter);
+        } else {
 
             $principal = 0;
             $planValues[] = "";
-        
-            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
-        // $planValues=$em->getRepository(PlanningAccomplishment::class)->findByInitiative();
-        // dd($planValues);
-       
-        return $this->render('principal/test.html.twig', [
-            'planValues' => $planValues,
-            'filterform'=> $filterform->createView(),
-            'principal' => $principal
-        ]);
-    }
-     /**
-     * @Route("/objectivevskpi", name="objectivevskpi")
-     */
-    public function objectivevskpi(Request $request, TaskAssignRepository $taskAssignRepository)
-    {
-        $em = $this->getDoctrine()->getManager();
-          $filterform = $this->createFormBuilder()
-            ->add('objective', EntityType::class, [
-                'class' => Objective::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
-                'placeholder' => "Year",
 
-                'required' => false
-            ])
-
-            ->getForm();
-        $filterform->handleRequest($request);
-         if ($filterform->isSubmitted()) {
-            $principal = 1;
-            $data = $filterform->getData()['objective'];
-            // dd($data);
-        $planValues=$em->getRepository(QuarterPlanAchievement::class)->findByKpiandQuarter($data);
-          } else {
-
-            $principal = 0;
-            $planValues[] = "";
-        
-            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
-        }
-        // $planValues=$em->getRepository(PlanningAccomplishment::class)->findByInitiative();
-        // dd($planValues);
-       
         return $this->render('principal/test2.html.twig', [
             'planValues' => $planValues,
-            'filterform'=> $filterform->createView(),
+            'filterform' => $filterform->createView(),
             'principal' => $principal
         ]);
     }
-     /**
-     * @Route("/goalvsobjective", name="s")
+    /**
+     * @Route("/goalvsobjective", name="goalvsobjective")
      */
     public function goalvsobjective(Request $request, TaskAssignRepository $taskAssignRepository)
     {
         $em = $this->getDoctrine()->getManager();
-          $filterform = $this->createFormBuilder()
+        if ($request->request->get("goal")) {
+            $goal = $request->request->get("goal");
+            $weightbased = $request->request->get("weightbased");
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = 2;
+            $quarterAccomplishment = $em->getRepository(QuarterPlanAchievement::class)->findByGoal($goal, $currentQuarter)[0];
+            $quarterAccomplishment->setAccomp($weightbased);
+            $em->flush();
+            return $this->redirectToRoute('goalvsobjective');
+        }
+        $filterform = $this->createFormBuilder()
             ->add('goal', EntityType::class, [
                 'class' => Goal::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
-                'placeholder' => "Year",
-
+                'placeholder' => "Goal",
                 'required' => false
             ])
-
             ->getForm();
         $filterform->handleRequest($request);
-         if ($filterform->isSubmitted()) {
+        if ($filterform->isSubmitted()) {
             $principal = 1;
+             $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = 2;
             $data = $filterform->getData()['goal'];
-            // dd($data);
-        $planValues=$em->getRepository(QuarterPlanAchievement::class)->findByobjgoalandQuarter($data);
-          } else {
+            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByobjgoalandQuarter($data,$currentQuarter);
+        } else {
 
             $principal = 0;
             $planValues[] = "";
-        
-            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
-        // $planValues=$em->getRepository(PlanningAccomplishment::class)->findByInitiative();
-        // dd($planValues);
-       
+
         return $this->render('principal/test.html.twig', [
             'planValues' => $planValues,
-            'filterform'=> $filterform->createView(),
+            'filterform' => $filterform->createView(),
             'principal' => $principal
         ]);
     }
-    
+
 
     /**
      * @Route("/principal_history", name="principal_history")

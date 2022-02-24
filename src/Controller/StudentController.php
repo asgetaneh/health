@@ -144,17 +144,17 @@ class StudentController extends AbstractController
             'studentSex' => $arr[1],
             'studentEnrollment' => $arr[2],
             'studentProgramLevel' => $arr[3],
-            'studentProgramLevelbysexs' => $arr[4],
-            'studentbysexandYears' => $arr[5],
-            'programs' => $arr[6],
-            'programTypes' => $arr[7]
+            // 'studentProgramLevelbysexs' => $arr[4],
+            // 'studentbysexandYears' => $arr[5],
+            // 'programs' => $arr[6],
+            // 'programTypes' => $arr[7]
 
 
 
         ]);
     }
     /**
-     * @Route("/student-report", name="student-report")
+     * @Route("/student_report", name="student_report")
      */
     public function student(Request $request, SISHelper $sISHelper): Response
     {
@@ -164,16 +164,60 @@ class StudentController extends AbstractController
             $arr[] = $value;
         }
         $pop = array_pop($arr[1]);
-
+// dd($arr[1]);
         return $this->render('student/dashboard.html.twig', [
             'controller_name' => 'StudentController',
             'totalStudent' => $arr[0],
             'studentSex' => $arr[1],
             'studentEnrollment' => $arr[2],
             'studentProgramLevel' => $arr[3],
-            'studentProgramLevelbysexs' => $arr[4],
-            'studentbysexandYears' => $arr[5],
-            'programs' => $arr[6]
+            // 'studentProgramLevelbysexs' => $arr[4],
+            // 'studentbysexandYears' => $arr[5],
+            // 'programs' => $arr[6]
+
+
+        ]);
+    }
+    /**
+     * @Route("/employee_report", name="employee_report")
+     */
+    public function employee(Request $request, SISHelper $sISHelper): Response
+    {
+        // dd($sISHelper->getStudent());
+        $arr = [];
+        $arr=['sex','1'];
+        $totalTeachersInternalLevals = array (
+          array("sex"=>"Male", "first"=>305,"second"=>1064,"third"=> 220,"speciality"=> 84,"subspeciality"=> 13),
+           array("sex"=>"Female", "first"=>93,"second"=>245,"third"=> 31,"speciality"=> 16,"subspeciality"=> 0));
+           $totalTeachersExternalLevals = array (
+          array("sex"=>"Male", "first"=>0,"second"=>6,"third"=> 34,"speciality"=> 4,"subspeciality"=> 0),
+           array("sex"=>"Female", "first"=>0,"second"=>0,"third"=> 3,"speciality"=> 0,"subspeciality"=> 0));
+            $totalTeacherLevals = array (
+          array("sex"=>"Male", "first"=>305,"second"=>1070,"third"=> 254,"speciality"=> 88,"subspeciality"=> 13),
+           array("sex"=>"Female", "first"=>93,"second"=>245,"third"=> 33,"speciality"=> 16,"subspeciality"=> 0));
+             $totalTeachersInternals = array (
+    //  array( "sex", "lst", "2nd","3.rd","speciality","sub speciality"),
+          array("sex"=>"male", "count"=>1686),
+           array("sex"=>"female", "count"=>385,));
+            $totalTeacherExternals = array (
+          array("sex"=>"male", "count"=>44),
+           array("sex"=>"female", "count"=>2,));
+             $totalTeachers = array (
+          array("sex"=>"male", "count"=>1730),
+           array("sex"=>"female", "count"=>387,));
+        
+     
+        return $this->render('student/employee.html.twig', [
+            'controller_name' => 'StudentController',
+           
+            'totalTeachersInternalLevals' => $totalTeachersInternalLevals,
+            'totalTeachers' => $totalTeachers,
+            'totalTeachersInternals'=>$totalTeachersInternals,
+            'totalTeacherExternals'=>$totalTeacherExternals,
+            'totalTeachersExternalLevals'=>$totalTeachersExternalLevals,
+            'totalTeacherLevals'=>$totalTeacherLevals,
+            // 'studentbysexandYears' => $arr[5],
+            // 'programs' => $arr[6]
 
 
         ]);

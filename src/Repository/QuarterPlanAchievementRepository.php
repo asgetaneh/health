@@ -48,55 +48,56 @@ class QuarterPlanAchievementRepository extends ServiceEntityRepository
     }
     */
     
-      public function findByObjective($objective)
+      public function findByObjective($objective,$quarter)
     {
         $qb = $this->createQueryBuilder('pa')
           
            ->join('pa.objectiveAchievement', 'oa')
             ->andwhere('oa.objective = :objective')
-            ->andwhere('pa.quarter = 2')
+            ->andwhere('pa.quarter = :quarter')
           
             ->setParameter('objective', $objective)
-            // ->setParameter('name', $social)
+            ->setParameter('quarter', $quarter)
         ;
 
         return $qb->getQuery()->getResult();
     }
-     public function findByKpiandQuarter($objective)
+      public function findByGoal($goal,$quarter)
     {
         $qb = $this->createQueryBuilder('pa')
-            // ->select('sum(pa.planValue) as plan')
-            // ->leftjoin('pa.socialAttribute', 'sa')
-           ->join('pa.kPiAchievement', 'ki')
-            ->Join('ki.kpi', 'k')
-            // ->Join('k.objective', 'ob')
-
-
-
-
-            // ->andwhere('pa.suitableInitiative = :suitin')
-            ->andwhere('k.objective = :objective')
-            ->andwhere('pa.quarter = 2')
           
-            ->setParameter('objective', $objective)
-            // ->setParameter('name', $social)
-        ;
-
-        return $qb->getQuery()->getResult();
-    }
-      public function findByobjgoalandQuarter($goal)
-    {
-        $qb = $this->createQueryBuilder('pa')
-           
-           ->join('pa.objectiveAchievement', 'k')
-            // ->Join('ki.kpi', 'k')
-              ->Join('k.objective', 'o')
-
-            ->andwhere('o.goal = :goal')
-            ->andwhere('pa.quarter = 2')
+           ->join('pa.goalAchievement', 'ga')
+            ->andwhere('ga.goal = :goal')
+            ->andwhere('pa.quarter = :quarter')
           
             ->setParameter('goal', $goal)
-            // ->setParameter('name', $social)
+            ->setParameter('quarter', $quarter)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+     public function findByKpiandQuarter($objective,$quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+           ->join('pa.kPiAchievement', 'ki')
+            ->Join('ki.kpi', 'k')
+            ->andwhere('k.objective = :objective')
+            ->andwhere('pa.quarter = :quarter')
+            ->setParameter('objective', $objective)
+            ->setParameter('quarter', $quarter)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+      public function findByobjgoalandQuarter($goal,$quarter)
+    {
+        $qb = $this->createQueryBuilder('pa')
+           ->join('pa.objectiveAchievement', 'k')
+              ->Join('k.objective', 'o')
+            ->andwhere('o.goal = :goal')
+            ->andwhere('pa.quarter = :quarter')
+            ->setParameter('goal', $goal)
+            ->setParameter('quarter', $quarter)
         ;
 
         return $qb->getQuery()->getResult();

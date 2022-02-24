@@ -61,6 +61,7 @@ security:
        - { path: ^/achievement/kpivis, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/achievement/planHome, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/changeLocale, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/student-report, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/student_report, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/employee_report, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/*, roles: ROLE_USER }
     

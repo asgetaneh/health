@@ -261,7 +261,7 @@ class OperationalTaskController extends AbstractController
         // foreach ($suitableInitiatives as $suitableInitiative) {
         //     // Helper::setGoalPlan($ent, $suitableInitiative);
        
-        //         PlanAchievementHelper::setGoalAchievement($ent, $suitableInitiative);
+        //         PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
         // }
 
         $em = $this->getDoctrine()->getManager();

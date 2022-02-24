@@ -22,7 +22,7 @@ class CoreTaskRepository extends ServiceEntityRepository
     // /**
     //  * @return CoreTask[] Returns an array of CoreTask objects
     //  */
-    
+    // findCoreTask
     public function findAllTasks()
     {
         return $this->createQueryBuilder('c')
@@ -31,7 +31,22 @@ class CoreTaskRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+     public function findAllTasksList($search = [])
+    {
+
+        $qb = $this->createQueryBuilder('i');
+        if (isset($search['coreTask']))  {
+            $qb
+                
+                ->andWhere('i.id = :coreTask')
+                ->setParameter('coreTask', $search['coreTask']);
+        }
+       
+       
+
+
+        return $qb->orderBy('i.id', 'ASC')->getQuery();
+    }
 
     /*
     public function findOneBySomeField($value): ?CoreTask

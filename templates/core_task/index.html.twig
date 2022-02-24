@@ -19,7 +19,7 @@
 						<span class="badge badge-info">
 							{% trans %}Total{% endtrans %}
 							:
-							<strong>{{coreTaskss|length}}</strong>
+							<strong>{{coreTaskLists|length}}</strong>
 						</span>
 
 					</div>
@@ -40,6 +40,32 @@
 						</div>
 					</div>
 					<div class="widget-main padding-16">
+					<div class="row">
+								<div class="search-area well col-xs-12">
+
+									<div class="row" style="margin-bottom:10px;">
+										{{ form_start(filterform,{'attr': {'role':'form','id':'filteruserform'}}) }}
+									
+										
+										<div class="col-md-6">
+											<div class="form-group">
+												{{ form_label(filterform.coreTask,"Core Task ") }}
+												{{ form_widget(filterform.coreTask,{'attr':{'class':'select2','data-placeholder':'select Core Task' }}) }}
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group" style="margin-top:25px;">
+												<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+											</div>
+										</div>
+
+
+										{{ form_end(filterform) }}
+									</div>
+									
+								</div>
+
+							</div>
 						<div class="table-responsive">
 							<table class="table">
 								<thead>
@@ -51,11 +77,13 @@
 								</thead>
 								<tbody>
 									{% set count =  core_tasks.getItemNumberPerPage() * (core_tasks.getCurrentPageNumber() -1) %}
+					
 									{% for core_task in core_tasks %}
 										{% set count = count + 1 %}
 										<tr>
 											<td>{{ count }}</td>
 											<td>{{ core_task.name }}</td>
+											
 											<td>
 												<a href="{{ path('core_task_show', {'id': core_task.id}) }}">
 													<i class="btn btn-primary fa fa-eye"></i>

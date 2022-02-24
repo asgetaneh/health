@@ -72,10 +72,6 @@ class PlanAchievementHelper
             $accomp=round($accomp, 2);
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
-
-
-
-            // $quarterPlanAchievement->setPlan($plan);
         }
         return;
     }
@@ -108,15 +104,10 @@ class PlanAchievementHelper
                     $plan = $accompPlan->getPlan();
                     $accomp = $accomp + ($accompValue / $plan) * $wieght;
                 }}
-// dd($accomp);
             }
          $accomp=round($accomp, 2);
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
-
-
-
-            // $quarterPlanAchievement->setPlan($plan);
         }
         return;
     }
@@ -153,12 +144,7 @@ class PlanAchievementHelper
 
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
-           
-
-
-
-            // $quarterPlanAchievement->setPlan($plan);
-        }
+                   }
         return;
     }
 }

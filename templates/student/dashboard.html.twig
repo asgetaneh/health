@@ -17,7 +17,7 @@
 {% block body %}
 	<div class="row" style="margin-top:30px; margin-left:30px; margin-right:20px;margin-bottom:50px;">
 
-{# 
+
 		<div class="page-content page-container" id="page-content">
 			<div class="padding">
 				<div class="row">
@@ -39,11 +39,12 @@
 								</h5>
 							</div>
 							<div class="widget-body">
-								<canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+								<div id="container" style="width: 400px; height: 300px;"></div>
+
 							</div>
 						</div>
 					</div>
-					{# <div class=" col-md-4 small-box ">
+					<div class=" col-md-4 small-box ">
 						<div class="widget-box widget-color-dar" id="widget-box-8">
 							<div class="widget-header">
 								<h5 class="widget-title bigger dark">STUDENT BASED ON ENROLLMENT
@@ -53,8 +54,8 @@
 								<canvas id="chart-enrollment" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
 							</div>
 						</div>
-					</div> #}
-					{# <div class=" col-md-4 small-box ">
+					</div>
+					<div class=" col-md-4 small-box ">
 						<div class="widget-box widget-color-dar" id="widget-box-8">
 							<div class="widget-header">
 								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM LEVEL
@@ -64,50 +65,68 @@
 								<canvas id="chart-programLevel" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
 							</div>
 						</div>
-					</div> 
+					</div>
 				</div>
 			</div>
 		</div>
-	</div> #}
+	</div>
 
 {% endblock %}
 {% block javascripts %}
 	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+	<script src="{{asset('assets/chart/anychart-base.min.js')}}"></script>
+
 
 	{# Chart.bundle.min.js
-					<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+						<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
 	<script>
-		$(document).ready(function () {
-var ctx = $("#chart-sex");
-function getRandomColor() {
-var letters = '0123456789ABCDEF';
-var color = '#';
-for (var i = 0; i < 6; i++) {
-color += letters[Math.floor(Math.random() * 16)];
-}
-return color;
-}
-var myLineChart = new Chart(ctx, {
-type: 'pie',
-data: {
-labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
-datasets: [
-{
-data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
-backgroundColor: [{% for sex in studentSex %}
-getRandomColor(),{% endfor %}]
-}
-]
-},
-options: {
-title: {
-display: true,
-text: 'Weather'
-}
-}
-});
+
+		anychart.onDocumentReady(function () { // create pie chart with passed data
+var chart = anychart.pie3d([{% for sex in studentSex %}[
+"{{ sex.sex }}", {{ sex.count }}
+],{% endfor %}]);
+
+// set chart title text settings
+chart
+chart.innerRadius("10%");
+
+chart.labels().position("outside");
+chart.container('container');
+chart.draw();
 });
 	</script>
+	{# <script>
+			$(document).ready(function () {
+	var ctx = $("#chart-sex");
+	function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+	color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+	}
+	var myLineChart = new Chart(ctx, {
+	type: 'pie',
+	data: {
+	labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
+	datasets: [
+	{
+	data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
+	backgroundColor: [{% for sex in studentSex %}
+	getRandomColor(),{% endfor %}]
+	}
+	]
+	},
+	options: {
+	title: {
+	display: true,
+	text: 'Weather'
+	}
+	}
+	});
+	});
+		</script> #}
 	<script>
 		$(document).ready(function () {
 var ctx = $("#chart-enrollment");
@@ -127,8 +146,7 @@ labels: [{% for enroll in studentEnrollment %}"{{ enroll.name }}",{% endfor %}],
 datasets: [
 {
 data: [{% for enroll in studentEnrollment %}{{ enroll.count }},{% endfor %}],
-backgroundColor: [{% for enroll in studentEnrollment %}
-getRandomColor(),{% endfor %}]
+backgroundColor: [{% for enroll in studentEnrollment %}getRandomColor(),{% endfor %}]
 }
 ]
 },
@@ -160,8 +178,7 @@ labels: [{% for programLevel in studentProgramLevel %}"{{ programLevel.name }}",
 datasets: [
 {
 data: [{% for programLevel in studentProgramLevel %}{{ programLevel.count }},{% endfor %}],
-backgroundColor: [{% for programLevel in studentProgramLevel %}
-getRandomColor(),{% endfor %}]
+backgroundColor: [{% for programLevel in studentProgramLevel %}getRandomColor(),{% endfor %}]
 }
 ]
 },
