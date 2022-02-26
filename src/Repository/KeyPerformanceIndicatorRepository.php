@@ -85,8 +85,8 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
     public function search($search=[]){
 
         $qb=$this->createQueryBuilder('k')
-        ->join('k.strategy','s')
-        ->join('s.objective','o')
+        // ->join('k.strategy','s')
+        ->join('k.objective','o')
         ;
         if(isset($search['goal']) && sizeof($search['goal'])>0){
             $qb->andWhere('o.goal in (:goal)')
@@ -99,7 +99,7 @@ class KeyPerformanceIndicatorRepository extends ServiceEntityRepository
             
         }
          if(isset($search['objective']) && sizeof($search['objective'])>0 ){
-            $qb->andWhere('s.objective in (:objective)')
+            $qb->andWhere('k.objective in (:objective)')
             ->setParameter('objective',$search['objective']);
             
         }
