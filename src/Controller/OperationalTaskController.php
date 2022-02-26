@@ -258,11 +258,11 @@ class OperationalTaskController extends AbstractController
         $ent=$this->getDoctrine()->getManager();
         $suitableInitiatives=$ent->getRepository(SuitableInitiative::class)->findAll();
         // dd(1);
-        // foreach ($suitableInitiatives as $suitableInitiative) {
-        //     // Helper::setGoalPlan($ent, $suitableInitiative);
+        foreach ($suitableInitiatives as $suitableInitiative) {
+            // Helper::calculateKpiPlan($ent, $suitableInitiative);
        
-        //         PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
-        // }
+                // PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
+        }
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -328,7 +328,7 @@ class OperationalTaskController extends AbstractController
             $value->setStatus(1);
         }
         $em->flush();
-        Helper::calculateInitiativePlan($em, $suitableInitiative);
+        Helper::setGoalPlan($em, $suitableInitiative);
 
         return new JsonResponse($operationalSuitable);
     }

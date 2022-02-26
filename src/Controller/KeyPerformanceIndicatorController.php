@@ -66,7 +66,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             ->getForm();
         $filterform->handleRequest($request);
         $locales = Helper::locales();
-        if ($form->isSubmitted() ) {
+        if ($form->isSubmitted()) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
@@ -125,7 +125,7 @@ class KeyPerformanceIndicatorController extends AbstractController
 
         ]);
     }
-     /**
+    /**
      * @Route("/excel", name="excel_kpi", methods={"GET","POST"})
      */
 
@@ -138,11 +138,11 @@ class KeyPerformanceIndicatorController extends AbstractController
 
         //     $initiativestotal  = $initiativeRepository->search($session->get('filter'))->getResult();
         // } else
-            $initiativestotal = $keyPerformanceIndicatorRepository->findAll();
+        $initiativestotal = $keyPerformanceIndicatorRepository->findAll();
 
 
         $spreadsheet = new Spreadsheet();
-        foreach (range('A', 'E') as $columnID) {
+        foreach (range('A', 'F') as $columnID) {
             $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
         }
         $sheet = $spreadsheet->getActiveSheet();
@@ -150,6 +150,7 @@ class KeyPerformanceIndicatorController extends AbstractController
         $sheet->setCellValue('B1', 'KPI Name');
         $sheet->setCellValue('C1', 'OBJECTIVE');
         $sheet->setCellValue('D1', 'Weight');
+        $sheet->setCellValue('E1', 'IsActive');
 
         $totalResult = $initiativestotal;
         // dd($totalResult);
@@ -160,6 +161,8 @@ class KeyPerformanceIndicatorController extends AbstractController
             $sheet->setCellValue('B' . $x, $result->getName());
             $sheet->setCellValue('C' . $x, $result->getObjective()->getName());
             $sheet->setCellValue('D' . $x, $result->getWeight());
+            $sheet->setCellValue('E' . $x, $result->getIsActive());
+
 
             $x++;
         }
@@ -214,8 +217,8 @@ class KeyPerformanceIndicatorController extends AbstractController
         $form = $this->createForm(KeyPerformanceIndicatorType::class, $keyPerformanceIndicator);
         $form->handleRequest($request);
         $locales = Helper::locales();
-        if ($form->isSubmitted() ) {
-                
+        if ($form->isSubmitted()) {
+
             foreach ($locales as $key => $value) {
                 $keyPerformanceIndicator->translate($value)->setName($request->request->get('key_performance_indicator')[$value]);
 
@@ -245,7 +248,7 @@ class KeyPerformanceIndicatorController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($keyPerformanceIndicator);
             $entityManager->flush();
-              $this->addFlash('danger', 'KPI Delete Successifull  !');
+            $this->addFlash('danger', 'KPI Delete Successifull  !');
         }
 
         return $this->redirectToRoute('key_performance_indicator_index');

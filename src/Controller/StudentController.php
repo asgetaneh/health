@@ -144,10 +144,10 @@ class StudentController extends AbstractController
             'studentSex' => $arr[1],
             'studentEnrollment' => $arr[2],
             'studentProgramLevel' => $arr[3],
-            // 'studentProgramLevelbysexs' => $arr[4],
-            // 'studentbysexandYears' => $arr[5],
-            // 'programs' => $arr[6],
-            // 'programTypes' => $arr[7]
+            'studentProgramLevelbysexs' => $arr[4],
+            'studentbysexandYears' => $arr[5],
+            'programs' => $arr[6],
+            'programTypes' => $arr[7]
 
 
 

@@ -212,7 +212,7 @@ class PrincipalController extends AbstractController
             $currentQuarter = 2;
             $data = $filterform->getData()['objective'];
             // dd($data);
-            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByKpiandQuarter($data,$currentQuarter);
+            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByKpiandQuarter($data, $currentQuarter);
         } else {
 
             $principal = 0;
@@ -221,6 +221,41 @@ class PrincipalController extends AbstractController
 
         return $this->render('principal/test2.html.twig', [
             'planValues' => $planValues,
+            'filterform' => $filterform->createView(),
+            'principal' => $principal
+        ]);
+    }
+    /**
+     * @Route("/kpiWeight", name="kpiWeight")
+     */
+    public function kpiWeight(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $filterform = $this->createFormBuilder()
+            ->add('objective', EntityType::class, [
+                'class' => Objective::class,
+                'placeholder' => "Objective",
+
+                'required' => false
+            ])
+            ->getForm();
+        $filterform->handleRequest($request);
+        if ($filterform->isSubmitted()) {
+            $principal = 1;
+          
+            $data = $filterform->getData()['objective'];
+            // dd($data->getId());
+            $key_performance_indicators = $em->getRepository(KeyPerformanceIndicator::class)->findBy(['objective'=>$data->getId()]);
+            // dd($key_performance_indicators);
+        } else {
+
+            $principal = 0;
+            $key_performance_indicators[] = "";
+        }
+
+        return $this->render('principal/kpiweight.html.twig', [
+            'key_performance_indicators' => $key_performance_indicators,
             'filterform' => $filterform->createView(),
             'principal' => $principal
         ]);
@@ -251,10 +286,10 @@ class PrincipalController extends AbstractController
         $filterform->handleRequest($request);
         if ($filterform->isSubmitted()) {
             $principal = 1;
-             $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
             $currentQuarter = 2;
             $data = $filterform->getData()['goal'];
-            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByobjgoalandQuarter($data,$currentQuarter);
+            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByobjgoalandQuarter($data, $currentQuarter);
         } else {
 
             $principal = 0;

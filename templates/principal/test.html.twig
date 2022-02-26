@@ -112,18 +112,18 @@
 													<td>{{ planValue.plan}}</td>
 													{% if planValue.accomp %}
 
-														<td>{{ (planValue.plan * planValue.accomp) / 1}}
+														<td>{{ (planValue.plan * planValue.accomp) / 100}}
 														</td>
 														<td>{{ planValue.accomp}}</td>
-														<td>{{ (planValue.objectiveAchievement.objective.weight * 1) / planValue.accomp }}
+														<td>{{ (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp  | number_format(2, '.',',')}}
 														</td>
-														{% set weightbased = weightbased + (planValue.objectiveAchievement.objective.weight * 1) / planValue.accomp  %}
+														{% set weightbased = weightbased + (planValue.objectiveAchievement.objective.weight * 100) / planValue.accomp  %}
 													{% endif %}
 													
 													{% set weight = weight + planValue.objectiveAchievement.objective.weight %}
 
 													{% set plan = plan + planValue.plan %}
-													{% set achivment = achivment + (planValue.plan * planValue.accomp) / 1 %}
+													{% set achivment = achivment + (planValue.plan * planValue.accomp) / 100 %}
 
 
 												</tr>
