@@ -259,7 +259,7 @@ class OperationalTaskController extends AbstractController
         $suitableInitiatives=$ent->getRepository(SuitableInitiative::class)->findAll();
         // dd(1);
         foreach ($suitableInitiatives as $suitableInitiative) {
-            // Helper::calculateKpiPlan($ent, $suitableInitiative);
+            // Helper::setGoalPlan($ent, $suitableInitiative);
        
                 // PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
         }

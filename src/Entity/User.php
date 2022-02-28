@@ -225,6 +225,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=OperationalSuitableInitiative::class, mappedBy="reportedBy")
      */
     private $operationalSuitableInitiatives;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastLogin;
     public function __construct()
     {
       
@@ -1383,6 +1388,18 @@ class User implements UserInterface
                 $operationalSuitableInitiative->setReportedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }

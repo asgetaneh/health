@@ -62,6 +62,7 @@ class Helper
     }
     public static function calculateInitiativePlan(EntityManagerInterface $em, $suitableInitiative)
     {
+        // dd(1);
         $em->clear();
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
         $year = $em->getRepository(PlanningYear::class)->find($suitableInitiative->getPlanningYear()->getId());
@@ -77,11 +78,12 @@ class Helper
 
             $isinitiativeAchievement = false;
         }
-        //  $em->flush();
+      
         foreach ($quarters as  $quarter) {
 
             $plan = $em->getRepository(PlanningAccomplishment::class)->calulateSumByInitiativeAndYear($suitableInitiative->getInitiative(), $suitableInitiative->getPlanningYear(), $quarter);
             $quarterPlanAchievement = null;
+            // dd($plan);
             if ($isinitiativeAchievement)
                 $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->findByInitiativeAchievementAndQuarter($initiativeAchievement, $quarter);
             $isexist = true;
@@ -96,11 +98,10 @@ class Helper
                 $quarterPlanAchievement->setPlan($plan);
             }
             if (!$isexist) {
-                //$initiativeAchievement->addQuarterAchievement($quarterPlanAchievement);
                 $em->persist($quarterPlanAchievement);
             }
         }
-        // if (!$isinitiativeAchievement)
+        
         //     $em->persist($initiativeAchievement);
 
         $em->flush();
