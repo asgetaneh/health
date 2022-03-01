@@ -46,23 +46,7 @@
 				<div id="home" class="tab-pane fade active in">
 					<div class="row">
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
-							{# <div class="widget-box ui-sortable-handle" id="widget-box-1"> #}
-							{# <div class="widget-header">
-																																																										<h5 class="widget-title">
-																																																											<strong>Initiative Achievement</strong>
-																																																										</h5>
-																																																	
-																																																										<div class="widget-toolbar">
-																																																	
-																																																	
-																																																											<a href="#" id="reload" data-action="reload">
-																																																												<i class="ace-icon fa fa-refresh"></i>
-																																																											</a>
-																																																	
-																																																	
-																																																										</div>
-																																																									</div> #}
-
+						
 								<div class="widget-body"> <div class="widget-main">
 									<div class="row">
 										<div class="search-area well col-md-12">
@@ -116,11 +100,11 @@
 													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
 
 													<th rowspan="2">Year</th>
-													<th colspan="2">yearly</th>
-													<th colspan="2">1st Quarter</th>
-													<th colspan="2">2nd Quarter</th>
-													<th colspan="2">3rd Quarter</th>
-													<th colspan="2">4th  Quarter</th>
+													<th >yearly</th>
+													<th>1st Quarter</th>
+													<th >2nd Quarter</th>
+													<th >3rd Quarter</th>
+													<th >4th  Quarter</th>
 
 
 												</tr>
@@ -128,15 +112,15 @@
 												<tr>
 
 
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
 
 
@@ -159,11 +143,11 @@
 
 
 														<td>{{plan_achievement.year}}</td>
-														<td>{{plan}}</td>
+														{# <td>{{plan}}</td> #}
 
 														<td>{{accomp}}</td>
 														{% for quarterplan in plan_achievement.quarterAchievement %}
-															<td>{{quarterplan.plan }}</td>
+															{# <td>{{quarterplan.plan }}</td> #}
 															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
 														{% endfor %}
 
@@ -187,20 +171,7 @@
 
 				<div
 					id="messages" class="tab-pane fade">
-					{# <div class="well">
-																					<form method="get" id="visform" action="{{path('plan_achievement_kpi_vis')}}" class="form-inline">
-																						<div class="form-group form-group-lg">
-																							<select name="kpi" id="" class="select2 form-control">
-															
-																								{% for kpi in kpis %}
-																									<option value="{{kpi.id}}">{{kpi}}</option>
-																								{% endfor %}
-																							</select>
-																						</div>
-															
-																						<button type="submit" id="visbutton" class="btn btn-primary btn-xs">{% trans %}Filter{% endtrans %}</button>
-																					</form>
-																				</div> #}
+					
 					<div id="chartdiv">
 						<canvas id="myChart" width="400" height="400"></canvas>
 					</div>

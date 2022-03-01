@@ -13,10 +13,10 @@
 	<div
 		class="row">
 		{# <div class=" pull-right">
-																			<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
-																				Report History
-																			</a>
-																		</div> #}
+																							<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
+																								Report History
+																							</a>
+																						</div> #}
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -28,10 +28,10 @@
 
 					<div
 						class="widget-toolbar">{# <span class="badge badge-info">
-																																																																																																																																					{% trans %}Total{% endtrans %}
-																																																																																																																																					:
-																																																																																																																																					<strong>{{suitableTotal|length}}</strong>
-																																																																																																																																				</span> #}
+																																																																																																																																																			{% trans %}Total{% endtrans %}
+																																																																																																																																																			:
+																																																																																																																																																			<strong>{{suitableTotal|length}}</strong>
+																																																																																																																																																		</span> #}
 
 
 					</div>
@@ -69,10 +69,14 @@
 
 							</div>
 						{% endif %}
-						{% set weighttotal = 0 %}
-						{% for planValue in planValues %}
-							{% set weighttotal = weighttotal + planValue.kPiAchievement.kpi.weight %}
-						{% endfor %}
+						{% if principal == 1 %}
+
+							{% set weighttotal = 0 %}
+							{% for planValue in planValues %}
+
+								{% set weighttotal = weighttotal + planValue.kPiAchievement.kpi.weight %}
+							{% endfor %}
+						{% endif %}
 						<div class="table-responsive">
 
 							{% if principal == 1 %}

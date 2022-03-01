@@ -135,11 +135,11 @@
 
 
 													<th rowspan="2">Year</th>
-													<th colspan="2">yearly</th>
-													<th colspan="2">1st Quarter</th>
-													<th colspan="2">2nd Quarter</th>
-													<th colspan="2">3rd Quarter</th>
-													<th colspan="2">4th  Quarter</th>
+													<th >yearly</th>
+													<th >1st Quarter</th>
+													<th >2nd Quarter</th>
+													<th >3rd Quarter</th>
+													<th >4th  Quarter</th>
 
 
 												</tr>
@@ -147,15 +147,15 @@
 												<tr>
 
 
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
-													<th>plan</th>
+													{# <th>plan</th> #}
 													<th>Accomp.</th>
 
 
@@ -180,10 +180,10 @@
 
 
 														<td>{{plan_achievement.year}}</td>
-														<td>{{plan}}</td>
+														{# <td>{{plan}}</td> #}
 														<td>{{accomp}}</td>
 														{% for quarterplan in plan_achievement.quarterAchievement %}
-															<td>{{quarterplan.plan }}</td>
+															{# <td>{{quarterplan.plan }}</td> #}
 															<td>{{quarterplan.accomp?quarterplan.accomp:"_" }}</td>
 														{% endfor %}
 
