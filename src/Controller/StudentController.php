@@ -158,23 +158,20 @@ class StudentController extends AbstractController
      */
     public function student(Request $request, SISHelper $sISHelper): Response
     {
-        // dd($sISHelper->getStudent());
-        $arr = [];
-        foreach ($sISHelper->getStudent() as $value) {
-            $arr[] = $value;
-        }
-        $pop = array_pop($arr[1]);
-        // dd($arr[1]);
-        return $this->render('student/dashboard.html.twig', [
-            'controller_name' => 'StudentController',
-            'totalStudent' => $arr[0],
-            'studentSex' => $arr[1],
-            'studentEnrollment' => $arr[2],
-            'studentProgramLevel' => $arr[3],
-            // 'studentProgramLevelbysexs' => $arr[4],
-            // 'studentbysexandYears' => $arr[5],
-            // 'programs' => $arr[6]
+        $totalStudents = $sISHelper->getTotalStudent();
+        $studnetBySex = $sISHelper->getBysex();
+        $enrollments = $sISHelper->getByEnrollment();
+        $years = $sISHelper->getByYear();
+        $programLevels = $sISHelper->getByProgramLevel();
 
+// dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
+        // dd($totalStudents);
+        return $this->render('student/student.html.twig', [
+            'totalStudents' => $totalStudents,
+            'studnetBySexs' => $studnetBySex,
+            'years'=>$years,
+            'programLevels'=>$programLevels,
+            'enrollments' => $enrollments,
 
         ]);
     }

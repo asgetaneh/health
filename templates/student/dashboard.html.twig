@@ -21,14 +21,15 @@
 		<div class="page-content page-container" id="page-content">
 			<div class="padding">
 				<div class="row">
-					<div class=" col-md-4 small-box ">
+				<div class=" col-md-4 small-box ">
 						<div class="widget-box" id="widget-box-8">
 							<div class="widget-header">
 								<h5 class="widget-title bigger dark">TOTAL NUMBER OF STUDENT
+									{# {{operationalTask}} #}
 								</h5>
 							</div>
 							<div class="inner">
-								<h1>{{totalStudent}}</h1>
+								<h1>{{totalStudents}}</h1>
 							</div>
 						</div>
 					</div>
@@ -36,33 +37,200 @@
 						<div class="widget-box " id="widget-box-8">
 							<div class="widget-header">
 								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX
+									{# {{operationalTask}} #}
 								</h5>
 							</div>
 							<div class="widget-body">
-								<div id="container" style="width: 400px; height: 300px;"></div>
+								<div class="widget-body">
+									<div id="container" style="width: 350px; height: 300px;"></div>
 
+								</div>
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Sex
+											</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for sex in studnetBySexs %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ sex.sex}}</td>
+												<td>{{ sex.totalstudent}}
+												</td>
+												{% set total = total + sex.totalstudent  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box " id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX AND YEAR
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div
+								class="widget-body">
+								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Sex</th>
+											<th>Year</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for year in years %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ year.sex}}</td>
+												<td>{{ year.year}}</td>
+												<td>{{ year.totalstudent}}
+
+												</td>
+												{% set total = total + year.totalstudent  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="2">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
 					<div class=" col-md-4 small-box ">
-						<div class="widget-box widget-color-dar" id="widget-box-8">
+						<div class="widget-box " id="widget-box-8">
 							<div class="widget-header">
-								<h5 class="widget-title bigger dark">STUDENT BASED ON ENROLLMENT
+								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX AND PROGRAM lEVEL
+									{# {{operationalTask}} #}
 								</h5>
 							</div>
-							<div class="widget-body">
-								<canvas id="chart-enrollment" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+							<div
+								class="widget-body">
+								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Sex</th>
+											<th>Program Level</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for programLevel in programLevels %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ programLevel.sex}}</td>
+												<td>{{ programLevel.program_level_name}}</td>
+												<td>{{ programLevel.totalstudent}}
+
+												</td>
+												{% set total = total + programLevel.totalstudent  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
 					<div class=" col-md-4 small-box ">
-						<div class="widget-box widget-color-dar" id="widget-box-8">
+						<div class="widget-box " id="widget-box-8">
 							<div class="widget-header">
-								<h5 class="widget-title bigger dark">STUDENT BASED ON PROGRAM LEVEL
+								<h5 class="widget-title bigger dark">STUDENT BASED ON SEX AND ENROLLMENT
+									{# {{operationalTask}} #}
 								</h5>
 							</div>
-							<div class="widget-body">
-								<canvas id="chart-programLevel" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+							<div
+								class="widget-body">
+								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
+								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Sex</th>
+											<th>Enrollment</th>
+											<th>Student Number</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% set count = 0 %}
+										{% set total = 0 %}
+										{% for enrollment in enrollments %}
+											<tr>
+												{% set count = count + 1 %}
+
+												<td>{{count}}</td>
+												<td>{{ enrollment.sex}}</td>
+												<td>{{ enrollment.enrollment_type_name}}</td>
+												<td>{{ enrollment.totalstudent}}
+
+												</td>
+												{% set total = total + enrollment.totalstudent  %}
+
+											</tr>
+
+										{% else %}
+											<tr>
+												<td colspan="3">no records found</td>
+											</tr>
+										{% endfor %}
+										<tr>
+											<td colspan="3">Total</td>
+											<td>{{total}}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -82,8 +250,8 @@
 	<script>
 
 		anychart.onDocumentReady(function () { // create pie chart with passed data
-var chart = anychart.pie3d([{% for sex in studentSex %}[
-"{{ sex.sex }}", {{ sex.count }}
+var chart = anychart.pie3d([{% for sex in studnetBySexs %}[
+"{{ sex.sex }}", {{ sex.totalstudent }}
 ],{% endfor %}]);
 
 // set chart title text settings
