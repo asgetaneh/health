@@ -47,12 +47,12 @@ class SISHelper
         $conn = $this->getConnection();
         $totalStudent = "SELECT count(id)  as totalstudent from student_info";
         if ($result = mysqli_query($conn, $totalStudent)) {
-            $totalS = array();
-            while ($r = mysqli_fetch_assoc($result)) {
-                $totalS[] = $r;
-            }
+            // $totalS = array();
+            $r = mysqli_fetch_assoc($result);
+                $totalS = $r;
+            
         }
-        return $totalS;
+        return $totalS['totalstudent'];
     }
     // public function getBysex()
     // {
