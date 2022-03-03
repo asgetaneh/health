@@ -69,7 +69,7 @@ class SISHelper
                 $sex[] = $r;
             }
         }
-        dd($sex);
+        // dd($sex);
         // $sisdb = "mysql  -h localhost -u root --password=123456 -D sis";
         // $cmd = $sisdb . " -e 'SELECT sex, count(id)  as totalstudent from student group by sex;'";
         return $sex;
