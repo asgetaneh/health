@@ -38,7 +38,10 @@
 								</h5>
 							</div>
 							<div class="widget-body">
-								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
+								<div class="widget-body">
+									<div id="container" style="width: 400px; height: 300px;"></div>
+
+								</div>
 								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 									<thead>
 										<tr>
@@ -85,7 +88,8 @@
 									{# {{operationalTask}} #}
 								</h5>
 							</div>
-							<div class="widget-body">
+							<div
+								class="widget-body">
 								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
 								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 									<thead>
@@ -134,7 +138,8 @@
 									{# {{operationalTask}} #}
 								</h5>
 							</div>
-							<div class="widget-body">
+							<div
+								class="widget-body">
 								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
 								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 									<thead>
@@ -183,7 +188,8 @@
 									{# {{operationalTask}} #}
 								</h5>
 							</div>
-							<div class="widget-body">
+							<div
+								class="widget-body">
 								{# <canvas id="chart-sex" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas> #}
 								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 									<thead>
@@ -238,7 +244,7 @@
 	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
 
 	{# Chart.bundle.min.js
-											<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+												<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
 
 	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
 	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
@@ -248,12 +254,29 @@
 	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
 	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
 	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+		<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+	<script src="{{asset('assets/chart/anychart-base.min.js')}}"></script>
+
+
+	{# Chart.bundle.min.js
+						<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
 	<script>
-		$(function () {
-$('.select2').css('min-width', '50%').select2({allowClear: false});
+
+		anychart.onDocumentReady(function () { // create pie chart with passed data
+var chart = anychart.pie3d([{% for sex in studnetBySexs %}[
+"{{ sex.sex }}", {{ sex.totalstudent }}
+],{% endfor %}]);
+
+// set chart title text settings
+chart
+chart.innerRadius("10%");
+
+chart.labels().position("outside");
+chart.container('container');
+chart.draw();
 });
 	</script>
-
+	
 
 	<script>
 		$(function () {
