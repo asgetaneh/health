@@ -184,9 +184,9 @@ class StudentController extends AbstractController
     public function srs(Request $request, SISHelper $sISHelper)
     {
         $totalStudents = $sISHelper->getTotalStudent();
-        $studnetBySex = $sISHelper->getBysex();
-        $enrollments = $sISHelper->getByEnrollment();
-
+        // $studnetBySex = $sISHelper->getBysex();
+        // $enrollments = $sISHelper->getByEnrollment();
+dd($totalStudents);
         // return $this->render('student/dashboard.html.twig', [
         //     'totalStudents' => $totalStudents,
         //     'studnetBySex' => $studnetBySex,

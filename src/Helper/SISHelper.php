@@ -45,7 +45,7 @@ class SISHelper
     public function getTotalStudent()
     {
         $conn = $this->getConnection();
-        $totalStudent = "SELECT count(id)  as totalstudent from student";
+        $totalStudent = "SELECT count(id)  as totalstudent from student_info";
         if ($result = mysqli_query($conn, $totalStudent)) {
             $totalS = array();
             while ($r = mysqli_fetch_assoc($result)) {
@@ -54,28 +54,30 @@ class SISHelper
         }
         return $totalS;
     }
-    public function getBysex()
-    {
-        $conn = $this->getConnection();
-        $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student group by sex";
-        if ($result = mysqli_query($conn, $studentBasedOnSex)) {
-            $sex = array();
-            while ($r = mysqli_fetch_assoc($result)) {
-                $sex[] = $r;
-            }
-        }
-        // $sisdb = "mysql  -h localhost -u root --password=123456 -D sis";
-        // $cmd = $sisdb . " -e 'SELECT sex, count(id)  as totalstudent from student group by sex;'";
-        return $sex;
-    }
-     public function getByEnrollment()
-    {$conn = $this->getConnection();
-        $enrollment = "SELECT sex, count(id)  as totalstudent from student group by sex";
-        if ($result = mysqli_query($conn, $enrollment)) {
-            $enrollments = array();
-            while ($r = mysqli_fetch_assoc($result)) {
-                $enrollments[] = $r; }
-        }
-        return $enrollments;
-    }
+    // public function getBysex()
+    // {
+    //     $conn = $this->getConnection();
+    //     $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student group by sex";
+    //     if ($result = mysqli_query($conn, $studentBasedOnSex)) {
+    //         $sex = array();
+    //         while ($r = mysqli_fetch_assoc($result)) {
+    //             $sex[] = $r;
+    //         }
+    //     }
+    //     // $sisdb = "mysql  -h localhost -u root --password=123456 -D sis";
+    //     // $cmd = $sisdb . " -e 'SELECT sex, count(id)  as totalstudent from student group by sex;'";
+    //     return $sex;
+    // }
+    // public function getByEnrollment()
+    // {
+    //     $conn = $this->getConnection();
+    //     $enrollment = "SELECT sex, count(id)  as totalstudent from student group by sex";
+    //     if ($result = mysqli_query($conn, $enrollment)) {
+    //         $enrollments = array();
+    //         while ($r = mysqli_fetch_assoc($result)) {
+    //             $enrollments[] = $r;
+    //         }
+    //     }
+    //     return $enrollments;
+    // }
 }
