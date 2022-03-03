@@ -196,7 +196,7 @@ class StudentController extends AbstractController
             'studnetBySexs' => $studnetBySex,
             'years'=>$years,
             'programLevels'=>$programLevels,
-            // 'enrollments' => $enrollments,
+            'enrollments' => $enrollments,
 
         ]);
     }

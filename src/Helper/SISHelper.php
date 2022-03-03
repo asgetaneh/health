@@ -87,7 +87,7 @@ class SISHelper
     public function getByEnrollment()
     {
         $conn = $this->getConnection();
-        $enrollment = "SELECT s.sex, en.enrollment_type_name, count(s.id) as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id INNER JOIN program p ON ifo.program_id=p.id INNER JOIN enrollment_type en ON p.enrollment_type_id=en.id group by s.sex,en.enrollment_type_name";
+        $enrollment = "SELECT s.sex, en.enrollment_type_name, count(s.id) as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id INNER JOIN program p ON ifo.program_id=p.id INNER JOIN enrollment_type en ON p.enrollment_type_id=en.id where ifo.record_status=1 group by s.sex,en.enrollment_type_name";
              
         if ($result = mysqli_query($conn, $enrollment)) {
             $enrollments = array();
@@ -100,7 +100,7 @@ class SISHelper
      public function getByProgramLevel()
     {
         $conn = $this->getConnection();
-        $enrollment = " SELECT s.sex, pl.program_level_name, count(s.id) as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id INNER JOIN program p ON ifo.program_id=p.id INNER JOIN program_level pl ON p.program_level_id=pl.id group by s.sex,pl.program_level_name";
+        $enrollment = " SELECT s.sex, pl.program_level_name, count(s.id) as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id INNER JOIN program p ON ifo.program_id=p.id INNER JOIN program_level pl ON p.program_level_id=pl.id where ifo.record_status=1 group by s.sex,pl.program_level_name";
              
         if ($result = mysqli_query($conn, $enrollment)) {
             $enrollments = array();
