@@ -186,14 +186,15 @@ class StudentController extends AbstractController
         $totalStudents = $sISHelper->getTotalStudent();
         $studnetBySex = $sISHelper->getBysex();
         $enrollments = $sISHelper->getByEnrollment();
-        $year = $sISHelper->getByYear();
+        $years = $sISHelper->getByYear();
         $programLevel = $sISHelper->getByProgramLevel();
 
-dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
+// dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
         return $this->render('student/student.html.twig', [
             'totalStudents' => $totalStudents,
             'studnetBySexs' => $studnetBySex,
+            'years'=>$years,
             // 'enrollments' => $enrollments,
 
         ]);
