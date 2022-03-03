@@ -45,7 +45,7 @@ class SISHelper
     public function getTotalStudent()
     {
         $conn = $this->getConnection();
-        $totalStudent = "SELECT count(id)  as totalstudent from student_info";
+        $totalStudent = "SELECT count(id)  as totalstudent from student";
         if ($result = mysqli_query($conn, $totalStudent)) {
             // $totalS = array();
             $r = mysqli_fetch_assoc($result);
