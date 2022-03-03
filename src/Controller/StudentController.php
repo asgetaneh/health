@@ -187,7 +187,7 @@ class StudentController extends AbstractController
         $studnetBySex = $sISHelper->getBysex();
         $enrollments = $sISHelper->getByEnrollment();
         $years = $sISHelper->getByYear();
-        $programLevel = $sISHelper->getByProgramLevel();
+        $programLevels = $sISHelper->getByProgramLevel();
 
 // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
@@ -195,6 +195,7 @@ class StudentController extends AbstractController
             'totalStudents' => $totalStudents,
             'studnetBySexs' => $studnetBySex,
             'years'=>$years,
+            'programLevels'=>$programLevels,
             // 'enrollments' => $enrollments,
 
         ]);
