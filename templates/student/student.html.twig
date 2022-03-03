@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('student_internal_report')}}">{% trans %}
+			<strong>
+				STUDENT INFORMATION{% endtrans %}
+			</strong>
+		</a>
+	</li>
+{% endblock %}
+{% block body %}
+	<div class="row" style="margin-top:30px; margin-left:30px; margin-right:20px;margin-bottom:50px;">
+
+
+		<div class="page-content page-container" id="page-content">
+			<div class="padding">
+				<div class="row">
+					<div class=" col-md-4 small-box ">
+						<div class="widget-box" id="widget-box-8">
+							<div class="widget-header">
+								<h5 class="widget-title bigger dark">TOTAL NUMBER OF STUDENT
+									{# {{operationalTask}} #}
+								</h5>
+							</div>
+							<div class="inner">
+								<h1>{{totalStudent[0]}}</h1>
+							</div>
+						</div>
+					</div>
+					
+					{# z #}
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+
+	{# Chart.bundle.min.js
+										<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-sex");
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
+datasets: [
+{
+data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
+backgroundColor: [{% for sex in studentSex %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-enrollment");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for enroll in studentEnrollment %}"{{ enroll.name }}",{% endfor %}],
+datasets: [
+{
+data: [{% for enroll in studentEnrollment %}{{ enroll.count }},{% endfor %}],
+backgroundColor: [{% for enroll in studentEnrollment %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script>
+		$(document).ready(function () {
+var ctx = $("#chart-programLevel");
+
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var myLineChart = new Chart(ctx, {
+type: 'pie',
+data: {
+labels: [{% for programLevel in studentProgramLevel %}"{{ programLevel.name }}",{% endfor %}],
+datasets: [
+{
+data: [{% for programLevel in studentProgramLevel %}{{ programLevel.count }},{% endfor %}],
+backgroundColor: [{% for programLevel in studentProgramLevel %}getRandomColor(),{% endfor %}]
+}
+]
+},
+options: {
+title: {
+display: true,
+text: 'Weather'
+}
+}
+});
+});
+	</script>
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
+	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+	<script>
+		$(function () {
+$('.select2').css('min-width', '50%').select2({allowClear: false});
+});
+	</script>
+
+
+	<script>
+		$(function () {
+
+$('#visform').submit(function (event) {
+event.preventDefault();
+var $form = $(this);
+$.ajax({
+type: 'GET',
+url: $form.attr('action'),
+data: $form.serialize(),
+success: function (data) {
+$('#chartdiv').html(data);
+},
+error: function (error) {}
+});
+
+})
+})
+	</script>
+{% endblock %}
