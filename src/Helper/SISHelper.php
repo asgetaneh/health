@@ -56,10 +56,13 @@ class SISHelper
     }
     public function getBysex()
     {
+        // INNER JOIN student_info ifo ON s.id=ifo.student_id
+        //      JOIN student_detail sd ON s.id = sd.student_id
+        //      where ifo.record_status=1
         $conn = $this->getConnection();
-        $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id
-             JOIN student_detail sd ON s.id = sd.student_id
-             where ifo.record_status=1 group by sex";
+        $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student 
+        
+              group by sex";
         if ($result = mysqli_query($conn, $studentBasedOnSex)) {
             $sex = array();
             while ($r = mysqli_fetch_assoc($result)) {
