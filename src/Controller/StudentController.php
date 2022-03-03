@@ -166,7 +166,7 @@ class StudentController extends AbstractController
 
 // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
-        return $this->render('student/student.html.twig', [
+        return $this->render('student/dashboard.html.twig', [
             'totalStudents' => $totalStudents,
             'studnetBySexs' => $studnetBySex,
             'years'=>$years,
