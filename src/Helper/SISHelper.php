@@ -57,7 +57,7 @@ class SISHelper
     public function getBysex()
     {
         $conn = $this->getConnection();
-        $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student group sex";
+        $studentBasedOnSex = "SELECT sex, count(id)  as totalstudent from student group by sex";
         if ($result = mysqli_query($conn, $studentBasedOnSex)) {
             $sex = array();
             while ($r = mysqli_fetch_assoc($result)) {
@@ -70,7 +70,7 @@ class SISHelper
     }
      public function getByEnrollment()
     {$conn = $this->getConnection();
-        $enrollment = "SELECT count(id)  as totalstudent from student";
+        $enrollment = "SELECT sex, count(id)  as totalstudent from student group by sex";
         if ($result = mysqli_query($conn, $enrollment)) {
             $enrollments = array();
             while ($r = mysqli_fetch_assoc($result)) {

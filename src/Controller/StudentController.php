@@ -158,7 +158,7 @@ class StudentController extends AbstractController
      */
     public function student(Request $request, SISHelper $sISHelper): Response
     {
-        dd($sISHelper->getStudent());
+        // dd($sISHelper->getStudent());
         $arr = [];
         foreach ($sISHelper->getStudent() as $value) {
             $arr[] = $value;
@@ -187,12 +187,12 @@ class StudentController extends AbstractController
         $studnetBySex = $sISHelper->getBysex();
         $enrollments = $sISHelper->getByEnrollment();
 
-        return $this->render('student/dashboard.html.twig', [
-            'totalStudents' => $totalStudents,
-            'studnetBySex' => $studnetBySex,
-            'enrollments' => $enrollments,
+        // return $this->render('student/dashboard.html.twig', [
+        //     'totalStudents' => $totalStudents,
+        //     'studnetBySex' => $studnetBySex,
+        //     'enrollments' => $enrollments,
             
-            ]);
+        //     ]);
         
     }
     /**
