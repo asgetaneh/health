@@ -99,7 +99,7 @@ class OperationalTaskController extends AbstractController
         $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
         foreach ($performerTasksList as $performerTas) {
             // dd($operational);
-            if ($performerTas?->getTaskCategory()?->getIsCore()) {
+            if ($performerTas->getTaskCategory()->getIsCore()) {
                 $countCore = $countCore + $performerTas->getWeight();
                 $idd = $performerTas->getId();
             } else {

@@ -40,11 +40,11 @@
 
 
 				<li role="treeitem">
-					<a href="{{ path('initiative_measurement_index') }}">
+					{#<a href="{{ path('initiative_measurement_index') }}">
 						<b class="fa fa-caret-right"></b>
 						{% trans %}Initiative Measurement
 						{% endtrans %}
-					</a>
+					</a>#}
 				</li>
 			{% endif %}
 
@@ -52,22 +52,22 @@
 
 
 				<li role="treeitem">
-					<a href="{{ path('task_category_index') }}">
+					{#<a href="{{ path('task_category_index') }}">
 						<b class="fa fa-caret-right"></b>
 						{% trans %}Task Category
 						{% endtrans %}
-					</a>
+					</a>#}
 				</li>
 			{% endif %}
 			{% if is_granted('vw_intv_bvr') %}
 
 
 				<li role="treeitem">
-					<a href="{{ path('core_task_index') }}">
+					{#<a href="{{ path('core_task_index') }}">
 						<b class="fa fa-caret-right"></b>
 						{% trans %}Core Task
 						{% endtrans %}
-					</a>
+					</a>#}
 				</li>
 			{% endif %}
 
