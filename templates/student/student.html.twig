@@ -1,18 +1,15 @@
-{% extends 'general.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block stylesheet %}
-
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace.min.css') }}" class="ace-main-stylesheet" id="main-ace-style"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/jquery-ui.custom.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/bootstrap-multiselect.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-skins.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/ace-rtl.min.css') }}"/>
-	<script src="{{ asset('assets/assets/js/ace-extra.min.js') }}"></script>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/fonts.googleapis.com.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/style.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('assets/assets/css/select2.min.css') }}"/>
+{% block subTitle %}
+	<li class="active">{% trans %}
+		SMIS{% endtrans %}</li>
+	<li class="active">
+		<a href="{{path('student_internal_report')}}">{% trans %}
+			<strong>
+				STUDENT INFORMATION{% endtrans %}
+			</strong>
+		</a>
+	</li>
 {% endblock %}
 {% block body %}
 	<div class="row" style="margin-top:30px; margin-left:30px; margin-right:20px;margin-bottom:50px;">
@@ -21,7 +18,7 @@
 		<div class="page-content page-container" id="page-content">
 			<div class="padding">
 				<div class="row">
-				<div class=" col-md-4 small-box ">
+					<div class=" col-md-4 small-box ">
 						<div class="widget-box" id="widget-box-8">
 							<div class="widget-header">
 								<h5 class="widget-title bigger dark">TOTAL NUMBER OF STUDENT
@@ -234,6 +231,9 @@
 							</div>
 						</div>
 					</div>
+
+					{# z #}
+
 				</div>
 			</div>
 		</div>
@@ -242,6 +242,19 @@
 {% endblock %}
 {% block javascripts %}
 	<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
+
+	{# Chart.bundle.min.js
+												<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> #}
+
+	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
+	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
+	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
+	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
+	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
+	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
+		<script src="{{ asset('assets/Chart.bundle.min.js') }}"></script>
 	<script src="{{asset('assets/chart/anychart-base.min.js')}}"></script>
 
 
@@ -263,116 +276,7 @@ chart.container('container');
 chart.draw();
 });
 	</script>
-	{# <script>
-			$(document).ready(function () {
-	var ctx = $("#chart-sex");
-	function getRandomColor() {
-	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-	color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
-	}
-	var myLineChart = new Chart(ctx, {
-	type: 'pie',
-	data: {
-	labels: [{% for sex in studentSex %}"{{ sex.sex }}",{% endfor %}],
-	datasets: [
-	{
-	data: [{% for sex in studentSex %}{{ sex.count }},{% endfor %}],
-	backgroundColor: [{% for sex in studentSex %}
-	getRandomColor(),{% endfor %}]
-	}
-	]
-	},
-	options: {
-	title: {
-	display: true,
-	text: 'Weather'
-	}
-	}
-	});
-	});
-		</script> #}
-	{# <script>
-		$(document).ready(function () {
-var ctx = $("#chart-enrollment");
-
-function getRandomColor() {
-var letters = '0123456789ABCDEF';
-var color = '#';
-for (var i = 0; i < 6; i++) {
-color += letters[Math.floor(Math.random() * 16)];
-}
-return color;
-}
-var myLineChart = new Chart(ctx, {
-type: 'pie',
-data: {
-labels: [{% for enroll in studentEnrollment %}"{{ enroll.name }}",{% endfor %}],
-datasets: [
-{
-data: [{% for enroll in studentEnrollment %}{{ enroll.count }},{% endfor %}],
-backgroundColor: [{% for enroll in studentEnrollment %}getRandomColor(),{% endfor %}]
-}
-]
-},
-options: {
-title: {
-display: true,
-text: 'Weather'
-}
-}
-});
-});
-	</script>
-	<script>
-		$(document).ready(function () {
-var ctx = $("#chart-programLevel");
-
-function getRandomColor() {
-var letters = '0123456789ABCDEF';
-var color = '#';
-for (var i = 0; i < 6; i++) {
-color += letters[Math.floor(Math.random() * 16)];
-}
-return color;
-}
-var myLineChart = new Chart(ctx, {
-type: 'pie',
-data: {
-labels: [{% for programLevel in studentProgramLevel %}"{{ programLevel.name }}",{% endfor %}],
-datasets: [
-{
-data: [{% for programLevel in studentProgramLevel %}{{ programLevel.count }},{% endfor %}],
-backgroundColor: [{% for programLevel in studentProgramLevel %}getRandomColor(),{% endfor %}]
-}
-]
-},
-options: {
-title: {
-display: true,
-text: 'Weather'
-}
-}
-});
-});
-	</script> #}
-	<script src="{{asset('assets/assets/js/jquery-2.1.4.min.js')}}"></script>
-	<script src="{{ asset('assets/basic/assets/js/bootstrap.min.js') }}"></script>
-	<script src="{{asset('assets/bootstrap-4.0/jquery-3.2.1.min.js')}}"></script>
-	<script src="{{ asset('assets/assets/js/select2.min.js') }}"></script>
-	<script src="{{asset('assets/assets/js/jquery-ui.custom.min.js')}}"></script>
-	<script src="{{asset('chart.js-3.3.2/package/dist/chart.min.js')}}"></script>
-	<script src="{{ asset('assets/assets/js/ace-elements.min.js') }}"></script>
-	<script src="{{ asset('assets/assets/js/ace.min.js') }}"></script>
-	<script>
-		$(function () {
-$('.select2').css('min-width', '50%').select2({allowClear: false});
-});
-	</script>
-
+	
 
 	<script>
 		$(function () {
