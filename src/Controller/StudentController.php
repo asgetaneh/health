@@ -15,6 +15,7 @@ use App\Entity\Region;
 use App\Entity\Sposnsorship;
 use App\Entity\StudentStatus;
 use App\Helper\SISHelper;
+use App\Helper\SRSHelper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -157,13 +158,13 @@ class StudentController extends AbstractController
     /**
      * @Route("/student_report", name="student_report")
      */
-    public function student(Request $request, SISHelper $sISHelper): Response
+    public function student(Request $request, SRSHelper $srsHelper): Response
     {
-        $totalStudents = $sISHelper->getTotalStudent();
-        $studnetBySex = $sISHelper->getBysex();
-        $enrollments = $sISHelper->getByEnrollment();
-        $years = $sISHelper->getByYear();
-        $programLevels = $sISHelper->getByProgramLevel();
+        $totalStudents = $srsHelper->getTotalStudent();
+        $studnetBySex = $srsHelper->getBysex();
+        $enrollments = $srsHelper->getByEnrollment();
+        $years = $srsHelper->getByYear();
+        $programLevels = $srsHelper->getByProgramLevel();
 
 // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
@@ -179,13 +180,13 @@ class StudentController extends AbstractController
     /**
      * @Route("/student_internal_report", name="student_internal_report")
      */
-    public function srs(Request $request, SISHelper $sISHelper)
+    public function srs(Request $request, SRSHelper $srsHelper)
     {
-        $totalStudents = $sISHelper->getTotalStudent();
-        $studnetBySex = $sISHelper->getBysex();
-        $enrollments = $sISHelper->getByEnrollment();
-        $years = $sISHelper->getByYear();
-        $programLevels = $sISHelper->getByProgramLevel();
+        $totalStudents = $srsHelper->getTotalStudent();
+        $studnetBySex = $srsHelper->getBysex();
+        $enrollments = $srsHelper->getByEnrollment();
+        $years = $srsHelper->getByYear();
+        $programLevels = $srsHelper->getByProgramLevel();
 
 // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
@@ -201,7 +202,7 @@ class StudentController extends AbstractController
     /**
      * @Route("/employee_report", name="employee_report")
      */
-    public function employee(Request $request, SISHelper $sISHelper): Response
+    public function employee(Request $request): Response
     {
         // dd($sISHelper->getStudent());
         $arr = [];
