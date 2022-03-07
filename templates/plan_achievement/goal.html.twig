@@ -46,8 +46,9 @@
 				<div id="home" class="tab-pane fade active in">
 					<div class="row">
 						<div class="col-sm-12 widget-container-col ui-sortable" id="widget-container-col-1">
-						
-								<div class="widget-body"> <div class="widget-main">
+
+							<div class="widget-body">
+								<div class="widget-main">
 									<div class="row">
 										<div class="search-area well col-md-12">
 
@@ -85,6 +86,8 @@
 									</div>
 									<div class="table-responsive">
 										<span class="badge badge-info pull-right">
+											<a href="{{path('goalvsobjective')}}" method="post" class="btn btn-success btn-sm">Goal Calculation</a>
+
 											{% trans %}Total{% endtrans %}
 											:
 											<strong>{{ plan_achievements.getTotalItemCount()}}</strong>
@@ -100,11 +103,11 @@
 													{# <th rowspan="2">{% trans %}behavior{% endtrans %}</th> #}
 
 													<th rowspan="2">Year</th>
-													<th >yearly</th>
+													<th>yearly</th>
 													<th>1st Quarter</th>
-													<th >2nd Quarter</th>
-													<th >3rd Quarter</th>
-													<th >4th  Quarter</th>
+													<th>2nd Quarter</th>
+													<th>3rd Quarter</th>
+													<th>4th  Quarter</th>
 
 
 												</tr>
@@ -169,9 +172,8 @@
 					</div>
 				</div>
 
-				<div
-					id="messages" class="tab-pane fade">
-					
+				<div id="messages" class="tab-pane fade">
+
 					<div id="chartdiv">
 						<canvas id="myChart" width="400" height="400"></canvas>
 					</div>

@@ -21,7 +21,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
     public function getTaskStatus($id, $office, $quarter)
     {
-        // dd($id);
+        // dd($id,$office,$quarter);
 
         return $this->createQueryBuilder('s')
             ->leftJoin('s.operationalPlanningAcc', 'pa')
@@ -166,7 +166,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-     public function findCores($suitableOperational, $user, $quarter)
+    public function findCores($suitableOperational, $user, $quarter)
     {
 
         //dd($productNmae);
@@ -187,7 +187,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    
+
 
 
     public function findsendToprincipal($user, $suitableinitiative)
@@ -268,6 +268,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->leftJoin('ps.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('ps.quarter = 3')
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ps.id', 'ASC')

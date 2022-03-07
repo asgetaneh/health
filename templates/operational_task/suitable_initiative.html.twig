@@ -109,6 +109,7 @@
 														{% if operationalSuitable.status == 1%}
 
 															{% if getTaskStatus(operationalSuitable.id,office,quarter) %}
+															{# {{ office }} #}
 																{# {{getTaskStatus(suitableInitiative.id,office)}} #}
 																<a href="{{ path('operational_task_index', {'id': operationalSuitable.id}) }}" title="show" class="btn btn-primary btn-sm">
 																	Assign

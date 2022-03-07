@@ -693,12 +693,12 @@ class OperationalTaskController extends AbstractController
             $accompValuetott = round($accompValueto, 2);
             // if task is Suportive can not insert in operationalSuitable
             if ($performerTask->getTaskCategory()->getIsCore()) {
-                $performerTask->setStatus(0);
+                // $performerTask->setStatus(0);
                 // dd($performerTaskId);
                 $plannings->setAccompValue($accompValuetott);
                 $operationalSuitable = $plannings->getOperationalSuitable();
             }
-            $operationalSuitable->setStatus(2);
+            // $operationalSuitable->setStatus(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($planning);
             $operationalSuitableInitiative->setOperationalOffice($operationalOffice);

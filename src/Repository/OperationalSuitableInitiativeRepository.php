@@ -85,6 +85,7 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->leftJoin('ops.operationalPlanning', 'opa')
             ->leftJoin('opa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('ops.quarter = 3')
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ops.id', 'ASC')

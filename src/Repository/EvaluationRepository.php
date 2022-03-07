@@ -80,6 +80,7 @@ class EvaluationRepository extends ServiceEntityRepository
           ->leftJoin('pa.operationalSuitable','op')
              ->leftJoin('op.suitableInitiative','su')
               ->andWhere('su.principalOffice = :principalOffice')
+              ->andWhere('ps.quarter = 3')
               ->setParameter('principalOffice', $principalOffice)
             ->orderBy('e.id', 'ASC')
     

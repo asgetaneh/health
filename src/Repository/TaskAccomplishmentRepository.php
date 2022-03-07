@@ -54,6 +54,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->leftJoin('ps.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
+            ->andWhere('ps.quarter = 3')
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ts.id', 'ASC')
