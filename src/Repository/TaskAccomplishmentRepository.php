@@ -45,7 +45,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice,$quarter)
     {
 
         return $this->createQueryBuilder('ts')
@@ -54,7 +54,8 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->leftJoin('ps.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
-            ->andWhere('ps.quarter = 3')
+            ->andWhere('ps.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ts.id', 'ASC')

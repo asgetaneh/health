@@ -157,7 +157,7 @@ class TaskAssignRepository extends ServiceEntityRepository
             // ->setMaxResults(10)
             ->getQuery()->getSingleScalarResult();
     }
-    public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice,$quarter)
     {
 
         return $this->createQueryBuilder('ta')
@@ -165,7 +165,8 @@ class TaskAssignRepository extends ServiceEntityRepository
             ->leftJoin('ps.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
-            ->andWhere('ps.quarter = 3')
+            ->andWhere('ps.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ta.id', 'ASC')

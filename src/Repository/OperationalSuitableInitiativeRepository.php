@@ -78,14 +78,15 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice,$quarter)
     {
 
         return $this->createQueryBuilder('ops')
             ->leftJoin('ops.operationalPlanning', 'opa')
             ->leftJoin('opa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
-            ->andWhere('ops.quarter = 3')
+            ->andWhere('ops.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ops.id', 'ASC')

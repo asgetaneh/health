@@ -358,6 +358,7 @@ class OperationalTaskController extends AbstractController
 
         $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableOperational, $user, AmharicHelper::getCurrentQuarter($em));
         $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableOperational, $user);
+    //   dd($performerTasksCore,$taskAcomolishs,$performerTasks);
         $time = new DateTime('now');
         $endDate = 0;
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();

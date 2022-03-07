@@ -148,7 +148,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
     public function findInitiativeBySocial($suitableOperational, $user, $quarter)
     {
 
-        //dd($productNmae);
+        // dd($suitableOperational,$user,$quarter);
         return $this->createQueryBuilder('s')
 
             ->leftJoin('s.operationalPlanningAcc', 'pl')
@@ -156,7 +156,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->andWhere('s.quarter = :quarter')
-            ->andWhere('tc.isCore = 0')
+            ->andWhere('tc.isCore = 0') 
             ->setParameter('user', $user)
             ->setParameter('quarter', $quarter)
             ->setParameter('initiative', $suitableOperational)
@@ -261,14 +261,15 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByPrincipal($principalOffice)
+    public function findByPrincipal($principalOffice,$quarter)
     {
 
         return $this->createQueryBuilder('ps')
             ->leftJoin('ps.operationalPlanningAcc', 'pa')
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
-            ->andWhere('ps.quarter = 3')
+            ->andWhere('ps.quarter = :quarter')
+            ->setParameter('quarter', $quarter)
             ->andWhere('su.principalOffice = :principalOffice')
             ->setParameter('principalOffice', $principalOffice)
             ->orderBy('ps.id', 'ASC')
