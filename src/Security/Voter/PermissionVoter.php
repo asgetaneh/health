@@ -14,14 +14,12 @@ class PermissionVoter extends Voter
     }
     protected function supports($attribute, $subject)
     {
-        //  return true;
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
+        
         $permission=$this->session->get("PERMISSION");
         if(!$permission)
         $permission=array();
 
-       return in_array($attribute, $permission);
+        return in_array($attribute, $permission) | in_array('supper', $permission);
     
     }
 
@@ -34,17 +32,7 @@ class PermissionVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-        // if ($subject instanceof Encounter) {
-        //     if($subject->getDoctor() == $user)
-        //         return true;
-        //     foreach ($subject->getTransfers() as $key => $value) {
-              
-        //        if ($value->getTransferredBy() == $user) {
-        //           return true;
-        //        }
-        //     }
-        //     return false;
-        // }
+      
         switch ($attribute) {
             case 'VIEW_USER':
 
@@ -59,6 +47,6 @@ class PermissionVoter extends Voter
         if (!$permission)
             $permission = array();
 
-        return in_array($attribute, $permission) | in_array('rlspad',  $user->getRoles());
+        return in_array($attribute, $permission) | in_array('supper',  $user->getRoles());
     }
 }

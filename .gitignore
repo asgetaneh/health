@@ -11,6 +11,7 @@
 /.env
 composer.lock
 symfony.lock
+/src/Security/LoginFormAuthenticator.php/
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
