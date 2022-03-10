@@ -132,7 +132,7 @@ class StudentController extends AbstractController
     //  */
     // public function studentReport(Request $request, SISHelper $sISHelper): Response
     // {
-        
+
     //     // dd($sISHelper->getStudent());
     //     $arr = [];
     //     foreach ($sISHelper->getStudent() as $value) {
@@ -165,14 +165,18 @@ class StudentController extends AbstractController
         $enrollments = $srsHelper->getByEnrollment();
         $years = $srsHelper->getByYear();
         $programLevels = $srsHelper->getByProgramLevel();
+        $studentByPrograms = $srsHelper->getByProgram();
+        $programs = $srsHelper->getProgram();
 
-// dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
+
+
+        dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms,$programs);
         // dd($totalStudents);
         return $this->render('student/dashboard.html.twig', [
             'totalStudents' => $totalStudents,
             'studnetBySexs' => $studnetBySex,
-            'years'=>$years,
-            'programLevels'=>$programLevels,
+            'years' => $years,
+            'programLevels' => $programLevels,
             'enrollments' => $enrollments,
 
         ]);
@@ -188,13 +192,13 @@ class StudentController extends AbstractController
         $years = $srsHelper->getByYear();
         $programLevels = $srsHelper->getByProgramLevel();
 
-// dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
+        // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
         return $this->render('student/student.html.twig', [
             'totalStudents' => $totalStudents,
             'studnetBySexs' => $studnetBySex,
-            'years'=>$years,
-            'programLevels'=>$programLevels,
+            'years' => $years,
+            'programLevels' => $programLevels,
             'enrollments' => $enrollments,
 
         ]);

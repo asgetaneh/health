@@ -41,75 +41,7 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class TaskAssignController extends AbstractController
 {
-    /**
-     * @Route("/excel", name="excel")
-     */
-    public function xslx(Request $request)
-    {
-        $file = $request->files->get('file'); // get the file from the sent request
-
-        $fileFolder = __DIR__ . '/../../public/';  //choose the folder in which the uploaded file will be stored
-        dd($file);
-        $filePathName = md5(uniqid()) . $file->getClientOriginalName();
-        dd($filePathName);
-        // apply md5 function to generate an unique identifier for the file and concat it with the file extension  
-        try {
-            $file->move($fileFolder, $filePathName);
-        } catch (FileException $e) {
-            dd($e);
-        }
-        $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file 
-        $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line 
-        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
-        dd($sheetData);
-    }
-    //   private $params;
-    //     // private $approverRepository;
-    //     private $logger;
-    //     private $mailer;
-    //     public function __construct(ContainerBagInterface $params, MailerInterface $mailer, LoggerInterface $logger)
-    //     {
-    //         // $this->approverRepository = $approverRepository;
-    //         $this->logger = $logger;
-    //         $this->mailer = $mailer;
-    //         $this->params = $params;
-    //     }
-    //     /**
-    //      * @Route("/mail", name="test_mail")
-    //      */
-    //     public function mail(Request $request, $performer, $formData, $message, $url)
-    //     {
-
-    //         $data = array();
-    //         // dd($approver);
-    //         array_push($data, ['name' => $formData->getName()]);
-    //         array_push($data, ['weight' => $formData->getWeight()]);
-    //         // array_push($data, ['domainName' => $formData->getDomainName()]);
-    // // dd($this->params->get('app.sender_email'));
-    //         $maillermessage = (new TemplatedEmail())
-    //             ->from($this->params->get('app.sender_email'))
-    //             ->to($performer->getUserInfo()->getEmail())
-    //             ->subject('Time for Mis Mailer!')
-    //             ->text('Sending emails is fun again!')
-    //             ->htmlTemplate(
-    //                 'page/mail.html.twig'
-    //             )->context([
-    //                 'taskName' => $formData->getName(),
-    //                 'taskWeight' => $formData->getWeight(),
-    //                 // 'domainName' => $formData->getDomainName(),
-    //                 'message' => $message,
-    //                 'url' => $url
-    //             ]);
-
-    //         $state = $this->mailer->send($maillermessage);
-
-    //         // return dd($state);
-
-    //         $this->logger->info('email sent' . $this->getUser()->getUserInfo()->getEmail());
-    //         // $this->addFlash('success', 'Email sent');
-
-    //         return $this->redirectToRoute('task_assign_new');
-    //     }
+   
 
 
     /**
@@ -144,9 +76,7 @@ class TaskAssignController extends AbstractController
             $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice()->getName();
             $operationalManager = $taskAccomplishment->getTaskAssign()->getAssignedBy()->getUserInfo()->getFullName();
         }
-        // dd($fullName);
-        // $fullName=$taskUsers->getAssignedTo()->getUserInfo()->getFullName();
-        // $quarter=$taskUser->getTaskAssign()->getPerformerTask()->getQuarter()->getName();
+       
         $currentYear = AmharicHelper::getCurrentYear();
         foreach ($taskAccomplishments as $value) {
             $taskAssign = $em->getRepository(TaskAssign::class)->find($value->getTaskAssign()->getId());
