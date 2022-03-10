@@ -113,7 +113,7 @@ class SRSHelper
      public function getProgram()
     {
         $conn = $this->getConnection();
-        $totalProgram= " SELECT  count(id) as totalProgram from program s ";
+        $totalProgram= " SELECT  count(id) as totalProgram from program  ";
              
         if ($result = mysqli_query($conn, $totalProgram)) {
             $programs = array();
@@ -126,9 +126,9 @@ class SRSHelper
     public function getByProgram()
     {
         $conn = $this->getConnection();
-        $enrollment = " SELECT s.sex, p.name, count(s.id) as totalstudent from student s INNER JOIN student_info ifo ON s.id=ifo.student_id INNER JOIN program p ON ifo.program_id=p.id where ifo.record_status=1 group by s.sex,p.name";
+        $programs = " SELECT  p.name, from program" ;
              
-        if ($result = mysqli_query($conn, $enrollment)) {
+        if ($result = mysqli_query($conn, $programs)) {
             $studentByPrograms = array();
             while ($r = mysqli_fetch_assoc($result)) {
                 $studentByPrograms[] = $r;
