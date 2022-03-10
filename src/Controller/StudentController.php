@@ -191,6 +191,12 @@ class StudentController extends AbstractController
         $enrollments = $srsHelper->getByEnrollment();
         $years = $srsHelper->getByYear();
         $programLevels = $srsHelper->getByProgramLevel();
+          $studentByPrograms = $srsHelper->getByProgram();
+        $programs = $srsHelper->getProgram();
+
+
+
+        dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms,$programs);
 
         // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
