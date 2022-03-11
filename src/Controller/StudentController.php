@@ -178,7 +178,7 @@ class StudentController extends AbstractController
             'years' => $years,
             'programLevels' => $programLevels,
             'enrollments' => $enrollments,
-            'programs'=>$programs,
+            'programs' => $programs,
 
         ]);
     }
@@ -192,12 +192,12 @@ class StudentController extends AbstractController
         $enrollments = $srsHelper->getByEnrollment();
         $years = $srsHelper->getByYear();
         $programLevels = $srsHelper->getByProgramLevel();
-          $studentByPrograms = $srsHelper->getByProgram();
+        $studentByPrograms = $srsHelper->getByProgram();
         $programs = $srsHelper->getProgram();
 
 
 
-        dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms,$programs);
+        // dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms, $programs);
 
         // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
@@ -207,6 +207,8 @@ class StudentController extends AbstractController
             'years' => $years,
             'programLevels' => $programLevels,
             'enrollments' => $enrollments,
+            'programs' => $programs,
+
 
         ]);
     }
