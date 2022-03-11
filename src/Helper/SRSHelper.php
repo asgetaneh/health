@@ -121,7 +121,7 @@ class SRSHelper
                 $programs[] = $r;
             }
         }
-        return $programs;
+        return $programs['totalProgram'];
     }
     public function getByProgram()
     {
