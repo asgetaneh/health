@@ -122,7 +122,7 @@ class SRSHelper
             }
         }
 
-        return $programs[0];
+        return $programs[0]['totalProgram'];
     }
     public function getByProgram()
     {
