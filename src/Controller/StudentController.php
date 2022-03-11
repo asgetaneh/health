@@ -170,7 +170,7 @@ class StudentController extends AbstractController
 
 
 
-        dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms,$programs);
+        // dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms,$programs);
         // dd($totalStudents);
         return $this->render('student/dashboard.html.twig', [
             'totalStudents' => $totalStudents,
@@ -178,6 +178,7 @@ class StudentController extends AbstractController
             'years' => $years,
             'programLevels' => $programLevels,
             'enrollments' => $enrollments,
+            'programs'=>$programs,
 
         ]);
     }
