@@ -51,7 +51,7 @@ class SRSHelper
             $r = mysqli_fetch_assoc($result);
             $totalS = $r;
         }
-        return $totalS;
+        return $totalS['totalstudent'];
     }
     public function getBysex()
     {
