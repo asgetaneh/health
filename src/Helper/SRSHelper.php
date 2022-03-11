@@ -116,13 +116,13 @@ class SRSHelper
         $totalProgram= " SELECT  count(id) as totalProgram from program s ";
              
         if ($result = mysqli_query($conn, $totalProgram)) {
-            $programs = array();
+            // $programs = array();
             while ($r = mysqli_fetch_assoc($result)) {
                 $programs[] = $r;
             }
         }
 
-        return $programs;
+        return $programs['totalProgram'];
     }
     public function getByProgram()
     {
