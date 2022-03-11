@@ -197,7 +197,7 @@ class StudentController extends AbstractController
 
 
 
-        dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms, $programs);
+        // dd($totalStudents, $studnetBySex, $enrollments, $studentByPrograms, $programs);
 
         // dd($totalStudents,$studnetBySex,$enrollments,$year,$programLevel);
         // dd($totalStudents);
