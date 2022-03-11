@@ -113,7 +113,7 @@ class SRSHelper
      public function getProgram()
     {
         $conn = $this->getConnection();
-        $totalProgram= " SELECT  count(id) as totalProgram from program s ";
+        $totalProgram= " SELECT  count(id) as totalProgram from program  ";
              
         if ($result = mysqli_query($conn, $totalProgram)) {
             // $programs = array();
