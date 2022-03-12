@@ -17,6 +17,7 @@ use App\Entity\SuitableInitiative;
 use App\Entity\SuitableOperational;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
+use App\Entity\TaskCategory;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
 use App\Helper\AmharicHelper;
@@ -373,6 +374,14 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
+              ->add('taskCategory', EntityType::class, [
+                'class' => TaskCategory::class,
+                // 'multiple' => true,
+                // 'placeholder' => 'All',
+                'placeholder' => "Task Category ",
+
+                'required' => false
+            ])
 
 
 
@@ -380,15 +389,15 @@ class SmisReportController extends AbstractController
         $form->handleRequest($request);
         if ($request->request->get("remove")) {
            $quarter=$request->request->get('form')['quarter'];
-
+           $taskCategory=$request->request->get('form')['taskCategory'];
             $prinOfId = $form->getData()['principalOffice']->getId();
             $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
-
-            $evaluations = $em->getRepository(Evaluation::class)->findByPrincipal($prinOfId,$quarter);
+// dd($taskCategory);
+            $evaluations = $em->getRepository(Evaluation::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
             $operationalSuitableInitiatives = $em->getRepository(OperationalSuitableInitiative::class)->findByPrincipal($prinOfId,$quarter);
-            $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId,$quarter);
-            $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId,$quarter);
-            $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId,$quarter);
+            $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
+            $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
+            $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
             // $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByPrincipal($prinOfId);
             $suitableOperationals = $em->getRepository(SuitableOperational::class)->findByPrincipal($prinOfId);
             // $planningAccomplishments = $em->getRepository(PlanningAccomplishment::class)->findByPrincipalRemove($prinOfId);

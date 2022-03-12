@@ -65,7 +65,7 @@ class EvaluationRepository extends ServiceEntityRepository
 
       ->getResult();
   }
-  public function findByPrincipal($principalOffice, $quarter)
+  public function findByPrincipal($principalOffice, $quarter,$taskCategory)
   {
 
     return $this->createQueryBuilder('e')->leftJoin('e.taskAccomplishment', 'ts')
@@ -74,6 +74,9 @@ class EvaluationRepository extends ServiceEntityRepository
       ->leftJoin('ps.operationalPlanningAcc', 'pa')
       ->leftJoin('pa.operationalSuitable', 'op')
       ->leftJoin('op.suitableInitiative', 'su')
+      ->leftJoin('ps.taskCategory', 'tc')
+      ->andWhere('tc.id = :taskCategory')
+      ->setParameter('taskCategory', $taskCategory)
       ->andWhere('su.principalOffice = :principalOffice')
       ->andWhere('ps.quarter = :quarter')
       ->setParameter('quarter', $quarter)

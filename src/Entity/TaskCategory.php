@@ -53,6 +53,10 @@ class TaskCategory
     {
         $this->performerTasks = new ArrayCollection();
     }
+     public function __toString()
+    {
+        return $this->name;
+    }
 
    
 
