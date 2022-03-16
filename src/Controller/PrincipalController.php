@@ -23,11 +23,14 @@ use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAssignRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Proxies\__CG__\App\Entity\Objective as EntityObjective;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PrincipalController extends AbstractController
@@ -206,6 +209,56 @@ class PrincipalController extends AbstractController
             ])
             ->getForm();
         $filterform->handleRequest($request);
+        if ($request->request->get("excel")) {
+            $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+            $currentQuarter = 2;
+            $data = $filterform->getData()['objective'];
+            $planValues = $em->getRepository(QuarterPlanAchievement::class)->findByKpiandQuarter($data, $currentQuarter);
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->getActiveSheet()->setTitle('Objective ');
+
+            foreach (range('A', 'G') as $columnID) {
+                $spreadsheet->getDefaultStyle()->getFont()->setSize(10)
+                    ->getColor()->setRGB('#93F748');
+                // $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(false);
+                $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setWidth('10');
+            }
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(60);
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', $data->getName());
+            $sheet->mergeCells('A1:E1');
+            $sheet->getStyle('A1')->getFont()->setSize(015)->getColor()->setRGB('#0000');
+            // $sheet->getRowDimension(1)->setRowHeight(45);
+            $sheet->setCellValue('A2', 'ቁልፍ የዉጤት አመላካች');
+            $sheet->setCellValue('B2', 'መለኪያ');
+            $sheet->setCellValue('C2', 'ዕቅድ');
+            $sheet->setCellValue('D2', 'ክንውን');
+            $sheet->setCellValue('E2', 'በፐርሰንት');
+
+
+
+
+
+            // $totalResult = $queryBuilder->getResult();
+            // dd($totalResult);
+            $x = 3;
+            $soh = 0;
+            foreach ($planValues as $result) {
+                $sheet->setCellValue('A' . $x, $result->getKPiAchievement()->getKpi());
+                $sheet->setCellValue('B' . $x, "number");
+                $sheet->setCellValue('C' . $x, $result->getPlan());
+                $sheet->setCellValue('D' . $x, ($result->getPlan() * $result->getAccomp()) / 100);
+                $sheet->setCellValue('E' . $x, $result->getAccomp());
+
+                $x++;
+            }
+            $writer = new Xlsx($spreadsheet);
+            $fileName = "objective vs kpi" . '.xlsx';
+            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+            $writer->save($temp_file);
+            return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+        }
         if ($filterform->isSubmitted()) {
             $principal = 1;
             $currentQuarter = AmharicHelper::getCurrentQuarter($em);
@@ -243,10 +296,10 @@ class PrincipalController extends AbstractController
         $filterform->handleRequest($request);
         if ($filterform->isSubmitted()) {
             $principal = 1;
-          
+
             $data = $filterform->getData()['objective'];
             // dd($data->getId());
-            $key_performance_indicators = $em->getRepository(KeyPerformanceIndicator::class)->findBy(['objective'=>$data->getId()]);
+            $key_performance_indicators = $em->getRepository(KeyPerformanceIndicator::class)->findBy(['objective' => $data->getId()]);
             // dd($key_performance_indicators);
         } else {
 

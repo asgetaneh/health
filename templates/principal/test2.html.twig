@@ -10,13 +10,8 @@
 {% block body %}
 
 
-	<div
-		class="row">
-		{# <div class=" pull-right">
-																							<a href="{{ path('principal_history') }}" title="history" class="btn btn-success  ">
-																								Report History
-																							</a>
-																						</div> #}
+	<div class="row">
+
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
 			<div class="widget-box widget-color-blue" id="widget-box-8">
 				<div class="widget-header">
@@ -26,15 +21,7 @@
 
 					<div class="widget-toolbar"></div>
 
-					<div
-						class="widget-toolbar">{# <span class="badge badge-info">
-																																																																																																																																																			{% trans %}Total{% endtrans %}
-																																																																																																																																																			:
-																																																																																																																																																			<strong>{{suitableTotal|length}}</strong>
-																																																																																																																																																		</span> #}
-
-
-					</div>
+					<div class="widget-toolbar"></div>
 				</div>
 
 				<div class="widget-body">
@@ -58,8 +45,12 @@
 										<div class="col-md-3">
 											<div class="form-group" style="margin-top:25px;">
 												<input type="submit" class="btn btn-primary btn-sm " value="Filter">
+												<button name="excel" class="btn btn-sm" value="excel" type="submit">
+												<i class="fa fa-file-excel text-success ">excel</i>
+											</button>
 											</div>
 										</div>
+										
 
 
 										{{ form_end(filterform) }}
