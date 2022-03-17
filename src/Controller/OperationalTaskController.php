@@ -317,6 +317,7 @@ class OperationalTaskController extends AbstractController
      */
     public function approveOperationalPlan(Request $request)
     {
+                $this->denyAccessUnlessGranted('pri_off_rep');
         $em = $this->getDoctrine()->getManager();
 
         $suitableInId = $request->request->get('suitableInId');
@@ -338,6 +339,8 @@ class OperationalTaskController extends AbstractController
      */
     public function accomplishment(Request $request, SuitableOperational $suitableOperational, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
+                $this->denyAccessUnlessGranted('opr_task');
+
         $em = $this->getDoctrine()->getManager();
         $socialAttr = 0;
         $user = $this->getUser();
@@ -396,6 +399,7 @@ class OperationalTaskController extends AbstractController
      */
     public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository)
     {
+                $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("planOffice")) {
             $planAcomplismentId = $request->request->get("planId");
@@ -617,6 +621,7 @@ class OperationalTaskController extends AbstractController
      */
     public function show(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+                        $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
@@ -636,6 +641,7 @@ class OperationalTaskController extends AbstractController
      */
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
+        
         $em = $this->getDoctrine()->getManager();
         $principal = $request->request->get('principal');
         if ($request->request->get('reportAvail')) {

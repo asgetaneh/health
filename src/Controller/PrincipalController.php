@@ -40,6 +40,9 @@ class PrincipalController extends AbstractController
      */
     public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request, PaginatorInterface $paginator): Response
     {
+
+        $this->denyAccessUnlessGranted('pre_rep_pro');
+
         $em = $this->getDoctrine()->getManager();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
 
@@ -188,6 +191,7 @@ class PrincipalController extends AbstractController
      */
     public function objectivevskpi(Request $request)
     {
+        $this->denyAccessUnlessGranted('pre_rep_pro');
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("objective")) {
             $objective = $request->request->get("objective");
@@ -283,6 +287,7 @@ class PrincipalController extends AbstractController
      */
     public function kpiWeight(Request $request)
     {
+        $this->denyAccessUnlessGranted('pre_rep_pro');
         $em = $this->getDoctrine()->getManager();
 
         $filterform = $this->createFormBuilder()
@@ -318,6 +323,7 @@ class PrincipalController extends AbstractController
      */
     public function goalvsobjective(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+        $this->denyAccessUnlessGranted('pre_rep_pro');
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("goal")) {
             $goal = $request->request->get("goal");
@@ -362,7 +368,7 @@ class PrincipalController extends AbstractController
      */
     public function score(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
     {
-        // $this->denyAccessUnlessGranted('pre_rep');
+        $this->denyAccessUnlessGranted('pri_off_rep');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $time = new DateTime('now');

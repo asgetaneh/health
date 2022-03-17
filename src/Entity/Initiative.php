@@ -133,6 +133,11 @@ class Initiative implements TranslatableInterface
      */
     private $coreTask;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=UnitOfMeasurement::class, inversedBy="initiatives")
+     */
+    private $unitOfMeasurement;
+
    
      
      const NUMERICAL=0;
@@ -519,6 +524,18 @@ class Initiative implements TranslatableInterface
     public function setCoreTask(?CoreTask $coreTask): self
     {
         $this->coreTask = $coreTask;
+
+        return $this;
+    }
+
+    public function getUnitOfMeasurement(): ?UnitOfMeasurement
+    {
+        return $this->unitOfMeasurement;
+    }
+
+    public function setUnitOfMeasurement(?UnitOfMeasurement $unitOfMeasurement): self
+    {
+        $this->unitOfMeasurement = $unitOfMeasurement;
 
         return $this;
     }

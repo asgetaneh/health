@@ -19,6 +19,7 @@ class CoreTaskController extends AbstractController
     #[Route('/', name: 'core_task_index')]
     public function index(Request $request, PaginatorInterface $paginator, CoreTaskRepository $coreTaskRepository): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
         $coreTask = new CoreTask();
         $form = $this->createForm(CoreTaskType::class, $coreTask);
         $form->handleRequest($request);
@@ -75,6 +76,7 @@ class CoreTaskController extends AbstractController
     #[Route('/new', name: 'core_task_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
+                        $this->denyAccessUnlessGranted('ad_intv');
         $coreTask = new CoreTask();
         $form = $this->createForm(CoreTaskType::class, $coreTask);
         $form->handleRequest($request);
@@ -96,6 +98,7 @@ class CoreTaskController extends AbstractController
     #[Route('/{id}', name: 'core_task_show', methods: ['GET'])]
     public function show(CoreTask $coreTask): Response
     {
+                        $this->denyAccessUnlessGranted('ad_intv');
         return $this->render('core_task/show.html.twig', [
             'core_task' => $coreTask,
         ]);
@@ -104,6 +107,7 @@ class CoreTaskController extends AbstractController
     #[Route('/{id}/edit', name: 'core_task_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CoreTask $coreTask): Response
     {
+                        $this->denyAccessUnlessGranted('ad_intv');
         $form = $this->createForm(CoreTaskType::class, $coreTask);
         $form->handleRequest($request);
 
@@ -122,6 +126,7 @@ class CoreTaskController extends AbstractController
     #[Route('/{id}', name: 'core_task_delete', methods: ['DELETE'])]
     public function delete(Request $request, CoreTask $coreTask): Response
     {
+                        $this->denyAccessUnlessGranted('ad_intv');
         if ($this->isCsrfTokenValid('delete' . $coreTask->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($coreTask);

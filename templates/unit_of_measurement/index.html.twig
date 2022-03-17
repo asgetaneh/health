@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UnitOfMeasurement index{% endblock %}
+
+{% block body %}
+    <h1>UnitOfMeasurement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for unit_of_measurement in unit_of_measurements %}
+            <tr>
+                <td>{{ unit_of_measurement.id }}</td>
+                <td>{{ unit_of_measurement.name }}</td>
+                <td>{{ unit_of_measurement.description }}</td>
+                <td>
+                    <a href="{{ path('unit_of_measurement_show', {'id': unit_of_measurement.id}) }}">show</a>
+                    <a href="{{ path('unit_of_measurement_edit', {'id': unit_of_measurement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('unit_of_measurement_new') }}">Create new</a>
+{% endblock %}

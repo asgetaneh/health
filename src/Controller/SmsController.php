@@ -35,7 +35,7 @@ class SmsController extends AbstractController
 
     public function index(Request $request, UserRepository $userRepository, SmsHelper $smsHelper)
     {
-        // $this->denyAccessUnlessGranted('sms_send');
+        $this->denyAccessUnlessGranted('sms_send');
 
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
@@ -124,6 +124,8 @@ class SmsController extends AbstractController
      */
     public function new(Request $request,SmsRepository $smsRepository,PaginatorInterface $paginator): Response
     {
+                $this->denyAccessUnlessGranted('sms_send');
+
         $sms = new Sms();
        $smsList=$smsRepository->findAll();
          $data = $paginator->paginate(
@@ -154,6 +156,8 @@ class SmsController extends AbstractController
      */
     public function edit(Request $request, Sms $sms): Response
     {
+                $this->denyAccessUnlessGranted('sms_send');
+
         $form = $this->createForm(SmsType::class, $sms);
         $form->handleRequest($request);
 
@@ -174,6 +178,8 @@ class SmsController extends AbstractController
      */
     public function delete(Request $request, Sms $sms): Response
     {
+                $this->denyAccessUnlessGranted('sms_send');
+
         if ($this->isCsrfTokenValid('delete' . $sms->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($sms);

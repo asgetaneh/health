@@ -236,6 +236,7 @@ class TaskAssignController extends AbstractController
         Request $request,
         PerformerTaskRepository $performerTaskRepository
     ) {
+                $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
@@ -342,6 +343,8 @@ class TaskAssignController extends AbstractController
      */
     public function show(TaskAssign $taskAssign): Response
     {
+                $this->denyAccessUnlessGranted('opr_task');
+
         return $this->render('task_assign/show.html.twig', [
             'task_assign' => $taskAssign,
         ]);
@@ -351,6 +354,8 @@ class TaskAssignController extends AbstractController
      */
     public function edit(Request $request, TaskAssign $taskAssign): Response
     {
+                $this->denyAccessUnlessGranted('opr_task');
+
         $form = $this->createForm(TaskAssignType::class, $taskAssign);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -367,6 +372,8 @@ class TaskAssignController extends AbstractController
      */
     public function delete(Request $request, TaskAssign $taskAssign): Response
     {
+                $this->denyAccessUnlessGranted('opr_task');
+
         if ($this->isCsrfTokenValid('delete' . $taskAssign->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($taskAssign);

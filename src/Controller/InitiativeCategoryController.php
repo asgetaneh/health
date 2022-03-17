@@ -20,6 +20,8 @@ class InitiativeCategoryController extends AbstractController
      */
     public function index(InitiativeCategoryRepository $initiativeCategoryRepository): Response
     {
+        $this->denyAccessUnlessGranted('ad_intv');
+
         return $this->render('initiative_category/index.html.twig', [
             'initiative_categories' => $initiativeCategoryRepository->findAll(),
         ]);
@@ -30,6 +32,8 @@ class InitiativeCategoryController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ad_intv');
+
         $initiativeCategory = new InitiativeCategory();
         $form = $this->createForm(InitiativeCategoryType::class, $initiativeCategory);
         $form->handleRequest($request);
@@ -53,6 +57,7 @@ class InitiativeCategoryController extends AbstractController
      */
     public function show(InitiativeCategory $initiativeCategory): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
         return $this->render('initiative_category/show.html.twig', [
             'initiative_category' => $initiativeCategory,
         ]);
@@ -63,6 +68,7 @@ class InitiativeCategoryController extends AbstractController
      */
     public function edit(Request $request, InitiativeCategory $initiativeCategory): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
         $form = $this->createForm(InitiativeCategoryType::class, $initiativeCategory);
         $form->handleRequest($request);
 
@@ -83,7 +89,8 @@ class InitiativeCategoryController extends AbstractController
      */
     public function delete(Request $request, InitiativeCategory $initiativeCategory): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$initiativeCategory->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('ad_intv');
+        if ($this->isCsrfTokenValid('delete' . $initiativeCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($initiativeCategory);
             $entityManager->flush();

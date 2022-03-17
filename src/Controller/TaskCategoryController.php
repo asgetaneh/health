@@ -16,6 +16,8 @@ class TaskCategoryController extends AbstractController
     #[Route('/', name: 'task_category_index', methods: ['GET'])]
     public function index(TaskCategoryRepository $taskCategoryRepository): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
+
         return $this->render('task_category/index.html.twig', [
             'task_categories' => $taskCategoryRepository->findAll(),
         ]);
@@ -24,6 +26,8 @@ class TaskCategoryController extends AbstractController
     #[Route('/new', name: 'task_category_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
+
         $taskCategory = new TaskCategory();
         $form = $this->createForm(TaskCategoryType::class, $taskCategory);
         $form->handleRequest($request);
@@ -45,6 +49,8 @@ class TaskCategoryController extends AbstractController
     #[Route('/{id}', name: 'task_category_show', methods: ['GET'])]
     public function show(TaskCategory $taskCategory): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
+
         return $this->render('task_category/show.html.twig', [
             'task_category' => $taskCategory,
         ]);
@@ -53,6 +59,8 @@ class TaskCategoryController extends AbstractController
     #[Route('/{id}/edit', name: 'task_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TaskCategory $taskCategory): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
+
         $form = $this->createForm(TaskCategoryType::class, $taskCategory);
         $form->handleRequest($request);
 
@@ -71,6 +79,8 @@ class TaskCategoryController extends AbstractController
     #[Route('/{id}', name: 'task_category_delete', methods: ['DELETE'])]
     public function delete(Request $request, TaskCategory $taskCategory): Response
     {
+                $this->denyAccessUnlessGranted('ad_intv');
+
         if ($this->isCsrfTokenValid('delete'.$taskCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($taskCategory);

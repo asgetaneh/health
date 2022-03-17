@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\InitiativeMeasurementRepository;
+use App\Repository\UnitOfMeasurementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=InitiativeMeasurementRepository::class)
+ * @ORM\Entity(repositoryClass=UnitOfMeasurementRepository::class)
  */
-class InitiativeMeasurement
+class UnitOfMeasurement
 {
     /**
      * @ORM\Id
@@ -30,19 +30,17 @@ class InitiativeMeasurement
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="measurement")
+     * @ORM\OneToMany(targetEntity=Initiative::class, mappedBy="unitOfMeasurement")
      */
     private $initiatives;
-public function __toString()
 
-    {
-       
-        return $this->getName();
-
-    }
     public function __construct()
     {
         $this->initiatives = new ArrayCollection();
+    }
+     public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -86,7 +84,7 @@ public function __toString()
     {
         if (!$this->initiatives->contains($initiative)) {
             $this->initiatives[] = $initiative;
-            $initiative->setMeasurement($this);
+            $initiative->setUnitOfMeasurement($this);
         }
 
         return $this;
@@ -96,8 +94,8 @@ public function __toString()
     {
         if ($this->initiatives->removeElement($initiative)) {
             // set the owning side to null (unless already changed)
-            if ($initiative->getMeasurement() === $this) {
-                $initiative->setMeasurement(null);
+            if ($initiative->getUnitOfMeasurement() === $this) {
+                $initiative->setUnitOfMeasurement(null);
             }
         }
 

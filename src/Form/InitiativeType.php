@@ -8,6 +8,7 @@ use App\Entity\InitiativeBehaviour;
 use App\Entity\KeyPerformanceIndicator;
 use App\Entity\PrincipalOffice;
 use App\Entity\CoreTask;
+use App\Entity\UnitOfMeasurement;
 use App\Helper\Helper;
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -138,6 +139,14 @@ class InitiativeType extends AbstractType
                      'attr' => ['class' => 'select2 form-control'],
                      'required' => false,
                       'placeholder'=>'choose measurement',
+
+                ])
+                  ->add('unitOfMeasurement', EntityType::class, [
+                    'class' => UnitOfMeasurement::class,
+                    'attr' => ['class' => 'select2 form-control'],
+                   'required' => false,
+                    'placeholder'=>'select Unit of Measurement',
+                   
 
                 ])
                 ;
