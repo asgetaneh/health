@@ -25,6 +25,8 @@ dh_auditor:
                 App\Entity\OperationalManager: ~
                 App\Entity\OperationalOffice: ~
                 App\Entity\Performer: ~
+                App\Entity\KeyPerformanceIndicator: ~
+
 
 
                 
