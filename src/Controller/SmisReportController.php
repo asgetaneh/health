@@ -21,10 +21,12 @@ use App\Entity\TaskCategory;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
 use App\Helper\AmharicHelper;
+use App\Repository\TaskAccomplishmentRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -183,22 +185,15 @@ class SmisReportController extends AbstractController
         // dd($quarterId);
         $value = 1;
         $principalValue = 1;
-
-
         $form = $this->createFormBuilder()
             ->add('principalOffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
                 'placeholder' => "All",
-
                 'required' => false
             ])
 
             ->add('planningYear', EntityType::class, [
                 'class' => PlanningYear::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
                 'placeholder' => "All",
 
                 'required' => false
@@ -219,10 +214,10 @@ class SmisReportController extends AbstractController
             $planningYear = $form->getData()['planningYear']->getId();
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffices);
             // dd($totalInitiative);
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(),$principalValue,$principalValue);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
 
             // dd($suitableInitiatives);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$principalValue,$currentQuarter,$principalValue);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
             $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
             $ethYear = $planningYear->getEthYear();
 
@@ -245,11 +240,8 @@ class SmisReportController extends AbstractController
             $principalOffice = $form->getData()['principalOffice']->getId();
             $planningYear = $form->getData()['planningYear']->getId();
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
-
-
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(),$principalValue,$principalValue);
-            // dd($suitableInitiatives);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$principalValue,$currentQuarter,$principalValue);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
         } else {
 
             $value = 0;
@@ -271,10 +263,28 @@ class SmisReportController extends AbstractController
             'totalInitiative' => $totalInitiative,
             'form' => $form->createView(),
             'suitableInitiatives' => $suitableInitiatives,
-            'value' => $value
+            'value' => $value,
 
         ]);
     }
+    
+    /**
+     * @Route("/task_list_report", name="task_list_report")
+     */
+    public function performerTaskEdit(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+            $suitableInitiativeId = $request->request->get('suitableInitiativeId');
+            //   dd($taskid);
+            // dd($taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId));
+
+            return new JsonResponse(
+                [
+                    'data' =>  $taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId)
+                ]
+            );
+        }
     /**
      * @Route("/score_progress", name="score_progress")
      */
@@ -297,24 +307,15 @@ class SmisReportController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('principalOffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
-                // 'multiple' => true,
-                // 'placeholder' => 'All',
                 'placeholder' => "Principal Office",
-
                 'required' => false
             ])
-
-
-
             ->getForm();
         $form->handleRequest($request);
-
-
         if ($form->isSubmitted()) {
             $prinOfId = $form->getData()['principalOffice']->getId();
             $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
         } else {
-
             $value = 0;
             $principalReports[] = "";
             $currentYear = AmharicHelper::getCurrentYear();
@@ -366,7 +367,7 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
-             ->add('quarter', EntityType::class, [
+            ->add('quarter', EntityType::class, [
                 'class' => PlanningQuarter::class,
                 // 'multiple' => true,
                 // 'placeholder' => 'All',
@@ -374,7 +375,7 @@ class SmisReportController extends AbstractController
 
                 'required' => false
             ])
-              ->add('taskCategory', EntityType::class, [
+            ->add('taskCategory', EntityType::class, [
                 'class' => TaskCategory::class,
                 // 'multiple' => true,
                 // 'placeholder' => 'All',
@@ -388,16 +389,16 @@ class SmisReportController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         if ($request->request->get("remove")) {
-           $quarter=$request->request->get('form')['quarter'];
-           $taskCategory=$request->request->get('form')['taskCategory'];
+            $quarter = $request->request->get('form')['quarter'];
+            $taskCategory = $request->request->get('form')['taskCategory'];
             $prinOfId = $form->getData()['principalOffice']->getId();
             $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
-// dd($taskCategory);
-            $evaluations = $em->getRepository(Evaluation::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
-            $operationalSuitableInitiatives = $em->getRepository(OperationalSuitableInitiative::class)->findByPrincipal($prinOfId,$quarter);
-            $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
-            $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
-            $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId,$quarter,$taskCategory);
+            // dd($taskCategory);
+            $evaluations = $em->getRepository(Evaluation::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
+            $operationalSuitableInitiatives = $em->getRepository(OperationalSuitableInitiative::class)->findByPrincipal($prinOfId, $quarter);
+            $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
+            $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
+            $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
             // $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByPrincipal($prinOfId);
             $suitableOperationals = $em->getRepository(SuitableOperational::class)->findByPrincipal($prinOfId);
             // $planningAccomplishments = $em->getRepository(PlanningAccomplishment::class)->findByPrincipalRemove($prinOfId);

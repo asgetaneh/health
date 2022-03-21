@@ -20,7 +20,39 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
     }
 
 
+    public function findTasksInReport($suitableInitiativeId)
+    {
 
+        return $this->createQueryBuilder('ts')
+            ->leftJoin('ts.taskAssign', 'ta')
+            ->leftJoin('ta.PerformerTask', 'ps')
+            ->leftJoin('ps.quarter', 'q')
+            ->leftJoin('ta.assignedTo', 'u')
+            ->leftJoin('ps.operationalOffice','opf')
+            ->leftJoin('u.userInfo', 'ui')
+            ->leftJoin('ps.taskCategory', 'tc')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->select('ps.name')
+            ->addSelect('q.name as quarterName')
+            ->addSelect('tc.name as taskCategory')
+            ->addSelect('ui.fullName')
+            ->addSelect('opf.name as operationalOffice')
+            ->addSelect('ts.expectedValue')
+
+            ->addSelect('ts.accomplishmentValue')
+
+            // ->andWhere('ps.status = 1')
+            // ->andWhere('ta.status = 5')
+            ->andWhere('su.id = :suitableInitiativeId')
+            ->setParameter('suitableInitiativeId', $suitableInitiativeId)
+            ->orderBy('tc.id', 'ASC')
+
+            ->getQuery()
+
+            ->getResult();
+    }
     public function findOperationalAccomplishment($suitableInitiative, $quarter)
     {
 
@@ -45,7 +77,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findByPrincipal($principalOffice, $quarter,$taskCategory)
+    public function findByPrincipal($principalOffice, $quarter, $taskCategory)
     {
 
         return $this->createQueryBuilder('ts')
