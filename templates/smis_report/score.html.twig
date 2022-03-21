@@ -11,6 +11,26 @@
 		</a>
 	</li>
 {% endblock %}
+		{% block stylesheet %}
+		<style>
+		table {
+
+				border-collapse: collapse;
+				width: 50%;
+			}
+
+			td,
+			tr,
+			th {
+				border: 0px solid #000;
+				text-align: left;
+				padding-left: 15px;
+				font-size: 12px;
+
+			}
+			</style>
+		{% endblock %}
+
 {% block body %}
 	<div class="row">
 		<div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
@@ -125,7 +145,7 @@
 														{% set count = count + 1 %}
 
 														<td>{{ count }}</td>
-														<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator}}</td>
+														<td> {{principal.suitableInitiative.initiative.keyPerformanceIndicator}}</td>
 														<td>{{principal.suitableInitiative.initiative.keyPerformanceIndicator.weight}}</td>
 														<td>{{principal.suitableInitiative.initiative}}</td>
 														<td>{{principal.suitableInitiative.initiative.weight}}</td>
@@ -190,7 +210,7 @@
 
 				<div class="modal-body">
 					<input type="hidden" name="performerValue" value="1">
-					<table class="table" id="records_table">
+					<table class="table" id="task_list_table">
 						<tr>
 
 							<th>Task Name</th>
@@ -248,10 +268,10 @@ data = data.data;
 
 $.each(data, function (i, item) {
 trHTML += '<tr><td>' + item.name + '</td><td>' + item.quarterName + '</td><td>' + item.taskCategory + '</td><td>' + item.operationalOffice + '</td><td>' + item.fullName + '</td><td>' + item.expectedValue + '</td><td>' + item.accomplishmentValue + 
-'</td><td>' +  (item.accomplishmentValue * 100) / item.expectedValue + ' (%) </td</tr>';
+'</td><td>' +   (item.accomplishmentValue * 100)  / item.expectedValue + ' (%) </td</tr>';
 
 });
-$('#records_table').append(trHTML);
+$('#task_list_table').append(trHTML);
 
 
 }
