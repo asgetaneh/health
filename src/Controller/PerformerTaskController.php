@@ -38,6 +38,9 @@ class PerformerTaskController extends AbstractController
      */
     public function index(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+
+        $this->denyAccessUnlessGranted('per_task');
+
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("taskUserId")) {
             $taskUserId = $request->request->get("taskUserId");
@@ -63,6 +66,8 @@ class PerformerTaskController extends AbstractController
      */
     public function list(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
+
         $taskAssigns = $taskAssignRepository->findBy(['assignedTo' => $this->getUser(), 'status' => 5]);
         return $this->render('performer_task/list.html.twig', [
             'taskAssigns' => $taskAssigns,
@@ -125,6 +130,8 @@ class PerformerTaskController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('per_task');
+
         $performerTask = new PerformerTask();
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
@@ -148,6 +155,8 @@ class PerformerTaskController extends AbstractController
      */
     public function show(Request $request, TaskAssignRepository $taskAssignRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
+
         $em = $this->getDoctrine()->getManager();
         $narativeForm = $this->createFormBuilder()
             ->add('narrative', FileType::class, array(
@@ -312,6 +321,7 @@ class PerformerTaskController extends AbstractController
      */
     public function listShow(Request $request, TaskAssignRepository $taskAssignRepository, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
         $taskAssign = $request->request->get('taskAssign');
         $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
         $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
@@ -327,6 +337,7 @@ class PerformerTaskController extends AbstractController
      */
     public function skipChallenge(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
         $em = $this->getDoctrine()->getManager();
 
         $taskId = $request->request->get('taskId');
@@ -340,6 +351,7 @@ class PerformerTaskController extends AbstractController
      */
     public function skip(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
         $em = $this->getDoctrine()->getManager();
 
         $taskId = $request->request->get('taskId');
@@ -353,6 +365,7 @@ class PerformerTaskController extends AbstractController
      */
     public function send(Request $request, TaskAssignRepository $taskAssignRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
         $em = $this->getDoctrine()->getManager();
 
         $taskAssignId = $request->request->get('taskAssignIds');
@@ -374,6 +387,7 @@ class PerformerTaskController extends AbstractController
      */
     public function performerTaskEdit(Request $request, TaskAssignRepository $taskAssignRepository, PerformerTaskRepository $performerTaskRepository)
     {
+        $this->denyAccessUnlessGranted('per_task');
         $em = $this->getDoctrine()->getManager();
         $pid = $request->request->get('perTaskId');
         if ($id = $request->request->get('performerId')) {
@@ -447,6 +461,7 @@ class PerformerTaskController extends AbstractController
      */
     public function edit(Request $request, PerformerTask $performerTask): Response
     {
+        $this->denyAccessUnlessGranted('per_task');
         $form = $this->createForm(PerformerTaskType::class, $performerTask);
         $form->handleRequest($request);
 
@@ -455,7 +470,6 @@ class PerformerTaskController extends AbstractController
 
             return $this->redirectToRoute('performer_task_index');
         }
-
         return $this->render('performer_task/edit.html.twig', [
             'performer_task' => $performerTask,
             'form' => $form->createView(),
@@ -467,6 +481,7 @@ class PerformerTaskController extends AbstractController
      */
     public function delete(Request $request, PerformerTask $performerTask): Response
     {
+        $this->denyAccessUnlessGranted('per_task');
         if ($this->isCsrfTokenValid('delete' . $performerTask->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($performerTask);
