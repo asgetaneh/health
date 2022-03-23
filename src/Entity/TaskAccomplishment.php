@@ -89,6 +89,11 @@ class TaskAccomplishment
      */
     private $taskAssign;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $taskDoneDescription;
+
 
     public function __construct()
     {
@@ -269,6 +274,18 @@ class TaskAccomplishment
     public function setTaskAssign(?TaskAssign $taskAssign): self
     {
         $this->taskAssign = $taskAssign;
+
+        return $this;
+    }
+
+    public function getTaskDoneDescription(): ?string
+    {
+        return $this->taskDoneDescription;
+    }
+
+    public function setTaskDoneDescription(?string $taskDoneDescription): self
+    {
+        $this->taskDoneDescription = $taskDoneDescription;
 
         return $this;
     }

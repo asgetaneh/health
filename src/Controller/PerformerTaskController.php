@@ -218,7 +218,8 @@ class PerformerTaskController extends AbstractController
         }
         if ($request->request->get('reportAvail')) {
             $reportValue = $request->request->get('reportValue');
-            // dd(1);
+            $report_description = $request->request->get('report_description');
+            // dd($report_description);
             $reportValueSocial = $request->request->get('reportValueSocial');
             $id = $request->request->get('taskAccomplishmentId');
             $taskAccomplishment = $taskAccomplishmentRepository->find($id);
@@ -229,12 +230,16 @@ class PerformerTaskController extends AbstractController
             }
             if ($reportValue == 0) {
                 $taskAccomplishment->setReportedValue(0);
+                $taskAccomplishment->setTaskDoneDescription($report_description);
+
                 if ($reportValueSocial) {
 
                     $taskAccomplishment->setReportedValueSocial($reportValueSocial);
                 }
             } else {
                 $taskAccomplishment->setReportedValue($reportValue);
+                $taskAccomplishment->setTaskDoneDescription($report_description);
+
                 if ($reportValueSocial) {
 
                     $taskAccomplishment->setReportedValueSocial($reportValueSocial);
@@ -243,9 +248,9 @@ class PerformerTaskController extends AbstractController
             $taskAssign = $request->request->get('taskUser');
             $session = new Session();
             $session->set('request', $request->request->get('taskUser'));
-            $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
+            $taskAssigns = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
             // dd($request);
-            $taskUser->setStatus(2);
+            $taskAssigns->setStatus(2);
 
             $em->flush();
             $this->addFlash('success', 'Reported successfully !');
@@ -359,8 +364,8 @@ class PerformerTaskController extends AbstractController
         $taskAccomplishment->setReportedAt(new \DateTime());
         $taskAssign->setStatus(5);
         // $taskUser->setType(1);
-         $session = new Session();
-            $session->remove('request');
+        $session = new Session();
+        $session->remove('request');
         $em->flush();
         return $this->redirectToRoute('performer_task_index');
     }
