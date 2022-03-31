@@ -41,7 +41,7 @@ class PrincipalController extends AbstractController
     public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request, PaginatorInterface $paginator): Response
     {
 
-        $this->denyAccessUnlessGranted('pre_rep_pro');
+        // $this->denyAccessUnlessGranted('pre_rep_pro');
 
         $em = $this->getDoctrine()->getManager();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
