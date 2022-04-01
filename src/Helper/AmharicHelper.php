@@ -54,6 +54,7 @@ class AmharicHelper
         // dump($gregorian);
         return $ethipic->format(DATE_ATOM);
     }
+    //get current Quarter
     public static function getCurrentQuarter( EntityManagerInterface $em
     )
     {
