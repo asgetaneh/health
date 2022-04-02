@@ -522,9 +522,9 @@ class SmisReportController extends AbstractController
             $taskAccomplishments = $em->getRepository(TaskAccomplishment::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
             $taskAssigns = $em->getRepository(TaskAssign::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
             $performerTasks = $em->getRepository(PerformerTask::class)->findByPrincipal($prinOfId, $quarter, $taskCategory);
-            // $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByPrincipal($prinOfId);
+            $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findByPrincipal($prinOfId);
             $suitableOperationals = $em->getRepository(SuitableOperational::class)->findByPrincipal($prinOfId);
-            // $planningAccomplishments = $em->getRepository(PlanningAccomplishment::class)->findByPrincipalRemove($prinOfId);
+            $planningAccomplishments = $em->getRepository(PlanningAccomplishment::class)->findByPrincipalRemove($prinOfId);
 
             foreach ($evaluations as  $value) {
                 $em->remove($value);
@@ -550,18 +550,18 @@ class SmisReportController extends AbstractController
                 $em->remove($value);
                 $em->flush();
             }
-            // foreach ($operationalPlanningAccomplishments as  $value) {
-            //     $em->remove($value);
-            //     $em->flush();
-            // }
+            foreach ($operationalPlanningAccomplishments as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
             foreach ($suitableOperationals as  $value) {
                 $value->setStatus(1);
                 $em->flush();
             }
-            // foreach ($planningAccomplishments as  $value) {
-            //     $em->remove($value);
-            //     $em->flush();
-            // }
+            foreach ($planningAccomplishments as  $value) {
+                $em->remove($value);
+                $em->flush();
+            }
             $this->addFlash('success', 'Plan Remove Successfuly');
         }
 
