@@ -127,6 +127,36 @@ class SuitableOperationalRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
     
+
+      public function findOprationalOfficeSuitableInitiative($OpratinalOffice)
+    {
+        // dd($id);
+
+        return $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+           // ->leftJoin('s.operationalOffice ', 'op')
+            ->andWhere('s.operationalOffice = :oprational_office')
+            ->setParameter('oprational_office', $OpratinalOffice)
+
+            ->getQuery()->getOneOrNullResult();
+    }
+    public function findScore($search = [],$oprationalOffice)
+    {
+
+        $qb = $this->createQueryBuilder('op_s_i');
+            if (isset($search['OpratinalOffice'])) {
+                $qb
+                    ->andWhere('op_s_i.operationalOffice = :oprational_office')
+                    ->setParameter('oprational_office', $search['OpratinalOffice']);
+            }
+            if (isset($search['planningYear'])) {
+                $qb
+                     ->leftJoin('op_s_i.suitableInitiative', 's')
+                    ->andWhere('s.planningYear = :planningYear')
+                    ->setParameter('planningYear', $search['planningYear']);
+            }
+        return $qb->getQuery()->getResult();
+    }
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

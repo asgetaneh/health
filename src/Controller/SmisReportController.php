@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Evaluation;
 use App\Entity\Initiative;
+use App\Entity\OperationalManager;
 use App\Entity\OperationalOffice;
 use App\Entity\OperationalPlanningAccomplishment;
 use App\Entity\OperationalSuitableInitiative;
@@ -285,6 +286,128 @@ class SmisReportController extends AbstractController
                 ]
             );
         }
+
+         /**
+     * @Route("/oprational_score_report", name="oprational_score_report") 
+     */
+    public function oprationalScore(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
+    {
+        $this->denyAccessUnlessGranted('pre_rep');
+        $em = $this->getDoctrine()->getManager();
+        $time = new DateTime('now');
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+
+        $quarterId = 0;
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+            }
+        }
+        // dd($quarterId);
+        $value = 1;
+        $oprationalValue = 1;
+
+
+        $form = $this->createFormBuilder()
+            ->add('OpratinalOffice', EntityType::class, [
+                'class' => OperationalOffice::class,
+//                'mapped'       => false,
+                // 'multiple' => true,
+                // 'placeholder' => 'All',
+                'placeholder' => "All",
+
+                'required' => false
+            ])
+
+            ->add('planningYear', EntityType::class, [
+                'class' => PlanningYear::class,
+                // 'multiple' => true,
+                // 'placeholder' => 'All',
+                'placeholder' => "All",
+
+                'required' => false
+            ])
+
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($request->request->get("print")) {
+            // dd(1);
+            $data = $form->getData();
+            $OpratinalOffice = $form->getData()['OpratinalOffice']->getId();
+            $OpratinalOffices = $em->getRepository(OperationalOffice::class)->find($OpratinalOffice);
+             
+            $OpratinalManager = $em->getRepository(OperationalManager::class)->findOneBy(['operationalOffice' => $OpratinalOffice]);
+            $OpratinalOfficeName = $OpratinalOffices->getName();
+            $chifPrincipal = $OpratinalOffices->getPrincipalOffice()->getManagedBy()->getName();
+            $OpratinalManagerFullname = $OpratinalManager->getManager()->getUserInfo()->getFullName();
+            $planningYear = $form->getData()['planningYear']->getId();
+            $totalOperationalSuitableInitiative = $em->getRepository(SuitableOperational::class)->findOprationalOfficeSuitableInitiative($OpratinalOffice);
+
+            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(),$OpratinalOffice);
+            
+            // dd($suitableInitiatives);
+            //$principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$oprationalValue,$currentQuarter,$oprationalValue);
+            $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
+            $ethYear = $planningYear->getEthYear();
+
+            $domPrint->print('smis_report/oprational_score_print.html.twig', [
+//                'principalReports' => $principalReports,
+                'date' => (new \DateTime())->format('y-m-d'),
+                'OpratinalManager' => $OpratinalManager,
+                'operationalsuitableInitiatives' => $operationalsuitableInitiatives,
+                'OpratinalOffices' => $OpratinalOffices,
+                'totalInitiative' => $totalOperationalSuitableInitiative,
+                 'chifPrincipal' => $chifPrincipal,
+                'ethYear' => $ethYear,
+                'fullName' => $OpratinalManagerFullname,
+            ], 'performance score card for ' . $OpratinalOffices, 'landscape');
+
+            // return $this->redirectToRoute('score_report');
+        }
+        if ($form->isSubmitted()) {
+            $value = 1;
+            $data = $form->getData();//dd($data);
+            if($form->getData()['OpratinalOffice']){
+                $OpratinalOffice = $form->getData()['OpratinalOffice']->getId();
+            }
+            else{
+                $OpratinalOffice = $this->getUser()->getOperationalOffices()->unwrap()->toArray();
+            }
+           // dd($OpratinalOffice);
+            $planningYear = $form->getData()['planningYear']->getId();
+            $totalOperationalSuitableInitiative = $em->getRepository(SuitableOperational::class)->findOprationalOfficeSuitableInitiative($OpratinalOffice);
+
+            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(),$OpratinalOffice);
+             
+            //dd($operationalsuitableInitiatives);
+            //$principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$OpratinalOffice,$currentQuarter,$oprationalValue);
+        } else {
+
+            $value = 0;
+            $principalReports[] = "";
+            $operationalsuitableInitiatives[] = "";
+            $totalOperationalSuitableInitiative = "";
+            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
+        }
+         //dd($operationalsuitableInitiatives);
+        $data = $paginator->paginate(
+            $operationalsuitableInitiatives,
+            $request->query->getInt('page', 1),
+            10
+        );
+         //dd($data);
+
+        return $this->render('smis_report/oprational_score.html.twig', [
+            'operationalsuitableInitiativeDatas' => $data,
+            'totalOperationalSuitableInitiative' => $totalOperationalSuitableInitiative,
+            'form' => $form->createView(),
+            'operationalsuitableInitiatives' => $operationalsuitableInitiatives,
+            'value' => $value
+
+        ]);
+    }
     /**
      * @Route("/score_progress", name="score_progress")
      */

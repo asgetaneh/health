@@ -459,6 +459,16 @@ ace.settings.loadState('sidebar')
 												</a>
 											</li>
 										{% endif %}
+										{% if is_granted("pre_rep_scr")   %}
+											<li>
+												<a href="{{ path('oprational_score_report') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													Oprational Performance Score
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
 										{% if is_granted("pre_rep_pro")   %}
 											<li>
 												<a href="{{ path('score_progress') }}">

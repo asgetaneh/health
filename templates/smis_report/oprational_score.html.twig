@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+
+{% block subTitle %}
+    <li class="active">{% trans %}
+        SMIS{% endtrans %}</li>
+    <li class="active">
+        <a href="{{path('smis_report')}}">{% trans %}
+            <strong>
+                SMIS Report{% endtrans %}
+            </strong>
+        </a>
+    </li>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 widget-container-col" id="widget-container-col-8">
+            <div class="widget-box widget-color-blue" id="widget-box-8">
+                <div class="widget-header">
+                    <h5 class="widget-title bigger lighter">
+                        <strong>SMIS Report
+                        </strong>
+                    </h5>
+                    <div class="widget-toolbar">
+                        <span class="badge badge-info">
+                            {% trans %}Total{% endtrans %}
+                            :
+{#                            <strong>{{operationalsuitableInitiatives.0.getTotalItemCount()}}</strong>#}
+
+                        </span>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-toolbox" id="widget-toolbox-1"></div>
+                    <div class="widget-main padding-16">
+                        <div class="row">
+                            <div class="search-area well col-md-12">
+
+                                <div class="row">
+                                    {{ form_start(form,{'attr': {'role':'form','id':'filteruserform'}}) }}
+                                    <div class="form-group col-md-4" style="display:inline;">
+                                        {{ form_label(form.planningYear," Year ") }}
+                                        {{ form_widget(form.planningYear,{'attr':{ 'class': ' select2 form-control','required':'true'}}) }}
+
+
+                                    </div>
+
+
+                                    <div class="form-group col-md-4" style="display:inline;">
+                                        {{ form_label(form.OpratinalOffice," Opratinal Office ") }}
+                                        {{ form_widget(form.OpratinalOffice,{'attr':{ 'class': ' select2 form-control','required':'true'}}) }}
+
+
+                                    </div>
+                                    <div class="form-group col-md-1" style="display:inline;">
+
+                                        <button type="submit" class="btn btn-sm btn-primary">{% trans %}filter{% endtrans %}</button>
+                                    </div>
+                                    <div class="form-group col-md-1" style="display:inline;">
+
+                                        <button type="submit" name="print" value="print" class="btn  btn-danger btn-xs ">
+                                            <i class=" fa fa-file-pdf text-danger"></i>
+                                            PDF
+                                        </button>
+                                    </div>
+                                    {{ form_end(form) }}
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+
+
+
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th colspan="2">KPI</th>
+                                        <th colspan="2">Initiative</th>
+                                        <th>Achievement</th>
+                                        <th>Q1T</th>
+                                        <th>Q1A</th>
+                                        <th>Q2T</th>
+                                        <th>Q2A</th>
+                                        <th>Q3T</th>
+                                        <th>Q3A</th>
+                                        <th>Q4T</th>
+                                        <th>Q4A</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set opcount = 0 %}
+                                    {% if value  %}
+                                    {% for suitableoprational in operationalsuitableInitiatives   %}
+                                        <tr>
+                                            {% set opcount = opcount+1 %}
+                                            <td >{{ opcount }}</td>
+                                            <td colspan="2">{{ suitableoprational.suitableInitiative.initiative.keyPerformanceIndicator }}</td>
+                                            <td colspan="2">{{ suitableoprational.suitableInitiative.initiative }}</td>
+                                            {% set yearlyplan = 0 %}
+
+                                            {% if suitableoprational.suitableInitiative.initiative.initiativeBehaviour.code == 0 %}
+
+
+                                                {% for plan in operationsuitable.planValue|filter(plan => plan.quarter.slug==1) %}
+                                                    {% set yearlyplan = plan.planValue %}
+                                                {% endfor %}
+
+
+                                            {% elseif  suitableoprational.suitableInitiative.initiative.initiativeBehaviour.code == 1 %}
+
+                                                {% set yearlyplan = suitableoprational.planValue|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+                                            {% elseif  suitableoprational.suitableInitiative.initiative.initiativeBehaviour.code== 2 %}
+
+                                                {% set yearplan = [] %}
+                                                {% for plan in suitableoprational.planValue|filter(plan => plan.planValue > 0) %}
+                                                    {% set planvalue = plan.planValue %}
+                                                    {% set yearplan = yearplan|merge([planvalue ])  %}
+
+                                                {% endfor %}
+
+                                                {% if yearplan|length > 1 %}
+
+                                                    {% set yearlyplan = max(yearplan) %}
+                                                {% elseif yearplan|length == 1 %}
+                                                    {% set yearlyplan = yearplan[0] %}
+                                                {% else %}
+
+                                                    {% set yearlyplan = 0 %}
+
+                                                {% endif %} 
+
+                                                {# {% set yearlyplan = max(yearplan) %} #}
+                                            {% elseif suitableoprational.suitableInitiative.initiative.initiativeBehaviour.code == 3 %}
+
+                                                {% set yearplan = [] %}
+                                                {% for plan in suitableoprational.planValue %}
+                                                    {% set planvalue = plan.planValue %}
+
+                                                    {% set yearplan = yearplan|merge([planvalue ])  %}
+
+                                                {% endfor %}
+
+                                                {% if yearplan|length > 1 %}
+
+                                                    {% set yearlyplan = min(yearplan) %}
+                                                {% elseif yearplan|length == 1 %}
+                                                    {% set yearlyplan = yearplan[0] %}
+                                                {% else %}
+
+                                                    {% set yearlyplan = 0 %}
+
+                                                {% endif %}
+
+                                            {% endif %}
+                                            <td>
+                                                {% if  suitableoprational.suitableInitiative.initiative.socialAtrribute|length > 0 %}
+
+                                                    {% if suitable.initiative.initiativeBehaviour.code == 0  %}
+
+                                                        {% for plan in suitableoprational.planValue|filter(plan => plan.quarter.slug == 1) %}
+
+                                                            <p>{{plan.socialAttribute.name|first|title}}
+                                                                :
+                                                                {{plan.planValue}}</p>
+
+
+                                                        {% endfor %}
+
+                                                    {% elseif suitable.initiative.initiativeBehaviour.code == 1 %}
+
+                                                        {% for attribute in suitable.initiative.socialAtrribute %}
+
+                                                            {% set yearplan = suitableoprational.planValue|filter(plan => plan.socialAttribute.id == attribute.id)|reduce((previousTotal,row)=> previousTotal + row.planValue) %}
+
+                                                            <p>{{attribute.name|first|title}}:{{yearplan ??"___" }}</p>
+
+                                                        {% endfor %}
+                                                    {% elseif suitable.initiative.initiativeBehaviour.code == 2 %}
+
+                                                        {% for attribute in suitable.initiative.socialAtrribute %}
+
+                                                            {% set yearplan = [] %}
+                                                            {% for plan in suitableoprational.planValue|filter(plan => plan.socialAttribute.id == attribute.id and plan.planValue > 0) %}
+                                                                {% set planvalue = plan.planValue %}
+                                                                {% set yearplan = yearplan|merge({planvalue })  %}
+
+
+                                                            {% endfor %}
+
+                                                            <p>{{attribute.name|first|title}}:{{max(yearplan) }}</p>
+
+                                                        {% endfor %}
+                                                    {% elseif suitable.initiative.initiativeBehaviour.code == 3 %}
+
+                                                        {% for attribute in suitable.initiative.socialAtrribute %}
+
+                                                            {% set yearplan = { } %}
+                                                            {% for plan in suitableoprational.planValue|filter(plan => plan.socialAttribute.id == attribute.id) %}
+                                                                {% set planvalue = plan.planValue %}
+                                                                {% set yearplan = yearplan|merge({planvalue })  %}
+
+                                                            {% endfor %}
+
+                                                            <p>{{attribute.name|first|title}}:{{min(yearplan) }}</p>
+
+                                                        {% endfor %}
+
+
+                                                    {% endif %}
+
+                                                {% else %}
+                                                    {{ yearlyplan }}
+                                                {% endif %}
+                                            </td>
+                                            {% for planacc in suitableoprational.planvalue   %}
+
+                                                <td>{{ planacc.planvalue }}</td>
+                                                <td>{{ planacc.accompvalue }}</td>
+                                            {% endfor %}
+                                            {#                                                                                                    {{ dump(suitableoprational) }}#}
+                                        </tr>
+                                    {% endfor %}
+                                    {#{% for oprationalReport in oprationalReports   %}
+                                     <td>{{ oprationalReport.operationalSuitable.operationalOffice }}</td>
+                                     <td>{{ oprationalReport.planValue }}</td>
+                                    {% endfor   %}#}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6">no records found</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                                
+                            </table>
+                        </div>
+
+                        <div class="pull-right" style="margin-right:10px;" id="custompaginator">{{ knp_pagination_render(operationalsuitableInitiativeDatas) }}</div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#custompaginator .page-link').click(function (e) {
+            e.preventDefault();
+            $('#filteruserform').attr('action', $(this).attr('href'));
+
+            $('#filteruserform').submit();
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $('.show-details-btn').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').next().toggleClass('open');
+            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+        });
+    </script>
+{% endblock %}
