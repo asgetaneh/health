@@ -501,33 +501,67 @@ class OperationalTaskController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
+        // if ($request->request->get("principal")) {
+        //     $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+        //     $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
+        //     foreach ($suitableInitiatives as $suit) {
+        //         if ($suit->getStatus() != 1) {
+        //             # code...
+
+        //             $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
+        //             $plan = 0;
+        //             foreach ($operatioanlSuitableInitiative as $value) {
+        //                 $plan = $plan + $value->getAccomplishedValue();
+        //                 $value->setStatus(2);
+        //                 $em->flush();
+        //             }
+        //             $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
+        //             if ($plan) {
+        //                 $planningAccomplishment->setAccompValue($plan);
+        //             }
+        //             // dd($planningAccomplishment->getSuitableInitiative());
+        //             if ($planningAccomplishment) {
+        //                 # code...
+        //                 $suit->setStatus(1);
+        //             }
+
+        //             $em->flush();
+        //         }}
         if ($request->request->get("principal")) {
             $currentQuarter = AmharicHelper::getCurrentQuarter($em);
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
             foreach ($suitableInitiatives as $suit) {
-                if ($suit->getStatus() != 1) {
+                // if ($suit->getStatus() != 1) {
+                //     # code...
+
+                //     $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
+                //     $plan = 0;
+                //     foreach ($operatioanlSuitableInitiative as $value) {
+                //         $plan = $plan + $value->getAccomplishedValue();
+                //         $value->setStatus(2);
+                //         $em->flush();
+                //     }
+                $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
+                if ($planningAccomplishment) {
                     # code...
 
-                    $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
-                    $plan = 0;
-                    foreach ($operatioanlSuitableInitiative as $value) {
-                        $plan = $plan + $value->getAccomplishedValue();
-                        $value->setStatus(2);
-                        $em->flush();
+                    if ($planningAccomplishment->getAccompValue() == null) {
+                        $suit->setStatus(null);
                     }
-                    $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
-                    if ($plan) {
-                        $planningAccomplishment->setAccompValue($plan);
-                    }
-                    // dd($planningAccomplishment->getSuitableInitiative());
-                    if ($planningAccomplishment) {
-                        # code...
-                        $suit->setStatus(1);
-                    }
-
-                    $em->flush();
                 }
+                // // if ($plan) {
+                //     $planningAccomplishment->setAccompValue($plan);
+                // }
+                // // dd($planningAccomplishment->getSuitableInitiative());
+                // if ($planningAccomplishment) {
+                //     # code...
+                //     $suit->setStatus(1);
+                // }
+
+                $em->flush();
+                // }
             }
+
             $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
         }
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
