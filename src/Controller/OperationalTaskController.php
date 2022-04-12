@@ -255,13 +255,13 @@ class OperationalTaskController extends AbstractController
     public function suitableInitiative(Request $request, PaginatorInterface $paginator, OperationalManagerRepository $operationalManagerRepository): Response
     {
         $this->denyAccessUnlessGranted('opr_task');
-        $ent=$this->getDoctrine()->getManager();
-        $suitableInitiatives=$ent->getRepository(SuitableInitiative::class)->findAll();
+        $ent = $this->getDoctrine()->getManager();
+        $suitableInitiatives = $ent->getRepository(SuitableInitiative::class)->findAll();
         // dd(1);
         foreach ($suitableInitiatives as $suitableInitiative) {
             // Helper::setGoalPlan($ent, $suitableInitiative);
-       
-                // PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
+
+            // PlanAchievementHelper::setKpiAchievement($ent, $suitableInitiative);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -317,7 +317,7 @@ class OperationalTaskController extends AbstractController
      */
     public function approveOperationalPlan(Request $request)
     {
-                $this->denyAccessUnlessGranted('pri_off_rep');
+        $this->denyAccessUnlessGranted('pri_off_rep');
         $em = $this->getDoctrine()->getManager();
 
         $suitableInId = $request->request->get('suitableInId');
@@ -339,7 +339,7 @@ class OperationalTaskController extends AbstractController
      */
     public function accomplishment(Request $request, SuitableOperational $suitableOperational, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
-                $this->denyAccessUnlessGranted('opr_task');
+        $this->denyAccessUnlessGranted('opr_task');
 
         $em = $this->getDoctrine()->getManager();
         $socialAttr = 0;
@@ -361,7 +361,7 @@ class OperationalTaskController extends AbstractController
 
         $performerTasks = $em->getRepository(PerformerTask::class)->findInitiativeBySocial($suitableOperational, $user, AmharicHelper::getCurrentQuarter($em));
         $taskAcomolishs = $taskAccomplishmentRepository->findDetailAccomplishSocial($suitableOperational, $user);
-    //   dd($performerTasksCore,$taskAcomolishs,$performerTasks);
+        //   dd($performerTasksCore,$taskAcomolishs,$performerTasks);
         $time = new DateTime('now');
         $endDate = 0;
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
@@ -399,7 +399,7 @@ class OperationalTaskController extends AbstractController
      */
     public function sendToPrincipal(Request $request, OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository, PlanningAccomplishmentRepository $planningAccomplishmentRepository)
     {
-                $this->denyAccessUnlessGranted('opr_task');
+        $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get("planOffice")) {
             $planAcomplismentId = $request->request->get("planId");
@@ -505,20 +505,28 @@ class OperationalTaskController extends AbstractController
             $currentQuarter = AmharicHelper::getCurrentQuarter($em);
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findAll();
             foreach ($suitableInitiatives as $suit) {
-                $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
-                $plan = 0;
-                foreach ($operatioanlSuitableInitiative as $value) {
-                    $plan = $plan + $value->getAccomplishedValue();
-                    $value->setStatus(2);
+                if ($suit->getStatus() != 1) {
+                    # code...
+
+                    $operatioanlSuitableInitiative = $em->getRepository(OperationalSuitableInitiative::class)->findPrincipalAccomplishment($suit->getId(), $currentQuarter);
+                    $plan = 0;
+                    foreach ($operatioanlSuitableInitiative as $value) {
+                        $plan = $plan + $value->getAccomplishedValue();
+                        $value->setStatus(2);
+                        $em->flush();
+                    }
+                    $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
+                    if ($plan) {
+                        $planningAccomplishment->setAccompValue($plan);
+                    }
+                    // dd($planningAccomplishment->getSuitableInitiative());
+                    if ($planningAccomplishment) {
+                        # code...
+                        $suit->setStatus(1);
+                    }
+
                     $em->flush();
                 }
-                $planningAccomplishment = $em->getRepository(PlanningAccomplishment::class)->findOneBy(['suitableInitiative' => $suit->getId(), 'quarter' => $currentQuarter]);
-                if ($plan) {
-                    $planningAccomplishment->setAccompValue($plan);
-                }
-                $suit->setStatus(1);
-
-                $em->flush();
             }
             $this->addFlash('success', 'Successfully Fetch Operational Office Result  !');
         }
@@ -621,7 +629,7 @@ class OperationalTaskController extends AbstractController
      */
     public function show(Request $request, TaskAssignRepository $taskAssignRepository)
     {
-                        $this->denyAccessUnlessGranted('opr_task');
+        $this->denyAccessUnlessGranted('opr_task');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
@@ -641,7 +649,7 @@ class OperationalTaskController extends AbstractController
      */
     public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
     {
-        
+
         $em = $this->getDoctrine()->getManager();
         $principal = $request->request->get('principal');
         if ($request->request->get('reportAvail')) {
