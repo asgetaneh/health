@@ -31,7 +31,7 @@ class PlanAchievementHelper
 
             $quarterPlanAchievement = $em->getRepository(QuarterPlanAchievement::class)->findByInitiativeAchievementAndQuarter($initiativeAchievement, $quarter);
 
-            $plan = $quarterPlanAchievement->getPlan();
+            // $plan = $quarterPlanAchievement->getPlan();
             $accomp = $em->getRepository(PlanningAccomplishment::class)->calulateAchievementByInitiativeAndYear($suitableInitiative->getInitiative(), $suitableInitiative->getPlanningYear(), $quarter);
             $quarterPlanAchievement->setAccomp($accomp);
             $em->flush();
