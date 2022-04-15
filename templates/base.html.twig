@@ -459,6 +459,17 @@ ace.settings.loadState('sidebar')
 												</a>
 											</li>
 										{% endif %}
+										{% if is_granted("pre_rep_chi")   %}
+											<li>
+												<a href="{{ path('score_report_child_principal') }}">
+													<b class="fa fa-caret-right"></b>
+													{% trans %}
+													principal performance Score
+													{% endtrans %}
+												</a>
+											</li>
+										{% endif %}
+										
 										{% if is_granted("pre_rep_scr")   %}
 											<li>
 												<a href="{{ path('oprational_score_report') }}">

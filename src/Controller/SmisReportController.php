@@ -24,6 +24,7 @@ use App\Helper\DomPrint;
 use App\Helper\AmharicHelper;
 use App\Repository\TaskAccomplishmentRepository;
 use DateTime;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -167,6 +168,121 @@ class SmisReportController extends AbstractController
         ]);
     }
     /**
+     * @Route("/score_report_child_principal", name="score_report_child_principal")
+     */
+    public function parentScore(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
+    {
+        // $this->denyAccessUnlessGranted('pre_rep_chi');
+        $em = $this->getDoctrine()->getManager();
+        $time = new DateTime('now');
+        $currentQuarter = AmharicHelper::getCurrentQuarter($em);
+
+        $quarterId = 0;
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+            }
+        }
+        // dd($quarterId);
+        $principal = $em->getRepository(PrincipalManager::class)->findOneBy(['principal' => $this->getUser()]);
+            $principalId =  $principal->getPrincipalOffice()->getId();
+        // dd($principalId->getId());
+
+        $value = 1;
+        $principalValue = 1;
+        $form = $this->createFormBuilder()
+            ->add('principalOffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'query_builder' => function (EntityRepository $er) 
+                use($principalId){
+                    return $er->createQueryBuilder('p')
+                        ->andWhere('p.managedBy = :val')
+                         ->setParameter('val' , $principalId)
+                        ->orderBy('p.id', 'ASC');
+                },
+
+                'placeholder' => "All",
+                'required' => false
+            ])
+
+            ->add('planningYear', EntityType::class, [
+                'class' => PlanningYear::class,
+                'placeholder' => "All",
+
+                'required' => false
+            ])
+
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($request->request->get("print")) {
+            // dd(1);
+            $data = $form->getData();
+            $principalOffice = $form->getData()['principalOffice']->getId();
+            $principalOffices = $em->getRepository(PrincipalOffice::class)->find($principalOffice);
+            $princpalManager = $em->getRepository(PrincipalManager::class)->findOneBy(['principalOffice' => $principalOffice]);
+            $principalOfficeName = $principalOffices->getName();
+            $chifPrincipal = $principalOffices->getManagedBy()->getName();
+            $princpalManager = $princpalManager->getPrincipal()->getUserInfo()->getFullName();
+            $planningYear = $form->getData()['planningYear']->getId();
+            $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffices);
+            // dd($totalInitiative);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
+
+            // dd($suitableInitiatives);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
+            $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
+            $ethYear = $planningYear->getEthYear();
+
+            $domPrint->print('smis_report/score_print.html.twig', [
+                'principalReports' => $principalReports,
+                'date' => (new \DateTime())->format('y-m-d'),
+                'chifPrincipal' => $chifPrincipal,
+                'suitableInitiatives' => $suitableInitiatives,
+                'principalOfficeName' => $principalOfficeName,
+                'totalInitiative' => $totalInitiative,
+                'ethYear' => $ethYear,
+                'fullName' => $princpalManager,
+            ], 'performance score card for ' . $principalOfficeName, 'landscape');
+
+            // return $this->redirectToRoute('score_report');
+        }
+        if ($form->isSubmitted()) {
+            $value = 1;
+            $data = $form->getData();
+            $principalOffice = $form->getData()['principalOffice']->getId();
+            // dd($principalOffice);
+            $planningYear = $form->getData()['planningYear']->getId();
+            $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
+            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
+        // dd($principalReports);
+        } else {
+
+            $value = 0;
+            $principalReports[] = "";
+            $suitableInitiatives[] = "";
+            $totalInitiative = "";
+            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
+        }
+        $data = $paginator->paginate(
+            $principalReports,
+            $request->query->getInt('page', 1),
+            10
+        );
+        // dd($data);
+
+        return $this->render('smis_report/score_parent.html.twig', [
+            'principalReports' => $data,
+            'totalInitiative' => $totalInitiative,
+            'form' => $form->createView(),
+            'suitableInitiatives' => $suitableInitiatives,
+            'value' => $value,
+
+        ]);
+    }
+    /**
      * @Route("/score_report", name="score_report")
      */
     public function score(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
@@ -243,6 +359,8 @@ class SmisReportController extends AbstractController
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
+            //    dd($principalReports);
+
         } else {
 
             $value = 0;
@@ -268,26 +386,26 @@ class SmisReportController extends AbstractController
 
         ]);
     }
-    
+
     /**
      * @Route("/task_list_report", name="task_list_report")
      */
     public function performerTaskEdit(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository)
     {
         $em = $this->getDoctrine()->getManager();
-        
-            $suitableInitiativeId = $request->request->get('suitableInitiativeId');
-            //   dd($taskid);
-            // dd($taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId));
 
-            return new JsonResponse(
-                [
-                    'data' =>  $taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId)
-                ]
-            );
-        }
+        $suitableInitiativeId = $request->request->get('suitableInitiativeId');
+        //   dd($taskid);
+        // dd($taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId));
 
-         /**
+        return new JsonResponse(
+            [
+                'data' =>  $taskAccomplishmentRepository->findTasksInReport($suitableInitiativeId)
+            ]
+        );
+    }
+
+    /**
      * @Route("/oprational_score_report", name="oprational_score_report") 
      */
     public function oprationalScore(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
@@ -312,7 +430,7 @@ class SmisReportController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('OpratinalOffice', EntityType::class, [
                 'class' => OperationalOffice::class,
-//                'mapped'       => false,
+                //                'mapped'       => false,
                 // 'multiple' => true,
                 // 'placeholder' => 'All',
                 'placeholder' => "All",
@@ -337,7 +455,7 @@ class SmisReportController extends AbstractController
             $data = $form->getData();
             $OpratinalOffice = $form->getData()['OpratinalOffice']->getId();
             $OpratinalOffices = $em->getRepository(OperationalOffice::class)->find($OpratinalOffice);
-             
+
             $OpratinalManager = $em->getRepository(OperationalManager::class)->findOneBy(['operationalOffice' => $OpratinalOffice]);
             $OpratinalOfficeName = $OpratinalOffices->getName();
             $chifPrincipal = $OpratinalOffices->getPrincipalOffice()->getManagedBy()->getName();
@@ -345,21 +463,21 @@ class SmisReportController extends AbstractController
             $planningYear = $form->getData()['planningYear']->getId();
             $totalOperationalSuitableInitiative = $em->getRepository(SuitableOperational::class)->findOprationalOfficeSuitableInitiative($OpratinalOffice);
 
-            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(),$OpratinalOffice);
-            
+            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(), $OpratinalOffice);
+
             // dd($suitableInitiatives);
             //$principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$oprationalValue,$currentQuarter,$oprationalValue);
             $planningYear = $em->getRepository(PlanningYear::class)->find($planningYear);
             $ethYear = $planningYear->getEthYear();
 
             $domPrint->print('smis_report/oprational_score_print.html.twig', [
-//                'principalReports' => $principalReports,
+                //                'principalReports' => $principalReports,
                 'date' => (new \DateTime())->format('y-m-d'),
                 'OpratinalManager' => $OpratinalManager,
                 'operationalsuitableInitiatives' => $operationalsuitableInitiatives,
                 'OpratinalOffices' => $OpratinalOffices,
                 'totalInitiative' => $totalOperationalSuitableInitiative,
-                 'chifPrincipal' => $chifPrincipal,
+                'chifPrincipal' => $chifPrincipal,
                 'ethYear' => $ethYear,
                 'fullName' => $OpratinalManagerFullname,
             ], 'performance score card for ' . $OpratinalOffices, 'landscape');
@@ -368,19 +486,18 @@ class SmisReportController extends AbstractController
         }
         if ($form->isSubmitted()) {
             $value = 1;
-            $data = $form->getData();//dd($data);
-            if($form->getData()['OpratinalOffice']){
+            $data = $form->getData(); //dd($data);
+            if ($form->getData()['OpratinalOffice']) {
                 $OpratinalOffice = $form->getData()['OpratinalOffice']->getId();
-            }
-            else{
+            } else {
                 $OpratinalOffice = $this->getUser()->getOperationalOffices()->unwrap()->toArray();
             }
-           // dd($OpratinalOffice);
+            // dd($OpratinalOffice);
             $planningYear = $form->getData()['planningYear']->getId();
             $totalOperationalSuitableInitiative = $em->getRepository(SuitableOperational::class)->findOprationalOfficeSuitableInitiative($OpratinalOffice);
 
-            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(),$OpratinalOffice);
-             
+            $operationalsuitableInitiatives = $em->getRepository(SuitableOperational::class)->findScore($form->getData(), $OpratinalOffice);
+
             //dd($operationalsuitableInitiatives);
             //$principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(),$OpratinalOffice,$currentQuarter,$oprationalValue);
         } else {
@@ -391,13 +508,13 @@ class SmisReportController extends AbstractController
             $totalOperationalSuitableInitiative = "";
             // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
         }
-         //dd($operationalsuitableInitiatives);
+        //dd($operationalsuitableInitiatives);
         $data = $paginator->paginate(
             $operationalsuitableInitiatives,
             $request->query->getInt('page', 1),
             10
         );
-         //dd($data);
+        //dd($data);
 
         return $this->render('smis_report/oprational_score.html.twig', [
             'operationalsuitableInitiativeDatas' => $data,
