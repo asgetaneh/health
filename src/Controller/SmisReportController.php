@@ -194,13 +194,13 @@ class SmisReportController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('principalOffice', EntityType::class, [
                 'class' => PrincipalOffice::class,
-                'query_builder' => function (EntityRepository $er) 
-                use($principalId){
-                    return $er->createQueryBuilder('p')
-                        ->andWhere('p.managedBy = :val')
-                         ->setParameter('val' , $principalId)
-                        ->orderBy('p.id', 'ASC');
-                },
+//                'query_builder' => function (EntityRepository $er) 
+//                use($principalId){
+//                    return $er->createQueryBuilder('p')
+//                        ->andWhere('p.managedBy = :val')
+//                         ->setParameter('val' , $principalId)
+//                        ->orderBy('p.id', 'ASC');
+//                },
 
                 'placeholder' => "All",
                 'required' => false
@@ -550,11 +550,28 @@ class SmisReportController extends AbstractController
                 'placeholder' => "Principal Office",
                 'required' => false
             ])
+           
+            ->add('planningYear', EntityType::class, [
+                'class' => PlanningYear::class,
+                'placeholder' => "All",
+
+                'required' => false
+            ])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $prinOfId = $form->getData()['principalOffice']->getId();
-            $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
+            if($form->getData()['planningYear'] && $form->getData()['principalOffice']){
+                 $QyearId = $form->getData()['planningYear']->getId();
+                 $prinOfId = $form->getData()['principalOffice']->getId();
+                $principalOffices = $em->getRepository(PrincipalOffice::class)->findByYearPrinciplaOffice( $prinOfId,$QyearId);
+            } 
+           else  if($form->getData()['planningYear']){
+                 $QyearId = $form->getData()['planningYear']->getId();
+                 $principalOffices = $em->getRepository(PrincipalOffice::class)->findByYear($QyearId);
+            } 
+            else {
+                $principalOffices = $em->getRepository(PrincipalOffice::class)->findBy(['id' => $prinOfId]);
+            }
         } else {
             $value = 0;
             $principalReports[] = "";
@@ -569,7 +586,7 @@ class SmisReportController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        // dd($data);
+        // dd(AmharicHelper::getCurrentYear());
 
         return $this->render('smis_report/progress.html.twig', [
 

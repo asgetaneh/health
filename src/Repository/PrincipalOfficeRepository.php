@@ -74,6 +74,37 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         ;
     }
     */
+    // /**
+    //  * @return PrincipalOffice[] Returns an array of PrincipalOffice objects
+    //  */
+   
+    public function findByYear($QyearId)
+    {
+        return $this->createQueryBuilder('p')
+            ->InnerJoin('p.suitableInitiatives', 's')
+            ->andWhere('s.planningYear= :year')
+             ->setParameter('year', $QyearId)
+            ->orderBy('p.id', 'ASC')
+//            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findByYearPrinciplaOffice( $prinOfId,$QyearId)
+    {
+        return $this->createQueryBuilder('p')
+            ->InnerJoin('p.suitableInitiatives', 's')
+            ->andWhere('p.id= :pid')
+            ->andWhere('s.planningYear= :year')
+             ->setParameter('pid', $prinOfId)
+             ->setParameter('year', $QyearId)
+            ->orderBy('p.id', 'ASC')
+//            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+  
 
     /*
     public function findOneBySomeField($value): ?PrincipalOffice
