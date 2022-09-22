@@ -138,16 +138,21 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         }
         return $qb->getQuery();
     }
-    public function findByPrincipalAndOffice($office)
+
+   public function findByPrincipalAndOffice($office, $planningyear)
     {
         $qb = $this->createQueryBuilder('i');
         $qb
             ->join('i.principalOffice', 'po')
+            ->join('i.planningYear', 'py')
             ->andWhere('po.id in (:office)')
+            ->andWhere('py.id = :planningyearid')
             // ->andwhere('i.isActive = 1')
-            ->setParameter('office', $office);
+            ->setParameter('office', $office)
+            ->setParameter('planningyearid', $planningyear);
         return $qb->getQuery()->getResult();
     }
+
     public function findwithPlan($id)
     {
         $qb = $this->createQueryBuilder('i');

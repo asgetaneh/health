@@ -287,7 +287,7 @@ class PlanController extends AbstractController
             $principaloffice=$operationaloffice->getPrincipalOffice();
 
             // $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
-            $recoverInitiatives = $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($principaloffice);
+            $recoverInitiatives = $em->getRepository(SuitableInitiative::class)->findByPrincipalAndOffice($principaloffice, $planningyear);
             $recoverData = $paginator->paginate($recoverInitiatives, $request->query->getInt('page', 1), 10);
             if ($request->query->get('nonsuitable')) {
                 $removableId = $request->query->get('initiative');
