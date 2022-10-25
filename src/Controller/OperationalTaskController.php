@@ -290,7 +290,7 @@ class OperationalTaskController extends AbstractController
         $currentMonths = explode('-', $currentMonths);
 
         if ($currentQuarter == 1) {
-            $currentYear = $currentYear + 1;dd($currentYear);
+            $currentYear = $currentYear + 1; 
                 if ($currentMonths[1] == "01") {
                 $currentYear = $currentYear - 1;
             }
