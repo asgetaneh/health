@@ -65,7 +65,7 @@ class StrategyController extends AbstractController
                 $strategy->translate($value)->setDescription($request->request->get('strategy')[$value . "description"]);
             }
             $strategy->setCreatedAt(new \DateTime());
-            $strategy->setIsActive(1);
+            $strategy->setIsActive(TRUE);
             $strategy->setCreatedBy($this->getUser());
             $entityManager->persist($strategy);
             $strategy->mergeNewTranslations();

@@ -1,216 +1,216 @@
 <div id="myModal" class="modal fade createModal" role="dialog">
-	<div
-		class="modal-dialog">
+    <div
+        class="modal-dialog">
 
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header bg-info">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header bg-info">
 
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4>{{initiativeName}}</h4>
-				<h4 class="modal-title">Create Task   for =>
-					{{quarterName}}
-					Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
-				</h4>
-				<h4 class="modal-title">Allowed Maximum 6 Tasks
-					{% if social == 1 %}
-						It Must Consider
-						<div class="badge badge-danger">Male</div>
-						and
-						<div class="badge badge-warning">Female</div>
-					{% endif %}
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>{{initiativeName}}</h4>
+                <h4 class="modal-title">Create Task   for =>
+                    {{quarterName}}
+                    Total Remainig Weight=<div class="badge badge-danger">{{ 100 - countWeight}}</div>
+                </h4>
+                <h4 class="modal-title">Allowed Maximum 6 Tasks
+                    {% if social == 1 %}
+                        It Must Consider
+                        <div class="badge badge-danger">Male</div>
+                        and
+                        <div class="badge badge-warning">Female</div>
+                    {% endif %}
 
-				</h4>
-			</div>
-			<div class="modal-body">
-				{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
 
-				<div class="form-group isSupportive">
+                <div class="form-group isSupportive">
 
-					<lable class=" control-label no-padding-right ">
-						<b>
-							Task Name
-						</b>
-					</lable>
-					<select
-						name="coreTaskList" class="select2  form-control ">
-						{# {% for coreTask in coreTaskList %} #}
-						<option value="{{ coreTaskList.name }}">{{ coreTaskList.name }}</option>
-						{# {% endfor %} #}
-					</select>
-				</div>
+                    <lable class=" control-label no-padding-right ">
+                        <b>
+                            Task Name
+                        </b>
+                    </lable>
+                    <select
+                        name="coreTaskList" class="select2  form-control ">
+                        {# {% for coreTask in coreTaskList %} #}
+                        <option value="{{ coreTaskList.name }}">{{ coreTaskList.name }}</option>
+                        {# {% endfor %} #}
+                    </select>
+                </div>
 
-				<div class="form-group isCores">
-					<lable class=" control-label no-padding-right">
-						<b>
-							Task Name
-						</b>
-					</lable>
-					<input type="text" name="performerTaskName" class="form-control">
+                <div class="form-group isCores">
+                    <lable class=" control-label no-padding-right">
+                        <b>
+                            Task Name
+                        </b>
+                    </lable>
+                    <input type="text" name="performerTaskName" class="form-control">
 
-				</div>
-				<div class="form-group">
-					<lable class=" control-label no-padding-right">
-						<b>
-							Task Description
-						</b>
-					</lable>
-					{{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
-				</div>
+                </div>
+                <div class="form-group">
+                    <lable class=" control-label no-padding-right">
+                        <b>
+                            Task Description
+                        </b>
+                    </lable>
+                    {{ form_widget(form.description,{'attr':{ 'class': 'form-control'}}) }}
+                </div>
 
-				<div class="form-group">
-					<lable class=" control-label no-padding-right isCores">
-						<b>
-							Task Weight
-						</b>
-					</lable>
-					{{ form_widget(form.weight,{'attr':{ 'class': 'form-control isCores '}}) }}
-				</div>
-				<input type="hidden" class="categoryId" name="categoryId">
-				<input type="hidden" class="isCore" name="isCore">
-			</div>
+                <div class="form-group">
+                    <lable class=" control-label no-padding-right isCores">
+                        <b>
+                            Task Weight
+                        </b>
+                    </lable>
+                    {{ form_widget(form.weight,{'attr':{ 'class': 'form-control isCores '}}) }}
+                </div>
+                <input type="hidden" class="categoryId" name="categoryId">
+                <input type="hidden" class="isCore" name="isCore">
+            </div>
 
 
-		</div>
-		<div class="modal-footer">
-			<input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Create{% endtrans %}"/>
-			<button type="button" class="btn btn-default pull-left closes" data-dismiss="modal">Close</button>
-			{{ form_end(form) }}
-		</div>
-	</div>
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-primary pull-right  " type="submit" value="{% trans %}Next{% endtrans %}"/>
+            <button type="button" class="btn btn-default pull-left closes" data-dismiss="modal">Close</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
 </div>
 <div class="modal fade assignModal" role="dialog">
-	<div class="modal-dialog">
-		<form
-			method="post" action="{{path('task_assign')}}">
+    <div class="modal-dialog">
+        <form
+            method="post" action="{{path('task_assign')}}">
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header bg-info">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-					<h4 class="modal-title">Assign Task</h4>
-					<h4>{{initiativeName}}
-					</h4>
+                    <h4 class="modal-title">Assign Task</h4>
+                    <h4>{{initiativeName}}
+                    </h4>
 
-				</div>
-				<div class="modal-body">
+                </div>
+                <div class="modal-body">
 
-					<div class="row">
-						<div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
 
-							<lable class=" control-label no-padding-right">
-								<b>
-									Select Task
-								</b>
-							</lable>
-							<select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true" required></select>
-
-
-						</div>
-						<div class="col-md-12">
-
-							<lable class=" control-label no-padding-right">
-								<b>
-									Select Performer
-								</b>
-							</lable>
-							<select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true" required></select>
+                            <lable class=" control-label no-padding-right">
+                                <b>
+                                    Select Task
+                                </b>
+                            </lable>
+                            <select autocomplete="off" name="task[]" id="crtask" class="form-control crtask select2  " multiple="true" required></select>
 
 
-						</div>
-						<div class="col-md-6">
+                        </div>
+                        <div class="col-md-12">
 
-							<lable class=" control-label no-padding-right">
-								<b>
-									Start Date
-								</b>
-							</lable>
-							<input type="text" name="startDate" class="form-control popupDatepicker" autocomplete="off" required>
-
-
-						</div>
-						<div class="col-md-6">
-
-							<lable class=" control-label no-padding-right">
-								<b>
-									End Date
-								</b>
-							</lable>
-							<input type="text" name="endDate" class="form-control popupDatepicker" autocomplete="off" required>
+                            <lable class=" control-label no-padding-right">
+                                <b>
+                                    Select Performer
+                                </b>
+                            </lable>
+                            <select autocomplete="off" name="user[]" id="user" class="form-control userlist select2  " multiple="true" required></select>
 
 
-						</div>
-						<div class="col-md-6">
+                        </div>
+                        <div class="col-md-6">
 
-							<lable class=" control-label no-padding-right">
-								<b>
-									Penality Days (20% deduction at each ill performance)  (Max={{maxContengencyTime}})
-									<h5 class="error text-danger"></h5>
-								</b>
-							</lable>
-
-							<input
-							type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
-						{# <input type="hidden" class="planValues" name="planValue"> #}
+                            <lable class=" control-label no-padding-right">
+                                <b>
+                                    Start Date
+                                </b>
+                            </lable>
+                            <input type="text" name="startDate" class="form-control popupDatepicker" autocomplete="off" required>
 
 
-						</div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <lable class=" control-label no-padding-right">
+                                <b>
+                                    End Date
+                                </b>
+                            </lable>
+                            <input type="text" name="endDate" class="form-control popupDatepicker" autocomplete="off" required>
 
 
-					</div>
-					<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Name</th>
+                        </div>
+                        <div class="col-md-6">
 
-								<th>Expected Value
-									{% if social == 1 %}Male
-									{% endif %}
-								</th>
-								{% if social == 1 %}
-									<th>Expected Value Female</th>
+                            <lable class=" control-label no-padding-right">
+                                <b>
+                                    Penality Days (20% deduction at each ill performance)  (Max={{maxContengencyTime}})
+                                    <h5 class="error text-danger"></h5>
+                                </b>
+                            </lable>
 
-								{% endif %}
-
-								<th>Description</th>
+                            <input
+                                type="number" name="timeGap" max="{{maxContengencyTime}}" class="form-control timeGap " autocomplete="true" required>
+                            {# <input type="hidden" class="planValues" name="planValue"> #}
 
 
-							</tr>
-						</thead>
-						<tbody>
-							{% set count = 0 %}
-							{% for measurement in measurements %}
+                        </div>
 
-								<tr>
-									{% set count = count + 1 %}
-									<td>{{ count}}</td>
-									<td>{{ measurement.name }}</td>
-									<input type="hidden" name="measurementId[]" value={{measurement.id}}>
-									<td>
 
-										<input type="hidden" name="expectedValues" class="form-control planValues isCores" required>
-										<input type="number" name="expectedValue" class="form-control values isCores">
-										<p class="planValueste" id="planValueste"></p>
-										<input type="hidden" class="categoryId" name="categoryId">
-										<input type="hidden" class="isCoreAssign2" name="isCore">
-									</td>
-									{% if social == 1 %}
+                    </div>
+                    <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
 
-										<td><input type="number" name="expectedValueSocial" class="form-control"></td>
-									{% endif %}
-									<td>
-										<textArea name="measurementDescription" class="form-control" required></textArea>
+                                <th>Expected Value
+                                    {% if social == 1 %}Male
+                                    {% endif %}
+                                </th>
+                                {% if social == 1 %}
+                                    <th>Expected Value Female</th>
+
+                                {% endif %}
+
+                                <th>Description</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set count = 0 %}
+                            {% for measurement in measurements %}
+
+                                <tr>
+                                    {% set count = count + 1 %}
+                                    <td>{{ count}}</td>
+                                    <td>{{ measurement.name }}</td>
+                            <input type="hidden" name="measurementId[]" value={{measurement.id}}>
+                            <td>
+
+                                <input type="hidden" name="expectedValues" class="form-control planValues isCores" required>
+                                <input type="number" name="expectedValue" class="form-control values isCores">
+                                <p class="planValueste" id="planValueste"></p>
+                                <input type="hidden" class="categoryId" name="categoryId">
+                                <input type="hidden" class="isCoreAssign2" name="isCore">
+                            </td>
+                            {% if social == 1 %}
+
+                                <td><input type="number" name="expectedValueSocial" class="form-control"></td>
+                                {% endif %}
+                            <td>
+                                <textArea name="measurementDescription" class="form-control" required></textArea>
 									</td>
 
 
 								</tr>
-							{% else %}
+                        {% else %}
 								<tr>
 									<td colspan="8">no records found</td>
 								</tr>
-							{% endfor %}
+                        {% endfor %}
 						</tbody>
 					</table>
 

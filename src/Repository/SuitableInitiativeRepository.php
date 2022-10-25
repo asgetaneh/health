@@ -221,6 +221,14 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         }
         return $qb->getQuery()->getResult();
     }
+    public function findScoreByPlanningYear($planningyear,$principalOffice, $principalValue)
+    {
+
+        $qb = $this->createQueryBuilder('s')
+                    ->andWhere('s.planningYear = :planningYear')
+                    ->setParameter('planningYear', $planningyear);
+        return $qb->getQuery()->getResult();
+    }
     public function getPrincipalSelectSuitable($principalOffice)
     {
         return $this->createQueryBuilder('s')

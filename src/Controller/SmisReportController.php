@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\PlanningYearRepository;
+
 
 class SmisReportController extends AbstractController
 {
@@ -186,6 +188,7 @@ class SmisReportController extends AbstractController
         }
         // dd($quarterId);
         $principal = $em->getRepository(PrincipalManager::class)->findOneBy(['principal' => $this->getUser()]);
+        if($principal)
             $principalId =  $principal->getPrincipalOffice()->getId();
         // dd($principalId->getId());
 
@@ -285,7 +288,7 @@ class SmisReportController extends AbstractController
     /**
      * @Route("/score_report", name="score_report")
      */
-    public function score(Request $request, DomPrint $domPrint, PaginatorInterface $paginator)
+    public function score(Request $request, DomPrint $domPrint, PaginatorInterface $paginator, PlanningYearRepository $planningYearRepository)
     {
         $this->denyAccessUnlessGranted('pre_rep');
         $em = $this->getDoctrine()->getManager();
@@ -351,7 +354,7 @@ class SmisReportController extends AbstractController
 
             // return $this->redirectToRoute('score_report');
         }
-        if ($form->isSubmitted()) {
+         if ($form->isSubmitted()) {
             $value = 1;
             $data = $form->getData();
             $principalOffice = $form->getData()['principalOffice']->getId();
@@ -359,15 +362,19 @@ class SmisReportController extends AbstractController
             $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
             $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
-            //    dd($principalReports);
+            //dd($principalReports);
 
         } else {
 
-            $value = 0;
-            $principalReports[] = "";
-            $suitableInitiatives[] = "";
-            $totalInitiative = "";
-            // $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal();
+            $value = 1;
+            $totalInitiative = 0;
+            $suitableInitiatives = [];
+             $principalReports = [];
+             $planningYear =  $planningYearRepository->findLast();
+             $totalInitiative = count($em->getRepository(Initiative::class)->findAll());
+             $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScoreByPlanningYear($planningYear, $principalValue, $principalValue);
+            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipalForTheLastYear($planningYear, $principalValue, $currentQuarter, $principalValue);
+           //dd($suitableInitiatives);
         }
         // dd($suitableInitiatives);
         $data = $paginator->paginate(

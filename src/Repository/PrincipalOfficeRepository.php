@@ -131,10 +131,10 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
     public function findPlannedOffice($filter = [])
     {
         $qb = $this->createQueryBuilder('p');
-
+       
         if (isset($filter['status'])) {
 
-
+            ;
             $status = $filter['status'];
 
             if ($status == 1) {
@@ -145,6 +145,7 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
                     ->setParameter('year', $filter['year'])
                 ->andWhere('pc.id is not null');
                 
+                
             } elseif ($status == 2) {
 
 
@@ -153,7 +154,8 @@ class PrincipalOfficeRepository extends ServiceEntityRepository
         }
 
 
-
+        $qb ->andWhere('p.isActive = :acctive')
+            ->setParameter('acctive',1);
 
         return $qb->getQuery();
     }

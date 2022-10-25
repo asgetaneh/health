@@ -114,7 +114,7 @@
 													<td>{{ operatioanlSuitable.operationalOffice  }}</td>
 
 													<input type="hidden" name="opsuiId[]" value="{{operatioanlSuitable.id}}">
-													{% set quarter =  operatioanlSuitable.quarter %}
+													{% set quarter =  operatioanlSuitable.quarter.id %}
 													{% set plan =  operatioanlSuitable.operationalPlanning.planValue  %}
 													{% set planId =  operatioanlSuitable.operationalPlanning.id  %}
 

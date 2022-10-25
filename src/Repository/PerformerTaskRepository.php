@@ -107,7 +107,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
 
             ->getResult();
     }
-    public function findPerformerInitiativeTask($user, $initiative)
+    public function findPerformerInitiativeTask($user, $initiative, $quarterId)
     {
 
         //dd($productNmae);
@@ -117,10 +117,12 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->andWhere('pl.operationalSuitable = :initiative')
             ->andWhere('s.createdBy = :user')
             ->andWhere('s.status = 1')
+            ->andWhere('s.quarter = :quarterr')
 
 
 
             ->setParameter('initiative', $initiative)
+            ->setParameter('quarterr', $quarterId)
             ->setParameter('user', $user)
 
             ->orderBy('s.id', 'ASC')

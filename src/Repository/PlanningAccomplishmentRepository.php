@@ -59,6 +59,18 @@ class PlanningAccomplishmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findPrincipalForTheLastYear($planningYear, $principalOffice, $currentQuarter, $principalValue)
+    {
+        $qb = $this->createQueryBuilder('pa');
+                $qb
+                    ->leftJoin('pa.suitableInitiative', 'p')
+                    ->andWhere('p.planningYear = :planningYear')
+                    ->setParameter('planningYear', $planningYear);
+                
+        return $qb->andWhere('pa.quarter = :planningQuarter')
+            ->setParameter('planningQuarter', $currentQuarter)
+            ->getQuery()->getResult();
+    }
     public function findPrincipal($search = [], $principalOffice, $currentQuarter, $principalValue)
     {
         $qb = $this->createQueryBuilder('pa');

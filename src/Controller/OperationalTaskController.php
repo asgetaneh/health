@@ -96,25 +96,11 @@ class OperationalTaskController extends AbstractController
         $idd = 0;
         $countCore = 0;
         $count = 0;
-        $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational);
-        foreach ($performerTasksList as $performerTas) {
-            // dd($operational);
-            if ($performerTas->getTaskCategory()->getIsCore()) {
-                $countCore = $countCore + $performerTas->getWeight();
-                $idd = $performerTas->getId();
-            } else {
-                $count = $count +
-                    $performerTas->getWeight();
-            }
-        }
-        $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask' => $idd]);
-        if ($assigns) {
-            $assign++;
-        }
-        // dd($assign);
+         // dd($assign);
         $time = new DateTime('now');
         $quarterId = 0;
         $quarterName = 0;
+        
         $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
         foreach ($quarters as $quarter) {
             if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
@@ -138,6 +124,23 @@ class OperationalTaskController extends AbstractController
                 $minDateEdit = $startYear . ',' . $quarterStartMonth1 . ',' . $quarterStartDate1;
             }
         }
+        
+        $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational, $quarterId);
+        foreach ($performerTasksList as $performerTas) {
+            // dd($operational);
+            if ($performerTas->getTaskCategory()->getIsCore()) {
+                $countCore = $countCore + $performerTas->getWeight();
+                $idd = $performerTas->getId();
+            } else {
+                $count = $count +
+                    $performerTas->getWeight();
+            }
+        }
+        $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask' => $idd]);
+        if ($assigns) {
+            $assign++;
+        }
+       
         $maxPenalityDays = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTasks = $em->getRepository(SmisSetting::class)->findAll()[0];
         $maxTask = $maxTasks->getMaxAllowedTasks();
@@ -228,7 +231,7 @@ class OperationalTaskController extends AbstractController
         $maxTask = $maxTasks->getMaxAllowedTasks();
         $maxPenalityDay = $maxPenalityDays->getMaxPenalityDays();
         return $this->render('operational_task/index.html.twig', [
-            'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational),
+            'performerTasks' => $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational, $quarterId),
             'countWeight' => $count,
             'countCore' => $countCore,
             'quarterName' => $quarterName,
@@ -287,8 +290,11 @@ class OperationalTaskController extends AbstractController
         $currentMonths = explode('-', $currentMonths);
 
         if ($currentQuarter == 1) {
-            $currentYear = $currentYear + 1;
-            if ($currentMonths[1] == "01") {
+            $currentYear = $currentYear + 1;dd($currentYear);
+                if ($currentMonths[1] == "01") {
+                $currentYear = $currentYear - 1;
+            }
+                if ($currentMonths[1] == "02") {
                 $currentYear = $currentYear - 1;
             }
         }
@@ -430,10 +436,10 @@ class OperationalTaskController extends AbstractController
                 $operationalSuitables = $operationalSuitableInitiativeRepository->findBy(['operationalPlanning' => $planAcomplismentId[0]]);
                 foreach ($operationalSuitables as $value) {
                     $value->setStatus(2);
-                }
-                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]);
-                $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();
-                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);
+                }//dd($operationalSuitables[0]->getOperationalOffice()->getOperationalInitiatives()->getInitiative());
+                $planAcomplishments1 = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planAcomplismentId[0]); 
+                $suitId = $planAcomplishments1->getOperationalSuitable()->getSuitableInitiative()->getId();//dd($suitId);
+                $planAcomplishments = $planningAccomplishmentRepository->findOneBy(['suitableInitiative' => $suitId, 'quarter' => $quarter]);//dd($quarter);
                 $planAcomplishments->setAccompValue($acompAverages[0]);
 
                 $suitableInitiative = $em->getRepository(SuitableInitiative::class)->find($suitId);
