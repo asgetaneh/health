@@ -51,12 +51,12 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->andWhere('op.principalOffice = :val')
             ->andWhere('su.suitableInitiative = :suitable')
             ->andWhere('o.quarter = :currentQuarter')
-            ->andWhere('o.status = 1')
+//            ->andWhere('o.status = 1')
             ->setParameter('currentQuarter', $currentQuarter)
             ->setParameter('val', $principalOffice)
             ->setParameter('suitable', $suitable)
             ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(30)
             ->getQuery()
             ->getResult();
     }
