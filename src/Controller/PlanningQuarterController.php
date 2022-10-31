@@ -41,6 +41,7 @@ class PlanningQuarterController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
            $data= $form->getData();
            $startDate=$request->request->get("startDate");
+          
            $endDate=$request->request->get("endDate");
            $startDate=explode('/',$startDate);
             $endDate=explode('/',$endDate);
@@ -129,8 +130,31 @@ class PlanningQuarterController extends AbstractController
     {
         $form = $this->createForm(PlanningQuarterType::class, $planningQuarter);
         $form->handleRequest($request);
-
+//       $startDate = $planningQuarter->getStartDate();
+//       $startDate = AmharicHelper::fromGretoEthstrint($planningQuarter->getStartDate());
         if ($form->isSubmitted() && $form->isValid()) {
+            if($request->request->get("startDate")){
+            $startDate1 =$request->request->get("startDate");   //dd($startDate1);
+             $startDate=explode('/',$startDate1);
+             $d = $startDate[0];
+             $m = $startDate[1];
+             $y = $startDate[2];
+             $startDate=DateTimeFactory::of($y, $m, $d);
+            $gergorianStart = AmharicHelper::fromEthtoGre($startDate);
+            $planningQuarter->setStartDate($gergorianStart);
+            }
+            if($request->request->get("endDate")){
+            $endDate1 =$request->request->get("endDate");   //dd($startDate1);
+             $endDate=explode('/',$endDate1);
+             $d = $endDate[0];
+             $m = $endDate[1];
+             $y = $endDate[2];
+             $endDate=DateTimeFactory::of($y, $m, $d);
+            $gergorianEnd = AmharicHelper::fromEthtoGre($endDate);
+            $planningQuarter->setEndDate($gergorianEnd);
+            }
+ 
+        
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('planning_quarter_index');
@@ -138,6 +162,7 @@ class PlanningQuarterController extends AbstractController
 
         return $this->render('planning_quarter/edit.html.twig', [
             'planning_quarter' => $planningQuarter,
+//            'startDate' => $startDate,
             'form' => $form->createView(),
         ]);
     }

@@ -357,13 +357,22 @@ class SmisReportController extends AbstractController
          if ($form->isSubmitted()) {
             $value = 1;
             $data = $form->getData();
-            $principalOffice = $form->getData()['principalOffice']->getId();
-            $planningYear = $form->getData()['planningYear']->getId();
-            $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
-            $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
-            $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
-            //dd($principalReports);
+            if ($form->getData()['planningYear']){
+                  $planningYear = $form->getData()['planningYear']->getId();
+            }
+            if ($form->getData()['principalOffice']){
+                $principalOffice = $form->getData()['principalOffice']->getId();
+                $totalInitiative = $em->getRepository(Initiative::class)->findOfficeInitiative($principalOffice);
+                $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
+                $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
+            }else{
+                $totalInitiative = count($em->getRepository(Initiative::class)->findAll());
+                $suitableInitiatives = $em->getRepository(SuitableInitiative::class)->findScore($form->getData(), $principalValue, $principalValue);
+                $principalReports = $em->getRepository(PlanningAccomplishment::class)->findPrincipal($form->getData(), $principalValue, $currentQuarter, $principalValue);
+                //dd($principalReports);
 
+            }
+            
         } else {
 
             $value = 1;
@@ -380,7 +389,7 @@ class SmisReportController extends AbstractController
         $data = $paginator->paginate(
             $principalReports,
             $request->query->getInt('page', 1),
-            10
+            1000
         );
         // dd($data);
 

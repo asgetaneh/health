@@ -21,6 +21,7 @@ use App\Helper\DomPrint;
 use App\Repository\OperationalSuitableInitiativeRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAssignRepository;
+use App\Repository\PlanningYearRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -38,12 +39,13 @@ class PrincipalController extends AbstractController
     /**
      * @Route("/principal_office_report", name="principal_office_report", methods={"GET","POST"})
      */
-    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, Request $request, PaginatorInterface $paginator): Response
+    public function report(SuitableInitiativeRepository $suitableInitiativeRepository, PlanningYearRepository $planinngYearRepository, Request $request, PaginatorInterface $paginator): Response
     {
 
         // $this->denyAccessUnlessGranted('pre_rep_pro');
 
         $em = $this->getDoctrine()->getManager();
+        $planinngYear = $planinngYearRepository->findLast();
         $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
 
         // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
@@ -79,7 +81,8 @@ class PrincipalController extends AbstractController
         } else {
             $principal = $em->getRepository(PrincipalManager::class)->findOneBy(['principal' => $this->getUser()]);
             $principalOffice =  $principal->getPrincipalOffice();
-            $suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+            //$suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
+            $suitableInitiatives = $suitableInitiativeRepository->findByPrincipalAndOffice($principalOffice, $planinngYear);
             $data = $paginator->paginate(
                 $suitableInitiatives,
                 $request->query->getInt('page', 1),

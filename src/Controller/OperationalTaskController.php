@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\Performer;
 use App\Entity\PerformerTask;
 use App\Entity\PlanningAccomplishment;
@@ -117,10 +116,16 @@ class OperationalTaskController extends AbstractController
                 $endYear = AmharicHelper::getCurrentYearPara($endYear);
                 $quarterStartMonth = AmharicHelper::getCurrentMonth();
                 $quarterStartMonth = explode('-', $quarterStartMonth);
-                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
-                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
-                $minDate = $startYear . ',' . $quarterStartMonth[1] . ',' . $quarterStartDate;
-                $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+                //
+                //$minDate = DateTimeFactory::fromDateTime($quarter->getStartDate())->format('Y,m,d');
+                $minDate = DateTimeFactory::fromDateTime($time)->format('Y,m,d');
+                $maxDate = DateTimeFactory::fromDateTime($quarter->getEndDate())->format('Y,m,d');
+                //dd($minDate);
+                //
+               // $maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+                //$maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
+                //$minDate = $startYear . ',' . $quarterStartMonth[1] . ',' . $quarterStartDate;
+                //$maxDate = $endYear . ',' . $quarterEndMonth . ',' . $quarterEndDate;
                 $minDateEdit = $startYear . ',' . $quarterStartMonth1 . ',' . $quarterStartDate1;
             }
         }
@@ -765,5 +770,19 @@ class OperationalTaskController extends AbstractController
             'iniName' => $iniName,
             'principal' => $principal
         ]);
+    }
+    
+     /**
+     * @Route("/challenges-for-report", name="challenges_for_report")
+     */
+    public function challengesForReport(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $taskAssigns = $taskAssignRepository->findAll();
+         return $this->render('operational_task/challenges_for_report.html.twig', [
+             'taskAssigns' => $taskAssigns,
+         ]);
+        dd($taskAssign);
+        
     }
 }

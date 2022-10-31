@@ -492,6 +492,16 @@ ace.settings.loadState('sidebar')
 										{% endif %}
 										{% if is_granted("pre_rep_rem")   %}
 										<li>
+											<a href="{{ path('challenges_for_report') }}">
+												<b class="fa fa-caret-right"></b>
+												{% trans %}
+												Challenges For Report
+												{% endtrans %}
+											</a>
+										</li>
+										{% endif %}
+										{#{% if is_granted("pre_rep_rem")   %}
+										<li>
 											<a href="{{ path('plan_remove') }}">
 												<b class="fa fa-caret-right"></b>
 												{% trans %}
@@ -499,7 +509,7 @@ ace.settings.loadState('sidebar')
 												{% endtrans %}
 											</a>
 										</li>
-										{% endif %}
+										{% endif %}#}
 
 
 									</ul>

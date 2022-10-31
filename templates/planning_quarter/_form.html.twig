@@ -22,6 +22,15 @@
 			<input type="text" name="startDate" class="popupDatepicker form-control" autocomplete="off">
 		</div>
 	</div>
+        {% if startDate is defined%}
+            <div class="col-md-4">
+                    <div class="form-group">
+                            <label class="floating-label" for="Name">Start Date</label>
+
+                            <input type="text" value="{{ startDate|date("m/d/Y") }}" name="startDate" class="popupDatepicker form-control" autocomplete="off">
+                    </div>
+            </div>
+         {% endif %}
 	<div class="col-md-4">
 		<div class="form-group">
 			<label class="floating-label" for="Name">End Date</label>
