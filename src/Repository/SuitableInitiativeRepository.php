@@ -152,6 +152,16 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('planningyearid', $planningyear);
         return $qb->getQuery()->getResult();
     }
+   public function findByYearForToBeReport($planningyear)
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb
+             ->join('i.planningYear', 'py')
+             ->andWhere('py.id = :planningyearid')
+            // ->andwhere('i.isActive = 1')
+             ->setParameter('planningyearid', $planningyear);
+        return $qb->getQuery()->getResult();
+    }
 
     public function findwithPlan($id)
     {

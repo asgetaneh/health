@@ -46,7 +46,7 @@ class PrincipalController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $planinngYear = $planinngYearRepository->findLast();
-        $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
+       // $principalOfficeName = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getName();
 
         // $principalOffice = $this->getUser()->getPrincipalManagers()[0]->getPrincipalOffice()->getId();
         $filterForm = $this->createFormBuilder()
@@ -80,9 +80,14 @@ class PrincipalController extends AbstractController
             );
         } else {
             $principal = $em->getRepository(PrincipalManager::class)->findOneBy(['principal' => $this->getUser()]);
-            $principalOffice =  $principal->getPrincipalOffice();
+            if($principal){
+                $principalOffice =  $principal->getPrincipalOffice();
+                 $suitableInitiatives = $suitableInitiativeRepository->findByPrincipalAndOffice($principalOffice, $planinngYear);
+            }else {
+                 $suitableInitiatives = $suitableInitiativeRepository->findByYearForToBeReport($planinngYear);
+            }
             //$suitableInitiatives = $suitableInitiativeRepository->findBy(["principalOffice" => $principalOffice]);
-            $suitableInitiatives = $suitableInitiativeRepository->findByPrincipalAndOffice($principalOffice, $planinngYear);
+           
             $data = $paginator->paginate(
                 $suitableInitiatives,
                 $request->query->getInt('page', 1),
@@ -154,8 +159,9 @@ class PrincipalController extends AbstractController
         //     ]);
         // } else {
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
-        // dd($currentQuarter);
+         
         $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(), $currentQuarter);
+        //dd($currentQuarter);
         $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
         return $this->render('principal/initiative_accomplishment.html.twig', [
             'operatioanlSuitables' => $operatioanlSuitables,
