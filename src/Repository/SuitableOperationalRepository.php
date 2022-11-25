@@ -157,6 +157,19 @@ class SuitableOperationalRepository extends ServiceEntityRepository
             }
         return $qb->getQuery()->getResult();
     }
+    
+     public function getBySuitableInitiatveOnly($suitableInitiative)
+    {
+        return $this->createQueryBuilder('os')
+            ->Join('os.suitableInitiative', 's')
+           
+            ->andWhere('os.suitableInitiative in (:suitable)')
+          
+            ->setParameter('suitable', $suitableInitiative)
+            ->orderBy('os.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return SuitableOperational[] Returns an array of SuitableOperational objects
     //  */

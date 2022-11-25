@@ -715,17 +715,17 @@ class OperationalTaskController extends AbstractController
             $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
             $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
             $expectedValue = $taskAccomplishment->getExpectedValue();
-            // dd($planning, $operationalOffice, $accompValue, $quarter);
-            $to = $planning->getPlanValue() * $accompValue;
+             //dd($planning, $operationalOffice, $accompValue, $quarter);
+            $to = $planning->getPlanValue() * $accompValue; 
             $accompValueto = $to / $expectedValue;
-            $accompValuetott = round($accompValueto, 2);
+            $accompValuetott = round($accompValueto, 2);//dd($accompValueto);
             // if task is Suportive can not insert in operationalSuitable
-            if ($performerTask->getTaskCategory()->getIsCore()) {
+//            if ($performerTask->getTaskCategory()->getIsCore()) {
                 // $performerTask->setStatus(0);
                 // dd($performerTaskId);
                 $plannings->setAccompValue($accompValuetott);
                 $operationalSuitable = $plannings->getOperationalSuitable();
-            }
+//            }
             // $operationalSuitable->setStatus(1);
             $operationalSuitableInitiative = new OperationalSuitableInitiative();
             $operationalSuitableInitiative->setOperationalPlanning($planning);
@@ -770,19 +770,5 @@ class OperationalTaskController extends AbstractController
             'iniName' => $iniName,
             'principal' => $principal
         ]);
-    }
-    
-     /**
-     * @Route("/challenges-for-report", name="challenges_for_report")
-     */
-    public function challengesForReport(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $taskAssigns = $taskAssignRepository->findAll();
-         return $this->render('operational_task/challenges_for_report.html.twig', [
-             'taskAssigns' => $taskAssigns,
-         ]);
-        dd($taskAssign);
-        
-    }
+    }    
 }

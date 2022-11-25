@@ -89,7 +89,7 @@
 										<th>Weight</th>
 										<th>Initiative</th>
 										<th>Weight</th>
-										<th colspan="12">Success indicators(Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}})</th>
+										<th colspan="13">Success indicators(Total Cascade Initiative={{totalInitiative}},Suitable Initiative={{suitableInitiatives|length}})</th>
 									</tr>
 									<tr>
 										<th></th>
@@ -109,7 +109,7 @@
 										<th>Q4A</th>
 
 										<th>Remarks</th>
-										<th>Task List</th>
+                                                                                <th colspan="2">Action</th>
 									</tr>
 								</thead>
 								{% if value %}
@@ -140,11 +140,36 @@
 
 														<td></td>
 														<td>
-															<button class="btn btn-sm btn-danger taskList" title="Task List" data-suitableinitiative="{{principal.suitableInitiative.id}}" type="button">
+															<button class="btn btn-sm btn-info taskList" title="Task List" data-suitableinitiative="{{principal.suitableInitiative.id}}" type="button">
 																<i class="fa fa-tasks"></i>
-															</button>
+                                                                                                                        </button> 
 														</td>
+                                                                                                                {% set suitable_initiative = [] %}
+                                                                                                                 {%  for su_oprational in suitable.suitableOperationals %}
+                                                                                                                
+                                                                                                                    {% if suitable.id not in suitable_initiative%}
+                                                                                                                    {% if su_oprational.status == 1%}
+                                                                                                                        <td>
+                                                                                                                           {% if is_granted("vw_usr_lst") or  is_granted("vw_usr_grp")  %}
+                                                                                                                            <a class="btn btn-sm btn-danger" title="Revise plan" href="{{path('plan_revision',{'suitinitiative':principal.suitableInitiative.id})}}"  type="button">
+                                                                                                                                <i class="fa fa-retweet"></i> 	
 
+                                                                                                                            </a>
+                                                                                                                            {% endif %}
+                                                                                                                        </td>
+                                                                                                                        {% set suitable_initiative  = suitable_initiative |merge([suitable.id]) %}
+                                                                                                                     {% else %}
+                                                                                                                         <td>  
+                                                                                                                        {{ 'modifiable' }}
+                                                                                                                         </td>
+                                                                                                                        {% set suitable_initiative  = suitable_initiative |merge([suitable.id]) %}
+                                                                                                                     {% endif %}
+                                                                                                                    
+                                                                                                                     {% endif %}
+                                                                                                               
+                                                                                                                            
+                                                                                                                {% endfor %}
+ 
 													</tr>
 												{% endif %}
 											{% endfor %}

@@ -64,7 +64,7 @@ class PlanController extends AbstractController
 
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser(), $delegationUser);
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
-        if ($request->query->get('office') && $request->query->get('planyear')) {
+        if ($request->query->get('office') && $request->query->get('planyear')) { 
 
             $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
@@ -80,7 +80,7 @@ class PlanController extends AbstractController
             $numberOfYearQuarter = $planningyear->getNumberOfQuarter();
 
 
-            if ($request->query->get('initiative')) {
+            if ($request->query->get('initiative')) { 
 
 
 

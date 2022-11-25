@@ -129,7 +129,7 @@
 									{% for taskCategory in taskCategorys %}
 										{% if taskCategory.isCore == 1 %}
 
-											{% if countCore < 100  %}
+							{#				{% if countCore < 100  %}
 												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
 													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 													Prepare
@@ -147,7 +147,7 @@
 														{{taskCategory.name}}
 														Task</a>
 												{% endif %}
-											{% endif %}
+											{% endif %}#}
 										{% else %}
 
 											{% if countWeight < 100  %}
@@ -155,7 +155,7 @@
 												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="">
 													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 													Create
-													{{taskCategory.name}}
+{#													{{taskCategory.name}}#}
 													Task</a>
 											{% endif %}
 											{% if countWeight >= 100 %}

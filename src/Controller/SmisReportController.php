@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\PlanningYearRepository;
+use App\Repository\SuitableOperationalRepository;
+use App\Repository\TaskAssignRepository;
 
 
 class SmisReportController extends AbstractController
@@ -746,5 +748,91 @@ class SmisReportController extends AbstractController
             'principalOffices' => $data,
 
         ]);
+    }
+    /**
+     * @Route("/plan-revision", name="plan_revision")
+     */
+    public function planRevisin(Request $request, PaginatorInterface $paginator,SuitableOperationalRepository $suitableOperationalRepository) {
+          $em = $this->getDoctrine()->getManager();
+        if ($request->query->get('suitinitiative')) {
+             $suitinitiative = $em->getRepository(SuitableInitiative::class)->find($request->query->get('suitinitiative'));
+            dump($suitinitiative);
+             $prinipal_id = $suitinitiative->getPrincipalOffice()->getID();
+             $suitableOprationals = $suitableOperationalRepository->getBySuitableInitiatveOnly($suitinitiative);
+             foreach ($suitableOprationals as $suitableOprational) {
+                 $suitableOprational->setStatus(0);
+                 $em->flush();
+             }
+        }
+     return $this->redirectToRoute('score_report_child_principal');
+    }
+    /**
+     * @Route("/challenges-for-report", name="challenges_for_report")
+     */
+    public function challengesForReport(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+       // $taskAssigns = $taskAssignRepository->findAll();
+          $goals = $this
+    ->getDoctrine()
+    ->getRepository('\App\Entity\Goal')
+    ->createQueryBuilder('gol')
+    ->leftJoin('gol.objectives', 'ob')
+    ->leftJoin('ob.keyPerformanceIndicators', 'kpi')
+    ->leftJoin('kpi.initiatives', 'I')
+    ->leftJoin('I.suitableInitiatives', 'SI')
+    ->leftJoin('SI.suitableOperationals', 'OSI')
+    ->leftJoin('OSI.planValue', 'OPAcomplish')
+    ->leftJoin('OPAcomplish.performerTasks', 'PTask')
+    ->leftJoin('PTask.taskAssigns', 'TaskA')
+    ->where('TaskA.challenge is not null')
+    ->andwhere('TaskA.challenge!=:none')
+    ->andwhere('TaskA.challenge!=:useless1')
+    ->setParameter('none', 'none')
+    ->setParameter('useless1', 'N/A')
+    ->getQuery()
+    ->getResult();
+//    dd($goals);
+//foreach ($goals as $goal) {
+//            foreach ($goal->getobjectives() as $o) {
+//                foreach ($o->getkeyPerformanceIndicators() as $k) {
+//                    foreach ($k->getinitiatives() as $i) {
+//                        foreach ($i->getsuitableInitiatives() as $si) {
+//                            foreach ($si->getoperationalInitiatives() as $osi) {
+//                                echo($osi->id);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }//dd();
+
+        $taskAssigns = $this
+    ->getDoctrine()
+    ->getRepository('\App\Entity\TaskAssign')
+    ->createQueryBuilder('TaskA')
+    ->leftJoin('TaskA.PerformerTask', 'performTask')
+    ->leftJoin('performTask.operationalPlanningAcc', 'OPA')
+    ->leftJoin('OPA.operationalSuitable', 'OS')
+    ->leftJoin('OS.suitableInitiative', 'SI')
+    ->leftJoin('SI.initiative', 'I')
+    ->where('TaskA.challenge is not null')
+    ->andwhere('TaskA.challenge!=:none')
+    ->andwhere('TaskA.challenge!=:useless1')
+    ->setParameter('none', 'none')
+    ->setParameter('useless1', 'N/A')
+    ->orderBy('SI.initiative')
+    ->getQuery()
+    ->getResult();
+          $data = $paginator->paginate(
+            $taskAssigns,
+            $request->query->getInt('page', 1),
+            15
+        );
+         return $this->render('smis_report/challenges_for_report.html.twig', [
+             'taskAssigns' => $data,
+         ]);
+        
+        
     }
 }
