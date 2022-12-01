@@ -136,6 +136,23 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
 
             ->getResult();
     }
+    
+    public function findTaskUsersListByAssiner($value)
+    {
+        return $this->createQueryBuilder('taskacc')
+            ->leftJoin('taskacc.taskAssign', 'tasign')
+            ->leftJoin('tasign.PerformerTask', 'pt')
+            ->leftJoin('pt.taskCategory', 'ta')
+            ->andWhere('pt.createdBy = :val')
+            ->andWhere('tasign.type < 3 ')
+            ->andWhere('tasign.status > 4 ')
+            ->andWhere('ta.isCore = 0')
+            ->setParameter('val', $value)
+            ->orderBy('tasign.id', 'ASC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 
 
     // /**

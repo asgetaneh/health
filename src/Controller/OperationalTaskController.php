@@ -304,7 +304,7 @@ class OperationalTaskController extends AbstractController
             }
         }
         $operationalSuitables = $em->getRepository(SuitableOperational::class)->findSuitableInitiatve($operationalOffice, $currentYear);
-        // dd($operationalSuitables);
+         //dd($currentYear);
         $operationalPlanningAccomplishments = $em->getRepository(OperationalPlanningAccomplishment::class)->findAll();
         $data = $paginator->paginate(
             $operationalSuitables,
@@ -666,41 +666,81 @@ class OperationalTaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $principal = $request->request->get('principal');
         if ($request->request->get('reportAvail')) {
-            $principal = $request->request->get('principal');
-            $percent = 0;
-            $reportValue = $request->request->get('reportValue');
+            $taskAccomplishments = $request->request->get('taskAccomplishment');
             $accompValue = $request->request->get('accompValue');
             $reportValueSocial = $request->request->get('reportValueSocial');
-            $accompValueSocial = $request->request->get('accompValueSocial');
+            foreach ($taskAccomplishments as $key => $id) {
+               $taskAccomplishment = $taskAccomplishmentRepository->find($id);
+                echo $id.'--'.$accompValue[$key].'<br/>';
+               
+                if ($accompValue[$key] < 0) {
+                    $this->addFlash('danger', 'Report value must be 0 or Postive Number !');
+                    return $this->redirectToRoute('performer_task_index');
+                 }
+                if ($accompValue[$key] == 0) {
+                    $taskAccomplishment->setAccomplishmentValue(0);
+                     if ($reportValueSocial) {
+                        $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                    }
+                } else {
+                    $taskAccomplishment->setAccomplishmentValue($accompValue[$key]);
+                    if ($reportValueSocial) {
+                        $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+                       /// $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+                    }
+                }
+            
+            $percent = 0;
             $quality = $request->request->get('quality');
-            $ids = $request->request->get('taskAccomplishmentId');
+            //$ids = $request->request->get('taskAccomplishmentId');
             $evaluation = new Evaluation();
-            $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
+            
             $planning = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc();
             $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice();
             $quarter = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter();
             $performerTaskId = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getId();
-            $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
+            $total_expected = 0;
+            $total_accomplished = 0;
+             foreach ($planning->getPerformerTasks() as $PerformerTask) {
+                 $weight_t = $PerformerTask->getWeight();
+                foreach ($PerformerTask->getTaskAssigns() as $TaskAssign) {
+                    foreach ($TaskAssign->getTaskAccomplishments() as $TaskAccomplishment) {
+                        $expected = $TaskAccomplishment->getExpectedValue()*$weight_t;
+                        $total_expected = $total_expected+$expected;
+                         $accomplished = $TaskAccomplishment->getAccomplishmentValue()*$weight_t;
+                        $total_accomplished = $total_accomplished+$accomplished;
+                       echo 'expected ='.$total_expected.'--acc ='.$total_accomplished.'<br/>';
+                    }
+
+                }
+
+            } //echo 'expected ='.$total_expected; dd($taskAccomplishments);
+              //echo ($total_expected.'<br/>');dd($total_accomplished);
+            $percent = (($accompValue[$key] * 100) / $taskAccomplishment->getExpectedValue());
             $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
-            if ($accompValue < 0) {
-                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
-                return $this->redirectToRoute('performer_task_index');
-            }
-            if ($accompValue == 0) {
-                $taskAccomplishment->setAccomplishmentValue(0);
-                $taskAccomplishment->setReportedValue(0);
-                if ($reportValueSocial) {
-                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
-                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
-                }
-            } else {
-                $taskAccomplishment->setAccomplishmentValue($accompValue);
-                $taskAccomplishment->setReportedValue($reportValue);
-                if ($reportValueSocial) {
-                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
-                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
-                }
-            }
+            
+            
+//            if ($accompValue < 0) {
+//                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
+//                return $this->redirectToRoute('performer_task_index');
+//            }
+//            if ($accompValue == 0) {
+//                $taskAccomplishment->setAccomplishmentValue(0);
+//                $taskAccomplishment->setReportedValue(0);
+//                if ($reportValueSocial) {
+//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+//                }
+//            } else {
+//                $taskAccomplishment->setAccomplishmentValue($accompValue);
+//                $taskAccomplishment->setReportedValue($reportValue);
+//                if ($reportValueSocial) {
+//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+//                }
+//            }
+            
+            
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
             $evaluation->setQuantity($percent);
@@ -714,15 +754,15 @@ class OperationalTaskController extends AbstractController
             $taskUser->setType(3);
             $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
             $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
-            $expectedValue = $taskAccomplishment->getExpectedValue();
+            $expectedValue = $taskAccomplishment->getExpectedValue();//dd($expectedValue);
              //dd($planning, $operationalOffice, $accompValue, $quarter);
-            $to = $planning->getPlanValue() * $accompValue; 
-            $accompValueto = $to / $expectedValue;
+            $to = $planning->getPlanValue() * $total_accomplished; 
+            $accompValueto = $to / $total_expected;
             $accompValuetott = round($accompValueto, 2);//dd($accompValueto);
             // if task is Suportive can not insert in operationalSuitable
 //            if ($performerTask->getTaskCategory()->getIsCore()) {
                 // $performerTask->setStatus(0);
-                // dd($performerTaskId);
+                 //dd($accompValuetott);
                 $plannings->setAccompValue($accompValuetott);
                 $operationalSuitable = $plannings->getOperationalSuitable();
 //            }
@@ -736,39 +776,161 @@ class OperationalTaskController extends AbstractController
             $operationalSuitableInitiative->setStatus(1);
             $em->persist($operationalSuitableInitiative);
             $em->flush();
-            $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
-            if ($principal) {
-                return $this->redirectToRoute('operational_task_principal_show');
-            } else {
-                return $this->redirectToRoute('operational_task_show');
+          
             }
+          $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
+        return $this->redirectToRoute('operational_task_show_detail');
         }
-        $taskAssign = $request->request->get('taskAssign');
-        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
-        $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
-        foreach ($taskAssigns as $value) {
-            $endDate = $value->getEndDate();
-            $endDates = explode('/', $endDate);
-            $date = new DateTime();
+//        $taskAssign = $request->request->get('taskAssign');
+//        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
+//        $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
+//        foreach ($taskAssigns as $value) {
+//            $endDate = $value->getEndDate();
+//            $endDates = explode('/', $endDate);
+//            $date = new DateTime();
+//        }dd($taskAssign);
+//        $task = $taskAssignRepository->find($taskAssign);
+//        $iniName = $task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
+//        if ($task->getType() < 2) {
+//            $task->setType(2);
+//            $em->flush();
+//        }
+         //dd($taskAccomplishments);
+           
+        $user = $this->getUser();
+        $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
+        if ($delegatedUser) {
+            $delegatedBy = $delegatedUser->getDelegatedBy();
+            $user = $delegatedBy;
         }
-        $task = $taskAssignRepository->find($taskAssign);
-        $iniName = $task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
-        if ($task->getType() < 2) {
-            $task->setType(2);
-            $em->flush();
-        }
+        $taskAccomplishments = $taskAccomplishmentRepository->findTaskUsersListByAssiner($user);//dd($taskAccomplishments);
+        //$taskAssigns = $taskAccomplishments->getTaskAssign();
         $social = 0;
-        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
-            if ($va->getName()) {
-                $social = 1;
-            }
-        }
+//        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
+//            if ($va->getName()) {
+//                $social = 1;
+//            }
+//        }
         return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
-            'taskAssigns' => $taskAssigns,
+            //'taskAssigns' => $taskAssigns,
             'social' => $social,
-            'iniName' => $iniName,
+//            'iniName' => $iniName,
             'principal' => $principal
         ]);
     }    
+//    /**
+//     * @Route("/show_detail", name="operational_task_show_detail")
+//     */
+//    public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
+//    {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $principal = $request->request->get('principal');
+//        if ($request->request->get('reportAvail')) {
+//            $principal = $request->request->get('principal');
+//            $percent = 0;
+//            $reportValue = $request->request->get('reportValue');
+//            $accompValue = $request->request->get('accompValue');
+//            $reportValueSocial = $request->request->get('reportValueSocial');
+//            $accompValueSocial = $request->request->get('accompValueSocial');
+//            $quality = $request->request->get('quality');
+//            $ids = $request->request->get('taskAccomplishmentId');
+//            $evaluation = new Evaluation();
+//            $taskAccomplishment = $taskAccomplishmentRepository->find($ids);
+//            $planning = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc();
+//            $operationalOffice = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getOperationalOffice();
+//            $quarter = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getQuarter();
+//            $performerTaskId = $taskAccomplishment->getTaskAssign()->getPerformerTask()->getId();
+//            $percent = (($accompValue * 100) / $taskAccomplishment->getExpectedValue());
+//            $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
+//            if ($accompValue < 0) {
+//                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
+//                return $this->redirectToRoute('performer_task_index');
+//            }
+//            if ($accompValue == 0) {
+//                $taskAccomplishment->setAccomplishmentValue(0);
+//                $taskAccomplishment->setReportedValue(0);
+//                if ($reportValueSocial) {
+//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+//                }
+//            } else {
+//                $taskAccomplishment->setAccomplishmentValue($accompValue);
+//                $taskAccomplishment->setReportedValue($reportValue);
+//                if ($reportValueSocial) {
+//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
+//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
+//                }
+//            }
+//            $evaluation->setEvaluateUser($evaluateUser);
+//            $evaluation->setTaskAccomplishment($taskAccomplishment);
+//            $evaluation->setQuantity($percent);
+//            if ($quality) {
+//                # code...
+//                $evaluation->setQuality($quality);
+//            } else {
+//                $evaluation->setQuality(0);
+//            }
+//            $taskUser = $taskAssignRepository->findOneBy(['id' => $taskAccomplishment->getTaskAssign()->getId()]);
+//            $taskUser->setType(3);
+//            $plannings = $em->getRepository(OperationalPlanningAccomplishment::class)->find($planning->getId());
+//            $performerTask = $em->getRepository(PerformerTask::class)->find($performerTaskId);
+//            $expectedValue = $taskAccomplishment->getExpectedValue();dd($expectedValue);
+//             //dd($planning, $operationalOffice, $accompValue, $quarter);
+//            $to = $planning->getPlanValue() * $accompValue; 
+//            $accompValueto = $to / $expectedValue;
+//            $accompValuetott = round($accompValueto, 2);//dd($accompValueto);
+//            // if task is Suportive can not insert in operationalSuitable
+////            if ($performerTask->getTaskCategory()->getIsCore()) {
+//                // $performerTask->setStatus(0);
+//                 dd($accompValuetott);
+//                $plannings->setAccompValue($accompValuetott);
+//                $operationalSuitable = $plannings->getOperationalSuitable();
+////            }
+//            // $operationalSuitable->setStatus(1);
+//            $operationalSuitableInitiative = new OperationalSuitableInitiative();
+//            $operationalSuitableInitiative->setOperationalPlanning($planning);
+//            $operationalSuitableInitiative->setOperationalOffice($operationalOffice);
+//            $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
+//            $operationalSuitableInitiative->setQuarter($quarter);
+//            // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
+//            $operationalSuitableInitiative->setStatus(1);
+//            $em->persist($operationalSuitableInitiative);
+//            $em->flush();
+//            $this->addFlash('success', 'Successfully Operational Manager set Acomplisment value  !');
+//            if ($principal) {
+//                return $this->redirectToRoute('operational_task_principal_show');
+//            } else {
+//                return $this->redirectToRoute('operational_task_show');
+//            }
+//        }
+//        $taskAssign = $request->request->get('taskAssign');
+//        $taskAccomplishments = $taskAccomplishmentRepository->findBy(['taskAssign' => $taskAssign]);
+//        $taskAssigns = $taskAssignRepository->findBy(['id' => $taskAssign]);
+//        foreach ($taskAssigns as $value) {
+//            $endDate = $value->getEndDate();
+//            $endDates = explode('/', $endDate);
+//            $date = new DateTime();
+//        }
+//        $task = $taskAssignRepository->find($taskAssign);
+//        $iniName = $task->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getName();
+//        if ($task->getType() < 2) {
+//            $task->setType(2);
+//            $em->flush();
+//        }
+//        $social = 0;
+//        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
+//            if ($va->getName()) {
+//                $social = 1;
+//            }
+//        }
+//        return $this->render('operational_task/showDetail.html.twig', [
+//            'taskAccomplishments' => $taskAccomplishments,
+//            'taskAssigns' => $taskAssigns,
+//            'social' => $social,
+//            'iniName' => $iniName,
+//            'principal' => $principal
+//        ]);
+//    }    
 }

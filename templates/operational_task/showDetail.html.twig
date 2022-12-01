@@ -94,7 +94,7 @@
 
 <div class="pull-right" style="margin-bottom:20px; margin-top:10px;">
 					<span class="badge badge-info text-white">
-						{{iniName}}</span>
+						{{'iniName'}}</span>
 				</div>
 				<div class="widget-body">
 					<div class="widget-toolbox" id="widget-toolbox-1">
@@ -114,7 +114,7 @@
 						<div class="table-responsive">
 							<form action="{{path('operational_task_show_detail')}}" method="post">
 
-								<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+				{#				<table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 									<thead>
 										<tr>
 											<th>#</th>
@@ -132,7 +132,7 @@
 
 									<tbody>
 										{% set count = 0 %}
-										{% for taskAssign in taskAssigns %}
+										{% for taskAssign in taskAccomplishment.taskAssign %}
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{ count}}</td>
@@ -151,31 +151,39 @@
 													{% endif %}
 												</td>
 
-												<td>
+												<td>#}
 
 													<table class=" table table-bordered table-responsive-xg table-hover">
 														<tr>
-															<th>Measurement
-															</th>
-															<th>Measurement Description
-															</th>
-															<th>Expected Value
-															</th>
-															<th>Report Value
-															</th>
-															<th>Accomplishment Value
-															</th>
+															<th>Initiative </th>
+															<th>Task name</th>
+                                                                                                                        <th>Performer Name</th>
+															<th>Measurement</th>
+															<th>Measurement Description</th>
+															<th>Weight </th>
+															<th>Start Date </th>
+															<th>End Date </th>
+															<th>Challenges </th>
+															<th>Expected Value</th>
+															<th>Report Value</th>
+															<th>Accomplishment Value</th>
 
 
 														</tr>
 														{% for taskAccomplishment in taskAccomplishments   %}
 															<tr>
-																{% if taskAssign.id == taskAccomplishment.taskAssign.id  %}
-
+																{% if taskAccomplishment.taskAssign.id  %}
+                                                                                                                                        <td>{{ taskAccomplishment.taskAssign.performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.initiative }}</td>
+                                                                                                                                        <td>{{ taskAccomplishment.taskAssign.performerTask.name }}</td>
+                                                                                                                                        <td>{{ taskAccomplishment.taskAssign.assignedTo.userInfo }}</td>
 																	<td>{{ taskAccomplishment.measurement.name }}</td>
 																	<input type="hidden" name="taskAccomplishmentId" value="{{taskAccomplishment.id}}">
 																	<td>{{ taskAccomplishment.measureDescription }}</td>
-																	<td>
+                                                                                                                                        <td>{{ taskAccomplishment.taskAssign.performerTask.weight  }}</td>
+																	<td>{{ taskAccomplishment.taskAssign.startDate  }}</td>
+                                                                                                                                        <td>{{ taskAccomplishment.taskAssign.endDate }}</td>
+                                                                                                                                         <td>{{ taskAccomplishment.taskAssign.challenge}}</td>
+                                                                                                                                        <td>
 																		{% if social == 1 %}
 																			Male=
 																		{% endif %}
@@ -216,14 +224,14 @@
 																	{% else %}
 																		<td>
 																			{% if social == 1  %}
-
 																				Male
 																			{% endif %}
-																			<input type="number" name="accompValue" class="form-conrol" required>
+                                                                                                                                                        <input type="hidden" name="taskAccomplishment[]" class="form-conrol" value="{{taskAccomplishment.id}}" required>
+																			<input type="number" name="accompValue[]" class="form-conrol" required>
 																			<input type="hidden" name="reportAvail" class="form-conrol" value="1" required>
 
 																			{% if social == 1  %}
-																				Female<input type="number" name="accompValueSocial" class="form-conrol" required>
+																				Female<input type="number" name="accompValueSocial[]" class="form-conrol" required>
 
 
 																			{% endif %}
@@ -241,7 +249,7 @@
 
 													</table>
 
-												</td>
+												{#</td>
 
 											</tr>
 										{% else %}
@@ -251,7 +259,7 @@
 										{% endfor %}
 
 									</tbody>
-								</table>
+								</table>#}
 
 								<input type="hidden" name="principal" value="{{principal}}">
 

@@ -163,7 +163,7 @@
 													<i class="ace-icon fa fa-users bigger-110 blue "></i>
 
 													Assign
-													{{taskCategory.name}}
+{#													{{taskCategory.name}}#}
 													Task</a>
 
 
@@ -230,7 +230,7 @@
 												{% if social == 1 %}
 													<th>Social</th>
 												{% endif %}
-												<th>Task Category</th>
+{#												<th>Task Category</th>#}
 
 												<th>Task Description</th>
 												<th>Task Weight</th>
@@ -252,11 +252,11 @@
 
 														<td>{{ performerTask.social }}</td>
 													{% endif %}
-													{% if performerTask.taskCategory  %}
+													{#{% if performerTask.taskCategory  %}
 														<td>{{ performerTask.taskCategory.name}}</td>
 													{% else %}
 														<td>{{ performerTask.taskCategory.name}}</td>
-													{% endif %}
+													{% endif %}#}
 
 
 													<td>{{ performerTask.description }}</td>
@@ -273,7 +273,7 @@
 																</th>
 																<th>Penality Days</th>
 																<th>Quantity</th>
-																<th>Reason</th>
+																<th>Rejected Reason</th>
 
 															</tr>
 															{% for taskAssign in taskAssigns %}
@@ -321,7 +321,7 @@
 														</table>
 													</td>
 													<td>
-														{% if not taskAssigns %}
+{#														{% if not taskAssigns %}#}
 															{% if not performerTask.taskCategory.isCore %}
 
 
@@ -329,7 +329,7 @@
 																	<i class="fa fa-edit"></i>
 																</button>
 															{% endif %}
-														{% endif %}
+{#														{% endif %}#}
 													</td>
 													<input type="hidden" class="countWeight1" value="{{countWeight}}">
 													<input type="hidden" class="user" value="{{app.user.id}}">

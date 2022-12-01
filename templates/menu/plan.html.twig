@@ -1,4 +1,4 @@
-<li class="active open sublist">
+    <li class="active open sublist">
 
 
 	<a href="#" class="dropdown-toggle " style="background:#3f87a6; color: #f5f6f8">
@@ -114,7 +114,7 @@
 			{% if is_granted('opr_task_list') %}
 
 				<li>
-					<a href="{{ path('operational_task_show') }}" style="background:#3f87a6; color: #f5f6f8">
+					<a href="{{ path('operational_task_show_detail') }}" style="background:#3f87a6; color: #f5f6f8">
 						<b class="fa fa-caret-right"></b>
 						{% set oper = 0 %}
 						{% for item in app.user.operationalManagers|filter(pr=> pr.isActive == 1) %}

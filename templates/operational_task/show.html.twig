@@ -76,12 +76,14 @@
 									<tr>
 										<th>#</th>
 										<th>TaskName</th>
-										<th>Initiative</th>
+										<th>Quantity</th>
+										
 										<th>Performer Name</th>
 										<th>StartDate</th>
 										<th>EndDate</th>
 										<th>Penality Days</th>
 										<th>Weight</th>
+                                                                                <th>Initiative</th>
 										<th>actions</th>
 									</tr>
 								</thead>
@@ -92,14 +94,16 @@
 											{% set count = count + 1 %}
 											<td>{{ count}}</td>
 											<td>{{ taskAssign.performerTask.name }}</td>
-											<td>{{ taskAssign.performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.initiative }}</td>
-
+											<td>{{ taskAssign.expectedvalue }}</td>
+											
 											<td>{{taskAssign.assignedTo.userInfo}}</td>
 
 											<td>{{ taskAssign.startDate  }}</td>
 											<td>{{ taskAssign.endDate  }}</td>
 											<td>{{ taskAssign.timeGap }}</td>
 											<td>{{ taskAssign.performerTask.weight }}</td>
+                                                                                        <td>{{ taskAssign.performerTask.operationalPlanningAcc.operationalSuitable.suitableInitiative.initiative }}</td>
+
 											<td>
 												<form action="{{path('operational_task_show_detail')}}" method="post">
 
