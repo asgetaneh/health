@@ -57,7 +57,61 @@ class PlanController extends AbstractController
     public function index(PlanRepository $planRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $em = $this->getDoctrine()->getManager();
+        $filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add("planyear", EntityType::class, [
+                'class' => PlanningYear::class,
+                'multiple' => false,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
 
+            ])
+            ->add("initiative", EntityType::class, [
+                'class' => Initiative::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("kpi", EntityType::class, [
+                'class' => KeyPerformanceIndicator::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("strategy", EntityType::class, [
+                'class' => Strategy::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("objective", EntityType::class, [
+                'class' => Objective::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("goal", EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'placeholder' => "All",
+                'multiple' => false,
+                'required' => false,
+
+            ])
+
+            ->getForm();
+        $filterForm->handleRequest($request);
+       
         $delegation = $em->getRepository(Delegation::class)->findDelegationUser($this->getUser());
 
         $delegationUser = $this->getDelegationUser($delegation);
@@ -65,7 +119,7 @@ class PlanController extends AbstractController
         $offices = $em->getRepository(PrincipalOffice::class)->findOfficeByUser($this->getUser(), $delegationUser);
         $activePlanningYear = $em->getRepository(PlanningYear::class)->findBy(['isActive' => 1]);
         if ($request->query->get('office') && $request->query->get('planyear')) { 
-
+            $a = 10;
             $planningyear = $em->getRepository(PlanningYear::class)->find($request->query->get('planyear'));
             $principaloffice = $em->getRepository(PrincipalOffice::class)->find($request->query->get('office'));
             $parentOffice = Helper::getParentOffice($principaloffice->getId(), $em);
@@ -136,7 +190,8 @@ class PlanController extends AbstractController
                     'isAllActive' => $isallActive,
                     'quarters' => $planningquarters,
                     'recoverInitiatives' => $recoverData,
-                    'operationalPlans' => $operationalPlans
+                    'operationalPlans' => $operationalPlans,
+                    'filterForm' => $filterForm->createView()
 
 
                 ]);
@@ -151,15 +206,16 @@ class PlanController extends AbstractController
                 'initiatives' =>  $initiatives,
                 'pricipaloffice' => $principaloffice,
                 'planyear' => $planningyear,
-                'recoverInitiatives' => $recoverData
-
+                'recoverInitiatives' => $recoverData,
+                 'filterForm' => $filterForm->createView()
             ]);
         }
 
         return $this->render('plan/index.html.twig', [
 
             'planningYears' =>  $activePlanningYear,
-            'offices' => $offices
+            'offices' => $offices,
+            'filterForm' => $filterForm->createView()
         ]);
     }
 

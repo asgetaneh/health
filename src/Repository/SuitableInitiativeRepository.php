@@ -147,7 +147,8 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
             ->join('i.planningYear', 'py')
             ->andWhere('po.id in (:office)')
             ->andWhere('py.id = :planningyearid')
-            // ->andwhere('i.isActive = 1')
+//             ->andwhere('i.isActive = 1')
+//             ->andwhere('i.status = 0')
             ->setParameter('office', $office)
             ->setParameter('planningyearid', $planningyear);
         return $qb->getQuery()->getResult();
@@ -158,8 +159,9 @@ class SuitableInitiativeRepository extends ServiceEntityRepository
         $qb
              ->join('i.planningYear', 'py')
              ->andWhere('py.id = :planningyearid')
+             
             // ->andwhere('i.isActive = 1')
-             ->setParameter('planningyearid', $planningyear);
+              ->setParameter('planningyearid', $planningyear);
         return $qb->getQuery()->getResult();
     }
 

@@ -8,86 +8,6 @@
 
 {% block body %}
     <div class="widget-main padding-16">
-  {#      <div class="row">
-            <div class="search-area well col-md-12">
-
-                <div class="row">
-                    {{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
-                    <div class="col-md-4">
-                        <div class="form-group form-group-sm">
-                            {{ form_label(filterform.goal,'Goal') }}
-                            {{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'Choose goal' }}) }}
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.perspective,'Perspective') }}
-                            {{ form_widget(filterform.perspective,{'attr':{'class':'select2 form-control','data-placeholder':'Choose perspective' }}) }}
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.objective,'Objective') }}
-                            {{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'Choose objective' }}) }}
-                        </div>
-                    </div>
-
-                    <div class="clearfix "></div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.strategy,'Strategy') }}
-                            {{ form_widget(filterform.strategy,{'attr':{'class':'select2 form-control','data-placeholder':'Choose strategy' }}) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.kpi,'KPI') }}
-                            {{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'Choose strategy' }}) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.principaloffice,'Responsible Office') }}
-                            {{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'Choose responsible office' }}) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.category,'Initiative Category') }}
-                            {{ form_widget(filterform.category,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Initiative Category' }}) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.coreTask,'Core Task ') }}
-                            {{ form_widget(filterform.coreTask,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Task Status' }}) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(filterform.task,'Initiative Core Task') }}
-                            {{ form_widget(filterform.task,{'attr':{'class':'select2 form-control','data-placeholder':'Choose Task ' }}) }}
-                        </div>
-                    </div>
-
-
-
-                    <div class="col-md-2">
-                        <div class="form-group" style="margin-top:25px;">
-                            <input type="submit" class="btn btn-primary btn-sm " value="Filter">
-                        </div>
-                    </div>
-
-
-                    {{ form_end(filterform) }}
-                </div>
-
-
-            </div>
-
-        </div>#}
         <div class="table-responsive">
             <form class="form-inline" method="get" style="display:inline;">
 
@@ -100,78 +20,137 @@
                     </div>
                 </div>
             </form>
-            <form action="{{path('print_initiative')}}" method="post">
 
-                <button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
-                    <i class=" fa fa-file-pdf text-danger"></i>
-                    PDF
-                </button>
-            </form>
-            <form action="{{path('excel_initiative')}}" method="post">
+            {# <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+                 <thead>
+                     <tr>
+                         <th>#</th>
+                         <th>{% trans %}Challenge{% endtrans %}</th>
+                         <th>{% trans %}Task{% endtrans %}</th>
+                         <th>{% trans %}Initiative {% endtrans %}</th> 
+                         <th>KPI</th>
+                         <th>Objective</th>
+                         <th>Goal</th>
+                         <th>
+                             actions
+                         </th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {% set count =  goals.getItemNumberPerPage() * (goals.getCurrentPageNumber() -1) %}
+                     {% for goal in goals %}
+                         {% for objective in goal.objectives %}
+                             {% for kpi in objective.keyPerformanceIndicators %}
+                                 {% for ini in kpi.initiatives %}
+                                     {% for SI in ini.suitableInitiatives %}
+                                         {% for sop in SI.suitableOperationals %}
+                                             {% for opacc in sop.planValue %}
+                                                 {% for ptask in opacc.performerTasks %}
+                                                     {% for tasign in ptask.taskAssigns %}
+                                                         {% if  tasign.challenge!= null and tasign.challenge!= 'no' and tasign.challenge!='none' and tasign.challenge!='N/A'%}
+                                                         {% set count = count + 1 %}
+                                                         <tr>
+                                                             <td> {{ count }}</td>
+                                                             <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal }}</td>
+                                                             <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective }}</td>
+                                                             <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator }}</td>
+                                                             <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative }}</td>
+                                                             <td>  {{ tasign.challenge }}</td>
+                                                         {% endif %}
+                                                         {% endfor %}
+                                                     {% endfor %}
+                                                 {% endfor %}
+                                             {% endfor %}
+                                         {% endfor %}
+                                     {% endfor %}
+                                 {% endfor %}
+                             {% endfor %}
+                             </tr>
+  
+                     {% else %}
+                         <tr>
+                             <td colspan="7">no records found</td>
+                         </tr>
+                     {% endfor %}
+                 </tbody>
+             </table>#}
 
-                <button type="submit" formtarget="_blank" class="btn btn-app btn-success btn-xs pull-right" style="margin-bottom:30px;">
-                    <i class=" fa fa-file-ex-o"></i>
-                    EXCEL
-                </button>
-            </form>
-           {# <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>{% trans %}Challenge{% endtrans %}</th>
-                        <th>{% trans %}Task{% endtrans %}</th>
-                        <th>{% trans %}Initiative {% endtrans %}</th> 
-                        <th>KPI</th>
-                        <th>Objective</th>
-                        <th>Goal</th>
-                        <th>
-                            actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% set count =  goals.getItemNumberPerPage() * (goals.getCurrentPageNumber() -1) %}
-                    {% for goal in goals %}
-                        {% for objective in goal.objectives %}
-                            {% for kpi in objective.keyPerformanceIndicators %}
-                                {% for ini in kpi.initiatives %}
-                                    {% for SI in ini.suitableInitiatives %}
-                                        {% for sop in SI.suitableOperationals %}
-                                            {% for opacc in sop.planValue %}
-                                                {% for ptask in opacc.performerTasks %}
-                                                    {% for tasign in ptask.taskAssigns %}
-                                                        {% if  tasign.challenge!= null and tasign.challenge!= 'no' and tasign.challenge!='none' and tasign.challenge!='N/A'%}
-                                                        {% set count = count + 1 %}
-                                                        <tr>
-                                                            <td> {{ count }}</td>
-                                                            <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal }}</td>
-                                                            <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective }}</td>
-                                                            <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator }}</td>
-                                                            <td>   {{ tasign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative }}</td>
-                                                            <td>  {{ tasign.challenge }}</td>
-                                                        {% endif %}
-                                                        {% endfor %}
-                                                    {% endfor %}
-                                                {% endfor %}
-                                            {% endfor %}
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% endfor %}
-                            {% endfor %}
-                            </tr>
- 
-                    {% else %}
-                        <tr>
-                            <td colspan="7">no records found</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>#}
-            
-            
-            
-            
-            
+
+
+            <div class="row">
+                {{ form_start(filterform,{'attr': {'role':'form','class':' ' }}) }}
+                <div class="col-md-4">
+                    <div class="form-group form-group-sm">
+                        {{ form_label(filterform.goal,'Goal') }}
+                        {{ form_widget(filterform.goal,{'attr':{'class':'select2 form-control ','data-placeholder':'Choose goal' }}) }}
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(filterform.objective,'Objective') }}
+                        {{ form_widget(filterform.objective,{'attr':{'class':'select2 form-control','data-placeholder':'Choose objective' }}) }}
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(filterform.kpi,'KPI') }}
+                        {{ form_widget(filterform.kpi,{'attr':{'class':'select2 form-control','data-placeholder':'Choose kpi' }}) }}
+                    </div>
+                </div>
+                <div class="clearfix "></div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(filterform.initiative,'Initiative') }}
+                        {{ form_widget(filterform.initiative,{'attr':{'class':'select2 form-control','data-placeholder':'Choose initiative' }}) }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(filterform.principaloffice,'Responsible Office') }}
+                        {{ form_widget(filterform.principaloffice,{'attr':{'class':'select2 form-control','data-placeholder':'Choose responsible office' }}) }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(filterform.planyear,'plan year') }}
+                        {{ form_widget(filterform.planyear,{'attr':{'class':'select2 form-control','data-placeholder':'Choose plan year' }}) }}
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group" style="margin-top:25px;">
+                        <input type="submit" class="btn btn-primary btn-sm " value="Filter">
+                    </div>
+                </div>
+               {# <div class="col-md-4">
+                    <form action="{{path('print_initiative')}}" method="post">
+
+                        <button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
+                            <i class=" fa fa-file-pdf text-danger"></i>
+                            PDF
+                        </button>
+                    </form>
+                </div>#}
+               {# <div class="col-md-4">
+                    <form action="{{path('excel_initiative')}}" method="post">
+
+                        <button type="submit" formtarget="_blank" class="btn btn-app btn-success btn-xs pull-right" style="margin-bottom:30px;">
+                            <i class=" fa fa-file-ex-o"></i>
+                            EXCEL
+                        </button>
+                    </form>
+                </div>#}
+
+                {{ form_end(filterform) }}
+            </div>
+
             {% set taskArray = [] %}
             {% set InitiativeArray = [] %}
             {% set kpiArray = [] %}
@@ -205,49 +184,49 @@
                                     {{ taskAssign.challenge }}
                                 </td>
                                 {% if taskAssign.performertask.name in taskArray %}
-                                         <td> {{ "--" }}</td>
+                                    <td> {{ "--" }}</td>
                                 {% else  %}
                                     <td>
                                         {% set taskArray = taskArray|merge([taskAssign.performertask.name]) %}
                                         {{ taskAssign.performertask }}
                                     </td>
                                 {% endif %}
-                                 {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative in InitiativeArray %}
-                                         <td> {{ "--" }}</td>
+                                {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative in InitiativeArray %}
+                                    <td> {{ "--" }}</td>
                                 {% else  %}
                                     <td>
                                         {% set InitiativeArray = taskArray|merge([taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative]) %}
                                         {{ taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative }}
                                     </td>
                                 {% endif %}
-                                 {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator in  kpiArray %}
-                                         <td> {{ "--" }}</td>
+                                {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator in  kpiArray %}
+                                    <td> {{ "--" }}</td>
                                 {% else  %}
                                     <td>
                                         {% set kpiArray = taskArray|merge([taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator]) %}
                                         {{ taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator }}
                                     </td>
                                 {% endif %}
-                                 {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective in  ObjectiveArray %}
-                                         <td> {{ "--" }}</td>
+                                {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective in  ObjectiveArray %}
+                                    <td> {{ "--" }}</td>
                                 {% else  %}
                                     <td>
                                         {% set ObjectiveArray = taskArray|merge([taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective]) %}
                                         {{ taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective }}
                                     </td>
                                 {% endif %}
-                                
-                                 {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal in  GoalArray %}
-                                         <td> {{ "--" }}</td>
+
+                                {% if taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal in  GoalArray %}
+                                    <td> {{ "--" }}</td>
                                 {% else  %}
                                     <td>
                                         {% set GoalArray = taskArray|merge([taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal]) %}
                                         {{ taskAssign.performertask.operationalPlanningAcc.operationalSuitable.suitableInitiative.Initiative.keyPerformanceIndicator.objective.goal }}
                                     </td>
                                 {% endif %}
-                                
-                            
-                               
+
+
+
 
 
                             </tr>

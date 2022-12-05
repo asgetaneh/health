@@ -19,10 +19,14 @@ use App\Entity\SuitableOperational;
 use App\Entity\TaskAccomplishment;
 use App\Entity\TaskAssign;
 use App\Entity\TaskCategory;
+use App\Entity\KeyPerformanceIndicator;
+use App\Entity\Objective;
+use App\Entity\Goal;
 use App\Form\PlanningYearType;
 use App\Helper\DomPrint;
 use App\Helper\AmharicHelper;
 use App\Repository\TaskAccomplishmentRepository;
+use App\Repository\SmisSettingRepository;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -769,7 +773,7 @@ class SmisReportController extends AbstractController
     /**
      * @Route("/challenges-for-report", name="challenges_for_report")
      */
-    public function challengesForReport(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository, PaginatorInterface $paginator)
+    public function challengesForReport(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository,SmisSettingRepository $smisSettingRepositoty, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
        // $taskAssigns = $taskAssignRepository->findAll();
@@ -806,7 +810,59 @@ class SmisReportController extends AbstractController
 //                }
 //            }
 //        }//dd();
+$filterForm = $this->createFormBuilder()
+            ->setMethod('Get')
+            ->add("planyear", EntityType::class, [
+                'class' => PlanningYear::class,
+                'multiple' => TRUE,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
 
+            ])
+            ->add("initiative", EntityType::class, [
+                'class' => Initiative::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("kpi", EntityType::class, [
+                'class' => KeyPerformanceIndicator::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+           
+            ->add("objective", EntityType::class, [
+                'class' => Objective::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add("goal", EntityType::class, [
+                'class' => Goal::class,
+                'multiple' => true,
+                'placeholder' => 'Choose an planning year',
+                'required' => false,
+
+            ])
+            ->add('principaloffice', EntityType::class, [
+                'class' => PrincipalOffice::class,
+                'placeholder' => "All",
+                'multiple' => TRUE,
+                'required' => false,
+
+            ])
+
+            ->getForm();
+        $filterForm->handleRequest($request);
+        
+         if ($filterForm->isSubmitted()) {//dd();
+             $taskAssigns = $taskAssignRepository->search($filterForm->getData());
+        }else{
+        
         $taskAssigns = $this
     ->getDoctrine()
     ->getRepository('\App\Entity\TaskAssign')
@@ -824,6 +880,7 @@ class SmisReportController extends AbstractController
     ->orderBy('SI.initiative')
     ->getQuery()
     ->getResult();
+        }
           $data = $paginator->paginate(
             $taskAssigns,
             $request->query->getInt('page', 1),
@@ -831,6 +888,7 @@ class SmisReportController extends AbstractController
         );
          return $this->render('smis_report/challenges_for_report.html.twig', [
              'taskAssigns' => $data,
+              'filterform' => $filterForm->createView()
          ]);
         
         
