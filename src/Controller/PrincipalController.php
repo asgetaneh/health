@@ -19,6 +19,7 @@ use App\Entity\SuitableInitiative;
 use App\Helper\AmharicHelper;
 use App\Helper\DomPrint;
 use App\Repository\OperationalSuitableInitiativeRepository;
+use App\Repository\OperationalPlanningAccomplishmentRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAssignRepository;
 use App\Repository\PlanningYearRepository;
@@ -106,7 +107,7 @@ class PrincipalController extends AbstractController
     /**
      * @Route("/intiative_accomplishment/{id}", name="initiative_accomplishment_list")
      */
-    public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,  OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository): Response
+    public function acomplishmentList(Request $request, SuitableInitiative $suitableInitiative,  OperationalSuitableInitiativeRepository $operationalSuitableInitiativeRepository,OperationalPlanningAccomplishmentRepository $OperationalPlanningAccomplishmentRepository): Response
     {
         $em = $this->getDoctrine()->getManager();
         $socialcount = 0;
@@ -161,10 +162,13 @@ class PrincipalController extends AbstractController
         $currentQuarter = AmharicHelper::getCurrentQuarter($em);
          
         $operatioanlSuitables = $operationalSuitableInitiativeRepository->findplan($principalOffice, $suitableInitiative->getId(), $currentQuarter);
-        //dd($currentQuarter);
+       
+        $operatioanlplanningAcc = $OperationalPlanningAccomplishmentRepository->findReport($principalOffice, $suitableInitiative->getId(), $currentQuarter);
+       
         $planningAcc = $em->getRepository(PlanningAccomplishment::class)->findBy(['suitableInitiative' => $suitableInitiative->getId()]);
+       // dd($operatioanlplanningAcc);
         return $this->render('principal/initiative_accomplishment.html.twig', [
-            'operatioanlSuitables' => $operatioanlSuitables,
+            'operatioanlplanningAccc' => $operatioanlplanningAcc,
             'initiativeName' => $initiativeName,
             'remainingdays' => $remainingdays,
             'planningAcc' => $planningAcc,

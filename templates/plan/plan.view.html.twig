@@ -444,6 +444,7 @@
 															{% endfor %}
 
 															<td>
+                                                                                                                            {% if is_granted('plan_yearly_plan') %}
 																<input type="hidden" name="currentpa" class="currentpa" value="{{suitableplans.getCurrentPageNumber() }}">
 
 																{% if operationsuitablelength >0 %}
@@ -478,6 +479,7 @@
 																		{% endif %}
 																	{% endif %}
 																{% endfor %}
+                                                                                                                                {% endif %}
 															</td>
 
 

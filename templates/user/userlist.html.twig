@@ -69,19 +69,36 @@ $('#example').DataTable();
 				</div>
 
 				<div class="widget-body">
-					<div class="row">
-						{{ form_start(form) }}
+                                    <div class="widget-toolbox" id="widget-toolbox-1">
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group">
+                                                    {% if is_granted('ad_kpi') %}
+                                                            <a class="btn btn-primary btn-sm btn-white btn-round" data-toggle="modal" data-target="#myModal">
+                                                                <i class="ace-icon fa fa-plus bigger-110 blue"></i>
+                                                                {% trans %}
+                                                                Add New{% endtrans %}
+                                                            </a>
+                                                    {% endif %}
+
+                                                </div>
+
+
+                                            </div>
+					</div>
+                                    
+					{#<div class="row">
+						{{ form_start(formtofilter) }}
 
 						<div class="form-group col-md-4 " style="display:inline;">
-							{{ form_label(form.status,"Office") }}
-							{{ form_widget(form.status,{'attr':{ 'class': ' form-control'}}) }}
+							{{ form_label(formtofilter.status,"Office") }}
+							{{ form_widget(formtofilter.status,{'attr':{ 'class': ' form-control'}}) }}
 
 
 						</div>
 						<button type="submit" class="btn btn-sm btn-primary" style="display:inline;margin-top:25px;margin-left:0px;">{% trans %}filter{% endtrans %}</button>
-						{{ form_end(form) }}
+						{{ form_end(formtofilter) }}
 
-					</div>
+					</div>#}
 					<form action="{{path('print_user')}}" method="post">
 
 						<button type="submit" formtarget="_blank" class="btn btn-app btn-danger btn-xs pull-right" style="margin-bottom:30px;">
@@ -150,6 +167,46 @@ $('#example').DataTable();
 						</div>
 					</div>
 				</div>
+                                <div id="myModal" class="modal fade" role="dialog">
+		<div
+			class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-info">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">New KeyPerformanceIndicator budget</h4>
+				</div>
+				<div class="modal-body">
+					{{ form_start(form,{'attr': {'class': 'my-form-class'} }) }}
+					<div class="row">
+
+						{% for f in form  %}
+							{% if f != form._token %}
+								<div class="form-group col-md-4">
+									<label>{{ form_label(f) }}</label>
+									{{ form_widget(f) }}
+								</div>
+
+							{% endif %}
+
+						{% endfor %}
+
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary pull-right" type="submit" value="{% trans %}Create{% endtrans %}"/>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					{{ form_end(form) }}</div>
+
+
+			</div>
+
+
+		</div>
+	</div>
 			</div>
 		</div>
 	</div>

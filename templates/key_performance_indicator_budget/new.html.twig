@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New KeyPerformanceIndicatorBudget{% endblock %}
+
+{% block body %}
+    <h1>Create new KeyPerformanceIndicatorBudget</h1>
+
+    {{ include('key_performance_indicator_budget/_form.html.twig') }}
+
+    <a href="{{ path('app_key_performance_indicator_budget_index') }}">back to list</a>
+{% endblock %}

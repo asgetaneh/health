@@ -205,6 +205,7 @@
 																		{# <a href="{{ path('initiative_show', {'id': suitableInitiative.initiative.id}) }}" class="btn btn-primary btn-sm">
 																																																																																																																																																																																																																																<i class="fa fa-eye"></i>
 																																																																																																																																																																																																																															</a> #}
+                                                                                                                                            {% if is_granted('plan_yearly_plan') %}
 
 																		<a href="#" title="add plan" data-id="{{suitableInitiative.id}}" data-office="{{pricipaloffice.id}}" data-year="{{planyear.id}}" class="addPlan btn btn-warning btn-sm">
 																			<span class="glyphicon glyphicon-plus"></span>
@@ -218,6 +219,7 @@
 																		<a href="#" class="btn btn-primary btn-sm">
 																			<span class="glyphicon glyphicon-tasks"></span>
 																		</a>
+                                                                                                                                                {% endif %}
 																	</td>
 																</tr>
 															{% else %}

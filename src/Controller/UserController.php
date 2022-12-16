@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Entity\User;
+use App\Form\UserType;
 
 class UserController extends AbstractController
 {
@@ -55,7 +57,7 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted("vw_usr_lst");
 
-        $form = $this->createFormBuilder()
+        $formtofilter = $this->createFormBuilder()
             ->setMethod('Get')
             ->add('status', ChoiceType::class, [
                 'choices' => [
@@ -64,15 +66,15 @@ class UserController extends AbstractController
                     'Not Choose Office' => 0
 
                 ]
-            ])->getForm();;
+            ])->getForm();
         $session = new Session();
         $session->remove('filter');
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $formtofilter->handleRequest($request);
+        if ($formtofilter->isSubmitted() && $formtofilter->isValid()) {
 
-            $session->set('filter', $form->getData());
+            $session->set('filter', $formtofilter->getData());
 
-            $users = $userInfoRepository->findStatus($form->getData());
+            $users = $userInfoRepository->findStatus($formtofilter->getData());
             // dd($users);
         } else if ($request->request->get("name")) {
             $users = $userInfoRepository->filter($request->request->get("name"));
@@ -80,6 +82,9 @@ class UserController extends AbstractController
         } else {
             $users = $userInfoRepository->findAll();
         }
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
         // dd($users);
         $data = $paginator->paginate(
             $users,
@@ -87,9 +92,11 @@ class UserController extends AbstractController
             10
         );
         return $this->render('user/userlist.html.twig', [
+             'form' => $form->createView(),
+//             'formtofilter' => $formtofilter->createView(),
             'users' => $data,
             'count' => $users = $userInfoRepository->findAll(),
-            'form' => $form->createView(),
+           
         ]);
     }
     /**

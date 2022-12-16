@@ -111,6 +111,16 @@ class PlanningYear
      */
     private $officeKpiPlans;
 
+    /**
+     * @ORM\OneToOne(targetEntity=KeyPerformanceIndicatorBudget::class, mappedBy="plan_year", cascade={"persist", "remove"})
+     */
+    private $keyPerformanceIndicatorBudget;
+
+    /**
+     * @ORM\OneToMany(targetEntity=KeyPerformanceIndicatorBudget::class, mappedBy="plan_year", orphanRemoval=true)
+     */
+    private $keyPerformanceIndicatorBudgets;
+
     public function __construct()
     {
         $this->planningPhases = new ArrayCollection();
@@ -124,6 +134,7 @@ class PlanningYear
         $this->goalAchievements = new ArrayCollection();
         $this->inistuitionSuitableInitiatives = new ArrayCollection();
         $this->officeKpiPlans = new ArrayCollection();
+        $this->keyPerformanceIndicatorBudgets = new ArrayCollection();
     }
     public function __toString()
     {
@@ -534,6 +545,53 @@ class PlanningYear
             // set the owning side to null (unless already changed)
             if ($officeKpiPlan->getYear() === $this) {
                 $officeKpiPlan->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getKeyPerformanceIndicatorBudget(): ?KeyPerformanceIndicatorBudget
+    {
+        return $this->keyPerformanceIndicatorBudget;
+    }
+
+    public function setKeyPerformanceIndicatorBudget(KeyPerformanceIndicatorBudget $keyPerformanceIndicatorBudget): self
+    {
+        // set the owning side of the relation if necessary
+        if ($keyPerformanceIndicatorBudget->getPlanYear() !== $this) {
+            $keyPerformanceIndicatorBudget->setPlanYear($this);
+        }
+
+        $this->keyPerformanceIndicatorBudget = $keyPerformanceIndicatorBudget;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, KeyPerformanceIndicatorBudget>
+     */
+    public function getKeyPerformanceIndicatorBudgets(): Collection
+    {
+        return $this->keyPerformanceIndicatorBudgets;
+    }
+
+    public function addKeyPerformanceIndicatorBudget(KeyPerformanceIndicatorBudget $keyPerformanceIndicatorBudget): self
+    {
+        if (!$this->keyPerformanceIndicatorBudgets->contains($keyPerformanceIndicatorBudget)) {
+            $this->keyPerformanceIndicatorBudgets[] = $keyPerformanceIndicatorBudget;
+            $keyPerformanceIndicatorBudget->setPlanYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKeyPerformanceIndicatorBudget(KeyPerformanceIndicatorBudget $keyPerformanceIndicatorBudget): self
+    {
+        if ($this->keyPerformanceIndicatorBudgets->removeElement($keyPerformanceIndicatorBudget)) {
+            // set the owning side to null (unless already changed)
+            if ($keyPerformanceIndicatorBudget->getPlanYear() === $this) {
+                $keyPerformanceIndicatorBudget->setPlanYear(null);
             }
         }
 

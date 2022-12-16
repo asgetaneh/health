@@ -83,6 +83,11 @@ class KeyPerformanceIndicator implements TranslatableInterface
     */
    private $officeKpiPlans;
 
+   /**
+    * @ORM\OneToMany(targetEntity=KeyPerformanceIndicatorBudget::class, mappedBy="key_performance_indicator", orphanRemoval=true)
+    */
+   private $keyPerformanceIndicatorBudgets;
+
    
     public function __toString()
     {
@@ -100,6 +105,7 @@ class KeyPerformanceIndicator implements TranslatableInterface
         $this->planAchievements = new ArrayCollection();
         $this->kPiAchievements = new ArrayCollection();
         $this->officeKpiPlans = new ArrayCollection();
+        $this->keyPerformanceIndicatorBudgets = new ArrayCollection();
        
     }
 
@@ -314,6 +320,37 @@ class KeyPerformanceIndicator implements TranslatableInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, KeyPerformanceIndicatorBudget>
+     */
+    public function getKeyPerformanceIndicatorBudgets(): Collection
+    {
+        return $this->keyPerformanceIndicatorBudgets;
+    }
+
+    public function addKeyPerformanceIndicatorBudget(KeyPerformanceIndicatorBudget $keyPerformanceIndicatorBudget): self
+    {
+        if (!$this->keyPerformanceIndicatorBudgets->contains($keyPerformanceIndicatorBudget)) {
+            $this->keyPerformanceIndicatorBudgets[] = $keyPerformanceIndicatorBudget;
+            $keyPerformanceIndicatorBudget->setKeyPerformanceIndicator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKeyPerformanceIndicatorBudget(KeyPerformanceIndicatorBudget $keyPerformanceIndicatorBudget): self
+    {
+        if ($this->keyPerformanceIndicatorBudgets->removeElement($keyPerformanceIndicatorBudget)) {
+            // set the owning side to null (unless already changed)
+            if ($keyPerformanceIndicatorBudget->getKeyPerformanceIndicator() === $this) {
+                $keyPerformanceIndicatorBudget->setKeyPerformanceIndicator(null);
+            }
+        }
+
+        return $this;
+    }
+
 
    
 }

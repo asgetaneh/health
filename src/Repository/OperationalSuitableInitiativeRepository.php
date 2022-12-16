@@ -56,7 +56,7 @@ class OperationalSuitableInitiativeRepository extends ServiceEntityRepository
             ->setParameter('val', $principalOffice)
             ->setParameter('suitable', $suitable)
             ->orderBy('o.id', 'ASC')
-            ->setMaxResults(30)
+            ->setMaxResults(50)
             ->getQuery()
             ->getResult();
     }

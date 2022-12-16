@@ -46,13 +46,13 @@ class InitiativeType extends AbstractType
                 ->add('maximumValue', null, [
                     'attr' => ['class' => 'form-control']
                 ])
-                 ->add('initiativeNumber', NumberType::class, [
-                   
-                    'attr' => ['class' => 'form-control'],
-                    
-                //    'required' => false,
-
-                ])
+//                 ->add('initiativeNumber', NumberType::class, [
+//                   
+//                    'attr' => ['class' => 'form-control'],
+//                    
+//                //    'required' => false,
+//
+//                ])
                 
                 ->add('weight', null, [
                    
@@ -69,17 +69,17 @@ class InitiativeType extends AbstractType
                   
 
                 ])
-                 ->add('weight', null, [
-                    'attr' => ['class' => 'form-control']
-                ])
-                 ->add('coreTask', EntityType::class, [
-                    'class' => CoreTask::class,
-                   
-                    'attr' => ['class' => 'select2 form-control'],
-                    'placeholder'=>'choose Core Task ',
-                    'required'=>false
+//                 ->add('weight', null, [
+//                    'attr' => ['class' => 'form-control']
+//                ])
+//                 ->add('coreTask', EntityType::class, [
+//                    'class' => CoreTask::class,
+//                   
+//                    'attr' => ['class' => 'select2 form-control'],
+//                    'placeholder'=>'choose Core Task ',
+//                    'required'=>false
                     // 'multiple'=>true,
-                ])
+//                ])
                 // ->add('baseline', null, [
                    
                 //     'attr' => ['class' => 'form-control'],

@@ -266,4 +266,24 @@ public function getOperationalCascading($principalOffice)
             
             ->getResult();
     }
+    
+    public function findReport($principalOffice, $suitable, $currentQuarter)
+    {
+        // dd($suitable,$principalOffice);
+        return $this->createQueryBuilder('oplanAcc')
+            ->leftJoin('oplanAcc.operationalSuitable', 'opSuit')
+            ->leftJoin('opSuit.suitableInitiative', 'SI')
+                
+             ->andWhere('SI.principalOffice = :val')
+            ->andWhere('opSuit.suitableInitiative = :suitable')
+            ->andWhere('oplanAcc.quarter = :currentQuarter')
+//            ->andWhere('o.status = 1')
+            ->setParameter('currentQuarter', $currentQuarter)
+            ->setParameter('val', $principalOffice)
+            ->setParameter('suitable', $suitable)
+            ->orderBy('oplanAcc.id', 'ASC')
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult();
+    }
 }

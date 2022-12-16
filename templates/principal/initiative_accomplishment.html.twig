@@ -42,7 +42,7 @@
 
 							{% if remainingdays <= sendToPlan %}
 								Remainig Days=><div class="badge badge-danger">{{remainingdays}}</div>
-								{% if  operatioanlSuitables  %}
+								{% if  operatioanlplanningAccc  %}
 
 									<button type="submit" class="btn btn-success"
 									onclick="return confirm('Are you sure you want to Send this Report To Plan Office?');">
@@ -101,29 +101,29 @@
 										</thead>
 										<tbody>
 
-											{% for operatioanlSuitable in operatioanlSuitables %}
+											{% for operatioanlplanningAcc in operatioanlplanningAccc %}
 
 												<tr>
 													{% set count = count + 1 %}
 													<td>{{ count}}</td>
 													{% if social == 1 %}
 
-														<td>{{operatioanlSuitable.social}}</td>
-														{% set socialId =  operatioanlSuitable.social.id %}
+														<td>{{operatioanlplanningAcc.social}}</td>
+														{% set socialId =  operatioanlplanningAcc.social.id %}
 													{% endif %}
-													<td>{{ operatioanlSuitable.operationalOffice  }}</td>
+													<td>{{ operatioanlplanningAcc.operationalSuitable.operationalOffice  }}</td>
 
-													<input type="hidden" name="opsuiId[]" value="{{operatioanlSuitable.id}}">
-													{% set quarter =  operatioanlSuitable.quarter.id %}
-													{% set plan =  operatioanlSuitable.operationalPlanning.planValue  %}
-													{% set planId =  operatioanlSuitable.operationalPlanning.id  %}
+													<input type="hidden" name="opplanAcciId[]" value="{{operatioanlplanningAcc.id}}">
+													{% set quarter =  operatioanlplanningAcc.quarter.id %}
+													{% set plan =  operatioanlplanningAcc.planValue  %}
+													{% set planId =  operatioanlplanningAcc.id  %}
 
 
-													<td>{{operatioanlSuitable.operationalPlanning.planValue }}</td>
+													<td>{{operatioanlplanningAcc.planValue }}</td>
 
-													<td>{{ operatioanlSuitable.accomplishedValue  }}</td>
+													<td>{{ operatioanlplanningAcc.accompValue  }}</td>
 
-													{% set total = total + operatioanlSuitable.accomplishedValue %}
+													{% set total = total + operatioanlplanningAcc.accompValue %}
 												</tr>
 
 
@@ -138,8 +138,8 @@
 
 												{% endif %}
 												<td>
-
-													{{planningAcc[1].planValue}}
+{#                                                                                                         {{ dump(operatioanlplanningAccc) }}#}
+													{{operatioanlplanningAccc[0].planValue}}
 												</td>
 
 												<td>
@@ -227,7 +227,7 @@
 
 													</td>
 													<td>
-
+                                                                                                           
 														{{planningAcc[1].planValue}}
 													</td>
 													<td>
