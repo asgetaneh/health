@@ -29,14 +29,14 @@ class StrategyType extends AbstractType
                     'required'=>true,
                 ])
                 
-               
-                ->add('strategyNumber', NumberType::class, [
-                   
-                    'attr' => ['class' => 'form-control'],
-                    
-                  
-
-                ])
+//               
+//                ->add('strategyNumber', NumberType::class, [
+//                   
+//                    'attr' => ['class' => 'form-control'],
+//                    
+//                  
+//
+//                ])
                  ->add('objective', EntityType::class, [
                     'class' => Objective::class,
                     'query_builder' => function (EntityRepository $er) {

@@ -100,7 +100,7 @@ class PerformerTaskRepository extends ServiceEntityRepository
             ->andWhere('s.quarter = :quarter')
             ->setParameter('quarter', $quarter)
             ->andWhere('s.createdBy = :user')
-            ->andWhere('ta.isCore = 0')
+            //->andWhere('ta.isCore = 0')
             ->andWhere('s.status = 1')
             ->setParameter('user', $user)
             ->getQuery()

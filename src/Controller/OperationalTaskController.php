@@ -133,13 +133,13 @@ class OperationalTaskController extends AbstractController
         $performerTasksList = $performerTaskRepository->findPerformerInitiativeTask($user, $suitableOperational, $quarterId);
         foreach ($performerTasksList as $performerTas) {
             // dd($operational);
-            if ($performerTas->getTaskCategory()->getIsCore()) {
-                $countCore = $countCore + $performerTas->getWeight();
-                $idd = $performerTas->getId();
-            } else {
+//            if ($performerTas->getTaskCategory()->getIsCore()) {
+//                $countCore = $countCore + $performerTas->getWeight();
+//                $idd = $performerTas->getId();
+//            } else {
                 $count = $count +
                     $performerTas->getWeight();
-            }
+//            }
         }
         $assigns = $em->getRepository(TaskAssign::class)->findOneBy(['PerformerTask' => $idd]);
         if ($assigns) {
@@ -620,6 +620,7 @@ class OperationalTaskController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $userId = $request->request->get("user");
+        //$userId =   $this->getUser()->getId();
         $users = $em->getRepository(User::class)->find($userId);
         $user = $users->getId();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user, 'status' => 1]);
@@ -627,6 +628,7 @@ class OperationalTaskController extends AbstractController
             $delegatedBy = $delegatedUser->getDelegatedBy()->getId();
             $user = $delegatedBy;
         }
+        //dd($user);
         if ($request->request->get('isCore')) {
 
             $units = $performerTaskRepository->filterDeliverByIsCore($request->request->get('task'), $user, $request->request->get('quartertask'));

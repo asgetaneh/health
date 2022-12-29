@@ -1,6 +1,15 @@
 {% if is_granted("vw_usr_lst") %}
 
 	<li>
+		<a href="{{ path('app_user_info_index') }}">
+			<b class="fa fa-caret-right"></b>
+			{% trans %}Users Information{% endtrans %}
+		</a>
+	</li>
+{% endif %}
+{% if is_granted("vw_usr_lst") %}
+
+	<li>
 		<a href="{{ path('user_list') }}">
 			<b class="fa fa-caret-right"></b>
 			{% trans %}Users{% endtrans %}

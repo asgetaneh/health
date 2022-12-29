@@ -143,7 +143,7 @@ class TaskAssignRepository extends ServiceEntityRepository {
                         ->andWhere('off.id = :val')
                         ->andWhere('t.type < 3 ')
                         ->andWhere('t.status > 4 ')
-                        ->andWhere('ta.isCore  = 0 ')
+                       // ->andWhere('ta.isCore  = 0 ')
                         ->setParameter('val', $operationalOfficeId)
                         ->orderBy('t.id', 'ASC')
                         // ->setMaxResults(10)

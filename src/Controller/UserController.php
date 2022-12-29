@@ -20,9 +20,18 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\User;
 use App\Form\UserType;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;        
+    }
+
+    
     /**
      * @Route("/maintenance", name="under_maintenance")
      */
@@ -82,20 +91,34 @@ class UserController extends AbstractController
         } else {
             $users = $userInfoRepository->findAll();
         }
-        $user = new User();
+                
+         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        // dd($users);
+        
+         if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+
+               $user->setPassword( 
+            $this->passwordEncoder->encodePassword( $user, $user->getPassword() )
+        );
+                 $user->setRoles(["staff"]);
+                 $user->setStatus(1);
+                $entityManager->flush();
+         }
+        // dd($user);
         $data = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
             10
         );
         return $this->render('user/userlist.html.twig', [
-             'form' => $form->createView(),
-//             'formtofilter' => $formtofilter->createView(),
+           
+             'formtofilter' => $formtofilter->createView(),
             'users' => $data,
             'count' => $users = $userInfoRepository->findAll(),
+              'form' => $form->createView(),
            
         ]);
     }

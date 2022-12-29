@@ -277,7 +277,7 @@
 
 
                                                         {% block tobologyMenu %}
-                                                            {% if is_granted('vw_usr_lst') %}
+                                                         {#   {% if is_granted('vw_usr_lst') %}
 
 
                                                                 <li class="toplist" role="treeitem">
@@ -296,7 +296,7 @@
 
                                                                     </ul>
                                                                 </li>
-                                                            {% endif %}
+                                                            {% endif %}#}
                                                             <li class="toplist" role="treeitem">
                                                                 <a class="dropdown-toggle" href="#">
                                                                     <i class=""></i>
@@ -402,7 +402,7 @@
                                                                             <ul class="submenu" role="treeitem">
 
 
-                                                                                {% if is_granted('vw_intv_bvr') %}
+                                                                                {% if is_granted('vw_kpi') %}
                                                                                     <li role="treeitem">
                                                                                         <a href="{{ path('key_performance_indicator_index') }}">
                                                                                             <b class="fa fa-caret-right"></b>
@@ -411,6 +411,8 @@
                                                                                             {% endtrans %}
                                                                                         </a>
                                                                                     </li>
+                                                                                    {% endif %}
+                                                                                    {% if is_granted('vw_intv_bvr') %}
                                                                                     <li role="treeitem">
                                                                                         <a href="{{ path('app_key_performance_indicator_budget_index') }}">
                                                                                             <b class="fa fa-caret-right"></b>
@@ -424,6 +426,7 @@
                                                                         </li>
 
                                                                     {% endif %}
+                                                                    {{ include('menu/initiative.html.twig') }}
                                                                     {% if is_granted('vw_intv') %}
 
 
@@ -612,7 +615,7 @@
                                                                     </ul>
                                                             </li>
                                                             {% endif %} #}
-                                                            {% if is_granted('perf_op_eval') %}
+                                                           {# {% if is_granted('perf_op_eval') %}
                                                                 <li class="toplist">
                                                                     <a href="#" class="dropdown-toggle ">
                                                                         <i class=""></i>
@@ -635,7 +638,7 @@
 
                                                                     </ul>
                                                                 </li>
-                                                            {% endif %}
+                                                            {% endif %}#}
                                                             {% if is_granted("vw_usr_lst") %}
                                                                 <li>
 

@@ -32,13 +32,13 @@ class KeyPerformanceIndicatorType extends AbstractType
                     'attr' => ['class' => 'form-control']
                 ])
 
-                ->add('kpiNumber', NumberType::class, [
-                   
-                    'attr' => ['class' => 'form-control'],
-                    
-                //    'required' => false,
-
-                ])
+//                ->add('kpiNumber', NumberType::class, [
+//                   
+//                    'attr' => ['class' => 'form-control'],
+//                    
+//                //    'required' => false,
+//
+//                ])
                   ->add('objective', EntityType::class, [
                     'class' => Objective::class,
                     'query_builder' => function (EntityRepository $er) {

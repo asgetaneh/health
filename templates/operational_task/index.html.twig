@@ -152,7 +152,7 @@
 
 											{% if countWeight < 100  %}
 
-												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="">
+												<a class="btn btn-primary   btn-white btn-round create" data-toggle="modal" data-category-id="{{taskCategory.id}}" data-category="{{taskCategory.isCore}}">
 													<i class="ace-icon fa fa-plus bigger-110 blue"></i>
 													Create
 {#													{{taskCategory.name}}#}
@@ -164,7 +164,7 @@
 
 													Assign
 {#													{{taskCategory.name}}#}
-													Task</a>
+													Task</a>					
 
 
 											{% endif %}
@@ -322,7 +322,7 @@
 													</td>
 													<td>
 {#														{% if not taskAssigns %}#}
-															{% if not performerTask.taskCategory.isCore %}
+															{% if not performerTask %}
 
 
 																<button class="btn btn-warning edit " data-taskid="{{performerTask.id}}" title="edit" data-target="#edit" type="button">

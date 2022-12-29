@@ -30,15 +30,38 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 /**
  * @Route("/initiative")
  */
 class InitiativeController extends AbstractController
 {
-    /**
+     /**
      * @Route("/", name="initiative_index", methods={"GET","POST"})
      */
+    
+//     public function sendEmail(MailerInterface $mailer): Response
+//    {
+//        $email = (new Email())
+//            ->from('ramassefa12@gmail.com')
+//            ->to('assefa.getaneh@JU.edu.et')
+//            //->cc('cc@example.com')
+//            //->bcc('bcc@example.com')
+//            //->replyTo('fabien@example.com')
+//            //->priority(Email::PRIORITY_HIGH)
+//            ->subject('Time for Symfony Mailer!')
+//            ->text('Sending emails is fun again!')
+//            ->html('<p>See Twig integration for better HTML integration!</p>');
+//
+//        $mailer->send($email);
+//        $this->addFlash('success', "email sent successfuly");
+//            return $this->redirectToRoute('goal_index');
+//        
+//        // ...
+//    }
+   
     public function index(InitiativeRepository $initiativeRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $this->denyAccessUnlessGranted('vw_intv');

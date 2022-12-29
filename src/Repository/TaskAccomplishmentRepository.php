@@ -146,7 +146,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->andWhere('pt.createdBy = :val')
             ->andWhere('tasign.type < 3 ')
             ->andWhere('tasign.status > 4 ')
-            ->andWhere('ta.isCore = 0')
+            //->andWhere('ta.isCore = 0')
             ->setParameter('val', $value)
             ->orderBy('tasign.id', 'ASC')
             // ->setMaxResults(10)
