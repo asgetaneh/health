@@ -131,7 +131,7 @@ class LdapUserProvider implements UserProviderInterface
         $userfind = $userRepository->findOneBy(['username' => $username]);
         # code...
         if (!$userfind) {
-            if ($ldapEntry->getAttributes()['employeeType'][0] == "Staff") {
+//            if ($ldapEntry->getAttributes()['employeeType'][0] == "Staff") {
                 $user->setUsername($username);
                 $user->setRoles(['staff']);
                 $user->setStatus(0);
@@ -148,7 +148,7 @@ class LdapUserProvider implements UserProviderInterface
                 $username = $user->getUsername();
                 $userfind1 = $userRepository->findOneBy(['username' => $username]);
                 return $userfind1;
-            }
+          //  }
         } else {
 
             return $userfind;

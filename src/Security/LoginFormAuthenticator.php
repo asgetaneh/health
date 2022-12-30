@@ -76,9 +76,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new InvalidCsrfTokenException();
         }
      $user = $userProvider->getUserEntityCheckedFromLdap($credentials['username'], $credentials['password']);
-     $this->is_ldap_user = true;
+     //$this->is_ldap_user = true;
      
-    //$user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+        //$user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
         $this->user = $user;
         if (!$user) {
 
@@ -87,7 +87,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             // throw new CustomUserMessageAuthenticationException('Username could not be found.');
         } else {
 
-            //$this->is_ldap_user = true;
+            $this->is_ldap_user = true;
         }
 
         return $user;
