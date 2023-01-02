@@ -22,7 +22,7 @@ class PermissionController extends AbstractController
     public function index(Request $request, PermissionRepository $permissionRepository, PaginatorInterface $paginator): Response
     {
 
-        $this->denyAccessUnlessGranted("vw_usr_per");
+        #$this->denyAccessUnlessGranted("vw_usr_per");
         $permissions = $permissionRepository->findAll();
         $data = $paginator->paginate(
             $permissions,
@@ -40,7 +40,7 @@ class PermissionController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $this->denyAccessUnlessGranted("vw_usr_per");
+        #$this->denyAccessUnlessGranted("vw_usr_per");
         $permission = new Permission();
         $form = $this->createForm(PermissionType::class, $permission);
         $form->handleRequest($request);
@@ -64,7 +64,7 @@ class PermissionController extends AbstractController
      */
     public function show(Permission $permission): Response
     {
-        $this->denyAccessUnlessGranted("vw_usr_per");
+        #$this->denyAccessUnlessGranted("vw_usr_per");
         return $this->render('permission/show.html.twig', [
             'permission' => $permission,
         ]);
@@ -75,7 +75,7 @@ class PermissionController extends AbstractController
      */
     public function edit(Request $request, Permission $permission): Response
     {
-        $this->denyAccessUnlessGranted("vw_usr_per");
+        #$this->denyAccessUnlessGranted("vw_usr_per");
 
         $form = $this->createForm(PermissionType::class, $permission);
         $form->handleRequest($request);
