@@ -266,8 +266,8 @@
 											<td>{{getOperationalQuarterPlanAccomp(operationalSuitable.suitableInitiative,4, operationaloffice)}}</td>
 
 
-											<td>
-                                                                                            {% if is_granted('plan_yearly_plan') %}
+                                                                                        <td>
+                                                                                            {% if is_granted('plan_yearly_plan') %} 
 												{% if operationalSuitable.status == 0 %}
 
 													{% if operationsuitablelength > 0 %}

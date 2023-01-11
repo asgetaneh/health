@@ -146,9 +146,9 @@
 													</div>
 												</td>
 												<td>
-                                                                                                    {% if suitable_initiative.status == 1 %}
+{#                                                                                                   {% if suitable_initiative.status == 1 %}#}
                                                                                                         
-                                                                                                    {% else %}
+{#                                                                                                    {% else %}#}
 													<div class="row">
 														<div class="col-md-4">
 															<a href="{{ path('initiative_accomplishment_list', {'id': suitable_initiative.id}) }}" title="show" class="btn btn-success btn-sm d-inline p-2 ">
@@ -156,7 +156,7 @@
 															</a>
 														</div>
 													</div>
-                                                                                                    {% endif %}
+{#                                                                                                   {% endif %}#}
 												</td>
 												<td>
 													{% if suitable_initiative.status == 1 %}

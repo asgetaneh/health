@@ -81,7 +81,7 @@ class PrincipalController extends AbstractController
             );
         } else {
             $principal = $em->getRepository(PrincipalManager::class)->findOneBy(['principal' => $this->getUser()]);
-            if($principal){
+            if($principal){//dd();
                 $principalOffice =  $principal->getPrincipalOffice();
                  $suitableInitiatives = $suitableInitiativeRepository->findByPrincipalAndOffice($principalOffice, $planinngYear);
             }else {
