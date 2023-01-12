@@ -21,9 +21,9 @@
 				<div class="widget-header">
 					<h5 class="widget-title bigger lighter">
 						<strong>Principal Office Report
-                                                    {% if suitable_initiatives %}
+                                                   {# {% if suitable_initiatives %}
                                                     ( of {{suitable_initiatives[0].planningyear}})
-                                                    {% endif %}
+                                                    {% endif %}#}
                                                 </strong>
 					</h5>
 
@@ -134,6 +134,7 @@
 											<tr>
 												{% set count = count + 1 %}
 												<td>{{count}}</td>
+{#												<td>{{ suitable_initiative.id}}</td>#}
 												<td>{{ suitable_initiative.initiative}}</td>
 												<td>{{ suitable_initiative.principalOffice}}
 												</td>
