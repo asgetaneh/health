@@ -92,7 +92,7 @@ class PrincipalController extends AbstractController
             $data = $paginator->paginate(
                 $suitableInitiatives,
                 $request->query->getInt('page', 1),
-                20
+                200
             );
         }
 

@@ -55,7 +55,7 @@
 					</a>
 				</li>
 			{% endif %}
-			{% if is_granted('pri_off_rep') %}
+			{#{% if is_granted('pri_off_rep') %}
 
 				<li>
 					<a href="{{ path('operational_task_principal_show') }}" style="background:#009933; color: #f5f6f8">
@@ -66,9 +66,6 @@
 
 							{% set princ = item.principalOffice.id %}
 						{% endfor %}
-						{# <pre>
-												{{ dump(princ) }}
-											</pre> #}
 						{% if getTaskList(princ) %}
 
 							<div class="badge badge-danger">
@@ -78,7 +75,7 @@
 						{% trans %}Operational Task List{% endtrans %}
 					</a>
 				</li>
-			{% endif %}
+			{% endif %}#}
 
 			{# {% if is_granted('pri_off_rep') %}
 							

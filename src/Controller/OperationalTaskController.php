@@ -692,7 +692,6 @@ class OperationalTaskController extends AbstractController
                        /// $taskAccomplishment->setReportedValueSocial($reportValueSocial);
                     }
                 }
-            
             $percent = 0;
             $quality = $request->request->get('quality');
             //$ids = $request->request->get('taskAccomplishmentId');
@@ -712,38 +711,14 @@ class OperationalTaskController extends AbstractController
                         $total_expected = $total_expected+$expected;
                          $accomplished = $TaskAccomplishment->getAccomplishmentValue()*$weight_t;
                         $total_accomplished = $total_accomplished+$accomplished;
-                      // echo 'expected ='.$total_expected.'--acc ='.$total_accomplished.'<br/>';
+                       //echo 'expected ='.$total_expected.'--acc ='.$total_accomplished.'<br/>';
                     }
 
                 }
 
-            } //echo 'expected ='.$total_expected; dd($taskAccomplishments);
-              //echo ($total_expected.'<br/>');dd($total_accomplished);
+            }
             $percent = (($accompValue[$key] * 100) / $taskAccomplishment->getExpectedValue());
-            $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();
-            
-            
-//            if ($accompValue < 0) {
-//                $this->addFlash('danger', 'Report value muste be 0 or Postive Number !');
-//                return $this->redirectToRoute('performer_task_index');
-//            }
-//            if ($accompValue == 0) {
-//                $taskAccomplishment->setAccomplishmentValue(0);
-//                $taskAccomplishment->setReportedValue(0);
-//                if ($reportValueSocial) {
-//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
-//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
-//                }
-//            } else {
-//                $taskAccomplishment->setAccomplishmentValue($accompValue);
-//                $taskAccomplishment->setReportedValue($reportValue);
-//                if ($reportValueSocial) {
-//                    $taskAccomplishment->setAccomplishmentValueSocial($accompValueSocial);
-//                    $taskAccomplishment->setReportedValueSocial($reportValueSocial);
-//                }
-//            }
-            
-            
+            $evaluateUser = $taskAccomplishment->getTaskAssign()->getAssignedTo();            
             $evaluation->setEvaluateUser($evaluateUser);
             $evaluation->setTaskAccomplishment($taskAccomplishment);
             $evaluation->setQuantity($percent);
@@ -776,7 +751,7 @@ class OperationalTaskController extends AbstractController
             $operationalSuitableInitiative->setAccomplishedValue($accompValuetott);
             $operationalSuitableInitiative->setQuarter($quarter);
             // $operationalSuitableInitiative->setSocial($socialAttribute[$key]);
-            $operationalSuitableInitiative->setStatus(1);
+            $operationalSuitableInitiative->setStatus(1);//dd();
             $em->persist($operationalSuitableInitiative);
             $em->flush();
           
