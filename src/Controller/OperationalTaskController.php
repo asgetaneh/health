@@ -674,7 +674,7 @@ class OperationalTaskController extends AbstractController
             $reportValueSocial = $request->request->get('reportValueSocial');
             foreach ($taskAccomplishments as $key => $id) {
                $taskAccomplishment = $taskAccomplishmentRepository->find($id);
-                echo $id.'--'.$accompValue[$key].'<br/>';
+               // echo $id.'--'.$accompValue[$key].'<br/>';
                
                 if ($accompValue[$key] < 0) {
                     $this->addFlash('danger', 'Report value must be 0 or Postive Number !');
@@ -712,7 +712,7 @@ class OperationalTaskController extends AbstractController
                         $total_expected = $total_expected+$expected;
                          $accomplished = $TaskAccomplishment->getAccomplishmentValue()*$weight_t;
                         $total_accomplished = $total_accomplished+$accomplished;
-                       echo 'expected ='.$total_expected.'--acc ='.$total_accomplished.'<br/>';
+                      // echo 'expected ='.$total_expected.'--acc ='.$total_accomplished.'<br/>';
                     }
 
                 }
