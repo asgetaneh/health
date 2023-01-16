@@ -137,17 +137,23 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->getResult();
     }
     
-    public function findTaskUsersListByAssiner($value)
+    public function findTaskUsersListByAssiner($value,$quarter,$year)
     {
         return $this->createQueryBuilder('taskacc')
             ->leftJoin('taskacc.taskAssign', 'tasign')
             ->leftJoin('tasign.PerformerTask', 'pt')
-            ->leftJoin('pt.taskCategory', 'ta')
-            ->andWhere('pt.createdBy = :val')
-            ->andWhere('tasign.type < 3 ')
+            ->innerJoin('pt.operationalPlanningAcc', 'OPA')
+            ->innerJoin('OPA.operationalSuitable', 'OS')
+            ->innerJoin('OS.suitableInitiative', 'SI')
+                
+             ->andWhere('pt.createdBy = :val')
+            ->andWhere('pt.quarter = :quarter')
+            ->andWhere('SI.planningYear = :planningYear')
+             ->andWhere('tasign.type < 3 ')
             ->andWhere('tasign.status > 4 ')
-            //->andWhere('ta.isCore = 0')
-            ->setParameter('val', $value)
+             ->setParameter('val', $value)
+            ->setParameter('quarter', $quarter)
+            ->setParameter('planningYear', $year)
             ->orderBy('tasign.id', 'ASC')
             // ->setMaxResults(10)
             ->getQuery()

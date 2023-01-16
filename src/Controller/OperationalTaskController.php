@@ -20,6 +20,7 @@ use App\Repository\PlanningAccomplishmentRepository;
 use App\Repository\SuitableInitiativeRepository;
 use App\Repository\TaskAccomplishmentRepository;
 use App\Repository\TaskAssignRepository;
+use App\Repository\PlanningYearRepository;
 use DateTime;
 use Andegna\DateTime as AD;
 use Andegna\DateTimeFactory;
@@ -662,12 +663,12 @@ class OperationalTaskController extends AbstractController
     /**
      * @Route("/show_detail", name="operational_task_show_detail")
      */
-    public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository)
+    public function showDetail(Request $request, TaskAccomplishmentRepository $taskAccomplishmentRepository, TaskAssignRepository $taskAssignRepository,PlanningYearRepository $PlanningYearRepository)
     {
 
         $em = $this->getDoctrine()->getManager();
         $principal = $request->request->get('principal');
-        if ($request->request->get('reportAvail')) {
+        if ($request->request->get('reportAvail')) {//dd();
             $taskAccomplishments = $request->request->get('taskAccomplishment');
             $accompValue = $request->request->get('accompValue');
             $reportValueSocial = $request->request->get('reportValueSocial');
@@ -798,21 +799,25 @@ class OperationalTaskController extends AbstractController
 //            $em->flush();
 //        }
          //dd($taskAccomplishments);
-           
+         // get user;
         $user = $this->getUser();
         $delegatedUser = $em->getRepository(Delegation::class)->findOneBy(["delegatedUser" => $user]);
         if ($delegatedUser) {
             $delegatedBy = $delegatedUser->getDelegatedBy();
             $user = $delegatedBy;
         }
-        $taskAccomplishments = $taskAccomplishmentRepository->findTaskUsersListByAssiner($user);//dd($taskAccomplishments);
-        //$taskAssigns = $taskAccomplishments->getTaskAssign();
+        // get quarter; 
+        $quarterId = 0;
+        $time = new DateTime('now');
+        $quarters = $em->getRepository(PlanningQuarter::class)->findAll();
+        foreach ($quarters as $quarter) {
+            if ($time >= $quarter->getStartDate() && $time <= $quarter->getEndDate()) {
+                $quarterId = $quarter->getId();
+                 }
+        }
+        $year = $PlanningYearRepository->findLast();//dd($year);
+        $taskAccomplishments = $taskAccomplishmentRepository->findTaskUsersListByAssiner($user,$quarterId,$year);//dd($taskAccomplishments);
         $social = 0;
-//        foreach ($taskAccomplishments[0]->getTaskAssign()->getPerformerTask()->getOperationalPlanningAcc()->getOperationalSuitable()->getSuitableInitiative()->getInitiative()->getSocialAtrribute() as $va) {
-//            if ($va->getName()) {
-//                $social = 1;
-//            }
-//        }
         return $this->render('operational_task/showDetail.html.twig', [
             'taskAccomplishments' => $taskAccomplishments,
             //'taskAssigns' => $taskAssigns,
