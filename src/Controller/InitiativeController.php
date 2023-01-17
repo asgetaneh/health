@@ -130,19 +130,19 @@ class InitiativeController extends AbstractController
                 'required' => false,
 
             ])
-             ->add('task', EntityType::class, [
-                'class' => CoreTask::class,
-                'multiple' => true,
-                'required' => false,
-
-            ])
-            ->add('coreTask', ChoiceType::class, [
-                'choices'  => [
-                    'Choose ' => null,
-                    'Assign' => 1,
-                    'Not Assign' => 0,
-                ],
-            ])
+//             ->add('task', EntityType::class, [
+//                'class' => CoreTask::class,
+//                'multiple' => true,
+//                'required' => false,
+//
+//            ])
+//            ->add('coreTask', ChoiceType::class, [
+//                'choices'  => [
+//                    'Choose ' => null,
+//                    'Assign' => 1,
+//                    'Not Assign' => 0,
+//                ],
+//            ])
             ->getForm();
 
 

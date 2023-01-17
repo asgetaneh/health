@@ -121,19 +121,19 @@ class InitiativeType extends AbstractType
                     'attr' => ['class' => 'select2 form-control'],
                      'placeholder'=>'select Principal Office',
                 ])
-                ->add('socialAtrribute', EntityType::class, [
-                    'class' => InitiativeAttribute::class,
-                    'attr' => ['class' => 'select2 form-control'],
-                     'multiple'=>true,
-                   'required' => false,
-                    'placeholder'=>'select Social Attribute',
-                   
-
-                ])
+//                ->add('socialAtrribute', EntityType::class, [
+//                    'class' => InitiativeAttribute::class,
+//                    'attr' => ['class' => 'select2 form-control'],
+//                     'multiple'=>true,
+//                   'required' => false,
+//                    'placeholder'=>'select Social Attribute',
+//                   
+//
+//                ])
                 ->add('measurement',ChoiceType::class,[
                     'choices'=>[
                         'Numerical'=>Initiative::NUMERICAL,
-                        'Ratio'=>Initiative::RATIO,
+//                        'Ratio'=>Initiative::RATIO,
                         'Percent'=>Initiative::PERCENT
                     ],
                      'attr' => ['class' => 'select2 form-control'],

@@ -31,7 +31,7 @@ class Helper
 
     public static function locales()
     {
-        return ["English" => 'en', "Afaan Oromo" => 'or', "Amharic" => 'am'];
+        return ["English" => 'en', "Amharic" => 'am']; //  "Afaan Oromo" => 'or',
         //"Tigr"=>$pr->getManagedBy()->getManagedBy()'tg'
     }
     public static function calculatePrincipalOfficePlan(EntityManagerInterface $em, $planInitiative)
