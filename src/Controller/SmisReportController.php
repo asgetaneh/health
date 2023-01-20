@@ -425,13 +425,15 @@ class SmisReportController extends AbstractController
 
         foreach ($data as $value) {
             $taskAssign = $em->getRepository(TaskAssign::class)->find($value['taskAssinedId']);
-            // dd($taskAssign);
+            $taskAccomplishment = $em->getRepository(TaskAccomplishment::class)->find($value['taskAccomplisedId']);
+            // dd($value);
+            $taskAccomplishment->setReportRevisionRequestedAt(new \DateTimeImmutable('now'));
             $taskAssign->setType(2);
             // $taskAssign->setStatus(3);
-        $em->flush();
+            $em->flush();
         }
         return new JsonResponse([
-            'message' =>'Plane Revision Requested'
+            'message' =>'Report Revision Requested'
         ]);
     }
 
