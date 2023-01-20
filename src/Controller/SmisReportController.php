@@ -417,7 +417,19 @@ class SmisReportController extends AbstractController
     public function scoreReportRevision(Request $request)
     {
         $this->denyAccessUnlessGranted('pre_rep');
+        // dd("ds");
+        $em =  $this->getDoctrine()->getManager();
         $suitableInitiativeId = $request->request->get('suitableInitiativeId');
+        $data = $em->getRepository(TaskAccomplishment::class)->findTasksInReportAccomplesed($suitableInitiativeId);
+
+
+        foreach ($data as $value) {
+            $taskAssign = $em->getRepository(TaskAssign::class)->find($value['taskAssinedId']);
+            // dd($taskAssign);
+            $taskAssign->setType(2);
+            // $taskAssign->setStatus(3);
+        $em->flush();
+        }
         return new JsonResponse([
             'message' =>'Plane Revision Requested'
         ]);
