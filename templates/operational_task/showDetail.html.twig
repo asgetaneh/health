@@ -217,7 +217,23 @@
                                                         {% endif %}
                                                     {% endif %}
                                                 </td>
-                                                {% if taskAccomplishment.accomplishmentValue %}
+                                               {% if taskAccomplishment.reportRevisionRequestedAt  %}
+													<td>
+														{% if social == 1  %}
+															Male
+														{% endif %}
+														<input type="hidden" name="taskAccomplishment[]" class="form-conrol" value="{{taskAccomplishment.id}}" required>
+														<input type="number" name="accompValue[]" class="form-conrol" required value="{{taskAccomplishment.accomplishmentValue}}">
+														<input type="hidden" name="reportAvail" class="form-conrol" value="1" required>
+
+														{% if social == 1  %}
+															Female<input type="number" name="accompValueSocial[]" class="form-conrol" required >
+
+
+														{% endif %}
+													</td>
+
+												{% elseif taskAccomplishment.accomplishmentValue %}
                                                     <td>{{ taskAccomplishment.accomplishmentValue }}</td>
 
 
