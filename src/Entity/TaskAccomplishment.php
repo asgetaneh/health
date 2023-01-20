@@ -93,7 +93,11 @@ class TaskAccomplishment
      * @ORM\Column(type="text", nullable=true)
      */
     private $taskDoneDescription;
-
+    
+      /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $report_revision_requested_at;
 
     public function __construct()
     {
@@ -286,6 +290,18 @@ class TaskAccomplishment
     public function setTaskDoneDescription(?string $taskDoneDescription): self
     {
         $this->taskDoneDescription = $taskDoneDescription;
+
+        return $this;
+    }
+
+      public function getReportRevisionRequestedAt(): ?\DateTimeImmutable
+    {
+        return $this->report_revision_requested_at;
+    }
+
+    public function setReportRevisionRequestedAt(?\DateTimeImmutable $report_revision_requested_at): self
+    {
+        $this->report_revision_requested_at = $report_revision_requested_at;
 
         return $this;
     }
