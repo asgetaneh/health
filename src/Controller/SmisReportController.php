@@ -408,6 +408,20 @@ class SmisReportController extends AbstractController
 
         ]);
     }
+    
+    
+
+    /**
+     * @Route("/score_report_revision", name="score_report_revision")
+     */
+    public function scoreReportRevision(Request $request)
+    {
+        $this->denyAccessUnlessGranted('pre_rep');
+        $suitableInitiativeId = $request->request->get('suitableInitiativeId');
+        return new JsonResponse([
+            'message' =>'Plane Revision Requested'
+        ]);
+    }
 
     /**
      * @Route("/task_list_report", name="task_list_report")
