@@ -73,6 +73,7 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->leftJoin('pa.operationalSuitable', 'op')
             ->leftJoin('op.suitableInitiative', 'su')
             ->select('ps.name')
+            ->addSelect('ts.id taskAccomplisedId')
             ->addSelect('q.name as quarterName')
             ->addSelect('tc.name as taskCategory')
             ->addSelect('ui.fullName')
