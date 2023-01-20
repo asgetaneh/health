@@ -42,8 +42,47 @@ class TaskAccomplishmentRepository extends ServiceEntityRepository
             ->addSelect('ts.expectedValue')
 
             ->addSelect('ts.accomplishmentValue')
+            ->addSelect('ta.id as taskAssinedId')
 
             // ->andWhere('ps.status = 1')
+            // ->andWhere('ta.status = 5')
+            ->andWhere('su.id = :suitableInitiativeId')
+            ->setParameter('suitableInitiativeId', $suitableInitiativeId)
+            ->orderBy('tc.id', 'ASC')
+
+            ->getQuery()
+
+            ->getResult();
+    }
+    
+    
+
+    public function findTasksInReportAccomplesed($suitableInitiativeId)
+    {
+
+        $qb = $this->createQueryBuilder('ts');
+        return  $qb->Where($qb->expr()->isNotNull('ts.accomplishmentValue'))
+            ->leftJoin('ts.taskAssign', 'ta')
+            ->leftJoin('ta.PerformerTask', 'ps')
+            ->leftJoin('ps.quarter', 'q')
+            ->leftJoin('ta.assignedTo', 'u')
+            ->leftJoin('ps.operationalOffice', 'opf')
+            ->leftJoin('u.userInfo', 'ui')
+            ->leftJoin('ps.taskCategory', 'tc')
+            ->leftJoin('ps.operationalPlanningAcc', 'pa')
+            ->leftJoin('pa.operationalSuitable', 'op')
+            ->leftJoin('op.suitableInitiative', 'su')
+            ->select('ps.name')
+            ->addSelect('q.name as quarterName')
+            ->addSelect('tc.name as taskCategory')
+            ->addSelect('ui.fullName')
+            ->addSelect('opf.name as operationalOffice')
+            ->addSelect('ts.expectedValue')
+
+            ->addSelect('ts.accomplishmentValue')
+            ->addSelect('ta.id as taskAssinedId')
+
+            // ->andWhere('ps.status = 1')suitableInitiativeId
             // ->andWhere('ta.status = 5')
             ->andWhere('su.id = :suitableInitiativeId')
             ->setParameter('suitableInitiativeId', $suitableInitiativeId)
