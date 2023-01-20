@@ -111,7 +111,8 @@
 										<th>Q3A</th>
 										<th>Q4T</th>
 										<th>Q4A</th>
-
+										<th>Requeset Report Revision
+										</th>
 {#										<th>Remarks</th>#}
 {#										<th>Task List</th>#}
 									</tr>
@@ -141,7 +142,11 @@
 														<td>{{ getQuarterPlanAccomp(suitable,3)}}</td>
 														<td>{{ getQuarterPlan(suitable,4)}}</td>
 														<td>{{ getQuarterPlanAccomp(suitable,4)}}</td>
-
+														<td>
+															<button class="btn btn-sm btn-info plane-revision" title="Plane Revision" data-suitableinitiative="{{principal.suitableInitiative.id}}" type="button">
+																<i class="fa fa-refresh"></i>
+															</button>
+														</td>
 {#														<td></td>#}
 														<td>
 															<a class="btn btn-sm btn-danger taskList" title="Task List" data-suitableinitiative="{{principal.suitableInitiative.id}}" type="button">
@@ -252,6 +257,47 @@ $('#task_list_table').append(trHTML);
 });
 
 })
+	</script>
+	<script>
+		$('.plane-revision').click(function () {
+var suitableInitiativeId = $(this).attr('data-suitableInitiative');
+console.log(suitableInitiativeId);
+ 
+swal.fire({
+  title: 'Request Report revision?',
+  inputAttributes: {
+    autocapitalize: 'off'
+  },
+  showCancelButton: true,
+  showLoaderOnConfirm: true,
+  preConfirm: (login) => {
+	$.ajax({
+		url:"{{ path('score_report_revision') }}",
+		method: "POST",
+		data: {
+		suitableInitiativeId: suitableInitiativeId
+		},
+		dataType: "json",
+		success: function (response) {
+			swal.fire({
+				position: 'top-end',
+				icon: 'success',
+				title: response.message,
+				showConfirmButton: false,
+				timer: 1500
+			})
+		},
+		error: function(error){
+			swal.showValidationMessage(
+          		`Request failed: ${error}`
+        	)
+		}
+	});
+      
+  },
+  allowOutsideClick: () => !swal.isLoading()
+})
+});
 	</script>
 	<script>
 		$('.closes').click(function () {
